@@ -1,0 +1,7 @@
+Bonjour, {firstname} {lastname}
+Votre demande de devis a bien été envoyée !
+Adresse de livraison: {invoiceAddress}
+Adresse de facturation: {deliveryAddress}
+Téléphone: {customerPhone}
+Votre message:
+{customerMessage}

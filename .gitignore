@@ -3,6 +3,7 @@
 
 /adminLionel/*
 /adm/
+/admin508srwjpw/*
 /bin/*
 /cache/*
 /classes/*
@@ -39,4 +40,12 @@ LICENSES
 vendor
 /vendor/
 .idea/
+<<<<<<< HEAD
 !.gitignore
+=======
+<<<<<<< HEAD
+!.gitignore
+=======
+!.gitignore
+>>>>>>> dc344d715603af69aae243a8f4d1935ccf82ae6a
+>>>>>>> 94ee12976bf7eb221e12afb93a28d33d4508f4ca

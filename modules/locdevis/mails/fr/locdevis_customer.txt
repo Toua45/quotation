@@ -1,0 +1,4 @@
+Bonjour {firstname} {lastname} et merci de votre confiance
+Vous trouverez ci-joint votre devis.
+Vous pouvez nous contacter par mail {shopMail} ou par tél au {shopTel}
+A très vite sur {shopUrl}

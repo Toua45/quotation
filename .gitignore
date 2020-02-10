@@ -39,4 +39,8 @@ LICENSES
 vendor
 /vendor/
 .idea/
+<<<<<<< HEAD
 !.gitignore
+=======
+!.gitignore
+>>>>>>> dc344d715603af69aae243a8f4d1935ccf82ae6a

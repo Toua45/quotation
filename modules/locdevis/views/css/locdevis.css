@@ -1,0 +1,61 @@
+#locDevisForm textarea{
+    height:100px;
+}
+#locDevisForm .locDevisConteneurTextarea {    
+    max-width:100%;
+}
+#locDevisForm textArea{
+    width:100%;
+}
+#locDevisForm .locDevisConteneurTextareaLeft {
+    float:left;
+}
+#locDevisForm .locDevisConteneurTextareaRight {
+    float:right;
+}
+#locDevisForm .locDevisConteneurQuotationName {
+    /*text-align: right;*/
+}
+#locDevisForm .locDevisConteneurQuotationName input{
+    width:100%;
+}
+#locDevisForm .locDevisInfos {
+    font-style:italic;
+    text-align:right;
+    padding-bottom:15px;
+}
+#locDevisForm .locDevisConteneurFieldCustomerInformation {
+    width:22%;    
+    float:left;
+    margin:0 4% 0 0;
+}
+#locDevisForm .locDevisConteneurFieldCustomerInformationLast {
+    margin:0;
+}
+#locDevisForm .locDevisConteneurFieldCustomerInformation input {
+    width:100%;    
+}
+#locDevisForm #cart_summary {
+    width:100%
+}
+#locDevisForm .invoice_address,
+#locDevisForm .delivery_address {
+    max-width:100%;
+}
+#locDevisForm .locDevisTextArea {
+    /*max-width:90%;*/
+}
+#locDevisForm #cart_summary thead th {
+    padding: 4px;
+}
+.locMaxWidthDevice {
+   width:50px;
+   display:block;
+   word-wrap: break-word;
+}
+@media screen and (min-width: 500px)
+{
+  .locMaxWidthDevice {
+    width:auto;
+ }
+}

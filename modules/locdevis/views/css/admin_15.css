@@ -1,0 +1,67 @@
+.panel {
+    background-color:#EBEDF4; 
+    border:1px solid #CCCED7; 
+    color:#585A69; 
+    font-size:1.1em;
+    margin:30px 0;
+    padding:1em;
+    position:relative;
+}
+.panel h3 {
+    background: #EBEDF4;
+    border: 1px solid #CCCED7;
+    font-weight: 700;
+    font-size:1em;
+    margin: 0;
+    padding: .2em .5em;
+    text-align: left;
+    position:absolute;
+    top:-15px;
+    left:10px;
+}
+.panel .help-block {
+    margin-left:260px;
+}
+.panel-footer .btn {
+cursor: pointer;
+background: #e3e3e3 url('../../img/bg-button-degrade.png') repeat-x scroll left top;
+background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent;
+background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#E3E3E3)) repeat scroll 0 0 transparent;
+border-color: #CCCCCC #BBBBBB #A0A0A0;
+border-left: 1px solid #BBBBBB;
+border-radius: 3px 3px 3px 3px;
+border-right: 1px solid #BBBBBB;
+border-style: solid;
+border-width: 1px;
+color: #000000;
+margin: 0;
+outline: medium none;
+padding: 3px 8px;
+text-align: center;
+vertical-align: middle;
+white-space: nowrap;
+text-shadow: 0 1px 0 #fff;
+}
+.panel-footer button {
+    float:right;
+}
+.panel textarea {
+    width:500px;
+    height:80px;
+}
+.icon-check,
+.process-icon-refresh,
+.icon-trash {
+	 display:inline-block;
+	 width:32px;
+	 height:32px;	
+}
+.icon-check {
+	background-image: url('../../../../img/admin/icon-valid.png');
+}
+.process-icon-refresh {
+	background-image: url('../../../../img/admin/icon-attention.png');
+}
+.icon-trash {	
+	background-image: url('../../../../img/admin/icon-cancel.png');
+}

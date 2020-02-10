@@ -1,0 +1,9 @@
+#locDevisForm .clearfix {
+    margin-top:15px;
+}
+#locDevisForm .locDevisConteneurTextareaLeft {
+    width:45%;
+}
+#locDevisForm .locDevisConteneurTextareaRight {
+    width:45%;
+}

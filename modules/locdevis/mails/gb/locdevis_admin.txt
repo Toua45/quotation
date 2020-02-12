@@ -1,1 +1,0 @@
-{firstname} / {lastname} / {customerMail} vient de faire 1 demande de devis dont vous trouverez en pièce jointe les éléments.

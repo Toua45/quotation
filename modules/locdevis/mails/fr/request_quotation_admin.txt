@@ -1,3 +1,0 @@
-Nouvelle demande de devis de: {firstname} {lastname} - {customerMail} - {customerPhone}
-Message:
-{customerMessage}

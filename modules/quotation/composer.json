@@ -1,10 +1,10 @@
 {
-  "name": "quotation",
+  "name": "toua/quotation",
   "description": "making quotations for clients",
   "authors": [
     {
-      "name": "nolwenn",
-      "email": "sachet.nolwenn@orange.fr"
+      "name": "toua",
+      "email": "toua.va45@gmail.com"
     }
   ],
   "require": {
@@ -12,10 +12,10 @@
   },
   "autoload": {
     "psr-4": {
-      "Quotation\\": "src/"
+      "Quotation\\Controller\\": "src/Controller/"
     },
     "classmap": [
-      "Quotation.php"
+      "quotation.php"
     ],
     "exclude-from-classmap": []
   },
@@ -24,6 +24,6 @@
     "prepend-autoloader": false
   },
   "type": "prestashop-module",
-  "author": "nolwenn",
+  "author": "toua",
   "license": "<???>"
 }

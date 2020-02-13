@@ -1,28 +1,28 @@
 <?php
 /**
-* 2007-2020 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2020 PrestaShop SA
-*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+ * 2007-2020 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2020 PrestaShop SA
+ * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -47,12 +47,12 @@ class Quotation extends Module
 
         parent::__construct();
 
-        $this->displayName = $this->l('Quotation module');
-        $this->description = $this->l('Création de devis pour les clients');
+        $this->displayName = $this->l('Quotation');
+        $this->description = $this->l('Création de devis pour clients');
 
-        $this->confirmUninstall = $this->l('Êtes-vous sûr de vouloir désinstaller ce module ?');
+        $this->confirmUninstall = $this->l('');
 
-        $this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = ['min' => '1.6', 'max' => _PS_VERSION_];
     }
 
     /**
@@ -63,7 +63,7 @@ class Quotation extends Module
     {
         Configuration::updateValue('QUOTATION_LIVE_MODE', false);
 
-        include(dirname(__FILE__).'/sql/install.php');
+        include(dirname(__FILE__) . '/sql/install.php');
 
         return parent::install() &&
             $this->installQuotationModuleTab() &&
@@ -76,16 +76,21 @@ class Quotation extends Module
     {
         Configuration::deleteByName('QUOTATION_LIVE_MODE');
 
-        include(dirname(__FILE__).'/sql/uninstall.php');
+        include(dirname(__FILE__) . '/sql/uninstall.php');
 
         return parent::uninstall();
     }
 
     private function installQuotationModuleTab()
     {
-        $tab = new Tab();
+        $tabId = (int) Tab::getIdFromClassName('AdminQuotationController');
+        if (!$tabId) {
+            $tabId = null;
+        }
+
+        $tab = new Tab($tabId);
         $tab->active = 1;
-        $tab->class_name = 'AdminQuotation';
+        $tab->class_name = 'AdminQuotationController';
         $tab->id_parent = (int)Tab::getIdFromClassName('AdminParentOrders');
         $tab->position = Tab::getNewLastPosition($tab->id_parent);
         foreach (Language::getLanguages(false) as $lang) {
@@ -95,8 +100,22 @@ class Quotation extends Module
         return $tab->add();
     }
 
+    private function uninstallQuotationModuleTab()
+    {
+        $tabId = (int) Tab::getIdFromClassName('AdminQuotationController');
+        if (!$tabId) {
+            return true;
+        }
+
+        $tab = new Tab($tabId);
+
+        return $tab->delete();
+    }
+
     /**
      * Load the configuration form
+     * @throws SmartyException
+     * @throws PrestaShopException
      */
     public function getContent()
     {
@@ -109,13 +128,14 @@ class Quotation extends Module
 
         $this->context->smarty->assign('module_dir', $this->_path);
 
-        $output = $this->context->smarty->fetch($this->local_path.'views/templates/admin/configure.tpl');
+        $output = $this->context->smarty->fetch($this->local_path . 'views/templates/admin/configure.tpl');
 
-        return $output.$this->renderForm();
+        return $output . $this->renderForm();
     }
 
     /**
      * Create the form that will be displayed in the configuration of your module.
+     * @throws PrestaShopException
      */
     protected function renderForm()
     {
@@ -130,14 +150,15 @@ class Quotation extends Module
         $helper->identifier = $this->identifier;
         $helper->submit_action = 'submitQuotationModule';
         $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false)
-            .'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+            . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
 
-        $helper->tpl_vars = array(
+
+        $helper->tpl_vars = [
             'fields_value' => $this->getConfigFormValues(), /* Add values for your inputs */
             'languages' => $this->context->controller->getLanguages(),
             'id_language' => $this->context->language->id,
-        );
+        ];
 
         return $helper->generateForm(array($this->getConfigForm()));
     }
@@ -147,51 +168,52 @@ class Quotation extends Module
      */
     protected function getConfigForm()
     {
-        return array(
-            'form' => array(
-                'legend' => array(
-                'title' => $this->l('Settings'),
-                'icon' => 'icon-cogs',
-                ),
-                'input' => array(
-                    array(
+
+        return [
+            'form' => [
+                'legend' => [
+                    'title' => $this->l('Settings'),
+                    'icon' => 'icon-cogs',
+                ],
+                'input' => [
+                    [
                         'type' => 'switch',
                         'label' => $this->l('Live mode'),
                         'name' => 'QUOTATION_LIVE_MODE',
                         'is_bool' => true,
                         'desc' => $this->l('Use this module in live mode'),
-                        'values' => array(
-                            array(
+                        'values' => [
+                            [
                                 'id' => 'active_on',
                                 'value' => true,
                                 'label' => $this->l('Enabled')
-                            ),
-                            array(
+                            ],
+                            [
                                 'id' => 'active_off',
                                 'value' => false,
                                 'label' => $this->l('Disabled')
-                            )
-                        ),
-                    ),
-                    array(
+                            ]
+                        ],
+                    ],
+                    [
                         'col' => 3,
                         'type' => 'text',
                         'prefix' => '<i class="icon icon-envelope"></i>',
                         'desc' => $this->l('Enter a valid email address'),
                         'name' => 'QUOTATION_ACCOUNT_EMAIL',
                         'label' => $this->l('Email'),
-                    ),
-                    array(
+                    ],
+                    [
                         'type' => 'password',
                         'name' => 'QUOTATION_ACCOUNT_PASSWORD',
                         'label' => $this->l('Password'),
-                    ),
-                ),
-                'submit' => array(
+                    ],
+                ],
+                'submit' => [
                     'title' => $this->l('Save'),
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**
@@ -199,11 +221,12 @@ class Quotation extends Module
      */
     protected function getConfigFormValues()
     {
-        return array(
+
+        return [
             'QUOTATION_LIVE_MODE' => Configuration::get('QUOTATION_LIVE_MODE', true),
             'QUOTATION_ACCOUNT_EMAIL' => Configuration::get('QUOTATION_ACCOUNT_EMAIL', 'contact@prestashop.com'),
             'QUOTATION_ACCOUNT_PASSWORD' => Configuration::get('QUOTATION_ACCOUNT_PASSWORD', null),
-        );
+        ];
     }
 
     /**
@@ -219,8 +242,9 @@ class Quotation extends Module
     }
 
     /**
-    * Add the CSS & JavaScript files you want to be loaded in the BO.
-    */
+     * Add the CSS & JavaScript files you want to be loaded in the BO.
+     */
+
     public function hookBackOfficeHeader()
     {
         if (Tools::getValue('module_name') == $this->name) {

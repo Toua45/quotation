@@ -24,6 +24,7 @@
 *}
 
 <div class="panel">
+
 	<h3><i class="icon icon-credit-card"></i> {l s='Quotation module' mod='quotation'}</h3>
 	<p>
 		<strong>{l s='Here is my new generic module!' mod='quotation'}</strong><br />

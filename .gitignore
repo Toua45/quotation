@@ -2,9 +2,14 @@
 !modules/quotation
 
 /adminLionel/*
+<<<<<<< HEAD
 /admin/*
 /admin508srwjpw/*
 /admin452gt6znb/*
+=======
+/adm/
+/adminToua/*
+>>>>>>> b90a32cdef27dc4a27a164f4a60bf19e0f3cfab7
 /bin/*
 /cache/*
 /classes/*

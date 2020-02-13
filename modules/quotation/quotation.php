@@ -18,9 +18,9 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author    PrestaShop SA <contact@prestashop.com>
- *  @copyright 2007-2020 PrestaShop SA
- *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2020 PrestaShop SA
+ * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -63,11 +63,12 @@ class Quotation extends Module
     {
         Configuration::updateValue('QUOTATION_LIVE_MODE', false);
 
-        include(dirname(__FILE__).'/sql/install.php');
+        include(dirname(__FILE__) . '/sql/install.php');
 
         $this->installQuotationModuleTab();
 
         return parent::install() &&
+            $this->installQuotationModuleTab() &&
             $this->registerHook('header') &&
             $this->registerHook('backOfficeHeader') &&
             $this->registerHook('displayAdminOrder');
@@ -77,13 +78,29 @@ class Quotation extends Module
     {
         Configuration::deleteByName('QUOTATION_LIVE_MODE');
 
-        include(dirname(__FILE__).'/sql/uninstall.php');
+        include(dirname(__FILE__) . '/sql/uninstall.php');
 
         return parent::uninstall();
     }
 
+    private function installQuotationModuleTab()
+    {
+        $tab = new Tab();
+        $tab->active = 1;
+        $tab->class_name = 'AdminQuotation';
+        $tab->id_parent = (int)Tab::getIdFromClassName('AdminParentOrders');
+        $tab->position = Tab::getNewLastPosition($tab->id_parent);
+        foreach (Language::getLanguages(false) as $lang) {
+            $tab->name[(int)$lang['id_lang']] = 'Devis';
+        }
+        $tab->module = $this->name;
+        return $tab->add();
+    }
+
     /**
      * Load the configuration form
+     * @throws SmartyException
+     * @throws PrestaShopException
      */
     public function getContent()
     {
@@ -96,9 +113,9 @@ class Quotation extends Module
 
         $this->context->smarty->assign('module_dir', $this->_path);
 
-        $output = $this->context->smarty->fetch($this->local_path.'views/templates/admin/configure.tpl');
+        $output = $this->context->smarty->fetch($this->local_path . 'views/templates/admin/configure.tpl');
 
-        return $output.$this->renderForm();
+        return $output . $this->renderForm();
     }
 
     /**
@@ -118,8 +135,9 @@ class Quotation extends Module
         $helper->identifier = $this->identifier;
         $helper->submit_action = 'submitQuotationModule';
         $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false)
-            .'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+            . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
+
 
         $helper->tpl_vars = [
             'fields_value' => $this->getConfigFormValues(), /* Add values for your inputs */
@@ -135,6 +153,7 @@ class Quotation extends Module
      */
     protected function getConfigForm()
     {
+
         return [
             'form' => [
                 'legend' => [
@@ -187,6 +206,7 @@ class Quotation extends Module
      */
     protected function getConfigFormValues()
     {
+
         return [
             'QUOTATION_LIVE_MODE' => Configuration::get('QUOTATION_LIVE_MODE', true),
             'QUOTATION_ACCOUNT_EMAIL' => Configuration::get('QUOTATION_ACCOUNT_EMAIL', 'contact@prestashop.com'),
@@ -206,26 +226,10 @@ class Quotation extends Module
         }
     }
 
-    private function installQuotationModuleTab()
-    {
-        $tab = new Tab();
-        $tab->active = 1;
-        $tab->class_name = 'AdminQuotation';
-        /* faire un tableau de retro compatibilite pour les menu
-        * https://www.prestashop.com/forums/topic/527046-new-admin-tab-bug/
-        */
-        $tab->id_parent = (int)Tab::getIdFromClassName('AdminParentOrders');
-        $tab->position = Tab::getNewLastPosition($tab->id_parent);
-        foreach (Language::getLanguages(false) as $lang) {
-            $tab->name[(int)$lang['id_lang']] = 'Devis';
-        }
-        $tab->module = $this->name;
-        return $tab->add();
-    }
-
     /**
      * Add the CSS & JavaScript files you want to be loaded in the BO.
      */
+
     public function hookBackOfficeHeader()
     {
         if (Tools::getValue('module_name') == $this->name) {

@@ -1,0 +1,6 @@
+# modules/your-module/config/routes.yml
+your_route_name:
+  path: quotation/admin
+  methods: [GET]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::adminAction'

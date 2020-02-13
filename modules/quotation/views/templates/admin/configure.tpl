@@ -24,11 +24,8 @@
 *}
 
 <div class="panel">
-<<<<<<< HEAD
-	<h3><i class="icon icon-credit-card"></i> {l s='Quotation' mod='quotation'}</h3>
-=======
+
 	<h3><i class="icon icon-credit-card"></i> {l s='Quotation module' mod='quotation'}</h3>
->>>>>>> b90a32cdef27dc4a27a164f4a60bf19e0f3cfab7
 	<p>
 		<strong>{l s='Here is my new generic module!' mod='quotation'}</strong><br />
 		{l s='Thanks to PrestaShop, now I have a great module.' mod='quotation'}<br />

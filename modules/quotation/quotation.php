@@ -65,8 +65,6 @@ class Quotation extends Module
 
         include(dirname(__FILE__) . '/sql/install.php');
 
-        $this->installQuotationModuleTab();
-
         return parent::install() &&
             $this->installQuotationModuleTab() &&
             $this->registerHook('header') &&
@@ -85,9 +83,14 @@ class Quotation extends Module
 
     private function installQuotationModuleTab()
     {
-        $tab = new Tab();
+        $tabId = (int) Tab::getIdFromClassName('AdminQuotationController');
+        if (!$tabId) {
+            $tabId = null;
+        }
+
+        $tab = new Tab($tabId);
         $tab->active = 1;
-        $tab->class_name = 'AdminQuotation';
+        $tab->class_name = 'AdminQuotationController';
         $tab->id_parent = (int)Tab::getIdFromClassName('AdminParentOrders');
         $tab->position = Tab::getNewLastPosition($tab->id_parent);
         foreach (Language::getLanguages(false) as $lang) {
@@ -95,6 +98,18 @@ class Quotation extends Module
         }
         $tab->module = $this->name;
         return $tab->add();
+    }
+
+    private function uninstallQuotationModuleTab()
+    {
+        $tabId = (int) Tab::getIdFromClassName('AdminQuotationController');
+        if (!$tabId) {
+            return true;
+        }
+
+        $tab = new Tab($tabId);
+
+        return $tab->delete();
     }
 
     /**

@@ -26,9 +26,25 @@
 $sql = array();
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'quotation` (
-    `id_quotation` int(11) NOT NULL AUTO_INCREMENT,
+           `id_quotation` int(11) NOT NULL AUTO_INCREMENT,
+    	   `id_cart` int(10) NOT NULL,
+		   `id_customer` int(10) NOT NULL,
+           `reference` varchar(128),
+           `message_visible` TEXT,
+           `id_customer_thread` int(10),
+		   `date_add` DATETIME NOT NULL,
+           `status` int(2) DEFAULT 0,
     PRIMARY KEY  (`id_quotation`)
-) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
+) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
+
+
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'quotation_text` (
+		  `id_quotation_text` int(10) NOT NULL AUTO_INCREMENT,
+		  `text_value` TEXT NOT NULL,
+		  `text_type` int(10) NOT NULL,
+                  `id_lang` int(10) NOT NULL,
+  		PRIMARY KEY (`id_quotation_text`)
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
 
 foreach ($sql as $query) {
     if (Db::getInstance()->execute($query) == false) {

@@ -31,6 +31,11 @@
  */
 $sql = array();
 
+$sql[] = 'SET foreign_key_checks = 0;';
+$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'quotation`;';
+$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'quotation_text`;';
+$sql[] = 'SET foreign_key_checks = 1;';
+
 foreach ($sql as $query) {
     if (Db::getInstance()->execute($query) == false) {
         return false;

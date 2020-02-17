@@ -6,6 +6,7 @@
          <div class="card p-1">
              <div class="panel col lg-12">
                  <div class="panel-heading">Devis</div>
+
                  <hr>
                  {{ form_start(form) }}
                  {{ form_widget(form) }}
@@ -18,43 +19,34 @@
 
                  {{ form_end(form) }}
 
-
-
-                 <table class="table table-striped table-responsive-row clearfix">
+                 <table class="table table-striped table-responsive-row">
                      <thead>
                      <tr>
                          <td>Ref</td>
-                         <td>Nouveau client</td>
-                         <td>Nom</td>
-                         <td>Total</td>
-                         <td>Etat</td>
-                         <td>Date</td>
-                         <td>PDF</td>
+                         <td>Message</td>
+                         <td>Date d'ajout</td>
+                         <td>Status</td>
+                         <td>Panier</td>
+                         <td>Client</td>
+                         <td>Entreprise</td>
                      </tr>
                      </thead>
                      <tbody>
-                     <tr>
-                         for quotation in quotations ?
-                         <td>quotation.ref</td>
-                         <td>quotation.customer.name</td>
-                         <td>quotation.customer.isNew (true/false)</td>
-                         <td>quotation.total</td>
-                         <td>quotation.status</td>
-                         <td>quotation.date</td>
-                         <td>quotation.pdf</td>
-                     </tr>
-                     <tr>
-                         <td>quotation.ref</td>
-                         <td>quotation.customer.name</td>
-                         <td>quotation.customer.isNew (true/false)</td>
-                         <td>quotation.total</td>
-                         <td>quotation.status</td>
-                         <td>quotation.date</td>
-                         <td>quotation.pdf</td>
-                     </tr>
+                     {% for quotation in quotations %}
+                         <tr>
+                             <td>{{ quotation.reference }}</td>
+                             <td>{{ quotation.messageVisible }}</td>
+                             <td>{{ quotation.dateAdd }}</td>
+                             <td>{{ quotation.status }}</td>
+                             <td>{{ quotation.idCart }}</td>
+                             <td>{{ quotation.idCustomer }}</td>
+                             <td>{{ quotation.idCustomerThread }}</td>
+                         </tr>
+                     {% endfor %}
                      </tbody>
                  </table>
              </div>
          </div>
      </div>
+
  {% endblock %}

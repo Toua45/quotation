@@ -23,7 +23,7 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-/*
+
 $sql = array();
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'quotation` (
@@ -43,7 +43,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'quotation_text` (
 		  `id_quotation_text` int(10) NOT NULL AUTO_INCREMENT,
 		  `text_value` TEXT NOT NULL,
 		  `text_type` int(10) NOT NULL,
-                  `id_lang` int(10) NOT NULL,
+          `id_lang` int(10) NOT NULL,
   		PRIMARY KEY (`id_quotation_text`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
 

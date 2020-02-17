@@ -2,14 +2,21 @@
 
 namespace Quotation\Controller;
 
+use Prestashop\modules\Quotation\Repository\QuotationRepository;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use quotation\Entity\Quotation;
-use Doctrine\ORM\EntityManagerInterface;
+use Quotation\Entity\Quotation;
 
 class AdminQuotationController extends FrameworkBundleAdminController
 {
-    public function adminAction()
+    public function quotationIndex()
     {
-        return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig');
+        $quotations = $this->getDoctrine()
+            ->getRepository(Quotation::class)
+            ->findAll();
+
+        return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
+            'quotations' => $quotations
+        ]);
     }
+
 }

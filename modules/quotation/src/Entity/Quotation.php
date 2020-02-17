@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity()
  */
-
 class Quotation
 {
     /**
@@ -17,57 +16,56 @@ class Quotation
      *
      * @ORM\Id
      * @ORM\Column(name="id", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue()
      */
     private $id;
 
     /**
      * @var string
      *
-     *@ORM\Column(name="reference" type="string" length=100)
+     * @ORM\Column(name="reference", type="string", length=100)
      */
     private $reference;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="message_visible" type="text")
+     * @ORM\Column(name="messageVisible", type="text", nullable=true)
      */
-    private $message_visible;
+    private $messageVisible;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date_add", type="datetime", nullable=false)
+     * @ORM\Column(name="date_add", type="datetime")
      */
     private $dateAdd;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="status" type="string" length=100)
+     * @ORM\Column(name="status", type="string", length=100)
      */
     private $status;
-
 
     /**
      * @var int
      *
-     * @ORM\Column(name="id_cart" type="int")
+     * @ORM\Column(name="id_cart", type="integer")
      * @ORM\OneToOne(targetEntity="Cart")
      */
     private $idCart;
 
     /**
      * @var int
-     * @ORM\Column(name="id_customer" type="int")
+     * @ORM\Column(name="id_customer", type="integer")
      * @ORM\ManyToOne(targetEntity="Customer", inversedBy="quotations")
      */
     private $idCustomer;
 
     /**
      * @var int
-     * @ORM\Column(name="id_customer_thread" type="int")
+     * @ORM\Column(name="id_customer_thread", type="integer", nullable=true)
      * @ORM\ManyToOne(targetEntity="CustomerThread", inversedBy="quotations")
      */
     private $idCustomerThread;
@@ -113,16 +111,16 @@ class Quotation
      */
     public function getMessageVisible()
     {
-        return $this->message_visible;
+        return $this->messageVisible;
     }
 
     /**
-     * @param string $message_visible
+     * @param string $messageVisible
      * @return Quotation
      */
-    public function setMessageVisible($message_visible)
+    public function setMessageVisible($messageVisible)
     {
-        $this->message_visible = $message_visible;
+        $this->messageVisible = $messageVisible;
         return $this;
     }
 
@@ -215,5 +213,4 @@ class Quotation
         $this->idCustomerThread = $idCustomerThread;
         return $this;
     }
-
 }

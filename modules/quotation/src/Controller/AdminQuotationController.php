@@ -4,8 +4,8 @@ namespace Quotation\Controller;
 
 use Prestashop\modules\Quotation\Repository\QuotationRepository;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Quotation\Entity\Quotation;
 use Doctrine\ORM\EntityManagerInterface;
+use Quotation\Entity\Quotation;
 use Quotation\Form\QuotationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +18,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             ->getRepository(Quotation::class)
             ->findAll();
 
-        $quotation = new \Quotation();
+        $quotation = new Quotation();
 
         $form = $this->createForm(QuotationType::class, $quotation);
         $form->handleRequest($request);

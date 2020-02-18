@@ -29,7 +29,13 @@
  * Maybe the merchant will just try to reset the module
  * but does not want to loose all of the data associated to the module.
  */
+
 $sql = array();
+
+$sql[] = 'SET foreign_key_checks = 0;';
+$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'quotation`;';
+$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'quotation_text`;';
+$sql[] = 'SET foreign_key_checks = 1;';
 
 foreach ($sql as $query) {
     if (Db::getInstance()->execute($query) == false) {

@@ -1,7 +1,7 @@
 # Quotation module
 
 Quotation est un module Prestashop permettant de générer des devis au format PDF 
-pour un client avant de passer d'un ou plusieurs produit·s.
+pour un client avant de passer commande d'un ou plusieurs produit·s.
 
 ## Kit de démarrage
 * Installer `Prestashop` sur vore machine

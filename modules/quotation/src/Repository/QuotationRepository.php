@@ -1,15 +1,37 @@
 <?php
 
-namespace Prestashop\modules\Quotation\Repository;
+namespace Quotation\Repository;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Quotation\Entity\Quotation;
+use Doctrine\DBAL\Connection;
 
-class QuotationRepository extends ServiceEntityRepository
+class QuotationRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @var Connection the Database connection
+     */
+    private $connection;
+
+    /**
+     * @var string the Database prefix
+     */
+    private $databasePrefix;
+
+    public function __construct(
+        Connection $connection,
+        $databasePrefix
+    ) {
+        $this->connection = $connection;
+        $this->databasePrefix = $databasePrefix;
+    }
+
+    public function findAll()
     {
-        parent::__construct($registry, Quotation::class);
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->addSelect('q.*')
+            ->from($this->databasePrefix . 'quotation', 'q')
+        ;
+
+        return $qb->execute()->fetchAll();
     }
 }

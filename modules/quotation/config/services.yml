@@ -7,9 +7,3 @@ services:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
-
-  product_comment_repository:
-    class: PrestaShop\Module\ProductComment\Repository\ProductCommentRepository
-    arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'

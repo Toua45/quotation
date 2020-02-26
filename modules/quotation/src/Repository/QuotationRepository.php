@@ -24,12 +24,15 @@ class QuotationRepository
         $this->databasePrefix = $databasePrefix;
     }
 
-    public function findAll()
+    public function findQuotationById()
     {
-        $qb = $this->connection->createQueryBuilder();
+        $qb = $this->connection->createQueryBuilder($);
         $qb
             ->addSelect('q.*')
+            ->addSelect('c.firstname, c.lastname')
             ->from($this->databasePrefix . 'quotation', 'q')
+            ->from($this->databasePrefix . 'customer' . 'c')
+            ->setParameter()
         ;
 
         return $qb->execute()->fetchAll();

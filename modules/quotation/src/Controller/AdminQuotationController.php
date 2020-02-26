@@ -14,7 +14,9 @@ class AdminQuotationController extends FrameworkBundleAdminController
     public function quotationIndex(Request $request)
     {
 
-
+        $quotations = $this->getDoctrine()
+            ->getRepository(Quotation::class)
+            ->findAll();
 
 
         //dump($this->get('quotation_repository')->findAll());die;

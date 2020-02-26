@@ -3,6 +3,7 @@
 namespace Quotation\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 
 class QuotationRepository
 {
@@ -16,6 +17,11 @@ class QuotationRepository
      */
     private $databasePrefix;
 
+    /**
+     * QuotationRepository constructor.
+     * @param Connection $connection
+     * @param $databasePrefix
+     */
     public function __construct(
         Connection $connection,
         $databasePrefix
@@ -24,17 +30,21 @@ class QuotationRepository
         $this->databasePrefix = $databasePrefix;
     }
 
-    public function findQuotationById()
+    /**
+     * @param int $customerId
+     * @return array
+     */
+    public function findCustomerById($customerId)
     {
-        $qb = $this->connection->createQueryBuilder($);
-        $qb
-            ->addSelect('q.*')
-            ->addSelect('c.firstname, c.lastname')
-            ->from($this->databasePrefix . 'quotation', 'q')
-            ->from($this->databasePrefix . 'customer' . 'c')
-            ->setParameter()
-        ;
-
+        /** @var QueryBuilder $qb */
+        $qb = $this->connection
+            ->createQueryBuilder()
+            ->select('q.id_quotation, q.id_cart, q.id_customer, q.id_customer_thread, q.reference, q.date_add, q.status')
+            ->addSelect('c.lastname, c.firstname')
+            ->from($this->databasePrefix. 'quotation', 'q')
+            ->join('q', $this->databasePrefix. 'customer', 'c', 'q.id_customer = c.id_customer')
+            ->where('id_customer = :id')
+            ->setParameter('id_customer', $customerId);
         return $qb->execute()->fetchAll();
     }
 }

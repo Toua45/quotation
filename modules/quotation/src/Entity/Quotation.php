@@ -84,7 +84,7 @@ class Quotation
     /**
      * @return int
      */
-    public function getCartProductId(): int
+    public function getCartProductId(): ?int
     {
         return $this->cartProductId;
     }

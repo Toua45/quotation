@@ -1,8 +1,16 @@
 # modules/your-module/config/routes.yml
-quotation_admin:
-  path: quotation/admin
+quotation_admin:        #RouteName
+  path: quotation/admin #URL
   methods: [GET]
   defaults:
     _controller: 'Quotation\Controller\AdminQuotationController::quotationIndex'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_add:
+  path: quotation/admin/add
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::add'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'

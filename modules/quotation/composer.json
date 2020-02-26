@@ -1,0 +1,38 @@
+{
+  "name": "quotation",
+  "description": "making quotations for clients",
+  "authors": [
+    {
+      "name": "toua",
+      "email": "toua.va45@gmail.com"
+    },
+    {
+      "name": "nolwenn",
+      "email": "sachet.nolwenn@orange.fr"
+    },
+    {
+      "name": "lionel",
+      "email": "lionel.delamare21@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.6.0",
+    "doctrine/orm": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Quotation\\": "src/"
+    },
+    "classmap": [
+      "quotation.php"
+    ],
+    "exclude-from-classmap": []
+  },
+  "config": {
+    "preferred-install": "dist",
+    "prepend-autoloader": false
+  },
+  "type": "prestashop-module",
+  "author": "Wilders",
+  "license": "<???>"
+}

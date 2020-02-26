@@ -1,0 +1,8 @@
+# modules/your-module/config/routes.yml
+quotation_admin:
+  path: quotation/admin
+  methods: [GET]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::quotationIndex'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'

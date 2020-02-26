@@ -1,0 +1,13 @@
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+ {% block content %}
+
+     <div class="card p-4">
+         <h1>Créer un devis</h1>
+         <a href="{{ path('quotation_admin') }}" class="btn btn-primary">Retour</a>
+         <hr>
+
+         {% include '@Modules/quotation/templates/admin/_form.html.twig' %}
+     </div>
+
+ {% endblock %}

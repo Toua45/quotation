@@ -70,7 +70,6 @@ class Quotation
      */
     private $status;
 
-
     /**
      * @return int
      */
@@ -92,54 +91,54 @@ class Quotation
     /**
      * @return int
      */
-    public function getIdCart()
+    public function getCartId()
     {
-        return $this->idCart;
+        return $this->cartId;
     }
 
     /**
-     * @param int $idCart
+     * @param int $cartId
      * @return Quotation
      */
-    public function setIdCart($idCart)
+    public function setCartId($cartId)
     {
-        $this->idCart = $idCart;
+        $this->cartId = $cartId;
         return $this;
     }
 
     /**
      * @return int
      */
-    public function getIdCustomer()
+    public function getCustomerId()
     {
-        return $this->idCustomer;
+        return $this->customerId;
     }
 
     /**
-     * @param int $idCustomer
+     * @param int $customerId
      * @return Quotation
      */
-    public function setIdCustomer($idCustomer)
+    public function setCustomerId($customerId)
     {
-        $this->idCustomer = $idCustomer;
+        $this->customerId = $customerId;
         return $this;
     }
 
     /**
      * @return int
      */
-    public function getIdCustomerThread()
+    public function getCustomerThreadId()
     {
-        return $this->idCustomerThread;
+        return $this->customerThreadId;
     }
 
     /**
-     * @param int $idCustomerThread
+     * @param int $customerThreadId
      * @return Quotation
      */
-    public function setIdCustomerThread($idCustomerThread)
+    public function setCustomerThreadId($customerThreadId)
     {
-        $this->idCustomerThread = $idCustomerThread;
+        $this->customerThreadId = $customerThreadId;
         return $this;
     }
 

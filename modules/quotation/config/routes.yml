@@ -1,5 +1,5 @@
 # modules/your-module/config/routes.yml
-your_route_name:
+quotation_admin:
   path: quotation/admin
   methods: [GET]
   defaults:

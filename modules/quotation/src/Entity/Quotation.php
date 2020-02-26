@@ -23,24 +23,17 @@ class Quotation
     /**
      * @var int
      *
-     * @ORM\Column(name="id_cart", type="integer")
+     * @ORM\Column(name="id_cart", type="array")
      * @ORM\OneToOne(targetEntity="Cart")
      */
     private $cartId;
 
     /**
      * @var int
-     * @ORM\Column(name="id_customer", type="integer")
+     * @ORM\Column(name="id_customer", type="array")
      * @ORM\ManyToOne(targetEntity="Customer", inversedBy="quotations")
      */
     private $customerId;
-
-    /**
-     * @var int
-     * @ORM\Column(name="id_customer_thread", type="integer", nullable=true)
-     * @ORM\ManyToOne(targetEntity="CustomerThread", inversedBy="quotations")
-     */
-    private $customerThreadId;
 
     /**
      * @var string
@@ -121,24 +114,6 @@ class Quotation
     public function setCustomerId($customerId)
     {
         $this->customerId = $customerId;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCustomerThreadId()
-    {
-        return $this->customerThreadId;
-    }
-
-    /**
-     * @param int $customerThreadId
-     * @return Quotation
-     */
-    public function setCustomerThreadId($customerThreadId)
-    {
-        $this->customerThreadId = $customerThreadId;
         return $this;
     }
 

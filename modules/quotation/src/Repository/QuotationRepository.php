@@ -31,20 +31,15 @@ class QuotationRepository
     }
 
     /**
-     * @param int $customerId
-     * @return array
+     * @return mixed[]
      */
-    public function findCustomerById($customerId)
+    public function findAll()
     {
-        /** @var QueryBuilder $qb */
-        $qb = $this->connection
-            ->createQueryBuilder()
-            ->select('q.id_quotation, q.id_cart, q.id_customer, q.id_customer_thread, q.reference, q.messageVisible, q.date_add, q.status')
-            ->addSelect('c.lastname, c.firstname')
-            ->from($this->databasePrefix. 'quotation', 'q')
-            ->join('q', $this->databasePrefix. 'customer', 'c', 'q.id_customer = c.id_customer')
-            ->where('id_customer = :id')
-            ->setParameter('id', $customerId);
-        return $qb->execute()->fetchAll();
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->addSelect('q.*, c.firstname', 'c.lastname')
+            ->from($this->databasePrefix . 'quotation', 'q')
+            ->join('q', $this->databasePrefix . 'customer', 'c', 'q.id_customer = c.id_customer')
+        ;return $qb->execute()->fetchAll();
     }
 }

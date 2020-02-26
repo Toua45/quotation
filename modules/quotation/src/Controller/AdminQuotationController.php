@@ -11,15 +11,14 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AdminQuotationController extends FrameworkBundleAdminController
 {
-    public function quotationIndex(Request $request)
+    public function quotationIndex()
     {
-
-        $quotations = $this->getDoctrine()
-            ->getRepository(Quotation::class)
-            ->findAll();
+        $quotationRepository = $this->get('quotation_repository');
+        $quotations = $quotationRepository->findAll();
 
 
-        //dump($this->get('quotation_repository')->findAll());die;
+
+
 
 
 

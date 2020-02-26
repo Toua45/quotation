@@ -3,7 +3,6 @@
 namespace Quotation\Repository;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Query\QueryBuilder;
 
 class QuotationRepository
 {
@@ -22,10 +21,7 @@ class QuotationRepository
      * @param Connection $connection
      * @param $databasePrefix
      */
-    public function __construct(
-        Connection $connection,
-        $databasePrefix
-    )
+    public function __construct(Connection $connection, $databasePrefix)
     {
         $this->connection = $connection;
         $this->databasePrefix = $databasePrefix;
@@ -35,7 +31,6 @@ class QuotationRepository
      * @return mixed[]
      */
     public function findAll()
-
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
@@ -45,10 +40,10 @@ class QuotationRepository
             ->addGroupBy('q.id_quotation')
             ->join('q', $this->databasePrefix . 'customer', 'c', 'q.id_customer = c.id_customer')
             ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart_product = cp.id_cart')
-            ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
-        ;
+            ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product');
         return $qb->execute()->fetchAll();
     }
+
     /**
      * @return mixed[]
      */

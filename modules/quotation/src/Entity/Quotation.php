@@ -23,10 +23,10 @@ class Quotation
     /**
      * @var int
      *
-     * @ORM\Column(name="id_cart", type="array")
+     * @ORM\Column(name="id_cart_product", type="array")
      * @ORM\OneToOne(targetEntity="Cart")
      */
-    private $cartId;
+    private $cartProductId;
 
     /**
      * @var int
@@ -84,18 +84,18 @@ class Quotation
     /**
      * @return int
      */
-    public function getCartId()
+    public function getCartProductId(): int
     {
-        return $this->cartId;
+        return $this->cartProductId;
     }
 
     /**
-     * @param int $cartId
+     * @param int $cartProductId
      * @return Quotation
      */
-    public function setCartId($cartId)
+    public function setCartProductId(int $cartProductId): Quotation
     {
-        $this->cartId = $cartId;
+        $this->cartProductId = $cartProductId;
         return $this;
     }
 

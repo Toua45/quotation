@@ -13,13 +13,11 @@ class AdminQuotationController extends FrameworkBundleAdminController
 {
     public function quotationIndex()
     {
+        dump($this->get('quotation_repository')->findAll());
+        //;die();
+
         $quotationRepository = $this->get('quotation_repository');
         $quotations = $quotationRepository->findAll();
-
-
-
-
-
 
 
 //        $form = $this->createForm(QuotationType::class, $quotation);

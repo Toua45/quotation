@@ -15,7 +15,7 @@
                          <td>Message</td>
                          <td>Date d'ajout</td>
                          <td>Status</td>
-                         <td>Panier</td>
+                         <td>Prix total du devis</td>
                      </tr>
                      </thead>
                      <tbody>
@@ -26,7 +26,7 @@
                              <td>{{ quotation.messageVisible }}</td>
                              <td>{{ quotation.date_add|date('d/m/Y') }}</td>
                              <td>{{ quotation.status }}</td>
-                             <td>{{ quotation.id_cart }}</td>
+                             <td>{{ quotation.total_product_price|number_format(2) }} €</td>
                          </tr>
                      {% endfor %}
                      </tbody>

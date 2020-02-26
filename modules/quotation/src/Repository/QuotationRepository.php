@@ -39,7 +39,7 @@ class QuotationRepository
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->addSelect('q.*, c.firstname', 'c.lastname', 'cp.id_cart', 'cp.quantity', 'p.price')
+            ->addSelect('q.*', 'c.firstname', 'c.lastname', 'cp.id_cart', 'cp.quantity', 'p.price')
             ->addSelect('SUM(p.price * cp.quantity) AS total_product_price')
             ->from($this->databasePrefix . 'quotation', 'q')
             ->addGroupBy('q.id_quotation')

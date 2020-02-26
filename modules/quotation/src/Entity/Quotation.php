@@ -23,14 +23,14 @@ class Quotation
     /**
      * @var int
      *
-     * @ORM\Column(name="id_cart_product", type="array")
+     * @ORM\Column(name="id_cart_product", type="integer")
      * @ORM\OneToOne(targetEntity="Cart")
      */
     private $cartProductId;
 
     /**
      * @var int
-     * @ORM\Column(name="id_customer", type="array")
+     * @ORM\Column(name="id_customer", type="integer")
      * @ORM\ManyToOne(targetEntity="Customer", inversedBy="quotations")
      */
     private $customerId;
@@ -45,7 +45,7 @@ class Quotation
     /**
      * @var string
      *
-     * @ORM\Column(name="messageVisible", type="text", nullable=true)
+     * @ORM\Column(name="message_visible", type="text", nullable=true)
      */
     private $messageVisible;
 

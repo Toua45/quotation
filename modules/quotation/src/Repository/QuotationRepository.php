@@ -47,6 +47,20 @@ class QuotationRepository
     /**
      * @return mixed[]
      */
+    public function findAllCustomers()
+    {
+//        return dump($this->connection);
+        return $this->connection->createQueryBuilder()
+            ->addSelect("CONCAT(c.firstname, ' ', c.lastname) AS fullname", "c.id_customer")
+            ->from($this->databasePrefix . 'customer', 'c')
+            ->execute()
+            ->fetchAll()
+            ;
+    }
+
+    /**
+     * @return mixed[]
+     */
     /*public function findOrder($idCart)
     {
         $qb = $this->connection->createQueryBuilder();

@@ -2,8 +2,10 @@
 
 namespace Quotation\Form;
 
+use PrestaShop\PrestaShop\Adapter\Entity\Customer;
 use Quotation\Entity\Quotation;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Quotation\Repository\QuotationRepository;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -38,13 +40,25 @@ class QuotationType extends AbstractType
                     'placeholder' => '2'
                 ]
             ])
-            ->add('customerId', IntegerType::class, [
+            ->add('customerId', ChoiceType::class, [
                 'label' => 'Client',
-                'attr' => [
-                    'placeholder' => '1'
-                ]
+                'multiple' => false,
+                'expanded' => false,
+                'required' => false,
+                'placeholder' => 'Sélectionnez le client',
+                'choices' => array_map(function ($n) {return $n;}, $this->choices())
             ])
             ;
+    }
+
+    public function choices()
+    {
+        $keys = $values = [];
+        foreach(Customer::getCustomers() as $key => $customer) {
+            $keys[] = $customer['firstname'] . ' ' . $customer['lastname'];
+            $values[] = $customer['id_customer'];
+        }
+        return array_combine($keys, $values);
     }
 
     public function configureOptions(OptionsResolver $resolver)

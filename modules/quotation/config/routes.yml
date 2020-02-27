@@ -14,3 +14,12 @@ quotation_admin_add:
     _controller: 'Quotation\Controller\AdminQuotationController::add'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
+
+quotation_admin_ajax:
+  path: quotation/admin/ajax
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::ajaxAction'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+

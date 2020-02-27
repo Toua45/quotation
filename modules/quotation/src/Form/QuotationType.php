@@ -17,6 +17,21 @@ class QuotationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('customerId', ChoiceType::class, [
+                'label' => 'Client',
+                'multiple' => false,
+                'expanded' => false,
+                'required' => true,
+                'placeholder' => 'Sélectionnez le client',
+                'choices' => array_map(function ($n) {return $n;}, $this->choicesCustomers())
+            ])
+            ->add('cartProductId', IntegerType::class, [
+                'label' => 'Panier',
+                'attr' => [
+                    'placeholder' => '2'
+                ]
+            ])
+
             ->add('reference', TextType::class, [
                 'label' => 'Référence',
                 'attr' => [
@@ -34,24 +49,10 @@ class QuotationType extends AbstractType
                     'placeholder' => 'A valider'
                 ]
             ])
-            ->add('cartProductId', IntegerType::class, [
-                'label' => 'Panier',
-                'attr' => [
-                    'placeholder' => '2'
-                ]
-            ])
-            ->add('customerId', ChoiceType::class, [
-                'label' => 'Client',
-                'multiple' => false,
-                'expanded' => false,
-                'required' => true,
-                'placeholder' => 'Sélectionnez le client',
-                'choices' => array_map(function ($n) {return $n;}, $this->choices())
-            ])
             ;
     }
 
-    public function choices()
+    public function choicesCustomers()
     {
         $keys = $values = [];
         foreach(Customer::getCustomers() as $key => $customer) {

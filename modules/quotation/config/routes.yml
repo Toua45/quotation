@@ -19,7 +19,7 @@ quotation_admin_ajax:
   path: quotation/admin/ajax
   methods: [GET, POST]
   defaults:
-    _controller: 'Quotation\Controller\AdminQuotationController::ajaxAction'
+    _controller: 'Quotation\Controller\AdminQuotationController::ajaxCarts'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
 

@@ -2,7 +2,6 @@
 
 namespace Quotation\Controller;
 
-use PrestaShop\PrestaShop\Adapter\Entity\Customer;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Quotation\Entity\Quotation;
 use Quotation\Form\QuotationType;
@@ -14,9 +13,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
 {
     public function quotationIndex()
     {
-//        dump($this->get('quotation_repository')->findAll());
-        //;die();
-
         $quotationRepository = $this->get('quotation_repository');
         $quotations = $quotationRepository->findAll();
 
@@ -48,7 +44,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function ajaxAction(): Response
+    public function ajaxCarts(): Response
     {
         $quotationRepository = $this->get('quotation_repository');
         $carts = $quotationRepository->findAllCarts();

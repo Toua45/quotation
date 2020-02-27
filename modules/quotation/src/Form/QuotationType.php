@@ -6,6 +6,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Customer;
 use Quotation\Entity\Quotation;
 use Quotation\Repository\QuotationRepository;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -38,15 +39,16 @@ class QuotationType extends AbstractType
                     'placeholder' => 'ABDY75'
                 ]
             ])
-            ->add('messageVisible', TextType::class, [
-                'label' => 'Message',
-                'attr' => [
-                    'placeholder' => 'Hello world'
-                ]
-            ])
             ->add('status', TextType::class, [
                 'attr' => [
                     'placeholder' => 'A valider'
+                ]
+            ])
+            ->add('messageVisible', TextareaType::class, [
+                'label' => 'Message',
+                'attr' => [
+                    'placeholder' => 'Hello world',
+                    'rows' => 5,
                 ]
             ])
             ;

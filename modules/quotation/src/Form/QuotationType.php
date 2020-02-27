@@ -44,7 +44,7 @@ class QuotationType extends AbstractType
                 'label' => 'Client',
                 'multiple' => false,
                 'expanded' => false,
-                'required' => false,
+                'required' => true,
                 'placeholder' => 'Sélectionnez le client',
                 'choices' => array_map(function ($n) {return $n;}, $this->choices())
             ])

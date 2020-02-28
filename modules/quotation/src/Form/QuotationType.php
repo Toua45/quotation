@@ -2,6 +2,7 @@
 
 namespace Quotation\Form;
 
+use PrestaShop\PrestaShop\Adapter\Entity\Cart;
 use PrestaShop\PrestaShop\Adapter\Entity\Customer;
 use Quotation\Entity\Quotation;
 use Quotation\Repository\QuotationRepository;
@@ -11,6 +12,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class QuotationType extends AbstractType
@@ -24,12 +28,21 @@ class QuotationType extends AbstractType
                 'expanded' => false,
                 'required' => true,
                 'placeholder' => 'Sélectionnez le client',
-                'choices' => array_map(function ($n) {return $n;}, $this->choicesCustomers())
-            ])
-            ->add('cartProductId', IntegerType::class, [
-                'label' => 'Panier',
+                'choices' => array_map(function ($n) {return $n;}, $this->choicesCustomers()),
                 'attr' => [
-                    'placeholder' => '2'
+                    'class' => 'linked-select',
+                ]
+            ])
+            ->add('cartProductId', ChoiceType::class, [
+                'label' => 'Panier',
+                'multiple' => false,
+                'expanded' => false,
+                'required' => true,
+                'placeholder' => 'Sélectionnez le panier',
+                'choices' => array_map(function ($m) {return $m;}, $this->choicesCarts()),
+                'attr' => [
+                    'placeholder' => '2',
+                    'id' => 'cart-form',
                 ]
             ])
 
@@ -60,6 +73,17 @@ class QuotationType extends AbstractType
         foreach(Customer::getCustomers() as $key => $customer) {
             $keys[] = $customer['firstname'] . ' ' . $customer['lastname'];
             $values[] = $customer['id_customer'];
+        }
+        return array_combine($keys, $values);
+    }
+
+    public function choicesCarts()
+    {
+        $idCustomer = $this->choicesCustomers();
+        $keys = $values = [];
+        foreach(Cart::getCustomerCarts((int)$idCustomer) as $key => $customerCart) {
+            $keys[] = $customerCart['id_cart'] . ' ' . $customerCart['date_add'];
+            $values[] = $customerCart['id_cart'];
         }
         return array_combine($keys, $values);
     }

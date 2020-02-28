@@ -31,6 +31,7 @@ class QuotationType extends AbstractType
                 'choices' => array_map(function ($n) {return $n;}, $this->choicesCustomers()),
                 'attr' => [
                     'class' => 'linked-select',
+                    'data-target' => '#quotation_cartProductId',
                 ]
             ])
             ->add('cartProductId', ChoiceType::class, [
@@ -41,8 +42,7 @@ class QuotationType extends AbstractType
                 'placeholder' => 'Sélectionnez le panier',
                 'choices' => array_map(function ($m) {return $m;}, $this->choicesCarts()),
                 'attr' => [
-                    'placeholder' => '2',
-                    'id' => 'cart-form',
+                    'id' => 'quotation_cartProductId',
                 ]
             ])
 

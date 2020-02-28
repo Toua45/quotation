@@ -71,4 +71,19 @@ class QuotationRepository
             ;
     }
 
+    /**
+     * @return mixed[]
+     */
+    public function findCartsByCustomer($idcustomer)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('cp.id_cart', 'cp.date_add', 'c.id_customer')
+            ->from($this->databasePrefix . 'cart_product', 'cp')
+            ->join('cp', $this->databasePrefix . 'cart', 'c', 'c.id_cart = cp.id_cart')
+            ->where('id_customer = :id_customer')
+            ->setParameter('id_customer', $idcustomer)
+            ->execute()
+            ->fetchAll()
+            ;
+    }
 }

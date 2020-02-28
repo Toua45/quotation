@@ -16,7 +16,9 @@ quotation_admin_add:
     _legacy_link: 'AdminQuotationController'
 
 quotation_admin_ajax:
-  path: quotation/admin/ajax
+  path: quotation/admin/{id_customer}/ajax
+  requirements:
+    id_customer: '\d+'
   methods: [GET, POST]
   defaults:
     _controller: 'Quotation\Controller\AdminQuotationController::ajaxCarts'

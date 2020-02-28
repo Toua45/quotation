@@ -27,6 +27,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
     public function add(Request $request): Response
     {
         $quotation = new Quotation();
+
         $form = $this->createForm(QuotationType::class, $quotation);
         $form->handleRequest($request);
 
@@ -40,13 +41,14 @@ class AdminQuotationController extends FrameworkBundleAdminController
         }
 
         return $this->render('@Modules/quotation/templates/admin/add_quotation.html.twig', [
-            'quotation' => $quotation,
+            'quotation' => dump($quotation),
             'form' => $form->createView(),
         ]);
     }
 
     public function ajaxCarts(Request $request): Response
     {
+        //permet de récupérer l'id customer de l'url en excluant les autres caractères
         $idCustomer = (int) preg_replace('/[^\d]/', '', $request->getPathInfo());
         $quotationRepository = $this->get('quotation_repository');
         $carts = $quotationRepository->findCartsByCustomer($idCustomer);

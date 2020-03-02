@@ -2,6 +2,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.12.1",
     "bootstrap": "^4.4.1",
+    "core-js": "^3.6.4",
     "encore": "^0.0.30-beta",
     "jquery": "^3.4.1",
     "sass-loader": "7.0.1",

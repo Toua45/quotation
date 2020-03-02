@@ -41,7 +41,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         }
 
         return $this->render('@Modules/quotation/templates/admin/add_quotation.html.twig', [
-            'quotation' => dump($quotation),
+            'quotation' => $quotation,
             'form' => $form->createView(),
         ]);
     }

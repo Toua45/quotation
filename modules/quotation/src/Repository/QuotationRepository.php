@@ -49,7 +49,6 @@ class QuotationRepository
      */
     public function findAllCustomers()
     {
-//        return dump($this->connection);
         return $this->connection->createQueryBuilder()
             ->addSelect("CONCAT(c.firstname, ' ', c.lastname) AS fullname", "c.id_customer")
             ->from($this->databasePrefix . 'customer', 'c')
@@ -61,16 +60,30 @@ class QuotationRepository
     /**
      * @return mixed[]
      */
-    /*public function findOrder($idCart)
+    public function findAllCarts()
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->addSelect('cp.id_cart', 'cp.quantity', 'p.price')
-            ->addSelect('SUM(p.price * cp.quantity) AS total_product_price')
+        return $this->connection->createQueryBuilder()
+            ->addSelect('cp.id_cart', 'cp.date_add', 'c.id_customer')
             ->from($this->databasePrefix . 'cart_product', 'cp')
-            ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
-            ->andWhere('cp.id_cart = :id_cart')
-            ->setParameter('id_cart', $idCart)
-        ;return $qb->execute()->fetchAll();
-    }*/
+            ->join('cp', $this->databasePrefix . 'cart', 'c', 'c.id_cart = cp.id_cart')
+            ->execute()
+            ->fetchAll()
+            ;
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function findCartsByCustomer($idcustomer)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('cp.id_cart', 'cp.date_add', 'c.id_customer')
+            ->from($this->databasePrefix . 'cart_product', 'cp')
+            ->join('cp', $this->databasePrefix . 'cart', 'c', 'c.id_cart = cp.id_cart')
+            ->where('id_customer = :id_customer')
+            ->setParameter('id_customer', $idcustomer)
+            ->execute()
+            ->fetchAll()
+            ;
+    }
 }

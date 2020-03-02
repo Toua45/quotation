@@ -2,35 +2,32 @@
 
 namespace Quotation\Controller;
 
-use PrestaShop\PrestaShop\Adapter\Entity\Customer;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Quotation\Entity\Quotation;
 use Quotation\Form\QuotationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminQuotationController extends FrameworkBundleAdminController
 {
     public function quotationIndex()
     {
-//        dump($this->get('quotation_repository')->findAll());
-        //;die();
-
         $quotationRepository = $this->get('quotation_repository');
         $quotations = $quotationRepository->findAll();
 
-//        dump($quotationRepository->findAllCustomers());die;
+        //dump($quotationRepository->findAllCarts());
+        //die;
 
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
             'quotations' => $quotations,
         ]);
     }
 
-
-
     public function add(Request $request): Response
     {
         $quotation = new Quotation();
+
         $form = $this->createForm(QuotationType::class, $quotation);
         $form->handleRequest($request);
 
@@ -49,4 +46,21 @@ class AdminQuotationController extends FrameworkBundleAdminController
         ]);
     }
 
+    public function ajaxCarts(Request $request): Response
+    {
+        //permet de récupérer l'id customer de l'url en excluant les autres caractères
+        $idCustomer = (int) preg_replace('/[^\d]/', '', $request->getPathInfo());
+        $quotationRepository = $this->get('quotation_repository');
+        $carts = $quotationRepository->findCartsByCustomer($idCustomer);
+
+        $cart = $response = [];
+
+        foreach ($carts as $key => $cart) {
+
+            $response[$key]['id_cart'] = $cart['id_cart'];
+            $response[$key]['date_cart'] = date("d/m/Y", strtotime($cart['date_add']));
+        }
+        //dump($response);die;
+        return new JsonResponse(json_encode($response), 200, [], true);
+    }
 }

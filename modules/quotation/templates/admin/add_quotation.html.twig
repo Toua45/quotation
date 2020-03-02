@@ -11,3 +11,8 @@
      </div>
 
  {% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('assets/js/test.js') }}"></script>
+    <script type="text/javascript">{% include '@Modules/quotation/assets/js/test.js' %}</script>
+{% endblock %}

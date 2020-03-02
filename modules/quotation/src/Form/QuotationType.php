@@ -40,10 +40,10 @@ class QuotationType extends AbstractType
                 'expanded' => false,
                 'required' => true,
                 'placeholder' => 'Sélectionnez le panier',
-                'choices' => array_map(function ($m) {return $m;}, $this->choicesCarts()),
+                /*'choices' => array_map(function ($m) {return $m;}, $this->choicesCarts()),
                 'attr' => [
                     'id' => 'quotation_cartProductId',
-                ]
+                ]*/
             ])
 
             ->add('reference', TextType::class, [

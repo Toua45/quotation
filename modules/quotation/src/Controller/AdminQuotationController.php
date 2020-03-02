@@ -53,9 +53,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $quotationRepository = $this->get('quotation_repository');
         $carts = $quotationRepository->findCartsByCustomer($idCustomer);
 
-        /*dump((int) preg_replace('/[^\d]/', '', $request->getPathInfo()));
-        die();*/
-
         $id = $cart = $date = [];
         foreach ($carts as $key => $cart) {
 

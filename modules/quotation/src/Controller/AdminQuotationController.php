@@ -53,14 +53,14 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $quotationRepository = $this->get('quotation_repository');
         $carts = $quotationRepository->findCartsByCustomer($idCustomer);
 
-        $id = $cart = $date = [];
+        $cart = $response = [];
+
         foreach ($carts as $key => $cart) {
 
-            $id[$key] = $cart['id_cart'];
-            $date[$key] = $cart['date_add'];
+            $response[$key]['id_cart'] = $cart['id_cart'];
+            $response[$key]['date_cart'] = date("d/m/Y", strtotime($cart['date_add']));
         }
-        $response = array_combine($id, $date);
-
+        //dump($response);die;
         return new JsonResponse(json_encode($response), 200, [], true);
     }
 }

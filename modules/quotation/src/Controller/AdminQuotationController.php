@@ -59,6 +59,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
             $response[$key]['id_cart'] = $cart['id_cart'];
             $response[$key]['date_cart'] = date("d/m/Y", strtotime($cart['date_add']));
+            $response[$key]['id_customer'] = $idCustomer;
         }
         //dump($response);die;
         return new JsonResponse(json_encode($response), 200, [], true);

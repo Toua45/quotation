@@ -31,14 +31,14 @@
                          <div class="infobulle">
                              <div class="bloc-infobulle">
                                  <span class="text-infobulle">
-                                    Créer un devis
+                                    Exporter
                                  </span>
                                  <div class="arrow"></div>
                              </div>
                          </div>
 
-                         <a href="{{ path('quotation_admin_add') }}">
-                             <span uk-icon="icon: plus-circle" class="justify-content-end"></span>
+                         <a href="#">
+                             <span uk-icon="icon: pull" class="justify-content-end"></span>
                          </a>
                      </div>
 
@@ -46,50 +46,92 @@
                          <div class="infobulle">
                              <div class="bloc-infobulle">
                                  <span class="text-infobulle">
-                                    Créer un devis
+                                    Rafraichir la liste
                                  </span>
                                  <div class="arrow"></div>
                              </div>
                          </div>
 
-                         <a href="{{ path('quotation_admin_add') }}">
-                             <span uk-icon="icon: plus-circle" class="justify-content-end"></span>
+                         <a href="#">
+                             <span uk-icon="icon: refresh" class="justify-content-end"></span>
                          </a>
                      </div>
 
-                     <div class="icon">
-                         <div class="infobulle">
-                             <div class="bloc-infobulle">
-                                 <span class="text-infobulle">
-                                    Créer un devis
-                                 </span>
-                                 <div class="arrow"></div>
-                             </div>
-                         </div>
-
-                         <a href="{{ path('quotation_admin_add') }}">
-                             <span uk-icon="icon: plus-circle" class="justify-content-end"></span>
-                         </a>
-                     </div>
                  </div>
 
              </div>
 
-             <table class="table table-striped table-light table-responsive-row">
-                 <thead>
+             <table class="table table-light table-striped">
+                 <thead class="border-0">
                  <tr>
-                     <td>Id</td>
-                     <td>Référence</td>
-                     <td>Client</td>
-                     <td>Message</td>
-                     <td>Date d'ajout</td>
-                     <td>Status</td>
-                     <td>Prix total du devis</td>
+                     <td></td>
+                     <td>
+                         <label for="id_quotation">ID</label>
+                     <td>
+                         <label for="reference">Référence</label>
+                     </td>
+                     <td>
+                         <label for="customer">Client</label>
+                     </td>
+                     <td>
+                         <label for="message">Message</label>
+                     </td>
+                     <td>
+                         <label for="date_add">Date d'ajout</label>
+                     </td>
+                     <td>
+                         <label for="status">Status</label>
+                     </td>
+                     <td>
+                         <label for="total">Prix total du devis</label>
+                     </td>
+                     <td>
+                         PDF
+                     </td>
+                     <td>
+                         <label for="actions">Actions</label>
+                     </td>
+                 </tr>
+                 <tr class="search">
+                     <td></td>
+                     <td>
+                         <input type="text" class="input-text" name="id_quotation" id="id_quotation">
+                     </td>
+                     <td>
+                         <input type="text" class="input-text" name="reference" id="reference">
+                     </td>
+                     <td>
+                         <input type="text" class="input-text" name="customer" id="customer">
+                     </td>
+                     <td>
+                         <input type="text" class="input-text" name="message" id="message">
+                     </td>
+                     <td>
+                         <input type="text" class="input-text" name="date_add" id="date_add">
+                     </td>
+                     <td>
+                         <select name="status" id="status">
+                             <option selected="selected">-</option>
+                             <option value="">Abandonné</option>
+                             <option value="">A valider</option>
+                             <option value="">Validé</option>
+                             <option value="">Commandé</option>
+                         </select>
+                     </td>
+                     <td>
+                         <input type="text" class="input-text" name="total" id="total">
+                     </td>
+                     <td></td>
+                     <td></td>
                  </tr>
                  </thead>
+
                  <tbody>
                  {% for quotation in quotations %}
                      <tr>
+                         <td>
+                             <input type="checkbox">
+                         </td>
                          <td>{{ quotation.id_quotation }}</td>
                          <td>{{ quotation.reference }}</td>
                          <td>{{ quotation.firstname }} {{ quotation.lastname }}</td>
@@ -97,6 +139,19 @@
                          <td>{{ quotation.date_add|date('d/m/Y') }}</td>
                          <td>{{ quotation.status }}</td>
                          <td>{{ quotation.total_product_price|number_format(2) }} €</td>
+                         <td>
+                             <a href="#">
+                                 <span uk-icon="icon: pdf-file" class="justify-content-end"></span>
+                             </a>
+                         </td>
+                         <td>
+                             <select name="actions" id="actions">
+                                 <option selected="selected">-</option>
+                                 <option value="">Modifier le devis</option>
+                                 <option value="">lorem ipsum</option>
+                                 <option value="">lorem ipsum</option>
+                             </select>
+                         </td>
                      </tr>
                  {% else %}
                      <tr>

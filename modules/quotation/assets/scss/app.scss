@@ -1,4 +1,6 @@
 @import "vars";
+@import "table";
+
 @import '~@fortawesome/fontawesome-free/scss/fontawesome';
 @import '~@fortawesome/fontawesome-free/scss/regular';
 @import '~@fortawesome/fontawesome-free/scss/solid';
@@ -37,10 +39,11 @@
 
   .icon {
     border-left: 1px solid $lightgrey;
-    padding:0 10px;
+    padding: 0 10px;
 
-    circle, line {
+    circle, line, path, polyline, polygon {
       stroke: $middlegrey;
+      stroke-width: 1.5;
     }
   }
 
@@ -53,8 +56,10 @@
     }
 
     a {
-      margin-left:65px;
-      circle, line {
+      color: $primary;
+      text-align: center;
+
+      circle, line, path, polyline, polygon {
         stroke: $primary;
       }
     }

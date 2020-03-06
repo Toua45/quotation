@@ -1,2 +1,114 @@
-@import "~bootstrap/scss/bootstrap";
+@import "vars";
 @import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/regular';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~@fortawesome/fontawesome-free/scss/brands';
+
+@mixin panel-font {
+  font-family: Ubuntu Condensed, Helvetica, Arial, sans-serif;
+}
+
+.quotation {
+  .card {
+    padding: 1rem;
+  }
+
+  .quotation-head {
+    width: 100%;
+    height: 35px;
+    color: $darkgrey;
+    border-bottom: 1px solid $lightgrey;
+    align-items: center;
+  }
+
+  .bloc-left {
+    display: flex;
+    align-items: center;
+  }
+
+  .panel-heading {
+    font-size: 14px;
+    line-height: 2.2em;
+    text-transform: uppercase;
+    margin: 0;
+    font-weight: 400;
+    @include panel-font;
+  }
+
+  .icon {
+    border-left: 1px solid $lightgrey;
+    padding:0 10px;
+
+    circle, line {
+      stroke: $middlegrey;
+    }
+  }
+
+  .icon:hover {
+    display: flex;
+    flex-direction: column;
+
+    .infobulle {
+      display: block;
+    }
+
+    a {
+      margin-left:65px;
+      circle, line {
+        stroke: $primary;
+      }
+    }
+  }
+
+  .infobulle {
+    display: none;
+    position: relative;
+    z-index: 990;
+
+    .bloc-infobulle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: -80px;
+
+      .text-infobulle {
+        background-color: $darkgrey;
+        color: $light;
+        text-transform: uppercase;
+        max-width: 250px;
+        padding: 20px;
+        text-align: center;
+        border-radius: 3px;
+        font-family: Open Sans, Helvetica, Arial, sans-serif;
+      }
+
+      .arrow {
+        $size: 10px;
+        background-color: $darkgrey;
+        width: $size;
+        height: $size;
+        transform: rotate(45deg);
+        margin-top: -5px;
+      }
+    }
+  }
+
+  .badge {
+    border: 1px solid $middlegrey;
+    border-radius: 20px;
+    font-size: 1.1em;
+    line-height: 1.2em;
+    padding: 0 10px;
+    font-weight: 700;
+    @include panel-font;
+  }
+
+  .btn {
+    width: max-content;
+    height: max-content;
+
+    span {
+      padding: 0;
+    }
+  }
+}

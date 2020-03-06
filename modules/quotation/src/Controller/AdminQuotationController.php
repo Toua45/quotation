@@ -5,8 +5,9 @@ namespace Quotation\Controller;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Quotation\Entity\Quotation;
 use Quotation\Form\QuotationType;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminQuotationController extends FrameworkBundleAdminController
@@ -24,7 +25,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function add(Request $request): Response
+    public function add(Request $request)
     {
         $quotation = new Quotation();
 
@@ -43,10 +44,12 @@ class AdminQuotationController extends FrameworkBundleAdminController
         return $this->render('@Modules/quotation/templates/admin/add_quotation.html.twig', [
             'quotation' => $quotation,
             'form' => $form->createView(),
+            'test' => _MODULE_DIR_
         ]);
     }
 
-    public function ajaxCarts(Request $request): Response
+    //http://localhost:8000/admin130mdhxh9/index.php/modules/quotation/admin/1/ajax
+    public function ajaxCarts(Request $request)
     {
         //permet de récupérer l'id customer de l'url en excluant les autres caractères
         $idCustomer = (int) preg_replace('/[^\d]/', '', $request->getPathInfo());
@@ -60,6 +63,20 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $response[$key]['id_cart'] = $cart['id_cart'];
             $response[$key]['date_cart'] = date("d/m/Y", strtotime($cart['date_add']));
         }
+
+        $file = 'test.js';
+        if (!is_file($file)) {
+            $file = fopen($file, 'w') or die('Unable to open file!');
+            for ($i = 0; $i < count($response); $i++) {
+                fwrite($file,
+                    ($i === 0 ? ('["' . $response[$i]['date_cart'] . '",') :
+                        ($i === count($response) - 1 ? ('"' . $response[$i]['date_cart'] . '"]') :
+                            ('"' . $response[$i]['date_cart'] . '",')))
+                );
+            }
+            fclose($file);
+        }
+
         //dump($response);die;
         return new JsonResponse(json_encode($response), 200, [], true);
     }

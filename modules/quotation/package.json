@@ -1,16 +1,14 @@
 {
-  "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.12.1",
-    "bootstrap": "^4.4.1",
-    "core-js": "^3.6.4",
-    "encore": "^0.0.30-beta",
-    "jquery": "^3.4.1",
-    "sass-loader": "7.0.1",
-    "uikit": "^3.3.1"
+  "name": "quotation",
+  "version": "1.0.0",
+  "description": "Quotation est un module Prestashop permettant de générer des devis au format PDF \r pour un client avant de passer commande d'un ou plusieurs produit·s.",
+  "main": "quotation.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "@symfony/webpack-encore": "^0.28.2",
-    "node-sass": "^4.13.1",
-    "webpack-notifier": "^1.6.0"
+
   }
 }

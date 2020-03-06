@@ -4959,6 +4959,11 @@ pkg-up@^1.0.0:
   dependencies:
     find-up "^1.0.0"
 
+popper.js@^1.16.1:
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.1.tgz#2a223cb3dc7b6213d740e40372be40de43e65b1b"
+  integrity sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==
+
 portfinder@^1.0.25:
   version "1.0.25"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.25.tgz#254fd337ffba869f4b9d37edc298059cb4d35eca"
@@ -6586,7 +6591,7 @@ uglify-js@~2.3:
     optimist "~0.3.5"
     source-map "~0.1.7"
 
-uikit@^3.3.1:
+uikit@^3.3.3:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/uikit/-/uikit-3.3.3.tgz#756f6dae476657a72155515d74099a3f30db8818"
   integrity sha512-YCrjTpti3cVTNjCXo0zeu7Kd/1nWJwIo4YRmLSVJ+MC/FdzWQgmfvby5rXR5TxEETnPamazrFtclPWJQya8W1g==

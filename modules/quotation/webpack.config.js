@@ -5,8 +5,9 @@ module.exports = {
     entry: {
         app: './assets/js/app.js'
     },
+    watch:true,
     output: {
-        path: path.resolve('../../admin130mdhxh9/quotation-bundle'),
+        path: path.resolve('../../adminLionel/quotation-bundle'),
         filename: 'quotation-bundle.js'
     }
 };

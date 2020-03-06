@@ -1,5 +1,5 @@
 import * as test from './quotation';
-import {customers} from '../../../../admin130mdhxh9/test';
+import {customers} from '../../../../adminLionel/test';
 import {QuotationModule} from './test';
 
 console.log(customers);

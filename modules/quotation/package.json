@@ -1,0 +1,14 @@
+{
+  "name": "quotation",
+  "version": "1.0.0",
+  "description": "Quotation est un module Prestashop permettant de générer des devis au format PDF  pour un client avant de passer commande d'un ou plusieurs produit·s.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.42.0"
+  }
+}

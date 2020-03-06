@@ -13,5 +13,15 @@
  {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript">{% include '@Modules/quotation/assets/js/test.js' %}</script>
+
+{#    <script type="text/javascript">{% include '@Modules/quotation/assets/js/test.js' %}</script>#}
+
+{#    <script src="{{ asset('test.js') }}"></script>#}
+{#    <script type="text/javascript" src="../../assets/js/jquery.js"></script>#}
+{#    <script type="text/javascript" src="../../assets/js/typeahead.js"></script>#}
+
+    <script type="text/javascript" src="{{ asset('quotation-bundle/quotation-bundle.js') }}"></script>
+{#    <script type="text/javascript">{% include '@Modules/quotation/assets/js/test.js' %}</script>#}
+{#    <script type="text/javascript">{% include '' %}</script>#}
+
 {% endblock %}

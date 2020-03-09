@@ -5,6 +5,7 @@ namespace Quotation\Controller;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Quotation\Entity\Quotation;
 use Quotation\Form\QuotationType;
+use Quotation\Service\QuotationFileSystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -62,21 +63,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $response[$key]['date_cart'] = date("d/m/Y", strtotime($cart['date_add']));
             $response[$key]['id_customer'] = $idCustomer;
         }
-
-//        $file = 'test.js';
-//        if (!is_file($file)) {
-//            $file = fopen($file, 'w') or die('Unable to open file!');
-//            for ($i = 0; $i < count($response); $i++) {
-//                fwrite($file,
-//                    ($i === 0 ? ('["' . $response[$i]['date_cart'] . '",') :
-//                        ($i === count($response) - 1 ? ('"' . $response[$i]['date_cart'] . '"]') :
-//                            ('"' . $response[$i]['date_cart'] . '",')))
-//                );
-//            }
-//            fclose($file);
-//        }
-
-        //dump($response);die;
         return new JsonResponse(json_encode($response), 200, [], true);
     }
 
@@ -91,19 +77,15 @@ class AdminQuotationController extends FrameworkBundleAdminController
         }
 
         $file = 'data-customer.js';
+        $fileSystem = new QuotationFileSystem();
         if (!is_file($file)) {
-            $file = fopen($file, 'w') or die('Unable to open file!');
-            fwrite($file, "");
-            for ($i = 0; $i < count($response); $i++) {
-                fwrite($file,
-                    ($i === 0 ? ('export const dataCustomers = {data:["' . $response[$i]['fullname'] . '",') :
-                        ($i === count($response) - 1 ? ('"' . $response[$i]['fullname'] . '"]}') :
-                            ('"' . $response[$i]['fullname'] . '",'))));
-            }
-            fclose($file);
+            $fileSystem->writeFile($file, $response);
+//            fclose($file);
+        } else {
+            $fileSystem->writeFile($file, $response);
         }
 
-        dump($response);die;
+//        dump($response);die;
         return new JsonResponse(json_encode($response), 200, [], true);
     }
 

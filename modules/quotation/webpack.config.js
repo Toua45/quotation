@@ -10,4 +10,5 @@ module.exports = {
         path: path.resolve('../../adminLionel/quotation-bundle'),
         filename: 'quotation-bundle.js'
     }
-};
+}
+

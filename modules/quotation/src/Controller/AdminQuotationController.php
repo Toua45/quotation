@@ -5,8 +5,6 @@ namespace Quotation\Controller;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Quotation\Entity\Quotation;
 use Quotation\Form\QuotationType;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -65,20 +63,97 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $response[$key]['id_customer'] = $idCustomer;
         }
 
-        $file = 'test.js';
-        if (!is_file($file)) {
-            $file = fopen($file, 'w') or die('Unable to open file!');
-            for ($i = 0; $i < count($response); $i++) {
-                fwrite($file,
-                    ($i === 0 ? ('["' . $response[$i]['date_cart'] . '",') :
-                        ($i === count($response) - 1 ? ('"' . $response[$i]['date_cart'] . '"]') :
-                            ('"' . $response[$i]['date_cart'] . '",')))
-                );
-            }
-            fclose($file);
-        }
+//        $file = 'test.js';
+//        if (!is_file($file)) {
+//            $file = fopen($file, 'w') or die('Unable to open file!');
+//            for ($i = 0; $i < count($response); $i++) {
+//                fwrite($file,
+//                    ($i === 0 ? ('["' . $response[$i]['date_cart'] . '",') :
+//                        ($i === count($response) - 1 ? ('"' . $response[$i]['date_cart'] . '"]') :
+//                            ('"' . $response[$i]['date_cart'] . '",')))
+//                );
+//            }
+//            fclose($file);
+//        }
 
         //dump($response);die;
         return new JsonResponse(json_encode($response), 200, [], true);
     }
+
+    public function ajaxCustomer(Request $request)
+    {
+        $customerRepository = $this->get('quotation_repository');
+        $customers = $customerRepository->findAllCustomers();
+        $response = [];
+
+        foreach ($customers as $key => $customer) {
+            $response[$key]['fullname'] = $customer['fullname'];
+        }
+
+        $file = 'data-customer.js';
+        if (!is_file($file)) {
+            $file = fopen($file, 'w') or die('Unable to open file!');
+            fwrite($file, "");
+            for ($i = 0; $i < count($response); $i++) {
+                fwrite($file,
+                    ($i === 0 ? ('export const dataCustomers = {data:["' . $response[$i]['fullname'] . '",') :
+                        ($i === count($response) - 1 ? ('"' . $response[$i]['fullname'] . '"]}') :
+                            ('"' . $response[$i]['fullname'] . '",'))));
+            }
+            fclose($file);
+        }
+
+        dump($response);die;
+        return new JsonResponse(json_encode($response), 200, [], true);
+    }
+
+
+
+
+
+
+
+
+
+
+//    public function ajaxCustomer(Request $request)
+//    {
+//        $customerRepository = $this->get('quotation_repository');
+//        $customers = $customerRepository->findAllCustomers();
+//        $response = [];
+//        $current = "";
+//        foreach ($customers as $key => $customer) {
+//            $response[$key]['fullname'] = $customer['fullname'];
+//        }
+//        $file = 'data-customer.js';
+//        if (!is_file($file)) {
+//            $file = fopen($file, 'w') or die('Unable to open file!');
+//            $current = file_get_contents($file);
+//
+//            for ($i = 0; $i < count($response); $i++) {
+//                    $current .=
+//                    ($i === 0 ? ('export const dataCustomers = {data:["' . $response[$i]['fullname'] . '",') :
+//                        ($i === count($response) - 1 ? ('"' . $response[$i]['fullname'] . '"]}') :
+//                            ('"' . $response[$i]['fullname'] . '",')));
+//            }
+//            file_put_contents($file, $current);
+//        }
+//        dump($current);die();
+////        else {
+////            unlink($file);
+////            $file = fopen($file, 'w') or die('Unable to open file!');
+////            for ($i = 0; $i < count($response); $i++) {
+////                fwrite($file,
+////                    ($i === 0 ? ('export const dataCustomers = {data:["' . $response[$i]['fullname'] . '",') :
+////                        ($i === count($response) - 1 ? ('"' . $response[$i]['fullname'] . '"]}') :
+////                            ('"' . $response[$i]['fullname'] . '",')))
+////                );
+////            }
+////            fclose($file);
+////        }
+////        dump($response);die();
+//
+//        return new JsonResponse(json_encode($response), 200, [], true);
+//    }
+
 }

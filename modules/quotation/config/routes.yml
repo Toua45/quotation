@@ -25,3 +25,10 @@ quotation_admin_ajax:
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
 
+quotation_admin_autocompletion_ajax:
+  path: quotation/admin/autocompletion/customer
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::ajaxCustomer'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'

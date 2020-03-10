@@ -7,7 +7,7 @@ module.exports = {
     },
     watch:true,
     output: {
-        path: path.resolve('../../adminLionel/quotation-bundle'),
+        path: path.resolve('../../adminToua/quotation-bundle'),
         filename: 'quotation-bundle.js'
     }
 }

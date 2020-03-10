@@ -1,17 +1,35 @@
 import * as test from './quotation';
-import {dataCustomers} from '../../../../adminLionel/data-customer';
+import {dataCustomers} from '../../../../adminToua/data-customer';
 // import {QuotationModule} from './test';
 // import {QuotationCustomerModule} from './customer';
-// import $ from './jquery';
+// import $ from 'jquery';
 
-console.log(dataCustomers.data);
+// console.log(dataCustomers.data);
 // QuotationModule.customerList();
 // QuotationModule.customers(QuotationModule.customerList());
 
-// var customers = [];
+const DOM = {
+    currentElement: null,
+    urlCustomers: document.getElementById('customers').dataset.customers.replace(/\?(?=\d)(\w|\W)+/g, ''),
+    customers: function () {
+        let customerTest = [];
+        fetch(DOM.urlCustomers)
+            .then(response => response.json())
+            .then(function (data) {
+                // console.log(data);
+                customerTest = data;
+                // console.log(customerTest)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        return customerTest;
+    },
+};
+
 var inputCustomer = document.getElementById('quotation_customerId');
 // console.log(inputCustomer);
-inputCustomer.addEventListener('keyup', function (Event) {
+inputCustomer.addEventListener('mousedown', function (Event) {
     var customerJson = document.getElementById('js-data');
     var url = customerJson.dataset.source;
     fetch(url)
@@ -19,13 +37,34 @@ inputCustomer.addEventListener('keyup', function (Event) {
             return response.json();
         })
         .then(function (data) {
+            DOM.customers();
             // customers = data;
-            // console.log(data)
+            // console.log(DOM.customers)
         })
         .catch(function (error) {
             console.log(error);
         });
 });
+
+var customersCall = document.getElementById('customers');
+
+// console.log(customersCall)
+// function getCustomers() {
+//     let customerTest = [];
+//     fetch(DOM.urlCustomers)
+//         .then(response => response.json())
+//         .then(function (data) {
+//             // console.log(data);
+//             customerTest = DOM.customers = data;
+//             // console.log(customerTest)
+//         })
+//         .catch(function (error) {
+//             console.log(error);
+//         });
+//     return customerTest;
+// }
+// console.log(DOM.customers)
+
 var substringMatcher = function (strs) {
     return function findMatches(q, cb) {
         var matches, substringRegex;
@@ -44,7 +83,6 @@ var substringMatcher = function (strs) {
     };
 };
 
-
 $('#the-basics .linked-select').typeahead({
         hint: true,
         highlight: true,
@@ -52,5 +90,6 @@ $('#the-basics .linked-select').typeahead({
     },
     {
         name: 'customers',
-        source: substringMatcher(dataCustomers.data || null)
+        source: substringMatcher(DOM.customers())
     });
+

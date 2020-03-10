@@ -2,6 +2,8 @@
 
  {% block content %}
 
+<span id="customers" class="card p-4" data-customers="{{ asset('data-customer.js') }}">
+
      <div class="card p-4">
          <h1>Créer un devis</h1>
          <a href="{{ path('quotation_admin') }}" class="btn btn-primary">Retour</a>
@@ -12,16 +14,17 @@
 
  {% endblock %}
 
-{% block javascripts %}
+    {% block javascripts %}
 
-    <script type="text/javascript">{% include '@Modules/quotation/assets/js/customer.js' %}</script>
+        <script type="text/javascript">{% include '@Modules/quotation/assets/js/customer.js' %}</script>
 
 {#    <script src="{{ asset('test.js') }}"></script>#}
 {#    <script type="text/javascript" src="../../assets/js/app.js"></script>#}
 {#    <script type="text/javascript" src="../../assets/js/typeahead.js"></script>#}
 
-    <script type="text/javascript" src="{{ asset('quotation-bundle/quotation-bundle.js') }}"></script>
-{#    <script type="text/javascript">{% include '@Modules/quotation/assets/js/test.js' %}</script>#}
-{#    <script type="text/javascript">{% include '' %}</script>#}
 
-{% endblock %}
+        <script type="text/javascript" src="{{ asset('quotation-bundle/quotation-bundle.js') }}"></script>
+        {#    <script type="text/javascript">{% include '@Modules/quotation/assets/js/test.js' %}</script>#}
+        {#    <script type="text/javascript">{% include '' %}</script>#}
+
+    {% endblock %}

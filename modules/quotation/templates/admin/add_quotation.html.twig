@@ -3,7 +3,7 @@
 
  {% block content %}
 
-<span id="customers" class="card p-4" data-customers="{{ asset('data-customer.js') }}">
+     <span id="customers" class="card p-4" data-customers="{{ asset('data-customer.js') }}"></span>
 
      <div class="card p-4">
          <h1>Créer un devis</h1>
@@ -27,6 +27,5 @@
         <script type="text/javascript" src="{{ asset('quotation-bundle/quotation-bundle.js') }}"></script>
         {#    <script type="text/javascript">{% include '@Modules/quotation/assets/js/test.js' %}</script>#}
         {#    <script type="text/javascript">{% include '' %}</script>#}
-        <script type="text/javascript" src="typehead.jquery.min.js"></script>
 
     {% endblock %}

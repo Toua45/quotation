@@ -11,4 +11,3 @@ module.exports = {
         filename: 'quotation-bundle.js'
     }
 }
-

@@ -1,14 +1,21 @@
 import * as test from './quotation';
 import {dataCustomers} from '../../../../adminLionel/data-customer';
-// import {QuotationModule} from './test';
-// import {QuotationCustomerModule} from './customer';
 // import $ from './jquery';
+
+// CustomerModule.customerList();
+// CustomerModule.customers(CustomerModule.customerList());
+
+
+
+
+
 
 console.log(dataCustomers.data);
 // QuotationModule.customerList();
 // QuotationModule.customers(QuotationModule.customerList());
 
-// var customers = [];
+
+var customers = [];
 var inputCustomer = document.getElementById('quotation_customerId');
 // console.log(inputCustomer);
 inputCustomer.addEventListener('keyup', function (Event) {
@@ -18,14 +25,23 @@ inputCustomer.addEventListener('keyup', function (Event) {
         .then(function (response) {
             return response.json();
         })
+
         .then(function (data) {
-            // customers = data;
-            // console.log(data)
+            customers = data;
+            // autocompletion(dataCustomers.data);
+            CustomerModule.customersCall();
+            // console.log(dataCustomers.data)
         })
+
         .catch(function (error) {
             console.log(error);
         });
+
 });
+
+var customersCall = fetch(CustomerModule.DOM.urlCustomers).then(response => response.json()).then(customers => console.log(customers));
+
+// console.log(dataCustomers);
 var substringMatcher = function (strs) {
     return function findMatches(q, cb) {
         var matches, substringRegex;
@@ -43,14 +59,16 @@ var substringMatcher = function (strs) {
         cb(matches);
     };
 };
+// console.log(dataCustomers.data);
 
-
-$('#the-basics .linked-select').typeahead({
-        hint: true,
-        highlight: true,
-        minLength: 1
-    },
-    {
-        name: 'customers',
-        source: substringMatcher(dataCustomers.data || null)
-    });
+function autocompletion(customers) {
+    $('#the-basics .linked-select').typeahead({
+            hint: true,
+            highlight: true,
+            minLength: 1
+        },
+        {
+            name: 'customers',
+            source: substringMatcher(customers)
+        });
+}

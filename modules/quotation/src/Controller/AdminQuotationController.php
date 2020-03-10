@@ -78,13 +78,14 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         $file = 'data-customer.js';
         $fileSystem = new QuotationFileSystem();
-        if (!is_file($file)) {
+        if (count($response) > 1) {
             $fileSystem->writeFile($file, $response);
-//            fclose($file);
+        } elseif (count($response) === 1) {
+            fwrite($file,"[\"{$response[0]['date_cart']}\"]");
         } else {
-            $fileSystem->writeFile($file, $response);
+            fwrite($file,"[]");
         }
-
+//        fclose($file);
 //        dump($response);die;
         return new JsonResponse(json_encode($response), 200, [], true);
     }

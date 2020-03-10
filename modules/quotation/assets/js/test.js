@@ -9,7 +9,7 @@ export const QuotationModule = {
     cartList: function () { return document.getElementById('quotation_cartProductId') },
 
     customers: function (element) {
-        element.addEventListener('change', function (Event) {
+        element.addEventListener('keyup', function (Event) {
             QuotationModule.DOM.currentElement = Event.currentTarget;
 
             if (Event.currentTarget.options[Event.currentTarget.selectedIndex].text === QuotationModule.DOM.placeholderClient) {

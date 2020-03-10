@@ -1,47 +1,70 @@
 import * as test from './quotation';
 import {dataCustomers} from '../../../../adminLionel/data-customer';
-// import $ from './jquery';
+// import {QuotationModule} from './test';
+// import {QuotationCustomerModule} from './customer';
+// import $ from 'jquery';
 
-// CustomerModule.customerList();
-// CustomerModule.customers(CustomerModule.customerList());
-
-
-
-
-
-
-console.log(dataCustomers.data);
+// console.log(dataCustomers.data);
 // QuotationModule.customerList();
 // QuotationModule.customers(QuotationModule.customerList());
 
+const DOM = {
+    currentElement: null,
+    urlCustomers: document.getElementById('customers').dataset.customers.replace(/\?(?=\d)(\w|\W)+/g, ''),
+    customers: function () {
+        let customerTest = [];
+        fetch(DOM.urlCustomers)
+            .then(response => response.json())
+            .then(function (data) {
+                // console.log(data);
+                customerTest = data;
+                // console.log(customerTest)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        return customerTest;
+    },
+};
 
-var customers = [];
 var inputCustomer = document.getElementById('quotation_customerId');
 // console.log(inputCustomer);
-inputCustomer.addEventListener('keyup', function (Event) {
+inputCustomer.addEventListener('mousedown', function (Event) {
     var customerJson = document.getElementById('js-data');
     var url = customerJson.dataset.source;
     fetch(url)
         .then(function (response) {
             return response.json();
         })
-
         .then(function (data) {
-            customers = data;
-            // autocompletion(dataCustomers.data);
-            CustomerModule.customersCall();
-            // console.log(dataCustomers.data)
+            DOM.customers();
+            // customers = data;
+            // console.log(DOM.customers)
         })
-
         .catch(function (error) {
             console.log(error);
         });
-
 });
 
-var customersCall = fetch(CustomerModule.DOM.urlCustomers).then(response => response.json()).then(customers => console.log(customers));
+var customersCall = document.getElementById('customers');
 
-// console.log(dataCustomers);
+// console.log(customersCall)
+// function getCustomers() {
+//     let customerTest = [];
+//     fetch(DOM.urlCustomers)
+//         .then(response => response.json())
+//         .then(function (data) {
+//             // console.log(data);
+//             customerTest = DOM.customers = data;
+//             // console.log(customerTest)
+//         })
+//         .catch(function (error) {
+//             console.log(error);
+//         });
+//     return customerTest;
+// }
+// console.log(DOM.customers)
+
 var substringMatcher = function (strs) {
     return function findMatches(q, cb) {
         var matches, substringRegex;
@@ -59,16 +82,13 @@ var substringMatcher = function (strs) {
         cb(matches);
     };
 };
-// console.log(dataCustomers.data);
 
-function autocompletion(customers) {
-    $('#the-basics .linked-select').typeahead({
-            hint: true,
-            highlight: true,
-            minLength: 1
-        },
-        {
-            name: 'customers',
-            source: substringMatcher(customers)
-        });
-}
+$('#the-basics .linked-select').typeahead({
+        hint: true,
+        highlight: true,
+        minLength: 1
+    },
+    {
+        name: 'customers',
+        source: substringMatcher(DOM.customers())
+    });

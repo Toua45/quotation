@@ -13,9 +13,12 @@ class QuotationFileSystem
 
         for ($i = 0; $i < count($response); $i++) {
             fwrite($file,
-                ($i === 0 ? ('export const dataCustomers = {data:["' . $response[$i]['fullname'] . '",') :
-                    ($i === count($response) - 1 ? ('"' . $response[$i]['fullname'] . '"]}') :
+                ($i === 0 ? ('["' . $response[$i]['fullname'] . '",') :
+                    ($i === count($response) - 1 ? ('"' . $response[$i]['fullname'] . '"]') :
                         ('"' . $response[$i]['fullname'] . '",'))));
+//                ($i === 0 ? ('export const dataCustomers = {data:["' . $response[$i]['fullname'] . '",') :
+//                    ($i === count($response) - 1 ? ('"' . $response[$i]['fullname'] . '"]}') :
+//                        ('"' . $response[$i]['fullname'] . '",'))));
         }
         fclose($file);
     }

@@ -5,7 +5,10 @@ import {customer} from '../../../../adminLionel/data-customer';
 // console.log(customer);
 QuotationModule.customerList();
 QuotationModule.customers(QuotationModule.customerList());
-QuotationModule.fetch(); // Appel de la fonction "customer"
+let customerJson = document.getElementById('js-data');
+let url = customerJson.dataset.source;
+QuotationModule.customers(QuotationModule.autocompletition())
+QuotationModule.fetch(url, QuotationModule.customers());
 
 
 // const DOM = {

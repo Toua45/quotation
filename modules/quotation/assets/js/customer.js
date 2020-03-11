@@ -9,16 +9,19 @@ export const QuotationModule = {
         return document.getElementById('quotation_customerId')
     },
 
-    fetch: function () {
-         window.addEventListener('DOMContentLoaded', function (Event) {
+    fetch: function (url, callback) {
+        window.addEventListener('DOMContentLoaded', function (Event) {
             QuotationModule.DOM.currentElement = Event.currentTarget;
-            let customerJson = document.getElementById('js-data');
-            let url = customerJson.dataset.source;
 
             fetch(url).then(function (response) {
                 return response.json();
             }).then(function (data) {
-                QuotationModule.customers();
+                if (typeof callback === undefined) {
+                    console.log("callback works");
+                    callback();
+                } else {
+                    console.log("Callback doesn's work.");
+                }
             })
                 .catch(function (error) {
                     console.log(error);
@@ -54,8 +57,6 @@ export const QuotationModule = {
 
     customers: function () {
         fetch(QuotationModule.DOM.urlCustomers).then(response => response.json()).then(function (data) {
-            console.log(data);
-            QuotationModule.DOM.customers = data;
             QuotationModule.autocompletition(data);
         })
             .catch(function (error) {

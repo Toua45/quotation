@@ -9,7 +9,6 @@
              <div class="d-flex align-items-center">
                  <span uk-icon="icon: user" class="mr-2"></span>
                  <h1 class="panel-heading">Client</h1>
-                 <span id="customers" class="card p-4" data-customers="{{ asset('data-customer.js') }}"></span>
              </div>
 
          </div>
@@ -27,7 +26,6 @@
 
 
 {% block javascripts %}
-    <script type="text/javascript">{% include '@Modules/quotation/assets/js/test.js' %}</script>
     <script type="text/javascript" src="{{ asset('quotation-bundle/quotation-bundle.js') }}"></script>
     <script type="module">{% include '@Modules/quotation/assets/js/customer.js' %}</script>
 

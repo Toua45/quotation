@@ -1,39 +1,58 @@
 export const QuotationModule = {
-    // Variables qui vont servir pour le fonctionnement du module (équivaut à des constantes)
     DOM: {
-        // Path de data-customer.js
+        currentElement: null,
         urlCustomers: document.getElementById('customers').dataset.customers.replace(/\?(?=\d)(\w|\W)+/g, ''),
+        customers: null,
     },
 
-    getData: function (url, callback, path = null, data) { // Callback => permet de passer une fonction comme paramètre d'une autre fonction
-        window.addEventListener('DOMContentLoaded', function (Event) { // DOM : représente l'architecture HTML (body, etc...).
-            // DOMContentLoaded => attend que la page soit chargée pour que le getData se déclenche.
-            fetch(url)
-                .then(function (response) {
-                    return response.json();
-                })
-                .then(function (data = []) {
-                    console.log(data);
-                    if (typeof callback === 'function') {
-                        if (data) {
-                            console.log("Params = true");
-                            callback(data);
-                        }
-                        if (path !== null) {
-                            console.log("Path works");
-                            callback(path);
+    customerList: function () {
+        return document.getElementById('quotation_customerId')
+    },
+
+    getData: function (url, callback, path = null, dataFetch = false, autocomplete = []) {
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log(url);
+            fetch(url).then(response => response.json()).then(data => {
+                if (typeof callback === 'function') {
+                    console.log("callback works");
+                    if (autocomplete.length >= 1) {
+                        console.log('call autocompletition');
+                        if (typeof autocomplete[0] === 'string') {
+                            if (typeof autocomplete[2] === 'number') {
+                                callback(autocomplete[0], autocomplete[1], autocomplete[2], data);
+                            } else {
+                                callback(autocomplete[0], autocomplete[1], 2, data);
+                            }
                         } else {
-                            callback();
-                            console.log('Params = false');
+                            console.log('Something went wrong :-(');
                         }
                     } else {
-                        console.log("Callback doesn's work.");
+                        if (dataFetch) {
+                            if (path !== null) {
+                                callback(path, data);
+                                console.log('path and data are true');
+                            } else {
+                                callback(data);
+                                console.log('data is true');
+                            }
+                        } else if (path !== null) {
+                            if (dataFetch) {
+                                callback(path, data);
+                                console.log('path and data are true');
+                            } else {
+                                callback(path);
+                                console.log('path is true');
+                            }
+                        } else {
+                            callback();
+                            console.log('no path, no data');
+                        }
                     }
 
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+                } else {
+                    console.log("Callback doesn't work.");
+                }
+            }).catch(error => console.log(error));
         });
     },
 
@@ -51,7 +70,7 @@ export const QuotationModule = {
         }
     },
 
-    autocomplete: function (data, selector, name, minLength = 2) {
+    autocompletition: function (selector, name, minLength = 2, dataFetch) {
         $(selector).typeahead({
                 hint: true,
                 highlight: true,
@@ -59,7 +78,7 @@ export const QuotationModule = {
             },
             {
                 name: name,
-                source: QuotationModule.substringMatcher(data)
+                source: QuotationModule.substringMatcher(dataFetch)
             })
-    },
+    }
 };

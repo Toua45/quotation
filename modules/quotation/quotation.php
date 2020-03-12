@@ -243,12 +243,14 @@ class Quotation extends Module
 
     /**
      * Add the CSS & JavaScript files you want to be loaded in the BO.
+     *     path: path.resolve('admin130mdhxh9/themes/new-theme/public'),
+
      */
 
     public function hookBackOfficeHeader()
     {
         if (Tools::getValue('module_name') == $this->name) {
-            $this->context->controller->addJS($this->_path.'views/js/back.js');
+            $this->context->controller->addJS('dist/main.js');
             $this->context->controller->addCSS($this->_path.'views/css/back.css');
         }
     }
@@ -267,3 +269,4 @@ class Quotation extends Module
         /* Place your code here. */
     }
 }
+

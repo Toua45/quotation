@@ -1,8 +1,34 @@
 # modules/your-module/config/routes.yml
-quotation_admin:
-  path: quotation/admin
-  methods: [GET]
+quotation_admin:        #RouteName
+  path: quotation/admin #URL
+  methods: [GET, POST]
   defaults:
     _controller: 'Quotation\Controller\AdminQuotationController::quotationIndex'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_add:
+  path: quotation/admin/add
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::add'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_ajax:
+  path: quotation/admin/{id_customer}/ajax
+  requirements:
+    id_customer: '\d+'
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::ajaxCarts'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_autocompletion_ajax:
+  path: quotation/admin/autocompletion/customer
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::ajaxCustomer'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'

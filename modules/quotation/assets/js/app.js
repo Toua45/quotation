@@ -33,7 +33,7 @@ QuotationModule.getData(
 
 QuotationModule.getData(
     QuotationModule.DOM.urlCustomers,
-    QuotationModule.autocompletition,
+    QuotationModule.autocomplete,
     null,
     true,
     ['#quotation_customerId', 'customers', 2]

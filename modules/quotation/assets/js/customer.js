@@ -43,8 +43,6 @@ export const QuotationModule = {
             matches = [];
             // Expression régulière utilisée pour déterminer si une chaîne contient la sous-chaîne `q`
             let substrRegex = new RegExp(q, 'i');
-
-            //
             $.each(strs, function (i, str) {
                 if (substrRegex.test(str)) {
                     matches.push(str);
@@ -54,7 +52,7 @@ export const QuotationModule = {
         }
     },
 
-    autocompletition: function (selector, name, minLength = 2, dataFetch) {
+    autocomplete: function (selector, name, minLength = 2, dataFetch) {
         $(selector).typeahead({
                 hint: true,
                 highlight: true,

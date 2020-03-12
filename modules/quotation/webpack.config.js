@@ -64,7 +64,7 @@ module.exports = {
     },
     watch:true,
     output: {
-        path: path.resolve('../../admin130mdhxh9/quotation-bundle'),
+        path: path.resolve('../../adminLionel/quotation-bundle'),
         filename: 'quotation-bundle.js'
     }
 };

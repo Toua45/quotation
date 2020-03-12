@@ -5,17 +5,11 @@ namespace Quotation\Form;
 use PrestaShop\PrestaShop\Adapter\Entity\Cart;
 use PrestaShop\PrestaShop\Adapter\Entity\Customer;
 use Quotation\Entity\Quotation;
-use Quotation\Repository\QuotationRepository;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class QuotationType extends AbstractType
@@ -32,17 +26,6 @@ class QuotationType extends AbstractType
                     'placeholder' => 'Sélectionnez le client',
                 ]
             ])
-//            ->add('cartProductId', ChoiceType::class, [
-//                'label' => 'Panier',
-//                'multiple' => false,
-//                'expanded' => false,
-//                'required' => true,
-//                'placeholder' => 'Sélectionnez le panier',
-//                /*'choices' => array_map(function ($m) {return $m;}, $this->choicesCarts()),
-//                'attr' => [
-//                    'id' => 'quotation_cartProductId',
-//                ]*/
-//            ])
 
             ->add('reference', TextType::class, [
                 'label' => 'Référence',

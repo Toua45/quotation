@@ -1,4 +1,4 @@
-import {QuotationModule} from './customer';
+import {QuotationModule} from './quotation_module';
 import {customer} from '../../../../adminLionel/data-customer';
 
 // Récupère le chemin du JSON par l'id 'js-data'

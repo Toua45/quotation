@@ -16,9 +16,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $quotationRepository = $this->get('quotation_repository');
         $quotations = $quotationRepository->findAll();
 
-        //dump($quotationRepository->findAllCarts());
-        //die;
-
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
             'quotations' => $quotations,
         ]);
@@ -47,10 +44,9 @@ class AdminQuotationController extends FrameworkBundleAdminController
         ]);
     }
 
-    //http://localhost:8000/admin130mdhxh9/index.php/modules/quotation/admin/1/ajax
     public function ajaxCarts(Request $request)
     {
-        //permet de récupérer l'id customer de l'url en excluant les autres caractères
+        // Permet de récupérer l'id customer de l'url en excluant les autres caractères
         $idCustomer = (int)preg_replace('/[^\d]/', '', $request->getPathInfo());
         $quotationRepository = $this->get('quotation_repository');
         $carts = $quotationRepository->findCartsByCustomer($idCustomer);
@@ -80,12 +76,9 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $fileSystem = new QuotationFileSystem();
         if (!is_file($file)) {
             $fileSystem->writeFile($file, $response);
-//            fclose($file);
         } else {
             $fileSystem->writeFile($file, $response);
         }
-
-//        dump($file);die;
         return new JsonResponse(json_encode($response), 200, [], true);
     }
 }

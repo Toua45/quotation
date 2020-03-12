@@ -9,23 +9,50 @@ export const QuotationModule = {
         return document.getElementById('quotation_customerId')
     },
 
-    fetch: function (url, callback) {
-        window.addEventListener('DOMContentLoaded', function (Event) {
-            QuotationModule.DOM.currentElement = Event.currentTarget;
-
-            fetch(url).then(function (response) {
-                return response.json();
-            }).then(function (data) {
-                if (typeof callback === undefined) {
+    getData: function (url, callback, path = null, dataFetch = false, autocomplete = []) {
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log(url);
+            fetch(url).then(response => response.json()).then(data => {
+                if (typeof callback === 'function') {
                     console.log("callback works");
-                    callback();
+                    if (autocomplete.length >= 1) {
+                        console.log('call autocompletition');
+                        if (typeof autocomplete[0] === 'string') {
+                            if (typeof autocomplete[2] === 'number') {
+                                callback(autocomplete[0], autocomplete[1], autocomplete[2], data);
+                            } else {
+                                callback(autocomplete[0], autocomplete[1], 2, data);
+                            }
+                        } else {
+                            console.log('Something went wrong :-(');
+                        }
+                    } else {
+                        if (dataFetch) {
+                            if (path !== null) {
+                                callback(path, data);
+                                console.log('path and data are true');
+                            } else {
+                                callback(data);
+                                console.log('data is true');
+                            }
+                        } else if (path !== null) {
+                            if (dataFetch) {
+                                callback(path, data);
+                                console.log('path and data are true');
+                            } else {
+                                callback(path);
+                                console.log('path is true');
+                            }
+                        } else {
+                            callback();
+                            console.log('no path, no data');
+                        }
+                    }
+
                 } else {
-                    console.log("Callback doesn's work.");
+                    console.log("Callback doesn't work.");
                 }
-            })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            }).catch(error => console.log(error));
         });
     },
 
@@ -43,24 +70,15 @@ export const QuotationModule = {
         }
     },
 
-    autocompletition: function (customers) {
-        $('#quotation_customerId').typeahead({
+    autocompletition: function (selector, name, minLength = 2, dataFetch) {
+        $(selector).typeahead({
                 hint: true,
                 highlight: true,
-                minLength: 1
+                minLength: minLength
             },
             {
-                name: 'customers',
-                source: QuotationModule.substringMatcher(customers)
+                name: name,
+                source: QuotationModule.substringMatcher(dataFetch)
             })
-    },
-
-    customers: function () {
-        fetch(QuotationModule.DOM.urlCustomers).then(response => response.json()).then(function (data) {
-            QuotationModule.autocompletition(data);
-        })
-            .catch(function (error) {
-                console.log(error)
-            });
-    },
+    }
 };

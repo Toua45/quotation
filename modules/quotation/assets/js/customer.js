@@ -1,28 +1,36 @@
 export const QuotationModule = {
+    // Variables qui vont servir pour le fonctionnement du module (équivaut à des constantes)
     DOM: {
-        currentElement: null,
+        // Path de data-customer.js
         urlCustomers: document.getElementById('customers').dataset.customers.replace(/\?(?=\d)(\w|\W)+/g, ''),
-        customers: null,
     },
 
-    customerList: function () {
-        return document.getElementById('quotation_customerId')
-    },
+    getData: function (url, callback, path = null, data) { // Callback => permet de passer une fonction comme paramètre d'une autre fonction
+        window.addEventListener('DOMContentLoaded', function (Event) { // DOM : représente l'architecture HTML (body, etc...).
+            // DOMContentLoaded => attend que la page soit chargée pour que le getData se déclenche.
+            fetch(url)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data = []) {
+                    console.log(data);
+                    if (typeof callback === 'function') {
+                        if (data) {
+                            console.log("Params = true");
+                            callback(data);
+                        }
+                        if (path !== null) {
+                            console.log("Path works");
+                            callback(path);
+                        } else {
+                            callback();
+                            console.log('Params = false');
+                        }
+                    } else {
+                        console.log("Callback doesn's work.");
+                    }
 
-    fetch: function (url, callback) {
-        window.addEventListener('DOMContentLoaded', function (Event) {
-            QuotationModule.DOM.currentElement = Event.currentTarget;
-
-            fetch(url).then(function (response) {
-                return response.json();
-            }).then(function (data) {
-                if (typeof callback === undefined) {
-                    console.log("callback works");
-                    callback();
-                } else {
-                    console.log("Callback doesn's work.");
-                }
-            })
+                })
                 .catch(function (error) {
                     console.log(error);
                 });
@@ -43,24 +51,15 @@ export const QuotationModule = {
         }
     },
 
-    autocompletition: function (customers) {
-        $('#quotation_customerId').typeahead({
+    autocomplete: function (data, selector, name, minLength = 2) {
+        $(selector).typeahead({
                 hint: true,
                 highlight: true,
-                minLength: 1
+                minLength: minLength
             },
             {
-                name: 'customers',
-                source: QuotationModule.substringMatcher(customers)
+                name: name,
+                source: QuotationModule.substringMatcher(data)
             })
-    },
-
-    customers: function () {
-        fetch(QuotationModule.DOM.urlCustomers).then(response => response.json()).then(function (data) {
-            QuotationModule.autocompletition(data);
-        })
-            .catch(function (error) {
-                console.log(error)
-            });
     },
 };

@@ -7,6 +7,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Customer;
 use Quotation\Entity\Quotation;
 use Quotation\Repository\QuotationRepository;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
@@ -22,29 +23,26 @@ class QuotationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('customerId', ChoiceType::class, [
+            ->add('customerId', SearchType::class, [
                 'label' => 'Client',
-                'multiple' => false,
-                'expanded' => false,
                 'required' => true,
-                'placeholder' => 'Sélectionnez le client',
-                'choices' => array_map(function ($n) {return $n;}, $this->choicesCustomers()),
                 'attr' => [
                     'class' => 'linked-select',
                     'data-target' => '#quotation_cartProductId',
+                    'placeholder' => 'Sélectionnez le client',
                 ]
             ])
-            ->add('cartProductId', ChoiceType::class, [
-                'label' => 'Panier',
-                'multiple' => false,
-                'expanded' => false,
-                'required' => true,
-                'placeholder' => 'Sélectionnez le panier',
-                /*'choices' => array_map(function ($m) {return $m;}, $this->choicesCarts()),
-                'attr' => [
-                    'id' => 'quotation_cartProductId',
-                ]*/
-            ])
+//            ->add('cartProductId', ChoiceType::class, [
+//                'label' => 'Panier',
+//                'multiple' => false,
+//                'expanded' => false,
+//                'required' => true,
+//                'placeholder' => 'Sélectionnez le panier',
+//                /*'choices' => array_map(function ($m) {return $m;}, $this->choicesCarts()),
+//                'attr' => [
+//                    'id' => 'quotation_cartProductId',
+//                ]*/
+//            ])
 
             ->add('reference', TextType::class, [
                 'label' => 'Référence',

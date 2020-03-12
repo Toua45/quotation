@@ -5,8 +5,8 @@ namespace Quotation\Controller;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Quotation\Entity\Quotation;
 use Quotation\Form\QuotationType;
+use Quotation\Service\QuotationFileSystem;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminQuotationController extends FrameworkBundleAdminController
@@ -24,7 +24,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function add(Request $request): Response
+    public function add(Request $request)
     {
         $quotation = new Quotation();
 
@@ -43,13 +43,15 @@ class AdminQuotationController extends FrameworkBundleAdminController
         return $this->render('@Modules/quotation/templates/admin/add_quotation.html.twig', [
             'quotation' => $quotation,
             'form' => $form->createView(),
+            'test' => _MODULE_DIR_
         ]);
     }
 
-    public function ajaxCarts(Request $request): Response
+    //http://localhost:8000/admin130mdhxh9/index.php/modules/quotation/admin/1/ajax
+    public function ajaxCarts(Request $request)
     {
         //permet de récupérer l'id customer de l'url en excluant les autres caractères
-        $idCustomer = (int) preg_replace('/[^\d]/', '', $request->getPathInfo());
+        $idCustomer = (int)preg_replace('/[^\d]/', '', $request->getPathInfo());
         $quotationRepository = $this->get('quotation_repository');
         $carts = $quotationRepository->findCartsByCustomer($idCustomer);
 
@@ -61,7 +63,29 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $response[$key]['date_cart'] = date("d/m/Y", strtotime($cart['date_add']));
             $response[$key]['id_customer'] = $idCustomer;
         }
-        //dump($response);die;
+        return new JsonResponse(json_encode($response), 200, [], true);
+    }
+
+    public function ajaxCustomer(Request $request)
+    {
+        $customerRepository = $this->get('quotation_repository');
+        $customers = $customerRepository->findAllCustomers();
+        $response = [];
+
+        foreach ($customers as $key => $customer) {
+            $response[$key]['fullname'] = $customer['fullname'];
+        }
+
+        $file = 'data-customer.js';
+        $fileSystem = new QuotationFileSystem();
+        if (!is_file($file)) {
+            $fileSystem->writeFile($file, $response);
+//            fclose($file);
+        } else {
+            $fileSystem->writeFile($file, $response);
+        }
+
+//        dump($file);die;
         return new JsonResponse(json_encode($response), 200, [], true);
     }
 }

@@ -1,32 +1,21 @@
-/*
- * Welcome to your app's main JavaScript file!
- *
- * We recommend including the built version of this JavaScript file
- * (and its CSS file) in your base layout (base.html.twig).
- */
+import {QuotationModule} from './customer';
+import {customer} from '../../../../admin130mdhxh9/data-customer';
 
-// any CSS you import will output into a single css file (app.scss in this case)
-import '../scss/app.scss';
+let customerJson = document.getElementById('js-data');
+let url = customerJson.dataset.source;
 
-// Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
-// import $ from 'jquery';
+QuotationModule.getData(
+    url,
+    QuotationModule.getData,
+    QuotationModule.DOM.urlCustomers,
+    false,
+    []
+);
 
-
-const $ = require('jquery');
-// this "modifies" the jquery module: adding behavior to it
-// the bootstrap module doesn't export/return anything
-require('bootstrap');
-
-// or you can include specific pieces
-// require('bootstrap/js/dist/tooltip');
-// require('bootstrap/js/dist/popover');
-
-$(document).ready(function() {
-    $('[data-toggle="popover"]').popover();
-});
-
-console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
-
-
-require('@fortawesome/fontawesome-free/css/all.min.css');
-require('@fortawesome/fontawesome-free/js/all.js');
+QuotationModule.getData(
+    QuotationModule.DOM.urlCustomers,
+    QuotationModule.autocompletition,
+    null,
+    true,
+    ['#quotation_customerId', 'customers', 2]
+);

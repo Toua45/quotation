@@ -1,5 +1,5 @@
 import {QuotationModule} from './quotation_module';
-import {customer} from '../../../../adminLionel/data-customer';
+import {customer} from '../../../../admin130mdhxh9/data-customer';
 
 // Récupère le chemin du JSON par l'id 'js-data'
 let url = document.getElementById('js-data').dataset.source;

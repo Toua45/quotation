@@ -9,7 +9,7 @@ export const QuotationModule = {
 
                 if (typeof callback === 'function') {
                     if (autocomplete.length >= 1) {
-                        // autocomplete[0] => coorespond au paramètre 'selector' de la fonction 'autocomplete' type=string
+                        // autocomplete[0] => correspond au paramètre 'selector' de la fonction 'autocomplete' type=string
                         if (typeof autocomplete[0] === 'string') {
                             // autocomplete[1] => correspond au paramètre 'name' de la fonction 'autocomplete' type=string
                             if (typeof autocomplete[1] === 'string') {

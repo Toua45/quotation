@@ -1,6 +1,4 @@
-import {QuotationModule} from './customer';
-import {customer} from '../../../../adm/data-customer';
-
+import {QuotationModule} from './quotation_module';
 
 // Récupère le chemin du JSON par l'id 'js-data'
 let url = document.getElementById('js-data').dataset.source;

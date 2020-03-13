@@ -27,24 +27,24 @@ class QuotationType extends AbstractType
                 ]
             ])
 
-            ->add('reference', TextType::class, [
-                'label' => 'Référence',
-                'attr' => [
-                    'placeholder' => 'ABDY75'
-                ]
-            ])
-            ->add('status', TextType::class, [
-                'attr' => [
-                    'placeholder' => 'A valider'
-                ]
-            ])
-            ->add('messageVisible', TextareaType::class, [
-                'label' => 'Message',
-                'attr' => [
-                    'placeholder' => 'Hello world',
-                    'rows' => 5,
-                ]
-            ])
+//            ->add('reference', TextType::class, [
+//                'label' => 'Référence',
+//                'attr' => [
+//                    'placeholder' => 'ABDY75'
+//                ]
+//            ])
+//            ->add('status', TextType::class, [
+//                'attr' => [
+//                    'placeholder' => 'A valider'
+//                ]
+//            ])
+//            ->add('messageVisible', TextareaType::class, [
+//                'label' => 'Message',
+//                'attr' => [
+//                    'placeholder' => 'Hello world',
+//                    'rows' => 5,
+//                ]
+//            ])
             ;
     }
 

@@ -1,7 +1,8 @@
+import '../scss/app.scss';
+
 import {QuotationModule} from './quotation_module';
 
 // any SCSS you require will output into a single scss file (app.scss in this case)
-require('../scss/app.scss');
 
 // or you can include specific pieces
 // require('bootstrap/js/dist/tooltip');

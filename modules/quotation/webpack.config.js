@@ -7,7 +7,7 @@ var quotation_bundle = {
     },
     watch: true,
     output: {
-        path: path.resolve('../../adminLionel/quotation-bundle'),
+        path: path.resolve('../../adminToua/quotation-bundle'),
         filename: 'quotation-bundle.js'
     },
     module: {

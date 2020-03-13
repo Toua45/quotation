@@ -1,11 +1,6 @@
 @import "vars";
 @import "table";
 
-@import '~@fortawesome/fontawesome-free/scss/fontawesome';
-@import '~@fortawesome/fontawesome-free/scss/regular';
-@import '~@fortawesome/fontawesome-free/scss/solid';
-@import '~@fortawesome/fontawesome-free/scss/brands';
-
 @mixin panel-font {
   font-family: Ubuntu Condensed, Helvetica, Arial, sans-serif;
 }

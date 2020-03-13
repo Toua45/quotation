@@ -2,6 +2,9 @@
 
 namespace Quotation\Controller;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Quotation\Entity\Quotation;
 use Quotation\Form\QuotationType;
@@ -28,6 +31,39 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $form = $this->createForm(QuotationType::class, $quotation);
         $form->handleRequest($request);
 
+        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
+            return $this->redirectToRoute('quotation_admin_add');
+        }
+
+        $this->redirect('@PrestaShop/Admin/Sell/Customer/CustomerController/addGroupSelectionToRequest'); // Permet d'appeler la méthode addGroupSelectionToRequest du CustomerController
+
+        $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')->getForm();
+        $customerForm->handleRequest($request);
+
+        $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
+
+        try {
+            $result = $customerFormHandler->handle($customerForm);
+
+            if ($customerId = $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                if ($request->query->has('submitFormAjax')) {
+                    /** @var ViewableCustomer $customerInformation */
+                    $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
+
+                    return $this->render('@PrestaShop/Admin/Sell/Customer/modal_create_success.html.twig', [
+                        'customerId' => $customerId,
+                        'customerEmail' => $customerInformation->getPersonalInformation()->getEmail(),
+                    ]);
+                }
+
+                return $this->redirectToRoute('quotation_admin_add');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $quotation->setDateAdd(new \DateTime('now'));
             $entityManager = $this->getDoctrine()->getManager();
@@ -40,7 +76,12 @@ class AdminQuotationController extends FrameworkBundleAdminController
         return $this->render('@Modules/quotation/templates/admin/add_quotation.html.twig', [
             'quotation' => $quotation,
             'form' => $form->createView(),
-            'test' => _MODULE_DIR_
+            'customerForm' => $customerForm->createView(),
+            'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
+            'minPasswordLength' => Password::MIN_LENGTH,
+            'displayInIframe' => $request->query->has('submitFormAjax'),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+//            'test' => _MODULE_DIR_
         ]);
     }
 

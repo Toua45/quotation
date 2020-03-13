@@ -1,4 +1,16 @@
+import '../scss/app.scss';
+
 import {QuotationModule} from './quotation_module';
+
+// any SCSS you require will output into a single scss file (app.scss in this case)
+
+// or you can include specific pieces
+// require('bootstrap/js/dist/tooltip');
+// require('bootstrap/js/dist/popover');
+
+$(document).ready(function() {
+    $('[data-toggle="popover"]').popover();
+});
 
 // Récupère le chemin du JSON par l'id 'js-data'
 let url = document.getElementById('js-data').dataset.source;

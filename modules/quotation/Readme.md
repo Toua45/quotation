@@ -14,14 +14,21 @@ pour un client avant de passer commande d'un ou plusieurs produit·s.
 ## Installation
 * Se déplacer dans le dossier `modules/quotation`
 * Exécuter `composer install`
-* Exécuter `yarn install`
+* Exécuter `npm install`
+* Exécuter `npm install --save-dev webpack`
+* Exécuter `npm run webpack`
 * Exécuter `doctrine:schema:update --force`
+
+## Administration
+* Renommer le dossier 'admin' dans le fichier 'quotation/webpack.config.js' par le nom de votre dossier admin de la racine de Prestashop.
+
 
 ## Construit avec
 * Prestashop 1.7.6.3
 * PHP 7.2
 * Symfony 3.4
 * Twig
+
 
 ## Auteurs
 * Lionel DELAMARE

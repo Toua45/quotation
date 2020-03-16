@@ -1,12 +1,16 @@
 export const QuotationModule = {
-    DOM: {
-        urlCustomers: document.getElementById('customers').dataset.customers.replace(/\?(?=\d)(\w|\W)+/g, ''),
+    getParamFromURL : (matcher) => window.location.href.match(new RegExp(matcher + '(?=\\?)', 'g')),
+
+    getCustomersURL: function () {
+        if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamFromURL('add').length === 1) {
+            return document.getElementById('customers').dataset.customers.replace(/\?(?=\d)(\w|\W)+/g, '');
+        }
     },
 
     getData: function (url, callback, path = null, dataFetch = false, autocomplete = []) {
         window.addEventListener('DOMContentLoaded', () => {
             fetch(url).then(response => response.json()).then(data => {
-
+                console.log(data);
                 if (typeof callback === 'function') {
                     if (autocomplete.length >= 1) {
                         // autocomplete[0] => correspond au paramètre 'selector' de la fonction 'autocomplete' type=string
@@ -62,5 +66,5 @@ export const QuotationModule = {
                 name: name,
                 source: QuotationModule.substringMatcher(dataFetch)
             })
-    }
+    },
 };

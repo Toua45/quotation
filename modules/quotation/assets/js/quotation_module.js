@@ -10,7 +10,6 @@ export const QuotationModule = {
     getData: function (url, callback, path = null, dataFetch = false, autocomplete = []) {
         window.addEventListener('DOMContentLoaded', () => {
             fetch(url).then(response => response.json()).then(data => {
-                console.log(data);
                 if (typeof callback === 'function') {
                     if (autocomplete.length >= 1) {
                         // autocomplete[0] => correspond au paramètre 'selector' de la fonction 'autocomplete' type=string

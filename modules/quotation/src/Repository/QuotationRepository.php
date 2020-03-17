@@ -86,4 +86,19 @@ class QuotationRepository
             ->fetchAll()
             ;
     }
+
+    /**
+     * @return mixed[]
+     */
+    public function findOneCustomerById($query)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname')
+            ->from($this->databasePrefix . 'customer', 'c')
+            ->where('c.firstname LIKE :query OR c.lastname LIKE :query')
+            ->setParameter('query', '%' . $query . '%')
+            ->execute()
+            ->fetchAll()
+            ;
+    }
 }

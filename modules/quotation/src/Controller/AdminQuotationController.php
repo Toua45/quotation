@@ -62,6 +62,15 @@ class AdminQuotationController extends FrameworkBundleAdminController
         return new JsonResponse(json_encode($response), 200, [], true);
     }
 
+    public function searchCustomers(Request $request, $query)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $customer = $quotationRepository->findOneCustomerById($query);
+
+        return new JsonResponse(json_encode($customer), 200, [], true);
+    }
+
+
     public function ajaxCustomer(Request $request)
     {
         $customerRepository = $this->get('quotation_repository');

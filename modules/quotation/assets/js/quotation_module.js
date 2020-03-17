@@ -8,7 +8,7 @@ export const QuotationModule = {
     },
 
     getData: function (url, callback, path = null, dataFetch = false, autocomplete = []) {
-        window.addEventListener('DOMContentLoaded', () => {
+        // window.addEventListener('DOMContentLoaded', () => {
             fetch(url).then(response => response.json()).then(data => {
                 if (typeof callback === 'function') {
                     if (autocomplete.length >= 1) {
@@ -36,7 +36,7 @@ export const QuotationModule = {
                     }
                 }
             }).catch(error => console.log(error));
-        });
+        // });
     },
 
     substringMatcher: function (strs) {

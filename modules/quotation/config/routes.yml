@@ -15,11 +15,21 @@ quotation_admin_add:
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
 
-quotation_admin_show_customer:
+quotation_admin_search_customers:
   path: quotation/admin/search/customers/{query}
-  methods: [GET, POST]
+  methods: [GET]
   defaults:
     _controller: 'Quotation\Controller\AdminQuotationController::searchCustomers'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_show_customer:
+  path: quotation/admin/show/customer/{id_customer}
+  requirements:
+    id_customer: '\d+'
+  methods: [GET]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::showCustomer'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
 

@@ -1,5 +1,5 @@
 import '../scss/app.scss';
-import { QuotationModule } from "./quotation_module";
+import {QuotationModule} from "./quotation_module";
 
 if (QuotationModule.getParamFromURL('add') !== null &&QuotationModule.getParamFromURL('add').length === 1) {
     // Récupère le chemin du JSON par l'id 'js-data'
@@ -39,6 +39,45 @@ if (QuotationModule.getParamFromURL('add') !== null &&QuotationModule.getParamFr
         ['#quotation_customerId', 'customers', 1]
     );
 
+    let urlSearchCustomers = document.querySelector('[data-searchcustomers]').dataset.searchcustomers;
+
+    const getQuery = (Event) => {
+        let query = Event.currentTarget.value !== ' ' || Event.currentTarget.value !== '' ?
+            Event.currentTarget.value.replace(/\s(?=\w)(\w)+/, '') : false;
+
+        const insertCustomerInDOM = (customers) => {
+            let output = '';
+            // Build show customer link based on his id.
+            // Exemple: http://localhost:8000/admin130mdhxh9/index.php/modules/quotation/admin/show/customer/2
+            let link = window.location.origin + '/admin130mdhxh9/index.php/modules/quotation/admin/show/customer/';
+            customers.forEach((customer, i) => {
+                import('./templates_module').then(mod => {
+                    output += mod.TemplateModule.card
+                        .replace(/---lastname---/, customer.lastname.toUpperCase())
+                        .replace(/---firstname---/, customer.firstname)
+                        .replace(/---text---/, 'This is a good customer!')
+                        .replace(/---link---/, link + customer.id_customer)
+                    ;
+                    if (customers.length - 1 === i) {
+                        document.getElementById('js-output-customers').innerHTML = output;
+                    }
+                });
+            });
+        };
+
+        QuotationModule.getData(
+            urlSearchCustomers.replace(/query/, Event.currentTarget.value),
+            insertCustomerInDOM,
+            null,
+            true,
+            []
+        );
+    };
+
+    const inputSearchCustomers = document.getElementById('quotation_customerId');
+    ['keyup', 'change'].forEach(event => {
+        inputSearchCustomers.addEventListener(event, getQuery, false);
+    });
 }
 
 // any SCSS you require will output into a single scss file (app.scss in this case)

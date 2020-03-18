@@ -33,14 +33,14 @@ QuotationModule.getData(
     []
 );
 
-/**
- * Fonction qui récupère les données dans le data-customer.js
- * Met aussi en parallèle en place l'autocomplétion
- * callback
- * path type=string
- * dataFetch type=bool
- * autocomplete = [(string) selector, (string) name, (int) minLength]
- */
+// /**
+//  * Fonction qui récupère les données dans le data-customer.js
+//  * Met aussi en parallèle en place l'autocomplétion
+//  * callback
+//  * path type=string
+//  * dataFetch type=bool
+//  * autocomplete = [(string) selector, (string) name, (int) minLength]
+//  */
 
 QuotationModule.getData(
     QuotationModule.DOM.urlCustomers,
@@ -49,3 +49,21 @@ QuotationModule.getData(
     true,
     ['#quotation_customerId', 'customers', 2]
 );
+
+let urlSearchCustomer = document.getElementById('js-search').dataset.source;
+console.log(urlSearchCustomer);
+
+const selectCustomer = document.getElementById('quotation_customerId');
+selectCustomer.addEventListener("change", function(Event){
+    // console.log(Event.currentTarget.value);
+    var elems = document.querySelectorAll('.autocomplete');
+    var instances = M.autocomplete.init(elems, options);
+
+    QuotationModule.getData(
+        urlSearchCustomer.replace(/lionel/, Event.currentTarget.value),
+        null,
+        null,
+        true,
+        []
+    )
+});

@@ -86,4 +86,28 @@ class QuotationRepository
             ->fetchAll()
             ;
     }
+
+    public function findCustomerById($idCustomer)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('cp.id_cart', 'cp.date_add', 'c.id_customer', 'q.id_quotation', 'q.date_add', 'q.status')
+            ->from($this->databasePrefix . 'quotation', 'q')
+            ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+            ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'cp.id_cart = q.id_cart_product')
+            ->where('c.id_customer = :id_customer')
+            ->setParameter('id_customer', $idCustomer)
+            ->execute()
+            ->fetch();
+    }
+
+    public function searchCustomers($query)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect("CONCAT(c.firstname, ' ', c.lastname) AS fullname", "c.id_customer")
+            ->from($this->databasePrefix . 'customer', 'c')
+            ->where('c.firstname LIKE :query OR c.lastname LIKE :query')
+            ->setParameter('query', '%' . $query . '%')
+            ->execute()
+            ->fetchAll();
+    }
 }

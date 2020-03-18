@@ -52,8 +52,9 @@ export const QuotationModule = {
         }
     },
 
-    autocomplete: function (selector, name, minLength = 2, dataFetch) {
+    autocomplete: function (selector, name, id_customer, minLength = 2, dataFetch) {
         $(selector).typeahead({
+                id: id_customer,
                 hint: true,
                 highlight: true,
                 minLength: minLength

@@ -32,3 +32,19 @@ quotation_admin_autocompletion_ajax:
     _controller: 'Quotation\Controller\AdminQuotationController::ajaxCustomer'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
+
+quotation_admin_show:
+  path: quotation/admin/show/customer/{idCustomer}
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::showCustomer'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_search:
+  path: quotation/admin/search/customer/{query}
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::searchCustomers'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'

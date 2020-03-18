@@ -49,7 +49,7 @@ if (QuotationModule.getParamFromURL('add') !== null &&QuotationModule.getParamFr
             let output = '';
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/admin130mdhxh9/index.php/modules/quotation/admin/show/customer/2
-            let link = window.location.origin + '/admin130mdhxh9/index.php/modules/quotation/admin/show/customer/';
+            let link = window.location.origin + '/adm/index.php/modules/quotation/admin/show/customer/';
             customers.forEach((customer, i) => {
                 import('./templates_module').then(mod => {
                     output += mod.TemplateModule.card
@@ -89,5 +89,3 @@ if (QuotationModule.getParamFromURL('add') !== null &&QuotationModule.getParamFr
 $(document).ready(function() {
     $('[data-toggle="popover"]').popover();
 });
-
-

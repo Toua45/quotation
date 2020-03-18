@@ -1,9 +1,5 @@
 @import "vars";
 
-@import "index";
-@import "table";
+@import "index/index";
+@import "index/table";
 @import "add";
-
-.twitter-typeahead, .linked-select, .form-control, .tt-input {
-  width: 50%!important;
-}

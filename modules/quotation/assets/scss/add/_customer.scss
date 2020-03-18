@@ -1,0 +1,29 @@
+.quotation {
+
+  .card-back {
+    margin: 0;
+    padding: 0;
+  }
+
+  .customer {
+
+    .form-label {
+      background-color: #edf7fb;
+      border-bottom: 1px solid #d8edf7;
+      border-radius: 3px;
+      color: #3586ae;
+      font-size: 13px;
+      padding: 0 5px;
+      width: max-content;
+
+      .control-label {
+        max-width: 100%;
+      }
+    }
+
+    .form-control {
+      width: 50%;
+      margin:0 10px;
+    }
+  }
+}

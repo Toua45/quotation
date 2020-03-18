@@ -1,5 +1,12 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
+
+<div class="d-flex align-items-center">
+    <div class="form-label">
+        {{ form_label(form.customerId) }}
+    </div>
+    {{ form_widget(form.customerId) }} ou
+    {% include '@Modules/quotation/templates/admin/_new/new_customer.html.twig' %}
+</div>
 
 <span id="js-data" data-source="{{ path('quotation_admin_autocompletion_ajax') }}"></span>
 

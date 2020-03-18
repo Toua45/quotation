@@ -2,9 +2,11 @@
 
  {% block content %}
 
-     <div class="quotation card p-4">
+     <div class="card p-3">
+         <a href="{{ path('quotation_admin') }}" class="btn btn-primary">Retour</a>
+     </div>
 
-         <a href="{{ path('quotation_admin') }}" class="btn btn-primary mb-5">Retour</a>
+     <div class="quotation card p-4" id="customers" data-customers="{{ asset('data-customer.js') }}">
 
          <div class="quotation-head mb-3 d-flex justify-content-between">
 
@@ -13,10 +15,11 @@
                  <span uk-icon="icon: user" class="mr-2"></span>
                  <h1 class="panel-heading">Client</h1>
              </div>
+
          </div>
 
          <section class="customer">
-             {% include '@Modules/quotation/templates/admin/add/_customer.html.twig' %}
+             {% include '@Modules/quotation/templates/admin/section/_customer.html.twig' %}
          </section>
 
      </div>

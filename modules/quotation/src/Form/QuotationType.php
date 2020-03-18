@@ -19,6 +19,9 @@ class QuotationType extends AbstractType
         $builder
             ->add('customerId', SearchType::class, [
                 'label' => 'Rechercher un client',
+                'label_attr' => [
+                    'class' => 'form-label'
+                ],
                 'required' => true,
                 'attr' => [
                     'class' => 'linked-select',

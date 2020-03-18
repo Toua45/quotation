@@ -87,27 +87,33 @@ class QuotationRepository
             ;
     }
 
-    public function findCustomerById($idCustomer)
+    /**
+     * @return mixed[]
+     */
+    public function findOneCustomerById($id_customer)
     {
         return $this->connection->createQueryBuilder()
-            ->addSelect('cp.id_cart', 'cp.date_add', 'c.id_customer', 'q.id_quotation', 'q.date_add', 'q.status')
-            ->from($this->databasePrefix . 'quotation', 'q')
-            ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
-            ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'cp.id_cart = q.id_cart_product')
+            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname')
+            ->from($this->databasePrefix . 'customer', 'c')
             ->where('c.id_customer = :id_customer')
-            ->setParameter('id_customer', $idCustomer)
+            ->setParameter('id_customer', $id_customer)
             ->execute()
-            ->fetch();
+            ->fetch()
+            ;
     }
 
-    public function searchCustomers($query)
+    /**
+     * @return mixed[]
+     */
+    public function findByQuery($query)
     {
         return $this->connection->createQueryBuilder()
-            ->addSelect("CONCAT(c.firstname, ' ', c.lastname) AS fullname", "c.id_customer")
+            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname')
             ->from($this->databasePrefix . 'customer', 'c')
             ->where('c.firstname LIKE :query OR c.lastname LIKE :query')
             ->setParameter('query', '%' . $query . '%')
             ->execute()
-            ->fetchAll();
+            ->fetchAll()
+            ;
     }
 }

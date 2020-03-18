@@ -64,8 +64,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-
-
         if ($form->isSubmitted() && $form->isValid()) {
             $quotation->setDateAdd(new \DateTime('now'));
             $entityManager = $this->getDoctrine()->getManager();
@@ -141,7 +139,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         foreach ($customers as $key => $customer) {
             $response[$key]['fullname'] = $customer['fullname'];
-            $response[$key]['id_customer'] = $customer['id_customer'];
         }
 
         $file = 'data-customer.js';
@@ -152,22 +149,5 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $fileSystem->writeFile($file, $response);
         }
         return new JsonResponse(json_encode($response), 200, [], true);
-    }
-
-    public function showCustomer(Request $request, $idCustomer)
-    {
-        $customerRepository = $this->get('quotation_repository');
-        $customer = $customerRepository->findCustomerById($idCustomer);
-
-        return new JsonResponse(json_encode($customer), 200, [], true);
-    }
-
-    public function searchCustomers(Request $request, $query)
-    {
-        $customerRepository = $this->get('quotation_repository');
-        $customer = $customerRepository->searchCustomers($query);
-
-//        dump($customer);die();
-        return new JsonResponse(json_encode($customer), 200, [], true);
     }
 }

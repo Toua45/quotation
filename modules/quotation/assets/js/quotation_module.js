@@ -67,4 +67,9 @@ export const QuotationModule = {
                 source: QuotationModule.substringMatcher(dataFetch)
             })
     },
+
+    getQuery: function () {
+
+    }
+
 };

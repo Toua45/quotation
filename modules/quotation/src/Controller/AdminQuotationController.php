@@ -81,7 +81,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
             'minPasswordLength' => Password::MIN_LENGTH,
             'displayInIframe' => $request->query->has('submitFormAjax'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-//            'test' => _MODULE_DIR_
         ]);
     }
 

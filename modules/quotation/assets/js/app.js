@@ -1,7 +1,7 @@
 import '../scss/app.scss';
 import {QuotationModule} from "./quotation_module";
 
-if (QuotationModule.getParamFromURL('add') !== null &&QuotationModule.getParamFromURL('add').length === 1) {
+if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamFromURL('add').length === 1) {
     // Récupère le chemin du JSON par l'id 'js-data'
     let url = document.getElementById('js-data').dataset.source;
 
@@ -50,7 +50,7 @@ if (QuotationModule.getParamFromURL('add') !== null &&QuotationModule.getParamFr
             let output = '';
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
-            let link = window.location.origin + '/admin130mdhxh9/index.php/modules/quotation/admin/show/customer/';
+            let link = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/customer/';
             customers.forEach((customer, i) => {
                 import('./templates_module').then(mod => {
                     output += mod.TemplateModule.card
@@ -69,28 +69,27 @@ if (QuotationModule.getParamFromURL('add') !== null &&QuotationModule.getParamFr
                         let newUrlCustomersDetails;
 
                         // const getCustomerDetails = (data) => {
-                            //console.log(data);
-                            if (document.querySelectorAll('a.customer-details') !== null) {
-                                document.querySelectorAll('a.customer-details').forEach(function (link) {
-                                    link.addEventListener('click', function (Event) {
-                                        Event.preventDefault();
-                                        newUrlCustomersDetails = urlCustomersDetails.replace(/\d+(?=\/details)/, link.dataset.idcustomer);
-                                        document.getElementById('customers').classList.add('d-none');
-                                        document.getElementById('js-customer-details').classList.replace('d-none', 'd-block');
-                                        console.log(newUrlCustomersDetails);
+                            // console.log(data);
+                        if (document.querySelectorAll('a.customer-details') !== null) {
+                            document.querySelectorAll('a.customer-details').forEach(function (link) {
+                                link.addEventListener('click', function (Event) {
+                                    Event.preventDefault();
+                                    newUrlCustomersDetails = urlCustomersDetails.replace(/\d+(?=\/details)/, link.dataset.idcustomer);
+                                    document.getElementById('search_customers').classList.add('d-none');
+                                    document.getElementById('js-customer-details').classList.replace('d-none', 'd-block');
+                                    // console.log(newUrlCustomersDetails);
 
-
-                                        // mod.TemplateModule.table
-                                        //     .replace(/---cartID---/, cart.cartId)
-                                        //     .replace();
-                                    });
+                                    // mod.TemplateModule.table
+                                    //     .replace(/---cartID---/, cart.cartId)
+                                    //     .replace();
                                 });
-                            }
+                            });
+                        }
                         // };
 
-                        //console.log(urlCustomersDetails.replace(/\d+(?=\/details)/, customer.id_customer));
                         // QuotationModule.getData(
-                        //     urlCustomersDetails.replace(/\d+(?=\/details)/, customer.id_customer),
+                        //     newUrlCustomersDetails,
+                        //     console.log(newUrlCustomersDetails),
                         //     getCustomerDetails,
                         //     null,
                         //     true,
@@ -99,8 +98,6 @@ if (QuotationModule.getParamFromURL('add') !== null &&QuotationModule.getParamFr
                     }
                 });
             });
-
-
         };
 
         QuotationModule.getData(
@@ -125,7 +122,7 @@ if (QuotationModule.getParamFromURL('add') !== null &&QuotationModule.getParamFr
 // require('bootstrap/js/dist/tooltip');
 // require('bootstrap/js/dist/popover');
 
-$(document).ready(function() {
+$(document).ready(function () {
     $('[data-toggle="popover"]').popover();
 });
 

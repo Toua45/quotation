@@ -50,13 +50,14 @@ if (QuotationModule.getParamFromURL('add') !== null &&QuotationModule.getParamFr
             let output = '';
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
-            let link = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/customer/';
+            let link = window.location.origin + '/admin130mdhxh9/index.php/modules/quotation/admin/show/customer/';
             customers.forEach((customer, i) => {
                 import('./templates_module').then(mod => {
                     output += mod.TemplateModule.card
                         .replace(/---lastname---/, customer.lastname.toUpperCase())
                         .replace(/---firstname---/, customer.firstname)
                         .replace(/---text---/, 'This is a good customer!')
+                        .replace(/---id---/, customer.id_customer)
                         .replace(/---link-show-customer---/, link + customer.id_customer)
                         .replace(/---link-show-customer-carts---/, link + customer.id_customer + '/details')
                     ;
@@ -65,35 +66,36 @@ if (QuotationModule.getParamFromURL('add') !== null &&QuotationModule.getParamFr
                         document.getElementById('js-output-customers').innerHTML = output;
 
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
-                        //console.log(document.querySelectorAll('.customer-details'));
+                        let newUrlCustomersDetails;
 
-                        const getCustomerDetails = function (data) {
-                            console.log(data);
-                            /**
-                             *
-                             * @type {string}
-                             */
-                            // console.log(document.querySelectorAll('.customer-details'));
-                            // document.getElementsByClassName('customer-details').forEach(function (link, i) {
-                            //     link.addEventListener('click', function (Event) {
-                            //         Event.preventDefault();
-                            //         console.log(link);
-                            //         let newUrlCustomersDetails = urlCustomersDetails.replace(/\d+(?=\/details)/, Event.currentTarget.value);
-                            //         mod.TemplateModule.table
-                            //             .replace(/---cartID---/, cart.cartId)
-                            //             .replace();
-                            //     });
-                            // })
+                        // const getCustomerDetails = (data) => {
+                            //console.log(data);
+                            if (document.querySelectorAll('a.customer-details') !== null) {
+                                document.querySelectorAll('a.customer-details').forEach(function (link) {
+                                    link.addEventListener('click', function (Event) {
+                                        Event.preventDefault();
+                                        newUrlCustomersDetails = urlCustomersDetails.replace(/\d+(?=\/details)/, link.dataset.idcustomer);
+                                        document.getElementById('customers').classList.add('d-none');
+                                        document.getElementById('js-customer-details').classList.replace('d-none', 'd-block');
+                                        console.log(newUrlCustomersDetails);
 
-                        };
 
-                        QuotationModule.getData(
-                            urlCustomersDetails.replace(/id_customer/, 2),
-                            getCustomerDetails,
-                            null,
-                            true,
-                            []
-                        );
+                                        // mod.TemplateModule.table
+                                        //     .replace(/---cartID---/, cart.cartId)
+                                        //     .replace();
+                                    });
+                                });
+                            }
+                        // };
+
+                        //console.log(urlCustomersDetails.replace(/\d+(?=\/details)/, customer.id_customer));
+                        // QuotationModule.getData(
+                        //     urlCustomersDetails.replace(/\d+(?=\/details)/, customer.id_customer),
+                        //     getCustomerDetails,
+                        //     null,
+                        //     true,
+                        //     []
+                        // );
                     }
                 });
             });

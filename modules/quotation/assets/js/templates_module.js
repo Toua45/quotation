@@ -6,7 +6,7 @@ export const TemplateModule = {
                 <h6 class="card-subtitle mb-2 text-muted">---firstname---</h6>
                 <p class="card-text">---text---</p>
                 <a href="---link-show-customer---" class="card-link">Show customer</a>
-                <a href="---link-show-customer-carts---" class="customer-details btn btn-outline-primary ml-3">Choisir</a>
+                <a href="---link-show-customer-carts---" data-idcustomer="---id---" class="customer-details btn btn-outline-primary ml-3">Choisir</a>
               </div>
             </div>`,
 

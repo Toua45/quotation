@@ -68,39 +68,35 @@ if (QuotationModule.getParamFromURL('add') !== null &&QuotationModule.getParamFr
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
 
-                        // const getCustomerDetails = (data) => {
-                            //console.log(data);
-                            if (document.querySelectorAll('a.customer-details') !== null) {
-                                document.querySelectorAll('a.customer-details').forEach(function (link) {
-                                    link.addEventListener('click', function (Event) {
-                                        Event.preventDefault();
-                                        newUrlCustomersDetails = urlCustomersDetails.replace(/\d+(?=\/details)/, link.dataset.idcustomer);
-                                        document.getElementById('customers').classList.add('d-none');
-                                        document.getElementById('js-customer-details').classList.replace('d-none', 'd-block');
-                                        console.log(newUrlCustomersDetails);
-
-
+                        if (document.querySelectorAll('a.customer-details') !== null) {
+                            document.querySelectorAll('a.customer-details').forEach(function (link) {
+                                link.addEventListener('click', function (Event) {
+                                    Event.preventDefault();
+                                    newUrlCustomersDetails = window.location.origin + urlCustomersDetails.replace(/\d+(?=\/details)/, link.dataset.idcustomer);
+                                    // document.getElementById('customers').classList.add('d-none');
+                                    // document.getElementById('js-customer-details').classList.replace('d-none', 'd-block');
+                                    console.log(newUrlCustomersDetails);
+                                    const getCustomerDetails = (data) => {
+                                        console.log(data);
+                                        console.log('from callback')
                                         // mod.TemplateModule.table
                                         //     .replace(/---cartID---/, cart.cartId)
                                         //     .replace();
-                                    });
+                                    };
+                                    console.log(newUrlCustomersDetails);
+                                    QuotationModule.getData(
+                                        newUrlCustomersDetails,
+                                        getCustomerDetails,
+                                        null,
+                                        true,
+                                        []
+                                    );
                                 });
-                            }
-                        // };
-
-                        //console.log(urlCustomersDetails.replace(/\d+(?=\/details)/, customer.id_customer));
-                        // QuotationModule.getData(
-                        //     urlCustomersDetails.replace(/\d+(?=\/details)/, customer.id_customer),
-                        //     getCustomerDetails,
-                        //     null,
-                        //     true,
-                        //     []
-                        // );
+                            });
+                        }
                     }
                 });
             });
-
-
         };
 
         QuotationModule.getData(

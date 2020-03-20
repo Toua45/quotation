@@ -6,7 +6,8 @@
 
          <div class="quotation-head mb-3 d-flex justify-content-between">
 
-             <div class="d-flex align-items-center" data-searchcustomers="{{ path('quotation_admin_search_customers', { query: 'query' }) }}">
+             <div class="d-flex align-items-center"
+                  data-searchcustomers="{{ path('quotation_admin_search_customers', { query: 'query' }) }}">
                  <span uk-icon="icon: user" class="mr-2"></span>
                  <h1 class="panel-heading">Client</h1>
              </div>
@@ -19,6 +20,25 @@
 
          <div id="js-output-customers"><!-- Customers here! --></div>
 
+         <span data-customerdetails="{{ path('quotation_admin_show_customer_details', { id_customer: 0 }) }}"></span>
+
+     </div>
+
+     <div class="customer-details d-none">
+         <table class="table">
+             <thead>
+             <tr>
+                 <th>ID</th>
+                 <th>Date</th>
+                 <th>Total</th>
+             </tr>
+             </thead>
+             <tbody>
+                 <tr id="js-output-customer-carts">
+                     <!-- Customer carts here -->
+                 </tr>
+             </tbody>
+         </table>
      </div>
  {% endblock %}
 

@@ -41,6 +41,7 @@ if (QuotationModule.getParamFromURL('add') !== null &&QuotationModule.getParamFr
 
     let urlSearchCustomers = document.querySelector('[data-searchcustomers]').dataset.searchcustomers;
 
+
     const getQuery = (Event) => {
         let query = Event.currentTarget.value !== ' ' || Event.currentTarget.value !== '' ?
             Event.currentTarget.value.replace(/\s(?=\w)(\w)+/, '') : false;
@@ -56,13 +57,48 @@ if (QuotationModule.getParamFromURL('add') !== null &&QuotationModule.getParamFr
                         .replace(/---lastname---/, customer.lastname.toUpperCase())
                         .replace(/---firstname---/, customer.firstname)
                         .replace(/---text---/, 'This is a good customer!')
-                        .replace(/---link---/, link + customer.id_customer)
+                        .replace(/---link-show-customer---/, link + customer.id_customer)
+                        .replace(/---link-show-customer-carts---/, link + customer.id_customer + '/details')
                     ;
+
                     if (customers.length - 1 === i) {
                         document.getElementById('js-output-customers').innerHTML = output;
+
+                        let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
+                        //console.log(document.querySelectorAll('.customer-details'));
+
+                        const getCustomerDetails = function (data) {
+                            console.log(data);
+                            /**
+                             *
+                             * @type {string}
+                             */
+                            // console.log(document.querySelectorAll('.customer-details'));
+                            // document.getElementsByClassName('customer-details').forEach(function (link, i) {
+                            //     link.addEventListener('click', function (Event) {
+                            //         Event.preventDefault();
+                            //         console.log(link);
+                            //         let newUrlCustomersDetails = urlCustomersDetails.replace(/\d+(?=\/details)/, Event.currentTarget.value);
+                            //         mod.TemplateModule.table
+                            //             .replace(/---cartID---/, cart.cartId)
+                            //             .replace();
+                            //     });
+                            // })
+
+                        };
+
+                        QuotationModule.getData(
+                            urlCustomersDetails.replace(/id_customer/, 2),
+                            getCustomerDetails,
+                            null,
+                            true,
+                            []
+                        );
                     }
                 });
             });
+
+
         };
 
         QuotationModule.getData(
@@ -77,6 +113,7 @@ if (QuotationModule.getParamFromURL('add') !== null &&QuotationModule.getParamFr
     const inputSearchCustomers = document.getElementById('quotation_customerId');
     ['keyup', 'change'].forEach(event => {
         inputSearchCustomers.addEventListener(event, getQuery, false);
+
     });
 }
 

@@ -2,6 +2,7 @@
 
 namespace Quotation\Controller;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
@@ -98,6 +99,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
             $response[$key]['id_cart'] = $cart['id_cart'];
             $response[$key]['date_cart'] = date("d/m/Y", strtotime($cart['date_add']));
+//            $response[$key]['total_product_price'] = $cart['total_product_price'];
             $response[$key]['id_customer'] = $idCustomer;
         }
         return new JsonResponse(json_encode($response), 200, [], true);
@@ -129,6 +131,57 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $customer = $quotationRepository->findOneCustomerById($id_customer);
 
         return new JsonResponse(json_encode($customer), 200, [], true);
+    }
+
+    /**
+     * Show details customer by ID
+     * @param Request $request
+     * @param $query
+     * @return JsonResponse
+     */
+    public function showCustomerDetails(Request $request, $id_customer)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $details = $quotationRepository->findAllDetailsByCustomer($id_customer);
+
+
+        $response = [];
+
+        foreach ($details as $key => $detail) {
+            $response[$key]['id_cart'] = $detail['id_cart'];
+            $response[$key]['date_cart'] = date("d/m/Y", strtotime($detail['date_cart']));
+            $response[$key]['id_order'] = $detail['id_order'];
+            $response[$key]['date_order'] = date("d/m/Y", strtotime($detail['date_order']));
+            $response[$key]['total_paid'] = $detail['total_paid'];
+            $response[$key]['payment'] = $detail['payment'];
+            $response[$key]['id_quotation'] = $detail['id_quotation'];
+            $response[$key]['date_quotation'] = date("d/m/Y", strtotime($detail['date_quotation']));
+            $response[$key]['id_customer'] = $id_customer;
+            $response[$key]['total_cart'] = $detail['price'] * $detail['quantity'];
+
+        }
+//        dump($response);die;
+
+        return new JsonResponse(json_encode($details), 200, [], true);
+
+//        try {
+//            /** @var ViewableCustomer $customerInformation */
+//            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $id_customer));
+//        } catch (CustomerNotFoundException $e) {
+//            $this->addFlash(
+//                'error',
+//                $this->trans('This customer does not exist.', 'Admin.Orderscustomers.Notification')
+//            );
+//
+//            return $this->redirectToRoute('quotation_admin_add');
+//        }
+
+//        return new JsonResponse(json_encode($carts), 200, [], true);
+
+//        return $this->render('@Modules/quotation/templates/admin/_customer/_customer_details.html.twig', [
+//            'carts' => $carts,
+//            'customerInformation' => $customerInformation,
+//        ]);
     }
 
     public function ajaxCustomer(Request $request)

@@ -143,7 +143,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
     {
         $quotationRepository = $this->get('quotation_repository');
         $details = $quotationRepository->findAllDetailsByCustomer($id_customer);
-
+//        dump($details);die;
 
         $response = [];
 
@@ -160,9 +160,9 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $response[$key]['total_cart'] = $detail['price'] * $detail['quantity'];
 
         }
-//        dump($response);die;
 
-        return new JsonResponse(json_encode($details), 200, [], true);
+
+        return new JsonResponse(json_encode($response), 200, [], true);
 
 //        try {
 //            /** @var ViewableCustomer $customerInformation */

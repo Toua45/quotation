@@ -12,8 +12,8 @@ export const TemplateModule = {
               </div>
             </div>`,
 
-    table: `<td>---cartId---</td>
-            <td>---cartDate---</td>
-            <td>---totalCart---</td>`,
+    table: `<td class="cart-id">---cartId---</td>
+            <td class="cart-date">---cartDate---</td>
+            <td class="cart-total">---totalCart---</td>`,
 
 };

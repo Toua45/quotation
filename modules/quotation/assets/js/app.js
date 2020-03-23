@@ -61,40 +61,41 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         .replace(/---link-show-customer---/, link + customer.id_customer)
                         .replace(/---link-show-customer-carts---/, link + customer.id_customer + '/details')
                     ;
-
+                    // console.log(mod.TemplateModule.card)
                     if (customers.length - 1 === i) {
                         document.getElementById('js-output-customers').innerHTML = output;
 
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
 
-                        // const getCustomerDetails = (data) => {
-                            // console.log(data);
                         if (document.querySelectorAll('a.customer-details') !== null) {
                             document.querySelectorAll('a.customer-details').forEach(function (link) {
                                 link.addEventListener('click', function (Event) {
                                     Event.preventDefault();
-                                    newUrlCustomersDetails = urlCustomersDetails.replace(/\d+(?=\/details)/, link.dataset.idcustomer);
+                                    newUrlCustomersDetails = window.location.origin + urlCustomersDetails.replace(/\d+(?=\/details)/, link.dataset.idcustomer);
                                     document.getElementById('search_customers').classList.add('d-none');
                                     document.getElementById('js-customer-details').classList.replace('d-none', 'd-block');
                                     // console.log(newUrlCustomersDetails);
-
-                                    // mod.TemplateModule.table
-                                    //     .replace(/---cartID---/, cart.cartId)
-                                    //     .replace();
+                                    const getCustomerDetails = (data) => {
+                                        // console.log(data);
+                                        // console.log('from callback')
+                                        mod.TemplateModule.table
+                                            .replace(/---cartId---/, 'Hello')
+                                            // .replace(/---cartId---/, customer.cart.id_cart)
+                                            // .replace(/---cartDate---/, customer.cart.date_add);
+                                    };
+                                    console.log(mod.TemplateModule.table)
+                                    // console.log(newUrlCustomersDetails);
+                                    QuotationModule.getData(
+                                        newUrlCustomersDetails,
+                                        getCustomerDetails,
+                                        null,
+                                        true,
+                                        []
+                                    );
                                 });
                             });
                         }
-                        // };
-
-                        // QuotationModule.getData(
-                        //     newUrlCustomersDetails,
-                        //     console.log(newUrlCustomersDetails),
-                        //     getCustomerDetails,
-                        //     null,
-                        //     true,
-                        //     []
-                        // );
                     }
                 });
             });
@@ -122,8 +123,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 // require('bootstrap/js/dist/tooltip');
 // require('bootstrap/js/dist/popover');
 
-$(document).ready(function () {
+$(document).ready(function() {
     $('[data-toggle="popover"]').popover();
 });
-
-

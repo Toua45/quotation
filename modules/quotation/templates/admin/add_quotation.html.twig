@@ -14,31 +14,40 @@
 
          </div>
 
-         {% include '@Modules/quotation/templates/admin/_new/new_customer.html.twig' %}
+         <div id="search_customers">
+             {% include '@Modules/quotation/templates/admin/_new/new_customer.html.twig' %}
 
-         {% include '@Modules/quotation/templates/admin/_form.html.twig' %}
+             {% include '@Modules/quotation/templates/admin/_form.html.twig' %}
+         </div>
 
-         <div id="js-output-customers"><!-- Customers here! --></div>
+         <div class="container">
+             <div class="row justify-content-between">
+                 <div class="col-md-4 col-10">
+                     <div id="js-output-customers"><!-- Customers here! --></div>
+                 </div>
+             </div>
+         </div>
 
          <span data-customerdetails="{{ path('quotation_admin_show_customer_details', { id_customer: 0 }) }}"></span>
 
-     </div>
+         <div id="js-customer-details" class="customer-details d-none">
 
-     <div id="js-customer-details" class="customer-details d-none">
-         <table class="table">
-             <thead>
-             <tr>
-                 <th>ID</th>
-                 <th>Date</th>
-                 <th>Total</th>
-             </tr>
-             </thead>
-             <tbody>
+             <table class="table">
+                 <thead>
+                 <tr>
+                     <th>ID</th>
+                     <th>Date</th>
+                     <th>Total</th>
+                 </tr>
+                 </thead>
+                 <tbody>
                  <tr id="js-output-customer-carts">
                      <!-- Customer carts here -->
                  </tr>
-             </tbody>
-         </table>
+                 </tbody>
+             </table>
+         </div>
+
      </div>
  {% endblock %}
 

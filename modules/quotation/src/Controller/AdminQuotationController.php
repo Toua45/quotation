@@ -143,7 +143,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
     {
         $quotationRepository = $this->get('quotation_repository');
         $details = $quotationRepository->findAllDetailsByCustomer($id_customer);
-        dump($details);die;
+//        dump($details);die;
 
         $response = [];
 

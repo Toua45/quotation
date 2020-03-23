@@ -77,8 +77,9 @@ if (QuotationModule.getParamFromURL('add') !== null &&QuotationModule.getParamFr
                                     // document.getElementById('js-customer-details').classList.replace('d-none', 'd-block');
                                     console.log(newUrlCustomersDetails);
                                     const getCustomerDetails = (data) => {
-                                        console.log(data);
                                         console.log('from callback')
+                                        console.log(data);
+
                                         // mod.TemplateModule.table
                                         //     .replace(/---cartID---/, cart.cartId)
                                         //     .replace();

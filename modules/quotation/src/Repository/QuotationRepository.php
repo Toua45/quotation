@@ -93,7 +93,7 @@ class QuotationRepository
     public function findOneCustomerById($id_customer)
     {
         return $this->connection->createQueryBuilder()
-            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname')
+            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname', 'c.email')
             ->from($this->databasePrefix . 'customer', 'c')
             ->where('c.id_customer = :id_customer')
             ->setParameter('id_customer', $id_customer)
@@ -108,7 +108,7 @@ class QuotationRepository
     public function findByQuery($query)
     {
         return $this->connection->createQueryBuilder()
-            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname')
+            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname', 'c.email')
             ->from($this->databasePrefix . 'customer', 'c')
             ->where('c.firstname LIKE :query OR c.lastname LIKE :query')
             ->setParameter('query', '%' . $query . '%')

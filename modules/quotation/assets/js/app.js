@@ -73,19 +73,16 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                 link.addEventListener('click', function (Event) {
                                     Event.preventDefault();
                                     newUrlCustomersDetails = window.location.origin + urlCustomersDetails.replace(/\d+(?=\/details)/, link.dataset.idcustomer);
-                                    document.getElementById('search_customers').classList.add('d-none');
-                                    document.getElementById('js-customer-details').classList.replace('d-none', 'd-block');
-                                    // console.log(newUrlCustomersDetails);
+
                                     const getCustomerDetails = (data) => {
-                                        // console.log(data);
-                                        // console.log('from callback')
-                                        mod.TemplateModule.table
-                                            .replace(/---cartId---/, 'Hello')
-                                            // .replace(/---cartId---/, customer.cart.id_cart)
-                                            // .replace(/---cartDate---/, customer.cart.date_add);
+                                        let output = '';
+                                        for (let customer of  data) {
+                                            output += mod.TemplateModule.table
+                                                .replace(/---cartId---/, customer.id_customer)
+                                                .replace(/---cartId---/, customer.id_cart)
+                                                .replace(/---cartDate---/, customer.date_cart);
+                                        }
                                     };
-                                    console.log(mod.TemplateModule.table)
-                                    // console.log(newUrlCustomersDetails);
                                     QuotationModule.getData(
                                         newUrlCustomersDetails,
                                         getCustomerDetails,
@@ -93,6 +90,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         true,
                                         []
                                     );
+
+                                    document.getElementById('search_customers').classList.add('d-none');
+                                    document.getElementById('js-output-customer-carts').classList.replace('d-none', 'd-block');
                                 });
                             });
                         }

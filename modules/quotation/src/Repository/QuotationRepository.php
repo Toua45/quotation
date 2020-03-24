@@ -3,6 +3,7 @@
 namespace Quotation\Repository;
 
 use Doctrine\DBAL\Connection;
+use PhpOffice\PhpSpreadsheet\Calculation\DateTime;
 
 class QuotationRepository
 {
@@ -45,40 +46,76 @@ class QuotationRepository
         return $query->execute()->fetchAll();
     }
 
-    public function findQuotationsByFilters($filter = null, $reference = null)
+    public function findQuotationsByFilters($filter, $reference = null, $oldest = null)
     {
         $query = $this->connection->createQueryBuilder();
         $query->addSelect('q.*', 'c.firstname', 'c.lastname');
 
-        if (!is_null($filter) || $filter !== '') {
+        if ($filter !== null) {
             $query
                 ->from($this->databasePrefix . 'customer', 'c')
                 ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
                 ->where('c.firstname LIKE :filter OR c.lastname LIKE :filter')
                 ->setParameter('filter', '%' . $filter . '%');
+            return $query->execute()->fetchAll();
 
-        } else {
-            $query
-                ->from($this->databasePrefix . 'quotation', 'q')
-                ->join('q', $this->databasePrefix . 'customer', 'c', 'q.id_customer = c.id_customer')
-                ->addGroupBy('q.id_quotation');
         }
-
-        if (!is_null($reference)) {
+        if ($reference !== null) {
             $query
                 ->from($this->databasePrefix . 'quotation', 'q')
-                ->join('q', $this->databasePrefix . 'customer', 'c', 'q.id_customer = c.id_customer')
+                ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
                 ->where('q.reference = :reference')
                 ->setParameter('reference', $reference);
-                return $query->execute()->fetch();
+            return $query->execute()->fetch();
+
         }
-        return $query->execute()->fetchAll();
+        if ($oldest !== null) {
+            $query
+                ->from($this->databasePrefix . 'quotation', 'q')
+                ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+                ->where('q.date_add >= :date_from')
+                ->setParameter('date_from', $oldest);
+            return $query->execute()->fetchAll();
+
+        }
+//        else {
+//            $query
+//                ->from($this->databasePrefix . 'quotation', 'q')
+//                ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+//                ->addGroupBy('q.id_quotation');
+//        }
+
+        //return $query->execute()->fetchAll();
     }
+
+
+
+
+
+
+    //        if (!is_null($filter) || $filter !== '') {
+//            $query
+//                ->from($this->databasePrefix . 'customer', 'c')
+//                ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
+//                ->where('c.firstname LIKE :filter OR c.lastname LIKE :filter')
+//                ->setParameter('filter', '%' . $filter . '%');
+//
+//            if (!is_null($reference)) {
+//                $query
+//                ->from($this->databasePrefix . 'quotation', 'q')
+//                ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+//                ->where('q.reference = :reference')
+//                ->setParameter('reference', $reference);
+//            }
+//        }
+//        return $query->execute()->fetchAll();
+
 
     /**
      * @return mixed[]
      */
-    public function findAllCustomers()
+    public
+    function findAllCustomers()
     {
         return $this->connection->createQueryBuilder()
             ->addSelect("CONCAT(c.firstname, ' ', c.lastname) AS fullname", "c.id_customer")
@@ -90,7 +127,8 @@ class QuotationRepository
     /**
      * @return mixed[]
      */
-    public function findAllCarts()
+    public
+    function findAllCarts()
     {
         return $this->connection->createQueryBuilder()
             ->addSelect('cp.id_cart', 'cp.date_add', 'c.id_customer')
@@ -103,7 +141,8 @@ class QuotationRepository
     /**
      * @return mixed[]
      */
-    public function findCartsByCustomer($idcustomer)
+    public
+    function findCartsByCustomer($idcustomer)
     {
         return $this->connection->createQueryBuilder()
             ->addSelect('cp.id_cart', 'cp.date_add', 'c.id_customer')
@@ -118,7 +157,8 @@ class QuotationRepository
     /**
      * @return mixed[]
      */
-    public function findOneCustomerById($id_customer)
+    public
+    function findOneCustomerById($id_customer)
     {
         return $this->connection->createQueryBuilder()
             ->addSelect('c.id_customer', 'c.firstname', 'c.lastname')
@@ -132,7 +172,8 @@ class QuotationRepository
     /**
      * @return mixed[]
      */
-    public function findByQuery($query)
+    public
+    function findByQuery($query)
     {
         return $this->connection->createQueryBuilder()
             ->addSelect('c.id_customer', 'c.firstname', 'c.lastname')

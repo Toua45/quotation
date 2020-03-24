@@ -25,26 +25,26 @@ class AdminQuotationController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function searchQuotationsByFilters(Request $request, $filter = null)
+    public function searchQuotationsByFilters(Request $request, $filter = !null, $reference = null, $oldest = null, $recent = null)
     {
 
         $quotationRepository = $this->get('quotation_repository');
 
-        if (preg_match('/\w+/', $filter)) {
-            $reference = $filter;
-            dump('reference');
-            dump($quotationRepository->findQuotationsByFilters(null, $reference));die();
-        } else if (preg_match('/[a-zA-Z]+/', $filter)) {
-            dump('not empty string');
-            dump($quotationRepository->findQuotationsByFilters($filter, null));die();
-        } else if (preg_match('/(.*?)/', $filter)) {
-            dump($quotationRepository->findQuotationsByFilters($filter, null));die();
-        }
+//        if (preg_match('/\w+/', $filter)) {
+//            $reference = $filter;
+//            dump('reference');
+//            dump($quotationRepository->findQuotationsByFilters(null, $reference));die();
+//        } elseif (preg_match('/[a-zA-Z]+/', $filter)) {
+//            dump('not empty string');
+//            dump($quotationRepository->findQuotationsByFilters($filter, null));die();
+//        } elseif (preg_match('/(.*?)/', $filter)) {
+//            dump($quotationRepository->findQuotationsByFilters($filter, null));die();
+//        }
 
 
 
-        //     $quotationFilter = $quotationRepository->findQuotationsByFilters($filter, $reference);
-//        dump($quotationFilter);die();
+             $quotationFilter = $quotationRepository->findQuotationsByFilters($filter, $reference, $oldest, $recent);
+             dump($quotationFilter);die();
 
 //        $quotationFilterForm = $quotationFilter = $this->createForm(QuotationSearchType::class);
 //

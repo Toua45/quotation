@@ -82,7 +82,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
             'minPasswordLength' => Password::MIN_LENGTH,
             'displayInIframe' => $request->query->has('submitFormAjax'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-//            'test' => _MODULE_DIR_
         ]);
     }
 
@@ -93,13 +92,12 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $quotationRepository = $this->get('quotation_repository');
         $carts = $quotationRepository->findCartsByCustomer($idCustomer);
 
-        $cart = $response = [];
+        $response = [];
 
         foreach ($carts as $key => $cart) {
 
             $response[$key]['id_cart'] = $cart['id_cart'];
             $response[$key]['date_cart'] = date("d/m/Y", strtotime($cart['date_add']));
-//            $response[$key]['total_product_price'] = $cart['total_product_price'];
             $response[$key]['id_customer'] = $idCustomer;
         }
         return new JsonResponse(json_encode($response), 200, [], true);
@@ -142,46 +140,35 @@ class AdminQuotationController extends FrameworkBundleAdminController
     public function showCustomerDetails(Request $request, $id_customer)
     {
         $quotationRepository = $this->get('quotation_repository');
-        $details = $quotationRepository->findAllDetailsByCustomer($id_customer);
-//        dump($details);die;
+        $carts = $quotationRepository->findCartsByCustomer($id_customer);
+        $orders = $quotationRepository->findOrdersByCustomer($id_customer);
+        $quotations = $quotationRepository->findQuotationsByCustomer($id_customer);
 
         $response = [];
 
-        foreach ($details as $key => $detail) {
-            $response[$key]['id_cart'] = $detail['id_cart'];
-            $response[$key]['date_cart'] = date("d/m/Y", strtotime($detail['date_cart']));
-            $response[$key]['id_order'] = $detail['id_order'];
-            $response[$key]['date_order'] = date("d/m/Y", strtotime($detail['date_order']));
-            $response[$key]['total_paid'] = $detail['total_paid'];
-            $response[$key]['payment'] = $detail['payment'];
-            $response[$key]['id_quotation'] = $detail['id_quotation'];
-            $response[$key]['date_quotation'] = date("d/m/Y", strtotime($detail['date_quotation']));
+        foreach ($carts as $key => $cart) {
             $response[$key]['id_customer'] = $id_customer;
-            $response[$key]['total_cart'] = $detail['price'] * $detail['quantity'];
-
+            $response[$key]['id_cart'] = $cart['id_cart'];
+            $response[$key]['date_cart'] = date("d/m/Y", strtotime($cart['date_cart']));
+            $response[$key]['total_cart'] = number_format($cart['total_cart'], 2);
         }
 
+        foreach ($orders as $key => $order) {
+            $response[$key]['id_customer'] = $id_customer;
+            $response[$key]['id_order'] = $order['id_order'];
+            $response[$key]['date_order'] = date("d/m/Y", strtotime($order['date_order']));
+            $response[$key]['total_paid'] = number_format($order['total_paid'], 2);
+            $response[$key]['payment'] = $order['payment'];
+        }
+
+        foreach ($quotations as $key => $quotation) {
+            $response[$key]['id_customer'] = $id_customer;
+            $response[$key]['id_quotation'] = $quotation['id_quotation'];
+            $response[$key]['date_quotation'] = date("d/m/Y", strtotime($quotation['date_quotation']));
+            $response[$key]['total_quotation'] = number_format($quotation['total_quotation'], 2);
+        }
 
         return new JsonResponse(json_encode($response), 200, [], true);
-
-//        try {
-//            /** @var ViewableCustomer $customerInformation */
-//            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $id_customer));
-//        } catch (CustomerNotFoundException $e) {
-//            $this->addFlash(
-//                'error',
-//                $this->trans('This customer does not exist.', 'Admin.Orderscustomers.Notification')
-//            );
-//
-//            return $this->redirectToRoute('quotation_admin_add');
-//        }
-
-//        return new JsonResponse(json_encode($carts), 200, [], true);
-
-//        return $this->render('@Modules/quotation/templates/admin/_customer/_customer_details.html.twig', [
-//            'carts' => $carts,
-//            'customerInformation' => $customerInformation,
-//        ]);
     }
 
     public function ajaxCustomer(Request $request)

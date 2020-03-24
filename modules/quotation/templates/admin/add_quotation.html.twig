@@ -6,25 +6,118 @@
 
          <div class="quotation-head mb-3 d-flex justify-content-between">
 
-             <div class="d-flex align-items-center">
+             <div class="d-flex align-items-center"
+                  data-searchcustomers="{{ path('quotation_admin_search_customers', { query: 'query' }) }}">
                  <span uk-icon="icon: user" class="mr-2"></span>
                  <h1 class="panel-heading">Client</h1>
              </div>
 
          </div>
 
-         {% include '@Modules/quotation/templates/admin/_new/new_customer.html.twig' %}
+         <div id="search_customers">
+             {% include '@Modules/quotation/templates/admin/_new/new_customer.html.twig' %}
 
-         {% include '@Modules/quotation/templates/admin/_form.html.twig' %}
+             {% include '@Modules/quotation/templates/admin/_form.html.twig' %}
+         </div>
 
+         <div class="container-fluid">
+             <div class="row justify-content-between">
+                 <div class="col-lg-12 col-md-8 col-sm-4">
+                     <div id="js-output-customers" class="d-flex"><!-- Customers here! --></div>
+                 </div>
+             </div>
+         </div>
+
+         <span data-customerdetails="{{ path('quotation_admin_show_customer_details', { id_customer: 0 }) }}"></span>
+
+         <div id="js-output-customer-details" class="customer-details d-none">
+
+             {#------Customer details-------#}
+
+             <nav>
+                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                     <a class="nav-item nav-link active" id="nav-cart-tab" data-toggle="tab" href="#nav-cart" role="tab"
+                        aria-controls="nav-cart" aria-selected="true">PANIERS</a>
+                     <a class="nav-item nav-link" id="nav-order-tab" data-toggle="tab" href="#nav-order" role="tab"
+                        aria-controls="nav-order" aria-selected="false">COMMANDES</a>
+                     <a class="nav-item nav-link" id="nav-quotation-tab" data-toggle="tab" href="#nav-quotation"
+                        role="tab" aria-controls="nav-quotation" aria-selected="false">DEVIS</a>
+                 </div>
+             </nav>
+
+             <div class="tab-content" id="nav-tabContent">
+                 {#-----Carts section-----#}
+                 <div class="tab-pane fade show active" id="nav-cart" role="tabpanel" aria-labelledby="nav-cart-tab">
+                     <div class="tableCart">
+                         <table class="table">
+                             <thead>
+                             <tr>
+                                 <th class="text-left">ID</th>
+                                 <th class="text-left">Date</th>
+                                 <th class="text-left">Total</th>
+                             </tr>
+                             </thead>
+                             <tbody id="output-customer-carts">
+
+                             <!-- Carts here! -->
+
+                             </tbody>
+                         </table>
+                     </div>
+                 </div>
+                 {#-----Carts section-----#}
+
+                 {#-----Orders section-----#}
+                 <div class="tab-pane fade" id="nav-order" role="tabpanel" aria-labelledby="nav-order-tab">
+                     <div class="tableOrder">
+                         <table class="table">
+                             <thead>
+                             <tr>
+                                 <th class="text-left">ID</th>
+                                 <th class="text-left">Date</th>
+                                 <th class="text-left">Total payé</th>
+                                 <th class="text-left">Paiment</th>
+                             </tr>
+                             </thead>
+                             <tbody id="output-customer-orders">
+
+                             <!-- Orders here! -->
+
+                             </tbody>
+                         </table>
+                     </div>
+                 </div>
+                 {#-----Orders section-----#}
+
+                 {#-----Quotations section-----#}
+                 <div class="tab-pane fade" id="nav-quotation" role="tabpanel" aria-labelledby="nav-quotation-tab">
+                     <div class="tableQuotation">
+                         <table class="table">
+                             <thead>
+                             <tr>
+                                 <th class="text-left">ID</th>
+                                 <th class="text-left">Date</th>
+                                 <th class="text-left">Total devis</th>
+                             </tr>
+                             </thead>
+                             <tbody id="output-customer-quotations">
+
+                             <!-- Quotations here! -->
+
+                             </tbody>
+                         </table>
+                     </div>
+                 </div>
+                 {#-----Quotations section-----#}
+             </div>
+
+         </div>
      </div>
-
  {% endblock %}
 
-{% block javascripts %}
-    <script type="text/javascript" src="{{ asset('quotation-bundle/quotation-bundle.js') }}"></script>
+    {% block javascripts %}
+        <script type="text/javascript" src="{{ asset('quotation-bundle/quotation-bundle.js') }}"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit-icons.min.js"></script>
-{% endblock %}
-
+        <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit-icons.min.js"></script>
+    {% endblock %}

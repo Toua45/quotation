@@ -7,6 +7,19 @@ quotation_admin:        #RouteName
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
 
+quotation_admin_search_filters:
+  path: quotation/admin/search/{filter}
+  methods: [GET]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::searchQuotationsByFilters'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+#    filter: null
+#    reference: null
+#  requirements:
+#    filter: '[a-zA-Z]+|(.*?)|\w+'
+##    reference: '(.*?)\w+'
+
 quotation_admin_add:
   path: quotation/admin/add
   methods: [GET, POST]
@@ -50,3 +63,4 @@ quotation_admin_autocompletion_ajax:
     _controller: 'Quotation\Controller\AdminQuotationController::ajaxCustomer'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
+

@@ -32,8 +32,8 @@ class QuotationRepository
      */
     public function findAll()
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
+        $query = $this->connection->createQueryBuilder();
+        $query
             ->addSelect('q.*', 'c.firstname', 'c.lastname', 'cp.id_cart', 'cp.quantity', 'p.price')
             ->addSelect('SUM(p.price * cp.quantity) AS total_product_price')
             ->from($this->databasePrefix . 'quotation', 'q')
@@ -41,7 +41,38 @@ class QuotationRepository
             ->join('q', $this->databasePrefix . 'customer', 'c', 'q.id_customer = c.id_customer')
             ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart_product = cp.id_cart')
             ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product');
-        return $qb->execute()->fetchAll();
+
+        return $query->execute()->fetchAll();
+    }
+
+    public function findQuotationsByFilters($filter = null, $reference = null)
+    {
+        $query = $this->connection->createQueryBuilder();
+        $query->addSelect('q.*', 'c.firstname', 'c.lastname');
+
+        if (!is_null($filter) || $filter !== '') {
+            $query
+                ->from($this->databasePrefix . 'customer', 'c')
+                ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
+                ->where('c.firstname LIKE :filter OR c.lastname LIKE :filter')
+                ->setParameter('filter', '%' . $filter . '%');
+
+        } else {
+            $query
+                ->from($this->databasePrefix . 'quotation', 'q')
+                ->join('q', $this->databasePrefix . 'customer', 'c', 'q.id_customer = c.id_customer')
+                ->addGroupBy('q.id_quotation');
+        }
+
+        if (!is_null($reference)) {
+            $query
+                ->from($this->databasePrefix . 'quotation', 'q')
+                ->join('q', $this->databasePrefix . 'customer', 'c', 'q.id_customer = c.id_customer')
+                ->where('q.reference = :reference')
+                ->setParameter('reference', $reference);
+                return $query->execute()->fetch();
+        }
+        return $query->execute()->fetchAll();
     }
 
     /**
@@ -53,8 +84,7 @@ class QuotationRepository
             ->addSelect("CONCAT(c.firstname, ' ', c.lastname) AS fullname", "c.id_customer")
             ->from($this->databasePrefix . 'customer', 'c')
             ->execute()
-            ->fetchAll()
-            ;
+            ->fetchAll();
     }
 
     /**
@@ -67,8 +97,7 @@ class QuotationRepository
             ->from($this->databasePrefix . 'cart_product', 'cp')
             ->join('cp', $this->databasePrefix . 'cart', 'c', 'c.id_cart = cp.id_cart')
             ->execute()
-            ->fetchAll()
-            ;
+            ->fetchAll();
     }
 
     /**
@@ -83,8 +112,7 @@ class QuotationRepository
             ->where('id_customer = :id_customer')
             ->setParameter('id_customer', $idcustomer)
             ->execute()
-            ->fetchAll()
-            ;
+            ->fetchAll();
     }
 
     /**
@@ -98,8 +126,7 @@ class QuotationRepository
             ->where('c.id_customer = :id_customer')
             ->setParameter('id_customer', $id_customer)
             ->execute()
-            ->fetch()
-            ;
+            ->fetch();
     }
 
     /**
@@ -113,7 +140,6 @@ class QuotationRepository
             ->where('c.firstname LIKE :query OR c.lastname LIKE :query')
             ->setParameter('query', '%' . $query . '%')
             ->execute()
-            ->fetchAll()
-            ;
+            ->fetchAll();
     }
 }

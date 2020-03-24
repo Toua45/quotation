@@ -7,6 +7,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Quotation\Entity\Quotation;
+use Quotation\Form\QuotationSearchType;
 use Quotation\Form\QuotationType;
 use Quotation\Service\QuotationFileSystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminQuotationController extends FrameworkBundleAdminController
 {
-    public function quotationIndex()
+    public function quotationIndex(Request $request)
     {
         $quotationRepository = $this->get('quotation_repository');
         $quotations = $quotationRepository->findAll();
@@ -22,6 +23,44 @@ class AdminQuotationController extends FrameworkBundleAdminController
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
             'quotations' => $quotations,
         ]);
+    }
+
+    public function searchQuotationsByFilters(Request $request, $filter = null)
+    {
+
+        $quotationRepository = $this->get('quotation_repository');
+
+        if (preg_match('/\w+/', $filter)) {
+            $reference = $filter;
+            dump('reference');
+            dump($quotationRepository->findQuotationsByFilters(null, $reference));die();
+        } else if (preg_match('/[a-zA-Z]+/', $filter)) {
+            dump('not empty string');
+            dump($quotationRepository->findQuotationsByFilters($filter, null));die();
+        } else if (preg_match('/(.*?)/', $filter)) {
+            dump($quotationRepository->findQuotationsByFilters($filter, null));die();
+        }
+
+
+
+        //     $quotationFilter = $quotationRepository->findQuotationsByFilters($filter, $reference);
+//        dump($quotationFilter);die();
+
+//        $quotationFilterForm = $quotationFilter = $this->createForm(QuotationSearchType::class);
+//
+//        $quotationFilterForm->handleRequest($request);
+//        if ($quotationFilterForm->isSubmitted() && $quotationFilterForm->isValid()) {
+//            $data = $quotationFilterForm->getData();
+//            $filter = $data['firstname'];
+//            $quotations = $quotationRepository->findQuotationsByFilters($filter);
+//        } else {
+//            $quotations = $quotationRepository->findAll();
+//        }
+//
+//        return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
+//            'quotations' => $quotations,
+//            'quotationFilterForm' => $quotationFilterForm->createView(),
+//        ]);
     }
 
     public function add(Request $request)

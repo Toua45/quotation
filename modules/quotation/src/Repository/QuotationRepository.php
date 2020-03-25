@@ -3,6 +3,7 @@
 namespace Quotation\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\Query\AST\Functions\AvgFunction;
 
 class QuotationRepository
 {
@@ -53,8 +54,7 @@ class QuotationRepository
             ->addSelect("CONCAT(c.firstname, ' ', c.lastname) AS fullname", "c.id_customer")
             ->from($this->databasePrefix . 'customer', 'c')
             ->execute()
-            ->fetchAll()
-            ;
+            ->fetchAll();
     }
 
     /**
@@ -67,8 +67,7 @@ class QuotationRepository
             ->from($this->databasePrefix . 'cart_product', 'cp')
             ->join('cp', $this->databasePrefix . 'cart', 'c', 'c.id_cart = cp.id_cart')
             ->execute()
-            ->fetchAll()
-            ;
+            ->fetchAll();
     }
 
     /**
@@ -83,8 +82,7 @@ class QuotationRepository
             ->where('id_customer = :id_customer')
             ->setParameter('id_customer', $idcustomer)
             ->execute()
-            ->fetchAll()
-            ;
+            ->fetchAll();
     }
 
     /**
@@ -98,8 +96,7 @@ class QuotationRepository
             ->where('c.id_customer = :id_customer')
             ->setParameter('id_customer', $id_customer)
             ->execute()
-            ->fetch()
-            ;
+            ->fetch();
     }
 
     /**
@@ -108,12 +105,19 @@ class QuotationRepository
     public function findByQuery($query)
     {
         return $this->connection->createQueryBuilder()
-            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname', 'c.email')
+            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname', 'c.email', 'c.id_gender', 'c.birthday',
+                'DATEDIFF(NOW(), c.birthday) / 365.25 AS old', 'c.date_add AS registration', 'c.id_lang', 'c.newsletter',
+                'c.optin AS offer_partners', 'c.date_upd AS last_update', 'c.active',
+                'g.id_gender', 'g.name AS title',
+                'l.id_lang', 'l.name AS lang'
+            )
+//            select('DATEDIFF("2012-02-01","2012-01-01") AS diffDates')
             ->from($this->databasePrefix . 'customer', 'c')
+            ->join('c', $this->databasePrefix . 'gender_lang', 'g', 'c.id_gender = g.id_gender')
+            ->join('c', $this->databasePrefix . 'lang', 'l', 'c.id_lang = l.id_lang')
             ->where('c.firstname LIKE :query OR c.lastname LIKE :query')
             ->setParameter('query', '%' . $query . '%')
             ->execute()
-            ->fetchAll()
-            ;
+            ->fetchAll();
     }
 }

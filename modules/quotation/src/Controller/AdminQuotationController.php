@@ -2,6 +2,7 @@
 
 namespace Quotation\Controller;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
@@ -81,7 +82,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
             'minPasswordLength' => Password::MIN_LENGTH,
             'displayInIframe' => $request->query->has('submitFormAjax'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-//            'test' => _MODULE_DIR_
         ]);
     }
 
@@ -92,7 +92,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $quotationRepository = $this->get('quotation_repository');
         $carts = $quotationRepository->findCartsByCustomer($idCustomer);
 
-        $cart = $response = [];
+        $response = [];
 
         foreach ($carts as $key => $cart) {
 
@@ -129,6 +129,46 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $customer = $quotationRepository->findOneCustomerById($id_customer);
 
         return new JsonResponse(json_encode($customer), 200, [], true);
+    }
+
+    /**
+     * Show details customer by ID
+     * @param Request $request
+     * @param $query
+     * @return JsonResponse
+     */
+    public function showCustomerDetails(Request $request, $id_customer)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $carts = $quotationRepository->findCartsByCustomer($id_customer);
+        $orders = $quotationRepository->findOrdersByCustomer($id_customer);
+        $quotations = $quotationRepository->findQuotationsByCustomer($id_customer);
+
+        $response = [];
+
+        foreach ($carts as $key => $cart) {
+            $response[$key]['id_customer'] = $id_customer;
+            $response[$key]['id_cart'] = $cart['id_cart'];
+            $response[$key]['date_cart'] = date("d/m/Y", strtotime($cart['date_cart']));
+            $response[$key]['total_cart'] = number_format($cart['total_cart'], 2);
+        }
+
+        foreach ($orders as $key => $order) {
+            $response[$key]['id_customer'] = $id_customer;
+            $response[$key]['id_order'] = $order['id_order'];
+            $response[$key]['date_order'] = date("d/m/Y", strtotime($order['date_order']));
+            $response[$key]['total_paid'] = number_format($order['total_paid'], 2);
+            $response[$key]['payment'] = $order['payment'];
+        }
+
+        foreach ($quotations as $key => $quotation) {
+            $response[$key]['id_customer'] = $id_customer;
+            $response[$key]['id_quotation'] = $quotation['id_quotation'];
+            $response[$key]['date_quotation'] = date("d/m/Y", strtotime($quotation['date_quotation']));
+            $response[$key]['total_quotation'] = number_format($quotation['total_quotation'], 2);
+        }
+
+        return new JsonResponse(json_encode($response), 200, [], true);
     }
 
     public function ajaxCustomer(Request $request)

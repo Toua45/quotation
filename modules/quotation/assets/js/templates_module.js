@@ -1,13 +1,17 @@
 export const TemplateModule = {
-    card: `<div class="card" style="width: 18rem;">
+    card: `<div id='customer-card_---increment---' class="card hidden mr-3 mb-4" >
               <div class="card-body">
                 <h5 class="card-title">---lastname---</h5>
                 <h6 class="card-subtitle mb-2 text-muted">---firstname---</h6>
                 <p class="card-text">---text---</p>
-                <button class="btn btn-primary" data-toggle="modal" data-target="#showCustomerModal">Details</button>   
+                <div class="row justify-content-between">
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#showCustomerModal">Details</button>   
+                    <a href="---link-show-customer-carts---" data-idcustomer="---id---" class="customer-details btn btn-outline-primary mx-3">Choisir</a>
+                </div>
                 ---modal-customer-infos---         
               </div>
             </div>`,
+
     modalCustomerInfos: `<div class="modal fade" id="showCustomerModal" tabindex="-1" role="dialog" aria-labelledby="showCustomerModalTitle" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -24,6 +28,7 @@ export const TemplateModule = {
                     </div>
                   </div>
                 </div>`,
+
     personalData: `<div class="row">
                         <div class="col">
                             <div class="card">
@@ -84,9 +89,27 @@ export const TemplateModule = {
                                   </div>
                                 </div>
                             
-                                  </div>
-                            </div>
-                        
-                        </div>
-                    </div>`
+                              </div>
+                        </div>                                
+              </div>
+            </div>`,
+
+    tableCart: `<tr>
+            <td class="cart-id text-left">---cartId---</td>
+            <td class="cart-date text-left">---cartDate---</td>
+            <td class="cart-total text-left">---totalCart---</td>
+            </tr>`,
+
+    tableOrder: `<tr>
+            <td class="order-id text-left">---orderId---</td>
+            <td class="order-date text-left">---orderDate---</td>
+            <td class="order-total text-left">---totalOrder---</td>
+            <td class="order-payment text-left">---payment---</td>
+        </tr>`,
+
+    tableQuotation: `<tr>
+            <td class="quotation-id text-left">---quotationId---</td>
+            <td class="quotation-date text-left">---quotationDate---</td>
+            <td class="quotation-total text-left">---totalQuotation---</td>
+        </tr>`,
 };

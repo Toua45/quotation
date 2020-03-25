@@ -25,7 +25,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function searchQuotationsByFilters(Request $request, $filter = !null, $reference = null, $oldest = null, $recent = null)
+    public function searchQuotationsByFilters(Request $request, $filter = !null, $reference = null, $oldest = null)
     {
 
         $quotationRepository = $this->get('quotation_repository');
@@ -43,7 +43,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
 
 
-             $quotationFilter = $quotationRepository->findQuotationsByFilters($filter, $reference, $oldest, $recent);
+             $quotationFilter = $quotationRepository->findQuotationsByFilters($filter, $reference, $oldest);
              dump($quotationFilter);die();
 
 //        $quotationFilterForm = $quotationFilter = $this->createForm(QuotationSearchType::class);

@@ -19,9 +19,9 @@ quotation_admin_search_filters:
     oldest: null
 #    recent: null
   requirements:
-    filter: '([a-zA-Z]+)?'
-    reference: '(\w+)?'
-    oldest: '((\d){4}-(\d){2}-(\d){2})?'
+    filter: '([a-zA-Z]+)?.+'
+    reference: '(\w+)?.+'
+    oldest: '((\d){4}-(\d){2}-(\d){2})?.+'
 #    filter: '[a-zA-Z]+|(.*?)|\w+'
 #    reference: '(.*?)\w+'
 

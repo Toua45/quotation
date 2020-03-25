@@ -31,7 +31,7 @@ export const TemplateModule = {
                                 ---firstname--- ---lastname--- [---id-customer---] -
                                 <a href="---customer-link-email---">---customer-email---</a>
                             
-                                <a href="---edit---" class="tooltip-link float-right" data-toggle="pstooltip" title="" data-placement="top" data-original-title="Modifier">
+                                <a href="---edit---" class="tooltip-link float-right" data-toggle="pstooltip" target="_blank" data-placement="top" data-original-title="Modifier">
                                   <i class="material-icons">edit</i>
                                 </a>
                               </h3>

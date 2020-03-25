@@ -49,12 +49,7 @@ export const TemplateModule = {
                                 <div class="row mb-1">
                                   <div class="col-4 text-right">Date d'inscription</div>
                                   <div class="col-8">---registration---</div>
-                                </div>
-                            
-                                <div class="row mb-1">
-                                  <div class="col-4 text-right">Dernière visite</div>
-                                  <div class="col-8">13/02/2020 10:09:32 ????</div>
-                                </div>                              
+                                </div>                         
                                 
                                 <div class="row mb-1">
                                   <div class="col-4 text-right">Langue</div>

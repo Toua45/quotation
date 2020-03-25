@@ -46,7 +46,7 @@ class QuotationRepository
         return $query->execute()->fetchAll();
     }
 
-    public function findQuotationsByFilters($reference = null, $filter = null, $start = null, $end = null)
+    public function findQuotationsByFilters($reference = null, $filter = null, $start = null ,$end = null)
     {
         $query = $this->connection->createQueryBuilder();
         $query->addSelect('q.*', 'c.firstname', 'c.lastname');
@@ -70,14 +70,29 @@ class QuotationRepository
                     ->setParameter('reference', $reference)
                     ->execute()->fetch();
                 break;
+            case '' !== $start && '' !== $end:
+                    return $query
+                        ->from($this->databasePrefix . 'quotation', 'q')
+                        ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+                        ->where('q.date_add >= :interval_start AND q.date_add <= :interval_end')
+                        ->setParameters(['interval_start' => $start, 'interval_end' => preg_replace('/_/', '', $end)])
+                        ->orderBy('q.date_add', 'DESC')
+                        ->execute()->fetchAll();
+                break;
             case '' !== $start:
+                return $query
+                    ->from($this->databasePrefix . 'quotation', 'q')
+                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+                    ->where('q.date_add >= :interval_start')
+                    ->setParameter('interval_start', $start)
+                    ->execute()->fetchAll();
+                break;
             case '' !== $end:
                 return $query
                     ->from($this->databasePrefix . 'quotation', 'q')
                     ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
-                    ->where('q.date_add >= :interval_start AND q.date_add <= :interval_end')
-                    ->setParameters(['interval_start' => $start, 'interval_end' => preg_replace('/_/', '', $end)])
-                    ->orderBy('q.date_add', 'DESC')
+                    ->where('q.date_add <= :interval_end')
+                    ->setParameter('interval_end', preg_replace('/_/', '', $end))
                     ->execute()->fetchAll();
                 break;
             default:

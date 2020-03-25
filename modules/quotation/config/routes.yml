@@ -15,10 +15,15 @@ quotation_admin_search_filters:
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
   requirements:
-    reference: '(\w+){5}|(.*?)'
+    reference: '(\w+){5}[^\_]|[^\_0-9]|(.*?)'
     filter: '^[a-zA-Z]+|(.*?)'
     start: '^(\d{4}(\-\d{2}){2})|\_$|(.*?)'
     end: '^(\d{4}(\-\d{2}){2})$|(.*?)'
+
+#    reference: '[a-zA-Z0-9]{6}[^\_]|[^\_0-9]|(.*?)'
+#    filter: '^[a-zA-Z]+|(.*?)'
+#    start: '^(\d{4}(\-\d{2}){2})|\_$|(.*?)'
+#    end: '^(\d{4}(\-\d{2}){2})$|(.*?)'
 
 quotation_admin_add:
   path: quotation/admin/add

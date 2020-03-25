@@ -8,22 +8,17 @@ quotation_admin:        #RouteName
     _legacy_link: 'AdminQuotationController'
 
 quotation_admin_search_filters:
-  path: quotation/admin/search/{filter}{reference}{oldest}
+  path: quotation/admin/search/{reference}{filter}{start}{end}
   methods: [GET]
   defaults:
     _controller: 'Quotation\Controller\AdminQuotationController::searchQuotationsByFilters'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
-    filter: null
-    reference: null
-    oldest: null
-#    recent: null
   requirements:
-    filter: '([a-zA-Z]+)?'
-    reference: '(\w+)?'
-    oldest: '((\d){4}-(\d){2}-(\d){2})?'
-#    filter: '[a-zA-Z]+|(.*?)|\w+'
-#    reference: '(.*?)\w+'
+    reference: '(\w+){5}|(.*?)'
+    filter: '^[a-zA-Z]+|(.*?)'
+    start: '^(\d{4}(\-\d{2}){2})|\_$|(.*?)'
+    end: '^(\d{4}(\-\d{2}){2})$|(.*?)'
 
 quotation_admin_add:
   path: quotation/admin/add

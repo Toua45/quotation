@@ -46,46 +46,42 @@ class QuotationRepository
         return $query->execute()->fetchAll();
     }
 
-    public function findQuotationsByFilters($filter, $reference = null, $oldest = null)
+    public function findQuotationsByFilters($start = null, $end = null, $reference = null, $filter = null)
     {
         $query = $this->connection->createQueryBuilder();
         $query->addSelect('q.*', 'c.firstname', 'c.lastname');
 
-        if ($filter !== null) {
-            $query
+        if ('' !== $filter) {
+            return $query
                 ->from($this->databasePrefix . 'customer', 'c')
                 ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
                 ->where('c.firstname LIKE :filter OR c.lastname LIKE :filter')
-                ->setParameter('filter', '%' . $filter . '%');
-            return $query->execute()->fetchAll();
-
-        }
-        if ($reference !== null) {
-            $query
+                ->setParameter('filter', '%' . $filter . '%')
+                ->execute()->fetchAll();
+        } elseif ('' !== $reference) {
+            return $query
                 ->from($this->databasePrefix . 'quotation', 'q')
                 ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
                 ->where('q.reference = :reference')
-                ->setParameter('reference', $reference);
-            return $query->execute()->fetch();
-
+                ->setParameter('reference', $reference)
+                ->execute()->fetch();
+        } elseif ('' !== $start) {
+            if ('' !== $end) {
+                return $query
+                    ->from($this->databasePrefix . 'quotation', 'q')
+                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+                    ->where('q.date_add >= :start AND q.date_add <= :end')
+                    ->setParameters(['start' => $start, 'end' => preg_replace('/_/', '', $end)])
+                    ->execute()->fetchAll();
+            } else {
+                return $query
+                    ->from($this->databasePrefix . 'quotation', 'q')
+                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+                    ->where('q.date_add >= :start')
+                    ->setParameter('start', $start)
+                    ->execute()->fetchAll();
+            }
         }
-        if ($oldest !== null) {
-            $query
-                ->from($this->databasePrefix . 'quotation', 'q')
-                ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
-                ->where('q.date_add >= :date_from')
-                ->setParameter('date_from', $oldest);
-            return $query->execute()->fetchAll();
-
-        }
-//        else {
-//            $query
-//                ->from($this->databasePrefix . 'quotation', 'q')
-//                ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
-//                ->addGroupBy('q.id_quotation');
-//        }
-
-        //return $query->execute()->fetchAll();
     }
 
 

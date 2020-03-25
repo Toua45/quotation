@@ -25,26 +25,18 @@ class AdminQuotationController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function searchQuotationsByFilters(Request $request, $filter = !null, $reference = null, $oldest = null, $recent = null)
+    public function searchQuotationsByFilters(Request $request, $start, $end, $reference, $filter)
     {
 
+        dump('ref -> ' . $reference);
+        dump('start -> ' . $start);
+        dump('filter -> ' . $filter);
+        dump('end -> ' . $end);
+
         $quotationRepository = $this->get('quotation_repository');
+        $quotationFilter = $quotationRepository->findQuotationsByFilters($start, $end, $reference, $filter);
 
-//        if (preg_match('/\w+/', $filter)) {
-//            $reference = $filter;
-//            dump('reference');
-//            dump($quotationRepository->findQuotationsByFilters(null, $reference));die();
-//        } elseif (preg_match('/[a-zA-Z]+/', $filter)) {
-//            dump('not empty string');
-//            dump($quotationRepository->findQuotationsByFilters($filter, null));die();
-//        } elseif (preg_match('/(.*?)/', $filter)) {
-//            dump($quotationRepository->findQuotationsByFilters($filter, null));die();
-//        }
-
-
-
-             $quotationFilter = $quotationRepository->findQuotationsByFilters($filter, $reference, $oldest, $recent);
-             dump($quotationFilter);die();
+        dump($quotationFilter);die();
 
 //        $quotationFilterForm = $quotationFilter = $this->createForm(QuotationSearchType::class);
 //

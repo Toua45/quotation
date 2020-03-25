@@ -46,65 +46,86 @@ class QuotationRepository
         return $query->execute()->fetchAll();
     }
 
-    public function findQuotationsByFilters($start = null, $end = null, $reference = null, $filter = null)
+    public function findQuotationsByFilters($reference = null, $filter = null, $start = null, $end = null)
     {
         $query = $this->connection->createQueryBuilder();
         $query->addSelect('q.*', 'c.firstname', 'c.lastname');
 
-        if ('' !== $filter) {
-            return $query
-                ->from($this->databasePrefix . 'customer', 'c')
-                ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
-                ->where('c.firstname LIKE :filter OR c.lastname LIKE :filter')
-                ->setParameter('filter', '%' . $filter . '%')
-                ->execute()->fetchAll();
-        } elseif ('' !== $reference) {
-            return $query
-                ->from($this->databasePrefix . 'quotation', 'q')
-                ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
-                ->where('q.reference = :reference')
-                ->setParameter('reference', $reference)
-                ->execute()->fetch();
-        } elseif ('' !== $start) {
-            if ('' !== $end) {
+        $filterSearch = [$filter, $reference, $start, $end];
+
+        switch($filterSearch):
+            case '' !== $filter:
+                return $query
+                    ->from($this->databasePrefix . 'customer', 'c')
+                    ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
+                    ->where('c.firstname LIKE :filter OR c.lastname LIKE :filter')
+                    ->setParameter('filter', '%' . $filter . '%')
+                    ->execute()->fetchAll();
+                break;
+            case '' !== $reference:
                 return $query
                     ->from($this->databasePrefix . 'quotation', 'q')
                     ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
-                    ->where('q.date_add >= :start AND q.date_add <= :end')
-                    ->setParameters(['start' => $start, 'end' => preg_replace('/_/', '', $end)])
-                    ->execute()->fetchAll();
-            } else {
+                    ->where('q.reference = :reference')
+                    ->setParameter('reference', $reference)
+                    ->execute()->fetch();
+                break;
+            case '' !== $start:
+            case '' !== $end:
                 return $query
                     ->from($this->databasePrefix . 'quotation', 'q')
                     ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
-                    ->where('q.date_add >= :start')
-                    ->setParameter('start', $start)
+                    ->where('q.date_add >= :interval_start AND q.date_add <= :interval_end')
+                    ->setParameters(['interval_start' => $start, 'interval_end' => preg_replace('/_/', '', $end)])
+                    ->orderBy('q.date_add', 'DESC')
                     ->execute()->fetchAll();
-            }
-        }
+                break;
+            default:
+                return $query
+                    ->from($this->databasePrefix . 'quotation', 'q')
+                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+                    ->addGroupBy('q.id_quotation')
+                    ->execute()->fetchAll();
+        endswitch;
+
+
+
+//        if ('' !== $filter) {
+//            return $query
+//                ->from($this->databasePrefix . 'customer', 'c')
+//                ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
+//                ->where('c.firstname LIKE :filter OR c.lastname LIKE :filter')
+//                ->setParameter('filter', '%' . $filter . '%')
+//                ->execute()->fetchAll();
+//        } elseif ('' !== $reference) {
+//            return $query
+//                ->from($this->databasePrefix . 'quotation', 'q')
+//                ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+//                ->where('q.reference = :reference')
+//                ->setParameter('reference', $reference)
+//                ->execute()->fetch();
+//        } elseif ('' !== $start) {
+//            if ('' !== $end) {
+//                return $query
+//                    ->from($this->databasePrefix . 'quotation', 'q')
+//                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+//                    ->where('q.date_add >= :start AND q.date_add <= :end')
+//                    ->setParameters(['start' => $start, 'end' => preg_replace('/_/', '', $end)])
+//                    ->orderBy('q.date_add', 'DESC')
+//                    ->execute()->fetchAll();
+//            } else {
+//                return $query
+//                    ->from($this->databasePrefix . 'quotation', 'q')
+//                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+//                    ->where('q.date_add >= :start')
+//                    ->setParameter('start', $start)
+//                    ->execute()->fetchAll();
+//            }
+//        }
     }
 
 
 
-
-
-
-    //        if (!is_null($filter) || $filter !== '') {
-//            $query
-//                ->from($this->databasePrefix . 'customer', 'c')
-//                ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
-//                ->where('c.firstname LIKE :filter OR c.lastname LIKE :filter')
-//                ->setParameter('filter', '%' . $filter . '%');
-//
-//            if (!is_null($reference)) {
-//                $query
-//                ->from($this->databasePrefix . 'quotation', 'q')
-//                ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
-//                ->where('q.reference = :reference')
-//                ->setParameter('reference', $reference);
-//            }
-//        }
-//        return $query->execute()->fetchAll();
 
 
     /**

@@ -25,16 +25,15 @@ class AdminQuotationController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function searchQuotationsByFilters(Request $request, $start, $end, $reference, $filter)
+    public function searchQuotationsByFilters(Request $request, $reference, $filter, $start, $end)
     {
-
-        dump('ref -> ' . $reference);
-        dump('start -> ' . $start);
         dump('filter -> ' . $filter);
-        dump('end -> ' . $end);
+        dump('reference -> ' . $reference);
+        dump('interval_start -> ' . $start);
+        dump('interval_end -> ' . $end);
 
         $quotationRepository = $this->get('quotation_repository');
-        $quotationFilter = $quotationRepository->findQuotationsByFilters($start, $end, $reference, $filter);
+        $quotationFilter = $quotationRepository->findQuotationsByFilters($reference, $filter, $start, $end);
 
         dump($quotationFilter);die();
 

@@ -17,7 +17,6 @@ class QuotationSearchType extends AbstractType
 //            ->add('lastname', SearchType::class)
 //            ->add('reference', SearchType::class)
 //            ->add('date_add', SearchType::class)
-//            ->add('price', SearchType::class)
         ;
     }
 

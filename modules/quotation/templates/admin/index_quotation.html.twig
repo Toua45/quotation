@@ -1,5 +1,5 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
-{#{% form_theme quotationFilterForm 'bootstrap_4_layout.html.twig' %}#}
+{#{% form_theme formQuotationFilter 'bootstrap_4_layout.html.twig' %}#}
 
  {% block content %}
 
@@ -95,17 +95,17 @@
                      </td>
                  </tr>
                  <tr class="search">
-{#                     {{ form_start(quotationFilterForm) }}#}
+{#                     {{ form_start(formQuotationFilter) }}#}
                      <td></td>
                      <td>
                          <input type="text" class="input-text" name="id_quotation" id="id_quotation">
                      </td>
                      <td>
-{#                         {{ form_row(formSearchQuotation.reference) }}#}
+{#                         {{ form_row(formQuotationFilter.reference) }}#}
 {#                         <input type="text" class="input-text" name="reference" id="reference">#}
                      </td>
                      <td>
-{#                         {{ form_row(quotationFilterForm.firstname) }}#}
+{#                         {{ form_row(formQuotationFilter.firstname) }}#}
 {#                         <input type="text" class="input-text" name="customer" id="customer">#}
                      </td>
                      <td>
@@ -142,7 +142,7 @@
 {#                         </a>#}
 {#                         <button>Rechercher</button>#}
                      </td>
-{#                     {{ form_end(quotationFilterForm) }}#}
+{#                     {{ form_end(formQuotationFilter) }}#}
                  </tr>
                  </thead>
 

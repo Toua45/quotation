@@ -1,6 +1,9 @@
-{{ form_start(form) }}
-    {{ form_label(form.customerId) }}
+{{ form_start(form, {'attr':{'class':'mt-4'}}) }}
+
+<div class="d-flex align-items-center">
+    {{ form_label(form.customerId, null, {'label_attr':{'class':'form-label col-sm-6 mr-2 mt-2'}}) }}
     {{ form_widget(form.customerId) }}
+</div>
 
 <span id="js-data" data-source="{{ path('quotation_admin_autocompletion_ajax') }}"></span>
 

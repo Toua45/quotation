@@ -5,14 +5,14 @@ export const TemplateModule = {
                 <h6 class="card-subtitle mb-2 text-muted">---firstname---</h6>
                 <p class="card-text">---text---</p>
                 <div class="row justify-content-between">
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#showCustomerModal">Details</button>   
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#showCustomerModal_---id-customer-modal---">Details</button>   
                     <a href="---link-show-customer-carts---" data-idcustomer="---id---" class="customer-details btn btn-outline-primary mx-3">Choisir</a>
                 </div>
                 ---modal-customer-infos---         
               </div>
             </div>`,
 
-    modalCustomerInfos: `<div class="modal fade" id="showCustomerModal" tabindex="-1" role="dialog" aria-labelledby="showCustomerModalTitle" aria-hidden="true">
+    modalCustomerInfos: `<div class="modal fade" id="showCustomerModal_---id-customer-modal---" tabindex="-1" role="dialog" aria-labelledby="showCustomerModalTitle" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                       <div class="modal-header">

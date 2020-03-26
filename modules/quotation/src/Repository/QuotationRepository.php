@@ -17,6 +17,13 @@ class QuotationRepository
      */
     private $databasePrefix;
 
+//    const STATUS = [
+//        'A valider',
+//        'Validé',
+//        'Commandé',
+//        'Annulé'
+//    ];
+
     /**
      * QuotationRepository constructor.
      * @param Connection $connection
@@ -46,61 +53,71 @@ class QuotationRepository
         return $query->execute()->fetchAll();
     }
 
-    public function findQuotationsByFilters($reference = null, $filter = null, $start = null ,$end = null)
+    public function findQuotationsByFilters($reference = null, $filter = null, $status = null, $start = null ,$end = null)
     {
         $query = $this->connection->createQueryBuilder();
         $query->addSelect('q.*', 'c.firstname', 'c.lastname');
 
-        $filterSearch = [$filter, $reference, $start, $end];
+        $filterSearch = [$filter, $reference, $status, $start, $end];
 
         switch($filterSearch):
-            case '' !== $filter:
-                return $query
-                    ->from($this->databasePrefix . 'customer', 'c')
-                    ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
-                    ->where('c.firstname LIKE :filter OR c.lastname LIKE :filter')
-                    ->setParameter('filter', '%' . $filter . '%')
-                    ->execute()->fetchAll();
-                break;
-            case '' !== $reference:
-                return $query
-                    ->from($this->databasePrefix . 'quotation', 'q')
-                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
-                    ->where('q.reference = :reference')
-                    ->setParameter('reference', $reference)
-                    ->execute()->fetch();
-                break;
-            case '' !== $start && '' !== $end:
-                    return $query
-                        ->from($this->databasePrefix . 'quotation', 'q')
-                        ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
-                        ->where('q.date_add >= :interval_start AND q.date_add <= :interval_end')
-                        ->setParameters(['interval_start' => $start, 'interval_end' => preg_replace('/_/', '', $end)])
-                        ->orderBy('q.date_add', 'DESC')
-                        ->execute()->fetchAll();
-                break;
-            case '' !== $start:
+//            case '' !== $filter:
+//                return $query
+//                    ->from($this->databasePrefix . 'customer', 'c')
+//                    ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
+//                    ->where('c.firstname LIKE :filter OR c.lastname LIKE :filter')
+//                    ->setParameter('filter', '%' . $filter . '%')
+//                    ->execute()->fetchAll();
+//                break;
+//            case '' !== $reference:
+//                return $query
+//                    ->from($this->databasePrefix . 'quotation', 'q')
+//                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+//                    ->where('q.reference = :reference')
+//                    ->setParameter('reference', $reference)
+//                    ->execute()->fetch();
+//                break;
+            case '' !== $status:
                 return $query
                     ->from($this->databasePrefix . 'quotation', 'q')
                     ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
-                    ->where('q.date_add >= :interval_start')
-                    ->setParameter('interval_start', $start)
+                    ->where('q.status = :status')
+                    ->setParameter('status', $status)
                     ->execute()->fetchAll();
                 break;
-            case '' !== $end:
-                return $query
-                    ->from($this->databasePrefix . 'quotation', 'q')
-                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
-                    ->where('q.date_add <= :interval_end')
-                    ->setParameter('interval_end', preg_replace('/_/', '', $end))
-                    ->execute()->fetchAll();
-                break;
-            default:
-                return $query
-                    ->from($this->databasePrefix . 'quotation', 'q')
-                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
-                    ->addGroupBy('q.id_quotation')
-                    ->execute()->fetchAll();
+//            case '' !== $start && '' !== $end:
+//                    return $query
+//                        ->from($this->databasePrefix . 'quotation', 'q')
+//                        ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+//                        ->where('q.date_add >= :interval_start AND q.date_add <= :interval_end')
+//                        ->setParameters(['interval_start' => $start, 'interval_end' => preg_replace('/_/', '', $end)])
+//                        ->orderBy('q.date_add', 'DESC')
+//                        ->execute()->fetchAll();
+//                break;
+//            case '' !== $start:
+//                return $query
+//                    ->from($this->databasePrefix . 'quotation', 'q')
+//                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+//                    ->where('q.date_add >= :interval_start')
+//                    ->setParameter('interval_start', $start)
+//                    ->orderBy('q.date_add', 'DESC')
+//                    ->execute()->fetchAll();
+//                break;
+//            case '' !== $end:
+//                return $query
+//                    ->from($this->databasePrefix . 'quotation', 'q')
+//                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+//                    ->where('q.date_add <= :interval_end')
+//                    ->setParameter('interval_end', preg_replace('/_/', '', $end))
+//                    ->orderBy('q.date_add', 'DESC')
+//                    ->execute()->fetchAll();
+//                break;
+//            default:
+//                return $query
+//                    ->from($this->databasePrefix . 'quotation', 'q')
+//                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+//                    ->addGroupBy('q.id_quotation')
+//                    ->execute()->fetchAll();
         endswitch;
 
 

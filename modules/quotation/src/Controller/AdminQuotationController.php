@@ -27,8 +27,8 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
     public function searchQuotationsByFilters(Request $request, $reference, $filter, $start, $end)
     {
-        dump('filter -> ' . $filter);
         dump('reference -> ' . $reference);
+        dump('filter -> ' . $filter);
         dump('interval_start -> ' . $start);
         dump('interval_end -> ' . $end);
 

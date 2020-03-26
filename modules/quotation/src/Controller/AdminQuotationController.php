@@ -8,7 +8,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Quotation\Entity\Quotation;
-use Quotation\Form\QuotationType;
+use Quotation\Form\QuotationCustomerType;
 use Quotation\Service\QuotationFileSystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,8 +29,8 @@ class AdminQuotationController extends FrameworkBundleAdminController
     {
         $quotation = new Quotation();
 
-        $form = $this->createForm(QuotationType::class, $quotation);
-        $form->handleRequest($request);
+        $formQuotationCustomer = $this->createForm(QuotationCustomerType::class, $quotation);
+        $formQuotationCustomer->handleRequest($request);
 
         if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
             return $this->redirectToRoute('quotation_admin_add');
@@ -65,18 +65,18 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $quotation->setDateAdd(new \DateTime('now'));
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($quotation);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('quotation_admin');
-        }
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            $quotation->setDateAdd(new \DateTime('now'));
+//            $entityManager = $this->getDoctrine()->getManager();
+//            $entityManager->persist($quotation);
+//            $entityManager->flush();
+//
+//            return $this->redirectToRoute('quotation_admin');
+//        }
 
         return $this->render('@Modules/quotation/templates/admin/add_quotation.html.twig', [
             'quotation' => $quotation,
-            'form' => $form->createView(),
+            'formQuotationCustomer' => $formQuotationCustomer->createView(),
             'customerForm' => $customerForm->createView(),
             'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
             'minPasswordLength' => Password::MIN_LENGTH,

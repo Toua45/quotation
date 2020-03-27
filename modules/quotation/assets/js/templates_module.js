@@ -99,7 +99,7 @@ export const TemplateModule = {
             <td class="cart-date text-left">---cartDate---</td>
             <td class="cart-total text-left">---totalCart---</td>
             <td class="cart-total text-left"><button class="btn btn-primary" data-toggle="modal" data-target="#showCartModal_---id-cart-modal---">Details</button></td>
-            <span>---modal-cart-infos--- </span>        
+<!--            <span>-&#45;&#45;modal-cart-infos-&#45;&#45; </span>        -->
               
             </tr>`,
 

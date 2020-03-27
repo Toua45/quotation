@@ -3,7 +3,7 @@
 namespace Quotation\Repository;
 
 use Doctrine\DBAL\Connection;
-use PhpOffice\PhpSpreadsheet\Calculation\DateTime;
+use Doctrine\DBAL\Query\QueryBuilder;
 
 class QuotationRepository
 {
@@ -63,96 +63,63 @@ class QuotationRepository
                     ->execute()->fetchAll();
                 break;
             case '' !== $reference:
+                $this->findQuotationsFromAndJoin($query);
                 return $query
-                    ->from($this->databasePrefix . 'quotation', 'q')
-                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
                     ->where('q.reference = :reference')
                     ->setParameter('reference', $reference)
                     ->execute()->fetch();
                 break;
             case '' !== $status:
+                $this->findQuotationsFromAndJoin($query);
                 return $query
-                    ->from($this->databasePrefix . 'quotation', 'q')
-                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
                     ->where('q.status = :status')
                     ->setParameter('status', $status)
                     ->execute()->fetchAll();
                 break;
             case '' !== $start && '' !== $end:
+                $this->findQuotationsFromAndJoin($query);
                 return $query
-                    ->from($this->databasePrefix . 'quotation', 'q')
-                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
                     ->where('q.date_add >= :interval_start AND q.date_add <= :interval_end')
                     ->setParameters(['interval_start' => $start, 'interval_end' => preg_replace('/_/', '', $end)])
-                    ->orderBy('q.date_add', 'DESC')
                     ->execute()->fetchAll();
                 break;
             case '' !== $start:
+                $this->findQuotationsFromAndJoin($query);
                 return $query
-                    ->from($this->databasePrefix . 'quotation', 'q')
-                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
                     ->where('q.date_add >= :interval_start')
                     ->setParameter('interval_start', $start)
-                    ->orderBy('q.date_add', 'DESC')
                     ->execute()->fetchAll();
                 break;
             case '' !== $end:
+                $this->findQuotationsFromAndJoin($query);
                 return $query
-                    ->from($this->databasePrefix . 'quotation', 'q')
-                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
                     ->where('q.date_add <= :interval_end')
                     ->setParameter('interval_end', preg_replace('/_/', '', $end))
-                    ->orderBy('q.date_add', 'DESC')
                     ->execute()->fetchAll();
                 break;
             default:
+                $this->findQuotationsFromAndJoin($query);
                 return $query
-                    ->from($this->databasePrefix . 'quotation', 'q')
-                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
                     ->addGroupBy('q.id_quotation')
                     ->execute()->fetchAll();
         endswitch;
     }
 
-//        if ('' !== $filter) {
-//            return $query
-//                ->from($this->databasePrefix . 'customer', 'c')
-//                ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
-//                ->where('c.firstname LIKE :filter OR c.lastname LIKE :filter')
-//                ->setParameter('filter', '%' . $filter . '%')
-//                ->execute()->fetchAll();
-//        } elseif ('' !== $reference) {
-//            return $query
-//                ->from($this->databasePrefix . 'quotation', 'q')
-//                ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
-//                ->where('q.reference = :reference')
-//                ->setParameter('reference', $reference)
-//                ->execute()->fetch();
-//        } elseif ('' !== $start) {
-//            if ('' !== $end) {
-//                return $query
-//                    ->from($this->databasePrefix . 'quotation', 'q')
-//                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
-//                    ->where('q.date_add >= :start AND q.date_add <= :end')
-//                    ->setParameters(['start' => $start, 'end' => preg_replace('/_/', '', $end)])
-//                    ->orderBy('q.date_add', 'DESC')
-//                    ->execute()->fetchAll();
-//            } else {
-//                return $query
-//                    ->from($this->databasePrefix . 'quotation', 'q')
-//                    ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
-//                    ->where('q.date_add >= :start')
-//                    ->setParameter('start', $start)
-//                    ->execute()->fetchAll();
-//            }
-//        }
-
+    /**
+     * @param QueryBuilder $query
+     * @return QueryBuilder
+     */
+    private function findQuotationsFromAndJoin(QueryBuilder $query)
+    {
+        return $query
+            ->from($this->databasePrefix . 'quotation', 'q')
+            ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer');
+    }
 
     /**
      * @return mixed[]
      */
-    public
-    function findAllCustomers()
+    public function findAllCustomers()
     {
         return $this->connection->createQueryBuilder()
             ->addSelect("CONCAT(c.firstname, ' ', c.lastname) AS fullname", "c.id_customer")
@@ -164,8 +131,7 @@ class QuotationRepository
     /**
      * @return mixed[]
      */
-    public
-    function findAllCarts()
+    public function findAllCarts()
     {
         return $this->connection->createQueryBuilder()
             ->addSelect('cp.id_cart', 'cp.date_add', 'c.id_customer')
@@ -178,8 +144,7 @@ class QuotationRepository
     /**
      * @return mixed[]
      */
-    public
-    function findCartsByCustomer($idcustomer)
+    public function findCartsByCustomer($idcustomer)
     {
         return $this->connection->createQueryBuilder()
             ->addSelect('cp.id_cart', 'cp.date_add', 'c.id_customer')
@@ -194,8 +159,7 @@ class QuotationRepository
     /**
      * @return mixed[]
      */
-    public
-    function findOneCustomerById($id_customer)
+    public function findOneCustomerById($id_customer)
     {
         return $this->connection->createQueryBuilder()
             ->addSelect('c.id_customer', 'c.firstname', 'c.lastname')
@@ -209,8 +173,7 @@ class QuotationRepository
     /**
      * @return mixed[]
      */
-    public
-    function findByQuery($query)
+    public function findByQuery($query)
     {
         return $this->connection->createQueryBuilder()
             ->addSelect('c.id_customer', 'c.firstname', 'c.lastname')

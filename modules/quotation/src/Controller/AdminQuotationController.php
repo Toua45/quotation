@@ -149,8 +149,15 @@ class AdminQuotationController extends FrameworkBundleAdminController
         foreach ($carts as $key => $cart) {
             $response[$key]['id_customer'] = $id_customer;
             $response[$key]['id_cart'] = $cart['id_cart'];
+            $response[$key]['firstname'] = $cart['firstname'];
+            $response[$key]['lastname'] = $cart['lastname'];
             $response[$key]['date_cart'] = date("d/m/Y", strtotime($cart['date_cart']));
             $response[$key]['total_cart'] = number_format($cart['total_cart'], 2);
+            $response[$key]['total_product'] = number_format($cart['total_product'], 2);
+            $response[$key]['id_product'] = $cart['id_product'];
+            $response[$key]['product_name'] = $cart['name'];
+            $response[$key]['product_price'] = number_format($cart['price'], 2);
+            $response[$key]['product_quantity'] = $cart['quantity'];
         }
 
         foreach ($orders as $key => $order) {
@@ -190,4 +197,19 @@ class AdminQuotationController extends FrameworkBundleAdminController
         }
         return new JsonResponse(json_encode($response), 200, [], true);
     }
+
+//    /**
+//     * Show cart by ID
+//     * @param Request $request
+//     * @param $query
+//     * @return JsonResponse
+//     */
+//    public function showCart(Request $request, $id_cart)
+//    {
+//        $cartRepository = $this->get('quotation_repository');
+//        $cart = $cartRepository->findOneCartById($id_cart);
+////        dump($cart);die;
+//
+//        return new JsonResponse(json_encode($cart), 200, [], true);
+//    }
 }

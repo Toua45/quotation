@@ -76,18 +76,49 @@ class QuotationRepository
     public function findCartsByCustomer($idcustomer)
     {
         return $this->connection->createQueryBuilder()
-            ->addSelect('ca.id_cart', 'ca.date_add AS date_cart', 'ca.id_customer')
+            ->addSelect('ca.id_cart', 'ca.date_add AS date_cart')
+            ->addSelect('ca.id_customer', 'c.firstname', ' c.lastname')
+            ->addSelect('cp.id_product', 'pl.name','p.price', 'cp.quantity')
+            ->addSelect('p.price * cp.quantity AS total_product')
             ->addSelect('SUM(p.price * cp.quantity) AS total_cart')
             ->from($this->databasePrefix . 'cart', 'ca')
             ->addGroupBy('ca.id_cart')
+            ->join('ca', $this->databasePrefix . 'customer', 'c', 'ca.id_customer = c.id_customer')
             ->join('ca', $this->databasePrefix . 'cart_product', 'cp', 'ca.id_cart = cp.id_cart')
             ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
-            ->where('id_customer = :id_customer')
+            ->join('p', $this->databasePrefix . 'product_lang', 'pl', 'p.id_product = pl.id_product')
+            ->where('ca.id_customer = :id_customer')
             ->setParameter('id_customer', $idcustomer)
             ->execute()
             ->fetchAll()
             ;
     }
+
+//    /**
+//     * @return mixed[]
+//     */
+//    public function findOneCartById($id_cart)
+//    {
+//        return $this->connection->createQueryBuilder()
+//            ->addSelect('cp.id_cart', 'p.id_product')
+//            ->from($this->databasePrefix . 'product', 'p')
+//            ->join('p', $this->databasePrefix . 'cart_product', 'cp', 'cp.id_product = p.id_product')
+//            ->where('cp.id_cart = :id_cart')
+//            ->setParameter('id_cart', $id_cart)
+//            ->execute()
+//            ->fetchAll();
+//
+////            ->addSelect('cp.id_cart', 'p.id_product', 'i.id_image', 'pl.name','p.price', 'cp.quantity')
+////            ->addSelect('SUM(p.price * cp.quantity) / COUNT(i.id_image * p.id_product) AS total_cart')
+////            ->from($this->databasePrefix . 'cart_product', 'cp')
+////            ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
+////            ->join('p', $this->databasePrefix . 'product_lang', 'pl', 'p.id_product = pl.id_product')
+////            ->join('p', $this->databasePrefix . 'image', 'i', 'p.id_product = i.id_product')
+////            ->where('cp.id_cart = :id_cart')
+////            ->setParameter('id_cart', $id_cart)
+////            ->execute()
+////            ->fetchAll();
+//    }
 
     /**
      * @return mixed[]

@@ -98,7 +98,64 @@ export const TemplateModule = {
             <td class="cart-id text-left">---cartId---</td>
             <td class="cart-date text-left">---cartDate---</td>
             <td class="cart-total text-left">---totalCart---</td>
+            <td class="cart-total text-left"><button class="btn btn-primary" data-toggle="modal" data-target="#showCartModal_---id-cart-modal---">Details</button></td>
+            <span>---modal-cart-infos--- </span>        
+              
             </tr>`,
+
+    modalCartInfos: `<div class="modal fade" id="showCartModal_---id-cart-modal---" tabindex="-1" role="dialog" aria-labelledby="showCustomerModalTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                    
+                    ---cart-datas---
+                    
+                      </div>
+                    </div>
+                  </div>
+                </div>`,
+
+    cartData: `<div class="row">
+                        <div class="col">
+                            <div class="card">
+                            <h2>INFORMATIONS CLIENT</h2>
+                              <h3 class="card-header"> <i class="material-icons">person</i>
+                              ---firstname--- ---lastname--- [---id-customer---]
+                              </h3>
+                              <div class="card-body">
+                              
+                                <h2>CONTENU DU PANIER</h2>
+                                
+                                <table class="table">
+                                     <thead>
+                                        <tr>
+                                        <th>Produits</th>
+                                        <th>Prix Unitaire</th>
+                                        <th>Quantité</th>
+                                        <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                        <td>---productName---</td>
+                                        <td>---productPrice---</td>
+                                        <td>---productQuantity---</td>
+                                        <td>---totalProduct---</td>
+                                        <tr>
+                                        <td>Total produits</td>
+                                        <td class="text-right">---totalCart---</td>
+                                        </tr>
+                                </table>
+                            
+                              </div>
+                            </div>                                
+                        </div>
+                </div>`,
 
     tableOrder: `<tr>
             <td class="order-id text-left">---orderId---</td>

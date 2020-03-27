@@ -89,7 +89,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         .replace(/---link-show-customer-carts---/, link + customer.id_customer + '/details')
                         .replace(/---increment---/, i)
                     ;
-                    console.log(output);
+                    // console.log(output);
                     // console.log(mod.TemplateModule.card)
                     if (customers.length - 1 === i) {
                         document.getElementById('js-output-customers').innerHTML = output;
@@ -122,7 +122,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         .replace(/\d+(?=\/details)/, link.dataset.idcustomer);
 
                                     const getCustomerDetails = (data) => {
-                                        // console.log(data);
+                                        console.log(data);
                                         let outputCart = '';
                                         let outputOrder = '';
                                         let outputQuotation = '';
@@ -131,7 +131,22 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             outputCart += mod.TemplateModule.tableCart
                                                 .replace(/---cartId---/, customer.id_cart)
                                                 .replace(/---cartDate---/, customer.date_cart)
-                                                .replace(/---totalCart---/, customer.total_cart + ' €');
+                                                .replace(/---totalCart---/, customer.total_cart + ' €')
+                                                .replace(/---id-cart-modal---/, customer.id_cart)
+                                                .replace(/---modal-cart-infos---/, (mod.TemplateModule.modalCartInfos
+                                                        .replace(/---id-cart-modal---/, customer.id_cart)
+                                                        .replace(/---cart-datas---/, (mod.TemplateModule.cartData
+                                                                .replace(/---firstname---/, customer.firstname)
+                                                                .replace(/---lastname---/, customer.lastname)
+                                                                .replace(/---id-customer---/, customer.id_customer)
+                                                                .replace(/---productName---/, customer.product_name)
+                                                                .replace(/---productPrice---/, customer.product_price + ' €')
+                                                                .replace(/---productQuantity---/, customer.product_quantity)
+                                                                .replace(/---totalProduct---/, customer.total_product + ' €')
+                                                                .replace(/---totalCart---/, customer.total_cart + ' €')
+                                                            )
+                                                        )
+                                                ));
                                         }
                                         for (let customer of data) {
                                             if (typeof customer.id_order !== 'undefined') {

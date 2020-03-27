@@ -8,18 +8,18 @@ quotation_admin:        #RouteName
     _legacy_link: 'AdminQuotationController'
 
 quotation_admin_search_filters:
-  path: quotation/admin/search/{reference}{status}{filter}{start}{end}
+  path: quotation/admin/search/{filter}{reference}{status}{start}{end}
   methods: [GET]
   defaults:
     _controller: 'Quotation\Controller\AdminQuotationController::searchQuotationsByFilters'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
   requirements:
-    reference: '^[a-zA-Z0-9]{5}|(.*?)'
-    filter: '^[a-zA-Z]+|(.*?)'
-    status: '^[a-zA-ZÀ-ÿ-. ]*'
-    start: '^(\d{4}(\-\d{2}){2})|\_$|(.*?)'
-    end: '^(\d{4}(\-\d{2}){2})$|(.*?)'
+    filter: '^(?!refused)(?!validated)(?!validate)(?!approved)[a-zA-Z]+|(.*?)'
+    reference: '^[a-zA-Z0-9]{5}$|(.*?)'
+    status: '^(refused$|validated$|validate$|approved$)|(.*?)'
+    start: '^(?!refused)(?!validated)(?!validate)(?!approved)(\d{4}(\-\d{2}){2})|\_$|(.*?)'
+    end: '^(?!refused)(?!validated)(?!validate)(?!approved)(\d{4}(\-\d{2}){2})$|(.*?)'
 
 quotation_admin_add:
   path: quotation/admin/add

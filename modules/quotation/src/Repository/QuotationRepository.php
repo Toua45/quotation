@@ -3,7 +3,7 @@
 namespace Quotation\Repository;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\ORM\Query\AST\Functions\AvgFunction;
+use Doctrine\ORM\EntityManagerInterface;
 
 class QuotationRepository
 {
@@ -85,8 +85,7 @@ class QuotationRepository
             ->where('id_customer = :id_customer')
             ->setParameter('id_customer', $idcustomer)
             ->execute()
-            ->fetchAll()
-            ;
+            ->fetchAll();
     }
 
     /**
@@ -118,8 +117,7 @@ class QuotationRepository
             ->where('q.id_customer = :id_customer')
             ->setParameter('id_customer', $idcustomer)
             ->execute()
-            ->fetchAll()
-            ;
+            ->fetchAll();
     }
 
     /**
@@ -146,11 +144,14 @@ class QuotationRepository
                 'DATEDIFF(NOW(), c.birthday) / 365.25 AS old', 'c.date_add AS registration', 'c.id_lang', 'c.newsletter',
                 'c.optin AS offer_partners', 'c.date_upd AS last_update', 'c.active',
                 'g.id_gender', 'g.name AS title',
-                'l.id_lang', 'l.name AS lang'
+                'l.id_lang', 'l.name AS lang',
+                'COUNT(o.id_order) AS orders'
             )
+            ->addSelect()
             ->from($this->databasePrefix . 'customer', 'c')
             ->join('c', $this->databasePrefix . 'gender_lang', 'g', 'c.id_gender = g.id_gender')
             ->join('c', $this->databasePrefix . 'lang', 'l', 'c.id_lang = l.id_lang')
+            ->leftJoin('c', $this->databasePrefix . 'orders', 'o', 'o.id_customer = c.id_customer')
             ->where('c.firstname LIKE :query OR c.lastname LIKE :query')
             ->setParameter('query', '%' . $query . '%')
             ->execute()

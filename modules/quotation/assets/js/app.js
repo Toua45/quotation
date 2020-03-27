@@ -61,29 +61,33 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         .replace(/---firstname---/, customer.firstname)
                         .replace(/---text---/, 'This is a good customer!')
                         .replace(/---modal-customer-infos---/, (TemplateModule.modalCustomerInfos
-                                .replace(/---personal-datas---/, (TemplateModule.personalData
-                                            .replace(/---firstname---/, customer.firstname)
-                                            .replace(/---lastname---/, customer.lastname)
-                                            .replace(/---id-customer---/, customer.id_customer)
-                                            .replace(/---customer-link-email---/, 'mailto:' + customer.email)
-                                            .replace(/---customer-email---/, customer.email)
-                                            .replace(/---edit---/, show + customer.id_customer + '/edit')
-                                            .replace(/---gender---/, customer.title)
-                                            .replace(/---old---/, Math.floor(customer.old))
-                                            .replace(/---birthday---/, customer.birthday)
-                                            .replace(/---registration---/, customer.registration)
-                                            .replace(/---lang---/, customer.lang)
-                                            .replace(/---last-update---/, customer.last_update)
-                                            .replace(/---badge-newsletter---/, (customer.newsletter === 1 ? 'badge-success' : 'badge-danger'))
-                                            .replace(/---icon-newsletter---/, (customer.newsletter === 1 ? 'check' : 'cancel'))
-                                            .replace(/---badge-partners---/, (customer.offer_partners === 1 ? 'badge-success' : 'badge-danger'))
-                                            .replace(/---icon-partners---/, (customer.offer_partners === 1 ? 'check' : 'cancel'))
-                                            .replace(/---badge-is-active---/, (customer.active === 1 ? 'badge-success' : 'badge-danger'))
-                                            .replace(/---icon-is-active---/, (customer.active === 1 ? 'check' : 'cancel'))
-                                            .replace(/---is-active---/, (customer.active === 1 ? 'Activé' : 'Désactivé'))
+                                    .replace(/---personal-datas---/, (TemplateModule.personalData
+                                        .replace(/---firstname---/, customer.firstname)
+                                        .replace(/---lastname---/, customer.lastname)
+                                        .replace(/---id-customer---/, customer.id_customer)
+                                        .replace(/---customer-link-email---/, 'mailto:' + customer.email)
+                                        .replace(/---customer-email---/, customer.email)
+                                        .replace(/---edit---/, show + customer.id_customer + '/edit')
+                                        .replace(/---gender---/, customer.title)
+                                        .replace(/---old---/, Math.floor(customer.old))
+                                        .replace(/---birthday---/, customer.birthday)
+                                        .replace(/---registration---/, customer.registration)
+                                        .replace(/---lang---/, customer.lang)
+                                        .replace(/---last-update---/, customer.last_update)
+                                        .replace(/---badge-newsletter---/, (customer.newsletter === 1 ? 'badge-success' : 'badge-danger'))
+                                        .replace(/---icon-newsletter---/, (customer.newsletter === 1 ? 'check' : 'cancel'))
+                                        .replace(/---badge-partners---/, (customer.offer_partners === 1 ? 'badge-success' : 'badge-danger'))
+                                        .replace(/---icon-partners---/, (customer.offer_partners === 1 ? 'check' : 'cancel'))
+                                        .replace(/---badge-is-active---/, (customer.active === 1 ? 'badge-success' : 'badge-danger'))
+                                        .replace(/---icon-is-active---/, (customer.active === 1 ? 'check' : 'cancel'))
+                                        .replace(/---is-active---/, (customer.active === 1 ? 'Activé' : 'Désactivé')))
                                     )
-                                )
-                        ))
+                                    .replace(/---customer-orders---/, (TemplateModule.customerOrders
+                                        .replace(/---nb-orders---/, customer.orders)
+                                        )
+                                    )
+                            )
+                        )
                         .replace(/---id---/, customer.id_customer)
                         .replace(/---link-show-customer-carts---/, link + customer.id_customer + '/details')
                         .replace(/---increment---/, i)
@@ -105,7 +109,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     // Renvoie l'élément parent le plus proche de l'élément courant (ici id customer-card_ est le plus proche de la class hidden)
                                     Event.currentTarget.closest('.hidden').classList.toggle('hidden'); // La méthode toggle permet de masquer ou d'afficher le paramètre hidden à l'élément class
                                     // Pour chaque cards qui aura la class hidden, ces dernières seront en display-none
-                                    document.querySelectorAll('.hidden').forEach(function (card,index) {
+                                    document.querySelectorAll('.hidden').forEach(function (card, index) {
                                         card.classList.add('d-none');
                                     });
 
@@ -128,11 +132,11 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         }
                                         for (let customer of data) {
                                             if (typeof customer.id_order !== 'undefined') {
-                                            outputOrder += mod.TemplateModule.tableOrder
-                                                .replace(/---orderId---/, customer.id_order)
-                                                .replace(/---orderDate---/, customer.date_order)
-                                                .replace(/---totalOrder---/, customer.total_paid + ' €')
-                                                .replace(/---payment---/, customer.payment);
+                                                outputOrder += mod.TemplateModule.tableOrder
+                                                    .replace(/---orderId---/, customer.id_order)
+                                                    .replace(/---orderDate---/, customer.date_order)
+                                                    .replace(/---totalOrder---/, customer.total_paid + ' €')
+                                                    .replace(/---payment---/, customer.payment);
                                             }
                                         }
                                         for (let customer of data) {

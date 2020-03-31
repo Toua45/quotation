@@ -2,7 +2,6 @@
 
 namespace Quotation\Controller;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
@@ -141,24 +140,39 @@ class AdminQuotationController extends FrameworkBundleAdminController
     {
         $quotationRepository = $this->get('quotation_repository');
         $carts = $quotationRepository->findCartsByCustomer($id_customer);
+
+        for ($i = 0; $i < count($carts); $i++) {
+            if ($carts[$i]['id_cart']) {
+                $carts[$i]['products'] = $quotationRepository->findProductsCustomerByCarts($carts[$i]['id_cart']);
+            }
+        }
+
         $orders = $quotationRepository->findOrdersByCustomer($id_customer);
         $quotations = $quotationRepository->findQuotationsByCustomer($id_customer);
 
-        $response = [];
-
-        foreach ($carts as $key => $cart) {
-            $response[$key]['id_customer'] = $id_customer;
-            $response[$key]['id_cart'] = $cart['id_cart'];
-            $response[$key]['firstname'] = $cart['firstname'];
-            $response[$key]['lastname'] = $cart['lastname'];
-            $response[$key]['date_cart'] = date("d/m/Y", strtotime($cart['date_cart']));
-            $response[$key]['total_cart'] = number_format($cart['total_cart'], 2);
-            $response[$key]['total_product'] = number_format($cart['total_product'], 2);
-            $response[$key]['id_product'] = $cart['id_product'];
-            $response[$key]['product_name'] = $cart['name'];
-            $response[$key]['product_price'] = number_format($cart['price'], 2);
-            $response[$key]['product_quantity'] = $cart['quantity'];
+        /*
+         * carts section
+        */
+        for ($i = 0; $i < count($carts); $i++) {
+            for ($j = 0; $j < count($carts[$i]['products']); $j++) {
+                if ($carts[$i]['id_cart']) {
+                    $carts[$i]['id_cart'] = $carts[$i]['id_cart'];
+                    $carts[$i]['firstname'] = $carts[$i]['firstname'];
+                    $carts[$i]['lastname'] = $carts[$i]['lastname'];
+                    $carts[$i]['date_cart'] = date("d/m/Y", strtotime($carts[$i]['date_cart']));
+                    $carts[$i]['total_cart'] = number_format($carts[$i]['total_cart'], 2);
+                    if ($carts[$i]['products']) {
+                        $carts[$i]['products'][$j]['id_product'] = $carts[$i]['products'][$j]['id_product'];
+                        $carts[$i]['products'][$j]['product_name'] = $carts[$i]['products'][$j]['product_name'];
+                        $carts[$i]['products'][$j]['product_price'] = number_format($carts[$i]['products'][$j]['product_price'], 2);
+                        $carts[$i]['products'][$j]['product_quantity'] = $carts[$i]['products'][$j]['product_quantity'];
+                        $carts[$i]['products'][$j]['total_product'] = number_format($carts[$i]['products'][$j]['total_product'], 2);
+                    }
+                }
+            }
         }
+
+        $response = [];
 
         foreach ($orders as $key => $order) {
             $response[$key]['id_customer'] = $id_customer;
@@ -175,7 +189,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $response[$key]['total_quotation'] = number_format($quotation['total_quotation'], 2);
         }
 
-        return new JsonResponse(json_encode($response), 200, [], true);
+        return new JsonResponse(json_encode(['carts' => $carts, 'response' => $response]), 200, [], true);
     }
 
     public function ajaxCustomer(Request $request)
@@ -197,19 +211,4 @@ class AdminQuotationController extends FrameworkBundleAdminController
         }
         return new JsonResponse(json_encode($response), 200, [], true);
     }
-
-//    /**
-//     * Show cart by ID
-//     * @param Request $request
-//     * @param $query
-//     * @return JsonResponse
-//     */
-//    public function showCart(Request $request, $id_cart)
-//    {
-//        $cartRepository = $this->get('quotation_repository');
-//        $cart = $cartRepository->findOneCartById($id_cart);
-////        dump($cart);die;
-//
-//        return new JsonResponse(json_encode($cart), 200, [], true);
-//    }
 }

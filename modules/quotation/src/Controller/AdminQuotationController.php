@@ -25,22 +25,22 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         $quotationFilterForm->handleRequest($request);
         if ($quotationFilterForm->isSubmitted() && $quotationFilterForm->isValid()) {
-            $data = $quotationFilterForm->getData();
+//            $data = $quotationFilterForm->getData();
 //            $name = $data['name'];
 //            $reference = $data['reference'];
 //            $status = $data['status'];
 //            $start = $data['start'];
 //            $end = $data['end'];
+
+            $name = $request->query->all()['quotation_search']['name'];
+            $reference = $request->query->all()['quotation_search']['reference'];
+            $status = $request->query->all()['quotation_search']['status'];
+            $start = $request->query->all()['quotation_search']['start'];
+            $end = $request->query->all()['quotation_search']['end'];
 //            dump($request->query->all()['quotation_search']['name']);die();
 //            dump($request->query->all()['quotation_search']['reference']);die();
-//            dump($reference);die();
 
-            $quotations = $quotationRepository->findQuotationsByFilters($request->query->all()['quotation_search']['name'],$request->query->all()['quotation_search']['reference'],
-                $request->query->all()['quotation_search']['status'], $request->query->all()['quotation_search']['start'],
-                $request->query->all()['quotation_search']['end']
-//
-            );
-
+            $quotations = $quotationRepository->findQuotationsByFilters($name, $reference, $status, $start, $end);
         } else {
             $quotations = $quotationRepository->findAll();
         }

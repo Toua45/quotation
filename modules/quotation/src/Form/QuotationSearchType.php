@@ -24,6 +24,8 @@ class QuotationSearchType extends AbstractType
             ->add('status', ChoiceType::class, [
                 'required' => false,
                 'placeholder' => 'État du devis',
+                'expanded' => true,
+                'multiple' => true,
                 'choices' => [
                     'validate' => 'validate',
                     'validated' => 'validated',

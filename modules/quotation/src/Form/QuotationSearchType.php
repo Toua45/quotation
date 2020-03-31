@@ -3,9 +3,11 @@
 namespace Quotation\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 class QuotationSearchType extends AbstractType
 {
@@ -13,10 +15,29 @@ class QuotationSearchType extends AbstractType
     {
         $builder
             ->setMethod('GET')
-            ->add('firstname', SearchType::class)
-//            ->add('lastname', SearchType::class)
-//            ->add('reference', SearchType::class)
-//            ->add('date_add', SearchType::class)
+            ->add('name', SearchType::class, [
+                'required' => false
+            ])
+            ->add('reference', SearchType::class, [
+                'required' => false
+            ])
+            ->add('status', ChoiceType::class, [
+                'required' => false,
+                'placeholder' => 'État du devis',
+                'choices' => [
+                    'validate' => 'validate',
+                    'validated' => 'validated',
+                    'approved' => 'approved',
+                    'refused' => 'refused'
+                ]
+            ])
+
+            ->add('start', DateType::class, [
+                'required' => false
+            ])
+            ->add('end', DateType::class, [
+                'required' => false
+            ])
         ;
     }
 

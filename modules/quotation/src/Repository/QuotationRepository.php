@@ -62,78 +62,78 @@ class QuotationRepository
      * end type=datetime
      */
     public function findQuotationsByFilters($name = null, $reference = null, $status = null, $start = null, $end = null
-                                            ,$_reference = null, $_status = null, $_start = null, $_end = null
+//                                            ,$_reference = null, $_status = null, $_start = null, $_end = null
     )
     {
         $query = $this->connection->createQueryBuilder();
         $query->addSelect('q.*', 'c.firstname', 'c.lastname');
 
         $filterSearch = [$name, $reference, $status, $start, $end
-            , $_reference, $_status, $_start, $_end
+//            , $_reference, $_status, $_start, $_end
         ];
 
         switch ($filterSearch):
 
             // Recherche composée à partir du 'name'
 
-            case '' !== $name && '' !== $_reference:
-                return $query
-                    ->from($this->databasePrefix . 'customer', 'c')
-                    ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
-                    ->where('(c.firstname LIKE :name OR c.lastname LIKE :name)
-                        AND q.reference = :_reference')
-                    ->setParameters(['name' => '%' . $name . '%', '_reference' => $_reference])
-                    ->execute()->fetchAll();
-                break;
-            case '' !== $name && '' !== $_start && '' !== $_end:
-                $this->addQuotationFromAndJoin($query);
-                return $query
-                    ->where('(c.firstname LIKE :name OR c.lastname LIKE :name)
-                    AND q.date_add >= :_interval_start AND q.date_add <= :_interval_end')
-                    ->setParameters(['name' => '%' . $name . '%', '_interval_start' => $_start,
-                        '_interval_end' => preg_replace('/_/', '', $_end)])
-                    ->execute()->fetchAll();
-                break;
-            case '' !== $name && '' !== $_start:
-                $this->addQuotationFromAndJoin($query);
-                return $query
-                    ->where('(c.firstname LIKE :name OR c.lastname LIKE :name)
-                    AND q.date_add >= :_interval_start')
-                    ->setParameters(['name' => '%' . $name . '%', '_interval_start' => $_start])
-                    ->execute()->fetchAll();
-                break;
-            case '' !== $name && '' !== $_end:
-                $this->addQuotationFromAndJoin($query);
-                return $query
-                    ->where('(c.firstname LIKE :name OR c.lastname LIKE :name)
-                    AND q.date_add <= :_interval_end')
-                    ->setParameters(['name' => '%' . $name . '%', '_interval_end' => preg_replace('/_/', '', $_end)])
-                    ->execute()->fetchAll();
-                break;
+//            case '' !== $name && '' !== $_reference:
+//                return $query
+//                    ->from($this->databasePrefix . 'customer', 'c')
+//                    ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
+//                    ->where('(c.firstname LIKE :name OR c.lastname LIKE :name)
+//                        AND q.reference = :_reference')
+//                    ->setParameters(['name' => '%' . $name . '%', '_reference' => $_reference])
+//                    ->execute()->fetchAll();
+//                break;
+//            case '' !== $name && '' !== $_start && '' !== $_end:
+//                $this->addQuotationFromAndJoin($query);
+//                return $query
+//                    ->where('(c.firstname LIKE :name OR c.lastname LIKE :name)
+//                    AND q.date_add >= :_interval_start AND q.date_add <= :_interval_end')
+//                    ->setParameters(['name' => '%' . $name . '%', '_interval_start' => $_start,
+//                        '_interval_end' => preg_replace('/_/', '', $_end)])
+//                    ->execute()->fetchAll();
+//                break;
+//            case '' !== $name && '' !== $_start:
+//                $this->addQuotationFromAndJoin($query);
+//                return $query
+//                    ->where('(c.firstname LIKE :name OR c.lastname LIKE :name)
+//                    AND q.date_add >= :_interval_start')
+//                    ->setParameters(['name' => '%' . $name . '%', '_interval_start' => $_start])
+//                    ->execute()->fetchAll();
+//                break;
+//            case '' !== $name && '' !== $_end:
+//                $this->addQuotationFromAndJoin($query);
+//                return $query
+//                    ->where('(c.firstname LIKE :name OR c.lastname LIKE :name)
+//                    AND q.date_add <= :_interval_end')
+//                    ->setParameters(['name' => '%' . $name . '%', '_interval_end' => preg_replace('/_/', '', $_end)])
+//                    ->execute()->fetchAll();
+//                break;
 
 
                 // Recherche composée à partir de 'status'
 
-            case '' !== $_status && '' !== $_start && '' !== $_end:
-                $this->addQuotationFromAndJoin($query);
-                return $query
-                    ->where('q.status = :_status AND q.date_add >= :_interval_start AND q.date_add <= :_interval_end')
-                    ->setParameters(['_status' => $_status, '_interval_start' => $_start,
-                        '_interval_end' => preg_replace('/_/', '', $_end)])
-                    ->execute()->fetchAll();
-                break;
-            case '' !== $_status && '' !== $_start:
-                $this->addQuotationFromAndJoin($query);
-                return $query
-                    ->where('q.status = :_status AND q.date_add >= :_interval_start')
-                    ->setParameters(['status' => $_status, '_interval_start' => $_start])
-                    ->execute()->fetchAll();
-                break;
-            case '' !== $_status && '' !== $_end:
-                return $query
-                    ->where('q.status = :_status AND q.date_add <= :_interval_end')
-                    ->setParameters(['status' => $_status, '_interval_end' => preg_replace('/_/', '', $_end)])
-                    ->execute()->fetchAll();
+//            case '' !== $_status && '' !== $_start && '' !== $_end:
+//                $this->addQuotationFromAndJoin($query);
+//                return $query
+//                    ->where('q.status = :_status AND q.date_add >= :_interval_start AND q.date_add <= :_interval_end')
+//                    ->setParameters(['_status' => $_status, '_interval_start' => $_start,
+//                        '_interval_end' => preg_replace('/_/', '', $_end)])
+//                    ->execute()->fetchAll();
+//                break;
+//            case '' !== $_status && '' !== $_start:
+//                $this->addQuotationFromAndJoin($query);
+//                return $query
+//                    ->where('q.status = :_status AND q.date_add >= :_interval_start')
+//                    ->setParameters(['status' => $_status, '_interval_start' => $_start])
+//                    ->execute()->fetchAll();
+//                break;
+//            case '' !== $_status && '' !== $_end:
+//                return $query
+//                    ->where('q.status = :_status AND q.date_add <= :_interval_end')
+//                    ->setParameters(['status' => $_status, '_interval_end' => preg_replace('/_/', '', $_end)])
+//                    ->execute()->fetchAll();
 
                 // Recherche simple
 

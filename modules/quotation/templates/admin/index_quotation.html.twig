@@ -1,5 +1,5 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
-{#{% form_theme formQuotationFilter 'bootstrap_4_layout.html.twig' %}#}
+{% form_theme quotationFilterForm 'bootstrap_4_layout.html.twig' %}
 
  {% block content %}
 
@@ -95,24 +95,25 @@
                      </td>
                  </tr>
                  <tr class="search">
-{#                     {{ form_start(formQuotationFilter) }}#}
+                     {{ form_start(quotationFilterForm) }}
                      <td></td>
+{#                     <td>#}
+{#                         <input type="text" class="input-text" name="id_quotation" id="id_quotation">#}
+{#                     </td>#}
                      <td>
-                         <input type="text" class="input-text" name="id_quotation" id="id_quotation">
-                     </td>
-                     <td>
-{#                         {{ form_row(formQuotationFilter.reference) }}#}
+                         {{ form_row(quotationFilterForm.reference) }}
 {#                         <input type="text" class="input-text" name="reference" id="reference">#}
                      </td>
                      <td>
-{#                         {{ form_row(formQuotationFilter.firstname) }}#}
+                         {{ form_row(quotationFilterForm.name) }}
 {#                         <input type="text" class="input-text" name="customer" id="customer">#}
                      </td>
+{#                     <td>#}
+{#                         <input type="text" class="input-text" name="message" id="message">#}
+{#                     </td>#}
                      <td>
-                         <input type="text" class="input-text" name="message" id="message">
-                     </td>
-                     <td>
-{#                         {{ form_row(formSearchQuotation.date_add) }}#}
+                         {{ form_row(quotationFilterForm.start) }}
+                         {{ form_row(quotationFilterForm.end) }}
 {#                         <div class="d-flex input-date">#}
 {#                             <span uk-icon="icon: calendar" class="d-flex justify-content-end mr-2"></span>#}
 {#                             <input type="date" name="date_add" id="date_add">#}
@@ -124,29 +125,31 @@
 {#                         </div>#}
                      </td>
                      <td>
-                         <select name="status" id="status">
-                             <option selected="selected">-</option>
-                             <option value="">Abandonné</option>
-                             <option value="">A valider</option>
-                             <option value="">Validé</option>
-                             <option value="">Commandé</option>
-                         </select>
+                         {{ form_row(quotationFilterForm.status) }}
+{#                         <select name="status" id="status">#}
+{#                             <option selected="selected">-</option>#}
+{#                             <option value="">Abandonné</option>#}
+{#                             <option value="">A valider</option>#}
+{#                             <option value="">Validé</option>#}
+{#                             <option value="">Commandé</option>#}
+{#                         </select>#}
                      </td>
-                     <td>
-                         <input type="text" class="input-text" name="total" id="total">
-                     </td>
+{#                     <td>#}
+{#                         <input type="text" class="input-text" name="total" id="total">#}
+{#                     </td>#}
                      <td></td>
                      <td>
 {#                         <a href="#" class="btn btn-light d-flex">#}
 {#                             <span uk-icon="icon: search" class="mr-1"></span> Rechercher#}
 {#                         </a>#}
-{#                         <button>Rechercher</button>#}
+                         <button class="btn btn-primary test col-md-4 offset-md-4">Rechercher</button>
                      </td>
-{#                     {{ form_end(formQuotationFilter) }}#}
+                     {{ form_end(quotationFilterForm) }}
                  </tr>
                  </thead>
 
                  <tbody>
+{#                 {{ dump(quotations) }}#}
                  {% for quotation in quotations %}
                      <tr class="bg-{{ loop.index0 is even ? 'light' : 'none' }}">
                          <td>
@@ -158,7 +161,7 @@
                          <td>{{ quotation.message_visible }}</td>
                          <td>{{ quotation.date_add|date('d/m/Y') }}</td>
                          <td>{{ quotation.status }}</td>
-                         <td>{{ quotation.total_product_price|number_format(2) }} €</td>
+{#                         <td>{{ quotation.total_product_price|number_format(2) }} €</td>#}
                          <td>
                              <a href="#">
                                  <span uk-icon="icon: pdf-file" class="justify-content-end"></span>

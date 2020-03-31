@@ -8,18 +8,31 @@ quotation_admin:        #RouteName
     _legacy_link: 'AdminQuotationController'
 
 quotation_admin_search_filters:
-  path: quotation/admin/search/{filter}{reference}{status}{start}{end}
+#  path: quotation/admin/search/{name}{reference}{status}{start}{end}
+  path: quotation/admin/search/{name}{reference}{status}{start}{end}/{_reference}{_status}{_start}{_end}
   methods: [GET]
   defaults:
     _controller: 'Quotation\Controller\AdminQuotationController::searchQuotationsByFilters'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
   requirements:
-    filter: '^(?!refused)(?!validated)(?!validate)(?!approved)[a-zA-Z]+|(.*?)'
-    reference: '^[a-zA-Z0-9]{5}$|(.*?)'
+    name: '^(?!refused)(?!validated)(?!validate)(?!approved)[a-zA-Z]+|(.*?)'
+    reference: '^[a-zA-Z0-9]{5}|(.*?)'
     status: '^(refused$|validated$|validate$|approved$)|(.*?)'
     start: '^(?!refused)(?!validated)(?!validate)(?!approved)(\d{4}(\-\d{2}){2})|\_$|(.*?)'
     end: '^(?!refused)(?!validated)(?!validate)(?!approved)(\d{4}(\-\d{2}){2})$|(.*?)'
+
+    _reference: '^[a-zA-Z0-9]{5}|(.*?)'
+    _status: '^(refused$|validated$|validate$|approved$)|(.*?)'
+    _start: '^(?!refused)(?!validated)(?!validate)(?!approved)(\d{4}(\-\d{2}){2})|\_$|(.*?)'
+    _end: '^(?!refused)(?!validated)(?!validate)(?!approved)(\d{4}(\-\d{2}){2})$|(.*?)'
+
+
+#    name: '^(?!refused)(?!validated)(?!validate)(?!approved)[a-zA-Z]+|(.*?)'
+#    reference: '^[a-zA-Z0-9]{5}$|(.*?)'
+#    status: '^(refused$|validated$|validate$|approved$)|(.*?)'
+#    start: '^(?!refused)(?!validated)(?!validate)(?!approved)(\d{4}(\-\d{2}){2})|\_$|(.*?)'
+#    end: '^(?!refused)(?!validated)(?!validate)(?!approved)(\d{4}(\-\d{2}){2})$|(.*?)'
 
 quotation_admin_add:
   path: quotation/admin/add

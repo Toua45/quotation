@@ -175,10 +175,10 @@ class QuotationRepository
                         'c.newsletter', 'c.optin AS offer_partners', 'c.date_upd AS last_update', 'c.active')
             ->addSelect('g.id_gender', 'g.name AS title')
             ->addSelect('l.id_lang', 'l.name AS lang')
-            ->addSelect('o.id_order AS customer_order '
+//            ->addSelect('o.id_order AS customer_order '
 //                , 'COUNT(o.id_order) AS nb_orders'
 //                , 'o.id_order AS nb_orders_test'
-            )
+//            )
 //            ->addSelect($sql)
             ->from($this->databasePrefix . 'customer', 'c')
             ->join('c', $this->databasePrefix . 'gender_lang', 'g', 'c.id_gender = g.id_gender')
@@ -186,7 +186,7 @@ class QuotationRepository
             ->leftJoin('c', $this->databasePrefix . 'orders', 'o', 'o.id_customer = c.id_customer')
             ->where('c.firstname LIKE :query OR c.lastname LIKE :query')
 //            ->where($sql)
-//            ->groupBy('c.id_customer')
+            ->groupBy('c.id_customer')
             ->setParameter('query', '%' . $query . '%')
             ->execute()
             ->fetchAll();

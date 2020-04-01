@@ -62,38 +62,39 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         .replace(/---firstname---/, customer.firstname)
                         .replace(/---text---/, 'This is a good customer!')
                         .replace(/---id-customer-modal---/, customer.id_customer)
+                        .replace(/---link-show-customer-carts---/, link + customer.id_customer + '/details')
+                        .replace(/---id---/, customer.id_customer)
                         .replace(/---modal-customer-infos---/, (mod.TemplateModule.modalCustomerInfos
-                                .replace(/---id-customer-modal---/, customer.id_customer)
-                                .replace(/---personal-datas---/, (mod.TemplateModule.personalData
-                                    .replace(/---firstname---/, customer.firstname)
-                                    .replace(/---lastname---/, customer.lastname)
-                                    .replace(/---id-customer---/, customer.id_customer)
-                                    .replace(/---customer-link-email---/, 'mailto:' + customer.email)
-                                    .replace(/---customer-email---/, customer.email)
-                                    .replace(/---edit---/, show + customer.id_customer + '/edit')
-                                    .replace(/---gender---/, customer.title)
-                                    .replace(/---old---/, Math.floor(customer.old))
-                                    .replace(/---birthday---/, customer.birthday)
-                                    .replace(/---registration---/, customer.registration)
-                                    .replace(/---lang---/, customer.lang)
-                                    .replace(/---last-update---/, customer.last_update)
-                                    .replace(/---badge-newsletter---/, (customer.newsletter === 1 ? 'badge-success' : 'badge-danger'))
-                                    .replace(/---icon-newsletter---/, (customer.newsletter === 1 ? 'check' : 'cancel'))
-                                    .replace(/---badge-partners---/, (customer.offer_partners === 1 ? 'badge-success' : 'badge-danger'))
-                                    .replace(/---icon-partners---/, (customer.offer_partners === 1 ? 'check' : 'cancel'))
-                                    .replace(/---badge-is-active---/, (customer.active === 1 ? 'badge-success' : 'badge-danger'))
-                                    .replace(/---icon-is-active---/, (customer.active === 1 ? 'check' : 'cancel'))
-                                    .replace(/---is-active---/, (customer.active === 1 ? 'Activé' : 'Désactivé'))
-                                )
+                                    .replace(/---id-customer-modal---/, customer.id_customer)
+                                    .replace(/---personal-datas---/, (mod.TemplateModule.personalData
+                                                .replace(/---firstname---/, customer.firstname)
+                                                .replace(/---lastname---/, customer.lastname)
+                                                .replace(/---id-customer---/, customer.id_customer)
+                                                .replace(/---customer-link-email---/, 'mailto:' + customer.email)
+                                                .replace(/---customer-email---/, customer.email)
+                                                .replace(/---edit---/, show + customer.id_customer + '/edit')
+                                                .replace(/---gender---/, customer.title)
+                                                .replace(/---old---/, Math.floor(customer.old))
+                                                .replace(/---birthday---/, customer.birthday)
+                                                .replace(/---registration---/, customer.registration)
+                                                .replace(/---lang---/, customer.lang)
+                                                .replace(/---last-update---/, customer.last_update)
+                                                .replace(/---badge-newsletter---/, (customer.newsletter === 1 ? 'badge-success' : 'badge-danger'))
+                                                .replace(/---icon-newsletter---/, (customer.newsletter === 1 ? 'check' : 'cancel'))
+                                                .replace(/---badge-partners---/, (customer.offer_partners === 1 ? 'badge-success' : 'badge-danger'))
+                                                .replace(/---icon-partners---/, (customer.offer_partners === 1 ? 'check' : 'cancel'))
+                                                .replace(/---badge-is-active---/, (customer.active === 1 ? 'badge-success' : 'badge-danger'))
+                                                .replace(/---icon-is-active---/, (customer.active === 1 ? 'check' : 'cancel'))
+                                                .replace(/---is-active---/, (customer.active === 1 ? 'Activé' : 'Désactivé'))
+                                        ) // close personal data content
+                                    ) // close personal data bloc
                                 .replace(/---customer-orders---/, (mod.TemplateModule.customerOrders
-                                    .replace(/---nb-orders---/, customer.orders)
-                                    )
-                                )
-                            .replace(/---id---/, customer.id_customer)
-                            .replace(/---link-show-customer-carts---/, link + customer.id_customer + '/details')
-                                )));
-
-                    console.log(output);
+                                            .replace(/---nb-orders---/, (customer.customer_order === null ? 0 : customer.nb_orders))
+                                ) // close orders content
+                                ) // close orders bloc
+                            ) // modale content
+                        ) // modale bloc
+                    ;
 
                     if (customers.length - 1 === i) {
                         document.getElementById('js-output-customers').innerHTML = output;

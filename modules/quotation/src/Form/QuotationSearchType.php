@@ -2,12 +2,12 @@
 
 namespace Quotation\Form;
 
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 class QuotationSearchType extends AbstractType
 {
@@ -24,8 +24,8 @@ class QuotationSearchType extends AbstractType
             ->add('status', ChoiceType::class, [
                 'required' => false,
                 'placeholder' => 'État du devis',
-                'expanded' => true,
-                'multiple' => true,
+//                'expanded' => true,
+//                'multiple' => true,
                 'choices' => [
                     'validate' => 'validate',
                     'validated' => 'validated',
@@ -34,11 +34,14 @@ class QuotationSearchType extends AbstractType
                 ]
             ])
 
-            ->add('start', DateType::class, [
-                'required' => false
+            ->add('start', DateTimeType::class, [
+                'required' => false,
+                'format' => 'Y-m-d'
             ])
-            ->add('end', DateType::class, [
-                'required' => false
+
+            ->add('end', DateTimeType::class, [
+                'required' => false,
+                'format' => 'Y-m-d'
             ])
         ;
     }

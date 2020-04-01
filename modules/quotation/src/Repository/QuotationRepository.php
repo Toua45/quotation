@@ -159,13 +159,6 @@ class QuotationRepository
                     ->setParameter('status', $status)
                     ->execute()->fetchAll();
                 break;
-            case '' !== $start && '' !== $end:
-                $this->addQuotationFromAndJoin($query);
-                return $query
-                    ->where('q.date_add >= :interval_start AND q.date_add <= :interval_end')
-                    ->setParameters(['interval_start' => $start, 'interval_end' => preg_replace('/_/', '', $end)])
-                    ->execute()->fetchAll();
-                break;
             case '' !== $start:
                 $this->addQuotationFromAndJoin($query);
                 return $query
@@ -178,6 +171,15 @@ class QuotationRepository
                 return $query
                     ->where('q.date_add <= :interval_end')
                     ->setParameter('interval_end', preg_replace('/_/', '', $end))
+                    ->execute()->fetchAll();
+                break;
+            case '' !== $start && '' !== $end:
+                $this->addQuotationFromAndJoin($query);
+                return $query
+                    ->where('q.date_add >= :interval_start AND q.date_add <= :interval_end')
+                    ->setParameters(['interval_start' => $start, 'interval_end' => preg_replace('/_/', '', $end)])
+//                    ->setParameter('interval_start', $start)
+//                    ->setParameter('interval_end', preg_replace('/_/', '', $end))
                     ->execute()->fetchAll();
                 break;
             default:

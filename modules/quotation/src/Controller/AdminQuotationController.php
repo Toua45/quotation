@@ -12,6 +12,7 @@ use Quotation\Form\QuotationType;
 use Quotation\Service\QuotationFileSystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Twig\Extra\Intl\IntlExtension;
 
 class AdminQuotationController extends FrameworkBundleAdminController
 {
@@ -35,10 +36,10 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $name = $request->query->all()['quotation_search']['name'];
             $reference = $request->query->all()['quotation_search']['reference'];
             $status = $request->query->all()['quotation_search']['status'];
-            $start = $request->query->all()['quotation_search']['start'];
-            $end = $request->query->all()['quotation_search']['end'];
-//            dump($request->query->all()['quotation_search']['name']);die();
-//            dump($request->query->all()['quotation_search']['reference']);die();
+            $start = $request->query->all()['quotation_search']['start']['date']['year'];
+            $end = $request->query->all()['quotation_search']['end']['date']['year'];
+
+            //$request->query->all()['quotation_search']['start']['date']['year']);
 
             $quotations = $quotationRepository->findQuotationsByFilters($name, $reference, $status, $start, $end);
         } else {

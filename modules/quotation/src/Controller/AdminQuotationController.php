@@ -12,7 +12,6 @@ use Quotation\Form\QuotationType;
 use Quotation\Service\QuotationFileSystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Twig\Extra\Intl\IntlExtension;
 
 class AdminQuotationController extends FrameworkBundleAdminController
 {

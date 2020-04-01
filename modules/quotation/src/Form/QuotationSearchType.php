@@ -16,11 +16,13 @@ class QuotationSearchType extends AbstractType
         $builder
             ->setMethod('GET')
             ->add('name', SearchType::class, [
-                'required' => false
+                'required' => false,
             ])
+
             ->add('reference', SearchType::class, [
                 'required' => false
             ])
+
             ->add('status', ChoiceType::class, [
                 'required' => false,
                 'placeholder' => 'État du devis',
@@ -36,12 +38,12 @@ class QuotationSearchType extends AbstractType
 
             ->add('start', DateTimeType::class, [
                 'required' => false,
-                'format' => 'Y-m-d'
+                'format' => 'Y-m-d',
             ])
 
             ->add('end', DateTimeType::class, [
                 'required' => false,
-                'format' => 'Y-m-d'
+                'format' => 'Y-m-d',
             ])
         ;
     }

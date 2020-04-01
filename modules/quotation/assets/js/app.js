@@ -62,39 +62,45 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         .replace(/---firstname---/, customer.firstname)
                         .replace(/---text---/, 'This is a good customer!')
                         .replace(/---id-customer-modal---/, customer.id_customer)
-                        .replace(/---link-show-customer-carts---/, link + customer.id_customer + '/details')
-                        .replace(/---id---/, customer.id_customer)
-                        .replace(/---modal-customer-infos---/, (mod.TemplateModule.modalCustomerInfos
-                                    .replace(/---id-customer-modal---/, customer.id_customer)
-                                    .replace(/---personal-datas---/, (mod.TemplateModule.personalData
-                                                .replace(/---firstname---/, customer.firstname)
-                                                .replace(/---lastname---/, customer.lastname)
-                                                .replace(/---id-customer---/, customer.id_customer)
-                                                .replace(/---customer-link-email---/, 'mailto:' + customer.email)
-                                                .replace(/---customer-email---/, customer.email)
-                                                .replace(/---edit---/, show + customer.id_customer + '/edit')
-                                                .replace(/---gender---/, customer.title)
-                                                .replace(/---old---/, Math.floor(customer.old))
-                                                .replace(/---birthday---/, customer.birthday)
-                                                .replace(/---registration---/, customer.registration)
-                                                .replace(/---lang---/, customer.lang)
-                                                .replace(/---last-update---/, customer.last_update)
-                                                .replace(/---badge-newsletter---/, (customer.newsletter === 1 ? 'badge-success' : 'badge-danger'))
-                                                .replace(/---icon-newsletter---/, (customer.newsletter === 1 ? 'check' : 'cancel'))
-                                                .replace(/---badge-partners---/, (customer.offer_partners === 1 ? 'badge-success' : 'badge-danger'))
-                                                .replace(/---icon-partners---/, (customer.offer_partners === 1 ? 'check' : 'cancel'))
-                                                .replace(/---badge-is-active---/, (customer.active === 1 ? 'badge-success' : 'badge-danger'))
-                                                .replace(/---icon-is-active---/, (customer.active === 1 ? 'check' : 'cancel'))
-                                                .replace(/---is-active---/, (customer.active === 1 ? 'Activé' : 'Désactivé'))
-                                        ) // close personal data content
-                                    ) // close personal data bloc
-                                .replace(/---customer-orders---/, (mod.TemplateModule.customerOrders
-                                            .replace(/---nb-orders---/, (customer.customer_order === null ? 0 : customer.nb_orders))
-                                ) // close orders content
-                                ) // close orders bloc
-                            ) // modale content
-                        ) // modale bloc
-                    ;
+                        .replace(/---modal-customer-infos---/,
+                            (mod.TemplateModule.modalCustomerInfos
+                                    .replace(/---link-show-customer-carts---/, link + customer.id_customer + '/details')
+                                    .replace(/---id---/, customer.id_customer)
+                                    .replace(/---modal-customer-infos---/,
+                                        (mod.TemplateModule.modalCustomerInfos
+                                                .replace(/---id-customer-modal---/, customer.id_customer)
+                                                .replace(/---personal-datas---/,
+                                                    (mod.TemplateModule.personalData
+                                                            .replace(/---firstname---/, customer.firstname)
+                                                            .replace(/---lastname---/, customer.lastname)
+                                                            .replace(/---id-customer---/, customer.id_customer)
+                                                            .replace(/---customer-link-email---/, 'mailto:' + customer.email)
+                                                            .replace(/---customer-email---/, customer.email)
+                                                            .replace(/---edit---/, show + customer.id_customer + '/edit')
+                                                            .replace(/---gender---/, customer.title)
+                                                            .replace(/---old---/, Math.floor(customer.old))
+                                                            .replace(/---birthday---/, customer.birthday)
+                                                            .replace(/---registration---/, customer.registration)
+                                                            .replace(/---lang---/, customer.lang)
+                                                            .replace(/---last-update---/, customer.last_update)
+                                                            .replace(/---badge-newsletter---/, (customer.newsletter === 1 ? 'badge-success' : 'badge-danger'))
+                                                            .replace(/---icon-newsletter---/, (customer.newsletter === 1 ? 'check' : 'cancel'))
+                                                            .replace(/---badge-partners---/, (customer.offer_partners === 1 ? 'badge-success' : 'badge-danger'))
+                                                            .replace(/---icon-partners---/, (customer.offer_partners === 1 ? 'check' : 'cancel'))
+                                                            .replace(/---badge-is-active---/, (customer.active === 1 ? 'badge-success' : 'badge-danger'))
+                                                            .replace(/---icon-is-active---/, (customer.active === 1 ? 'check' : 'cancel'))
+                                                            .replace(/---is-active---/, (customer.active === 1 ? 'Activé' : 'Désactivé'))
+                                                    )
+                                                )
+                                                .replace(/---customer-orders---/,
+                                                    (mod.TemplateModule.customerOrders
+                                                            .replace(/---nb-orders---/, (customer.customer_order === null ? 0 : customer.nb_orders))
+                                                    )
+                                                )
+                                        )
+                                    )
+                            )
+                        );
 
                     if (customers.length - 1 === i) {
                         document.getElementById('js-output-customers').innerHTML = output;
@@ -127,18 +133,49 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         .replace(/\d+(?=\/details)/, link.dataset.idcustomer);
 
                                     const getCustomerDetails = (data) => {
-                                        // console.log(data);
                                         let outputCart = '';
                                         let outputOrder = '';
                                         let outputQuotation = '';
+                                        let modalCustomerDetails = '';
+                                        let modalCustomerDetailsCart = '';
                                         // L'instruction for...of permet de créer une boucle d'un array qui parcourt un objet itérable
-                                        for (let customer of data) {
+                                        // Attention à l'ordre d'éxécution des boucles, on éxecute dans cartData, ensuite dans modalCartInfos et enfin tableCart
+                                        for (let cart of data['carts']) {
+
+                                            for (let product of cart['products']) {
+                                                // TemplateModule.cartData correspond à cartData dans le fichier templates_module.js
+                                                modalCustomerDetailsCart += mod.TemplateModule.cartData
+                                                    .replace(/---productName---/, product.product_name)
+                                                    .replace(/---productPrice---/, product.product_price + ' €')
+                                                    .replace(/---productQuantity---/, product.product_quantity)
+                                                    .replace(/---totalProduct---/, product.total_product + ' €');
+
+                                            }
+                                            modalCustomerDetails += mod.TemplateModule.modalCartInfos
+                                                .replace(/---id-cart-modal---/, cart.id_cart)
+                                                .replace(/---id-cart-link---/, cart.id_cart)
+                                                .replace(/---firstname---/, cart.firstname)
+                                                .replace(/---lastname---/, cart.lastname)
+                                                .replace(/---id-customer---/, cart.id_customer)
+                                                .replace(/---id-cart---/, cart.id_cart)
+                                                .replace(/---cart-data---/, modalCustomerDetailsCart)
+                                                .replace(/---totalCart---/, cart.total_cart + ' €');
+
+                                            // Une fois les boucles effectuées, on vide la modalCustomerDetailsCart
+                                            modalCustomerDetailsCart = '';
+                                        }
+
+                                        for (let customer of data['carts']) {
                                             outputCart += mod.TemplateModule.tableCart
                                                 .replace(/---cartId---/, customer.id_cart)
                                                 .replace(/---cartDate---/, customer.date_cart)
-                                                .replace(/---totalCart---/, customer.total_cart + ' €');
+                                                .replace(/---totalCart---/, customer.total_cart + ' €')
+                                                .replace(/---id-cart-modal---/, customer.id_cart);
                                         }
-                                        for (let customer of data) {
+
+                                        document.getElementById('tableCart').insertAdjacentHTML('afterend', modalCustomerDetails);
+
+                                        for (let customer of data['response']) {
                                             if (typeof customer.id_order !== 'undefined') {
                                                 outputOrder += mod.TemplateModule.tableOrder
                                                     .replace(/---orderId---/, customer.id_order)
@@ -147,7 +184,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---payment---/, customer.payment);
                                             }
                                         }
-                                        for (let customer of data) {
+                                        for (let customer of data['response']) {
                                             if (typeof customer.id_quotation !== 'undefined') {
                                                 outputQuotation += mod.TemplateModule.tableQuotation
                                                     .replace(/---quotationId---/, customer.id_quotation)

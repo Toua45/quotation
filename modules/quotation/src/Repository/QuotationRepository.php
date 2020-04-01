@@ -3,7 +3,6 @@
 namespace Quotation\Repository;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityManagerInterface;
 
 class QuotationRepository
 {
@@ -75,17 +74,44 @@ class QuotationRepository
      */
     public function findCartsByCustomer($idcustomer)
     {
+        $expr = $this->connection->getExpressionBuilder();
+
         return $this->connection->createQueryBuilder()
-            ->addSelect('ca.id_cart', 'ca.date_add AS date_cart', 'ca.id_customer')
+            ->addSelect('ca.id_cart', 'ca.date_add AS date_cart')
+            ->addSelect('ca.id_customer', 'c.firstname', ' c.lastname')
             ->addSelect('SUM(p.price * cp.quantity) AS total_cart')
             ->from($this->databasePrefix . 'cart', 'ca')
-            ->addGroupBy('ca.id_cart')
+            ->join('ca', $this->databasePrefix . 'customer', 'c', 'ca.id_customer = c.id_customer')
             ->join('ca', $this->databasePrefix . 'cart_product', 'cp', 'ca.id_cart = cp.id_cart')
             ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
-            ->where('id_customer = :id_customer')
+            ->where($expr->eq('ca.id_customer', ':id_customer'))
+            ->addGroupBy('ca.id_cart')
             ->setParameter('id_customer', $idcustomer)
             ->execute()
             ->fetchAll();
+    }
+
+    /**
+     * @return array
+     */
+
+    public function findProductsCustomerByCarts($idCart)
+    {
+        $expr = $this->connection->getExpressionBuilder();
+
+        return $this->connection->createQueryBuilder()
+            ->addSelect('p.id_product', 'pl.name AS product_name', 'p.reference AS product_reference', 'p.price AS product_price', 'cp.quantity AS product_quantity')
+            ->addSelect('p.price * cp.quantity AS total_product')
+            ->from($this->databasePrefix . 'product', 'p')
+            ->join('p', $this->databasePrefix . 'cart_product', 'cp', 'cp.id_product = p.id_product')
+            ->join('cp', $this->databasePrefix . 'cart', 'ca', 'cp.id_cart = ca.id_cart')
+            ->join('ca', $this->databasePrefix . 'customer', 'c', 'ca.id_customer = c.id_customer')
+            ->join('p', $this->databasePrefix . 'product_lang', 'pl', 'p.id_product = pl.id_product')
+            ->where($expr->eq('ca.id_cart', ':id_cart'))
+            ->setParameter('id_cart', $idCart)
+            ->execute()
+            ->fetchAll();
+
     }
 
     /**

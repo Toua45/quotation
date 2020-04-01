@@ -17,15 +17,24 @@ class QuotationSearchType extends AbstractType
             ->setMethod('GET')
             ->add('name', SearchType::class, [
                 'required' => false,
+                'label' => false,
+                'attr' => [
+                    'class' => 'input-text'
+                ]
             ])
 
             ->add('reference', SearchType::class, [
-                'required' => false
+                'required' => false,
+                'label' => false,
+                'attr' => [
+                    'class' => 'input-text'
+                ]
             ])
 
             ->add('status', ChoiceType::class, [
                 'required' => false,
-                'placeholder' => 'État du devis',
+                'label' => false,
+                'placeholder' => 'Afficher tous les status',
 //                'expanded' => true,
 //                'multiple' => true,
                 'choices' => [
@@ -33,17 +42,30 @@ class QuotationSearchType extends AbstractType
                     'validated' => 'validated',
                     'approved' => 'approved',
                     'refused' => 'refused'
+                ],
+                'attr' => [
+                    'class' => 'input-text'
                 ]
             ])
 
             ->add('start', DateTimeType::class, [
                 'required' => false,
+                'label' => false,
+                'input' => 'datetime',
                 'format' => 'Y-m-d',
+                'attr' => [
+                    'class' => 'input-date'
+                ]
             ])
 
             ->add('end', DateTimeType::class, [
                 'required' => false,
+                'label' => false,
+                'input' => 'datetime',
                 'format' => 'Y-m-d',
+                'attr' => [
+                    'class' => 'input-date'
+                ]
             ])
         ;
     }

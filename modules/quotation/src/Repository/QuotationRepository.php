@@ -150,7 +150,7 @@ class QuotationRepository
                 return $query
                     ->where('q.reference = :reference')
                     ->setParameter('reference', $reference)
-                    ->execute()->fetch();
+                    ->execute()->fetchAll();
                 break;
             case '' !== $status:
                 $this->addQuotationFromAndJoin($query);

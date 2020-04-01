@@ -15,6 +15,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminQuotationController extends FrameworkBundleAdminController
 {
+    private function queryQuotation(Request $request)
+    {
+        return $request->query->all()['quotation_search'];
+    }
+
     public function quotationIndex(Request $request)
     {
         $quotationRepository = $this->get('quotation_repository');
@@ -25,20 +30,13 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         $quotationFilterForm->handleRequest($request);
         if ($quotationFilterForm->isSubmitted() && $quotationFilterForm->isValid()) {
-//            $data = $quotationFilterForm->getData();
-//            $name = $data['name'];
-//            $reference = $data['reference'];
-//            $status = $data['status'];
-//            $start = $data['start'];
-//            $end = $data['end'];
+            $name = $this->queryQuotation($request)['name'];
+            $reference = $this->queryQuotation($request)['reference'];
+            $status = $this->queryQuotation($request)['status'];
+            $start = $this->queryQuotation($request)['start']['date']['year'];
+            $end = $this->queryQuotation($request)['end']['date']['year'];
 
-            $name = $request->query->all()['quotation_search']['name'];
-            $reference = $request->query->all()['quotation_search']['reference'];
-            $status = $request->query->all()['quotation_search']['status'];
-            $start = $request->query->all()['quotation_search']['start']['date']['year'];
-            $end = $request->query->all()['quotation_search']['end']['date']['year'];
-
-            //$request->query->all()['quotation_search']['start']['date']['year']);
+//            $end = $request->query->all()['quotation_search']['end']['date']['year'];
 
             $quotations = $quotationRepository->findQuotationsByFilters($name, $reference, $status, $start, $end);
         } else {

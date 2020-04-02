@@ -129,6 +129,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         let modalCustomerDetailsCart = '';
                                         let modalCustomerOrderDetails = '';
                                         let modalCustomerOrderDetailsCart = '';
+                                        let modalCustomerQuotationDetails = '';
+                                        let modalCustomerQuotationDetailsCart = '';
 
                                         /*
                                         * Cart section
@@ -227,14 +229,45 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         /*
                                         * Quotation section
                                          */
+                                        for (let cart of data['carts']) {
+
+                                            for (let product of cart['products']) {
+
+                                                modalCustomerQuotationDetailsCart += mod.TemplateModule.cartData
+                                                    .replace(/---productName---/, product.product_name)
+                                                    .replace(/---productPrice---/, product.product_price + ' €')
+                                                    .replace(/---productQuantity---/, product.product_quantity)
+                                                    .replace(/---totalProduct---/, product.total_product + ' €');
+                                            }
+
+                                            for (let quotation of cart['quotations']) {
+
+                                                modalCustomerQuotationDetails += mod.TemplateModule.modalCartQuotationInfos
+                                                    .replace(/---id-quotation-modal---/, quotation.id_quotation)
+                                                    .replace(/---firstname---/, cart.firstname)
+                                                    .replace(/---lastname---/, cart.lastname)
+                                                    .replace(/---id-customer---/, cart.id_customer)
+                                                    .replace(/---id-quotation---/, quotation.id_quotation)
+                                                    .replace(/---reference---/, quotation.quotation_reference)
+                                                    .replace(/---id-cart---/, quotation.id_cart_product)
+                                                    .replace(/---totalQuotation---/, quotation.total_quotation + ' €')
+                                                    .replace(/---quotation-cart-data---/, modalCustomerQuotationDetailsCart);
+                                            }
+
+                                            modalCustomerQuotationDetailsCart = '';
+                                        }
+
                                         for (let customer of data['response']) {
                                             if (typeof customer.id_quotation !== 'undefined') {
                                                 outputQuotation += mod.TemplateModule.tableQuotation
                                                     .replace(/---quotationId---/, customer.id_quotation)
                                                     .replace(/---quotationDate---/, customer.date_quotation)
-                                                    .replace(/---totalQuotation---/, customer.total_quotation + ' €');
+                                                    .replace(/---totalQuotation---/, customer.total_quotation + ' €')
+                                                    .replace(/---id-quotation-modal---/, customer.id_quotation);
                                             }
                                         }
+
+                                        document.getElementById('tableQuotation').insertAdjacentHTML('afterend', modalCustomerQuotationDetails);
 
                                         /**
                                          * La propriété innerHTML définit ou retourne le contenu HTML d'un élément,

@@ -140,20 +140,26 @@ class QuotationRepository
     /**
      * @return mixed[]
      */
-    public function findQuotationsByCustomer($idcustomer)
+    public function findQuotationsByCustomer($idcustomer, $idCart = null)
     {
-        return $this->connection->createQueryBuilder()
-            ->addSelect('q.id_customer', 'q.id_quotation', 'q.date_add AS date_quotation', 'cp.quantity', 'p.price')
+        $query = $this->connection->createQueryBuilder()
+            ->addSelect('q.id_customer', 'q.id_quotation', 'q.reference AS quotation_reference', 'q.date_add AS date_quotation', 'q.id_cart_product', 'cp.quantity', 'p.price')
             ->addSelect('SUM(p.price * cp.quantity) AS total_quotation')
             ->from($this->databasePrefix . 'quotation', 'q')
             ->addGroupBy('q.id_quotation')
             ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart_product = cp.id_cart')
-            ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
-            ->where('q.id_customer = :id_customer')
-            ->setParameter('id_customer', $idcustomer)
-            ->execute()
-            ->fetchAll()
-            ;
+            ->join('cp', $this->databasePrefix . 'cart', 'ca', 'cp.id_cart = ca.id_cart')
+            ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product');
+
+            if ($idCart == null) {
+                $query->where('q.id_customer = :id_customer')
+                    ->setParameter('id_customer', $idcustomer);
+            } else {
+                $query->where('q.id_customer = :id_customer AND q.id_cart_product = :id_cart')
+                    ->setParameters(['id_customer' => $idcustomer, 'id_cart' => $idCart]);
+            }
+
+        return $query->addGroupBy('q.id_quotation')->execute()->fetchAll();
     }
 
     /**

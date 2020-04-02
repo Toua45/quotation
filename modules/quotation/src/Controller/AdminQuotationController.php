@@ -15,6 +15,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminQuotationController extends FrameworkBundleAdminController
 {
+
+    /**
+     * quotation_search type=array
+     * Fonction privée qui récupère toutes les données à partir du tableau 'quotation_search
+     */
     private function queryQuotation(Request $request)
     {
         return $request->query->all()['quotation_search'];
@@ -30,15 +35,23 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         $quotationFilterForm->handleRequest($request);
         if ($quotationFilterForm->isSubmitted() && $quotationFilterForm->isValid()) {
+
+//            dump($end = $request->query->all()['quotation_search']  );die();
+
             $name = $this->queryQuotation($request)['name'];
             $reference = $this->queryQuotation($request)['reference'];
             $status = $this->queryQuotation($request)['status'];
             $start = $this->queryQuotation($request)['start']['date']['year'];
             $end = $this->queryQuotation($request)['end']['date']['year'];
 
-//            $end = $request->query->all()['quotation_search']['end']['date']['year'];
+            $_reference = $this->queryQuotation($request)['reference'];
+            $_status = $this->queryQuotation($request)['status'];
+            $_start = $this->queryQuotation($request)['start']['date']['year'];
+            $_end = $this->queryQuotation($request)['end']['date']['year'];
 
-            $quotations = $quotationRepository->findQuotationsByFilters($name, $reference, $status, $start, $end);
+            $quotations = $quotationRepository->findQuotationsByFilters($name, $reference, $status, $start, $end
+                                                                        , $_reference, $_status, $_start, $_end
+            );
         } else {
             $quotations = $quotationRepository->findAll();
         }
@@ -67,28 +80,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
 ////        dump('_interval_start (_supérieures) -> ' . $_start);
 ////        dump('_interval_end (_inférieures) -> ' . $_end);
 //
-//        $quotationRepository = $this->get('quotation_repository');
-//        $quotationFilter = $quotationRepository->findQuotationsByFilters($name, $reference, $status, $start, $end
-//                                                                        ,$_reference, $_status, $_start, $_end
-//        );
-//
-////        dump($quotationFilter);die();
-//
-//        $quotationFilterForm = $quotationFilter = $this->createForm(QuotationSearchType::class);
-//
-//        $quotationFilterForm->handleRequest($request);
-//        if ($quotationFilterForm->isSubmitted() && $quotationFilterForm->isValid()) {
-//            $data = $quotationFilterForm->getData();
-//            $filter = $data;
-//            $quotations = $quotationRepository->findQuotationsByFilters($filter);
-//        } else {
-//            $quotations = $quotationRepository->findAll();
-//        }
-//
-//        return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
-//            'quotations' => $quotations,
-//            'quotationFilterForm' => $quotationFilterForm->createView(),
-//        ]);
+
 //    }
 
     public function add(Request $request)

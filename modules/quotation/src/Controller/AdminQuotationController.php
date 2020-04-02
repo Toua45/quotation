@@ -144,10 +144,11 @@ class AdminQuotationController extends FrameworkBundleAdminController
         for ($i = 0; $i < count($carts); $i++) {
             if ($carts[$i]['id_cart']) {
                 $carts[$i]['products'] = $quotationRepository->findProductsCustomerByCarts($carts[$i]['id_cart']);
+                $carts[$i]['orders'] = $quotationRepository->findOrdersByCustomer($id_customer, $carts[$i]['id_cart']);
             }
         }
 
-        $orders = $quotationRepository->findOrdersByCustomer($id_customer);
+        $orders = $quotationRepository->findOrdersByCustomer($id_customer, null);
         $quotations = $quotationRepository->findQuotationsByCustomer($id_customer);
 
         /*
@@ -176,10 +177,21 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         foreach ($orders as $key => $order) {
             $response[$key]['id_customer'] = $id_customer;
+            $response[$key]['firstname'] = $order['firstname'];
+            $response[$key]['lastname'] = $order['lastname'];
             $response[$key]['id_order'] = $order['id_order'];
+            $response[$key]['order_reference'] = $order['order_reference'];
+            $response[$key]['id_cart'] = $order['id_cart'];
             $response[$key]['date_order'] = date("d/m/Y", strtotime($order['date_order']));
+            $response[$key]['total_products'] = number_format($order['total_products'], 2);
+            $response[$key]['total_shipping'] = number_format($order['total_shipping'], 2);
             $response[$key]['total_paid'] = number_format($order['total_paid'], 2);
             $response[$key]['payment'] = $order['payment'];
+            $response[$key]['order_status'] = $order['order_status'];
+            $response[$key]['address1'] = $order['address1'];
+            $response[$key]['address2'] = $order['address2'];
+            $response[$key]['postcode'] = $order['postcode'];
+            $response[$key]['city'] = $order['city'];
         }
 
         foreach ($quotations as $key => $quotation) {
@@ -189,7 +201,10 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $response[$key]['total_quotation'] = number_format($quotation['total_quotation'], 2);
         }
 
-        return new JsonResponse(json_encode(['carts' => $carts, 'response' => $response]), 200, [], true);
+        return new JsonResponse(json_encode([
+            'carts' => $carts,
+            'response' => $response,
+        ]), 200, [], true);
     }
 
     public function ajaxCustomer(Request $request)

@@ -152,8 +152,17 @@ class QuotationRepository
     public function findOneCustomerById($id_customer)
     {
         return $this->connection->createQueryBuilder()
-            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname', 'c.email')
+            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname', 'c.email', 'c.id_gender', 'c.birthday',
+                'DATEDIFF(NOW(), c.birthday) / 365.25 AS old', 'c.date_add AS registration', 'c.id_lang',
+                'c.newsletter', 'c.optin AS offer_partners', 'c.date_upd AS last_update', 'c.active')
+            ->addSelect('g.id_gender', 'g.name AS title')
+            ->addSelect('l.id_lang', 'l.name AS lang')
+            ->addSelect('COUNT(o.id_order) AS nb_orders')
             ->from($this->databasePrefix . 'customer', 'c')
+            ->join('c', $this->databasePrefix . 'gender_lang', 'g', 'c.id_gender = g.id_gender')
+            ->join('c', $this->databasePrefix . 'lang', 'l', 'c.id_lang = l.id_lang')
+            ->leftJoin('c', $this->databasePrefix . 'orders', 'o', 'o.id_customer = c.id_customer')
+            ->orderBy('o.id_customer')
             ->where('c.id_customer = :id_customer')
             ->setParameter('id_customer', $id_customer)
             ->execute()
@@ -165,55 +174,13 @@ class QuotationRepository
      */
     public function findByQuery($query)
     {
-//        $sql = 'SELECT COUNT(o.id_order) AS nb_orders
-//                FROM ' . $this->databasePrefix . 'orders o
-//                GROUP BY o.id_customer';
-
-        $qb = $this->connection->createQueryBuilder()
-            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname', 'c.email', 'c.id_gender', 'c.birthday',
-                        'DATEDIFF(NOW(), c.birthday) / 365.25 AS old', 'c.date_add AS registration', 'c.id_lang',
-                        'c.newsletter', 'c.optin AS offer_partners', 'c.date_upd AS last_update', 'c.active')
-            ->addSelect('g.id_gender', 'g.name AS title')
-            ->addSelect('l.id_lang', 'l.name AS lang')
-//            ->addSelect('o.id_order AS customer_order '
-//                , 'COUNT(o.id_order) AS nb_orders'
-//                , 'o.id_order AS nb_orders_test'
-//            )
-//            ->addSelect($sql)
+        return $this->connection->createQueryBuilder()
+            ->addSelect('c.firstname', 'c.lastname')
             ->from($this->databasePrefix . 'customer', 'c')
-            ->join('c', $this->databasePrefix . 'gender_lang', 'g', 'c.id_gender = g.id_gender')
-            ->join('c', $this->databasePrefix . 'lang', 'l', 'c.id_lang = l.id_lang')
-            ->leftJoin('c', $this->databasePrefix . 'orders', 'o', 'o.id_customer = c.id_customer')
             ->where('c.firstname LIKE :query OR c.lastname LIKE :query')
-//            ->where($sql)
             ->groupBy('c.id_customer')
             ->setParameter('query', '%' . $query . '%')
             ->execute()
             ->fetchAll();
-
-//        $nb_orders = $this->connection->createQueryBuilder()
-//            ->addSelect('c.id_customer')
-//            ->addSelect('COUNT(o.id_order) AS nb_orders')
-//            ->from($this->databasePrefix . 'orders', 'o')
-//            ->join('o', $this->databasePrefix . 'customer', 'c', 'o.id_customer = c.id_customer')
-//            ->groupBy('c.id_customer')
-//            ->execute()
-//            ->fetchAll();
-
-        return  $qb;
     }
-
-//SELECT *
-//FROM `question`
-//WHERE q_id = (
-//SELECT r_fk_question_id
-//FROM `reponse`
-//ORDER BY r_date_ajout DESC
-//LIMIT 1
-//)
-
-//$qb->select('u,p')
-//->from('User','u')
-//->join('u.profile','p','ON','p.annee IN (SELECT MAX(p2.annee) FROM Profile p2 GROUP BY p2.user)')
-//->where ('p.att1=1');
 }

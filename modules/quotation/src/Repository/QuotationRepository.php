@@ -111,21 +111,30 @@ class QuotationRepository
             ->setParameter('id_cart', $idCart)
             ->execute()
             ->fetchAll();
-
     }
 
     /**
      * @return mixed[]
      */
-    public function findOrdersByCustomer($idcustomer)
+    public function findOrdersByCustomer($idcustomer, $idCart = null)
     {
-        return $this->connection->createQueryBuilder()
-            ->addSelect('o.id_order', 'o.date_add AS date_order', 'o.total_paid', 'o.payment', 'o.id_customer')
+        $query = $this->connection->createQueryBuilder()
+            ->addSelect('o.id_order', 'o.reference AS order_reference', 'o.id_cart', 'o.date_add AS date_order',
+                'o.total_products', 'o.total_shipping', 'o.total_paid', 'o.payment', 'osl.name AS order_status')
+            ->addSelect('o.id_customer', 'c.firstname', ' c.lastname', 'a.address1', 'a.address2', 'a.postcode', 'a.city')
             ->from($this->databasePrefix . 'orders', 'o')
-            ->where('id_customer = :id_customer')
-            ->setParameter('id_customer', $idcustomer)
-            ->execute()
-            ->fetchAll();
+            ->join('o', $this->databasePrefix . 'customer', 'c', 'o.id_customer = c.id_customer')
+            ->join('o', $this->databasePrefix . 'order_state_lang', 'osl', 'o.current_state = osl.id_order_state')
+            ->join('c', $this->databasePrefix . 'address', 'a', 'c.id_customer = a.id_customer');
+
+            if ($idCart == null) {
+                $query->where('o.id_customer = :id_customer')
+                    ->setParameter('id_customer', $idcustomer);
+            } else {
+                $query->where('o.id_customer = :id_customer AND o.id_cart = :id_cart')
+                    ->setParameters(['id_customer' => $idcustomer, 'id_cart' => $idCart]);
+            }
+            return $query->addGroupBy('o.id_order')->execute()->fetchAll();
     }
 
     /**

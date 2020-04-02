@@ -134,11 +134,18 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         let outputQuotation = '';
                                         let modalCustomerDetails = '';
                                         let modalCustomerDetailsCart = '';
+                                        let modalCustomerOrderDetails = '';
+                                        let modalCustomerOrderDetailsCart = '';
+
+                                        /*
+                                        * Cart section
+                                         */
                                         // L'instruction for...of permet de créer une boucle d'un array qui parcourt un objet itérable
                                         // Attention à l'ordre d'éxécution des boucles, on éxecute dans cartData, ensuite dans modalCartInfos et enfin tableCart
                                         for (let cart of data['carts']) {
 
                                             for (let product of cart['products']) {
+
                                                 // TemplateModule.cartData correspond à cartData dans le fichier templates_module.js
                                                 modalCustomerDetailsCart += mod.TemplateModule.cartData
                                                     .replace(/---productName---/, product.product_name)
@@ -171,15 +178,62 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                         document.getElementById('tableCart').insertAdjacentHTML('afterend', modalCustomerDetails);
 
+                                        /*
+                                        * Order section
+                                         */
+                                        for (let cart of data['carts']) {
+
+                                            for (let product of cart['products']) {
+
+                                                // Etant donné que les produits d'un panier sont déjà récupérés, on va réutiliser le template correspondant, ici TemplateModule.cartData
+                                                modalCustomerOrderDetailsCart += mod.TemplateModule.cartData
+                                                    .replace(/---productName---/, product.product_name)
+                                                    .replace(/---productPrice---/, product.product_price + ' €')
+                                                    .replace(/---productQuantity---/, product.product_quantity)
+                                                    .replace(/---totalProduct---/, product.total_product + ' €');
+                                            }
+
+                                            for (let order of cart['orders']) {
+
+                                                modalCustomerOrderDetails += mod.TemplateModule.modalCartOrderInfos
+                                                    .replace(/---id-order-modal---/, order.id_order)
+                                                    .replace(/---firstname---/, order.firstname)
+                                                    .replace(/---lastname---/, order.lastname)
+                                                    .replace(/---id-customer---/, order.id_customer)
+                                                    .replace(/---address1---/, order.address1)
+                                                    .replace(/---address2---/, order.address2)
+                                                    .replace(/---postcode---/, order.postcode)
+                                                    .replace(/---city---/, order.city)
+                                                    .replace(/---id-order---/, order.id_order)
+                                                    .replace(/---reference---/, order.order_reference)
+                                                    .replace(/---orderStatus---/, order.order_status)
+                                                    .replace(/---id-cart---/, order.id_cart)
+                                                    .replace(/---totalProducts---/, order.total_products + ' €')
+                                                    .replace(/---totalShipping---/, order.total_shipping + ' €')
+                                                    .replace(/---totalPaid---/, order.total_paid + ' €')
+                                                    .replace(/---order-cart-data---/, modalCustomerOrderDetailsCart);
+                                            }
+
+                                            modalCustomerOrderDetailsCart = '';
+                                        }
+
                                         for (let customer of data['response']) {
                                             if (typeof customer.id_order !== 'undefined') {
                                                 outputOrder += mod.TemplateModule.tableOrder
                                                     .replace(/---orderId---/, customer.id_order)
                                                     .replace(/---orderDate---/, customer.date_order)
                                                     .replace(/---totalOrder---/, customer.total_paid + ' €')
-                                                    .replace(/---payment---/, customer.payment);
+                                                    .replace(/---payment---/, customer.payment)
+                                                    .replace(/---orderStatus---/, customer.order_status)
+                                                    .replace(/---id-order-modal---/, customer.id_order);
                                             }
                                         }
+
+                                         document.getElementById('tableOrder').insertAdjacentHTML('afterend', modalCustomerOrderDetails);
+
+                                        /*
+                                        * Quotation section
+                                         */
                                         for (let customer of data['response']) {
                                             if (typeof customer.id_quotation !== 'undefined') {
                                                 outputQuotation += mod.TemplateModule.tableQuotation

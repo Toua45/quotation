@@ -173,6 +173,14 @@ class AdminQuotationController extends FrameworkBundleAdminController
                 }
             }
 
+            for ($k = 0; $k < count($carts[$i]['orders']); $k++) {
+                if ($carts[$i]['orders']) {
+                    $carts[$i]['orders'][$k]['total_products'] = number_format($carts[$i]['orders'][$k]['total_products'], 2);
+                    $carts[$i]['orders'][$k]['total_shipping'] = number_format($carts[$i]['orders'][$k]['total_shipping'], 2);
+                    $carts[$i]['orders'][$k]['total_paid'] = number_format($carts[$i]['orders'][$k]['total_paid'], 2);
+                }
+            }
+
             for ($l = 0; $l < count($carts[$i]['quotations']); $l++) {
                 if ($carts[$i]['quotations']) {
                     $carts[$i]['quotations'][$l]['price'] = number_format($carts[$i]['quotations'][$l]['price'], 2);

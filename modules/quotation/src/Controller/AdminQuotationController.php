@@ -120,7 +120,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
     /**
      * Show customer by ID
      * @param Request $request
-     * @param $query
+     * @param $id_customer
      * @return JsonResponse
      */
     public function showCustomer(Request $request, $id_customer)

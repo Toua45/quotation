@@ -145,11 +145,12 @@ class AdminQuotationController extends FrameworkBundleAdminController
             if ($carts[$i]['id_cart']) {
                 $carts[$i]['products'] = $quotationRepository->findProductsCustomerByCarts($carts[$i]['id_cart']);
                 $carts[$i]['orders'] = $quotationRepository->findOrdersByCustomer($id_customer, $carts[$i]['id_cart']);
+                $carts[$i]['quotations'] = $quotationRepository->findQuotationsByCustomer($id_customer, $carts[$i]['id_cart']);
             }
         }
 
         $orders = $quotationRepository->findOrdersByCustomer($id_customer, null);
-        $quotations = $quotationRepository->findQuotationsByCustomer($id_customer);
+        $quotations = $quotationRepository->findQuotationsByCustomer($id_customer, null);
 
         /*
          * carts section
@@ -169,6 +170,13 @@ class AdminQuotationController extends FrameworkBundleAdminController
                         $carts[$i]['products'][$j]['product_quantity'] = $carts[$i]['products'][$j]['product_quantity'];
                         $carts[$i]['products'][$j]['total_product'] = number_format($carts[$i]['products'][$j]['total_product'], 2);
                     }
+                }
+            }
+
+            for ($l = 0; $l < count($carts[$i]['quotations']); $l++) {
+                if ($carts[$i]['quotations']) {
+                    $carts[$i]['quotations'][$l]['price'] = number_format($carts[$i]['quotations'][$l]['price'], 2);
+                    $carts[$i]['quotations'][$l]['total_quotation'] = number_format($carts[$i]['quotations'][$l]['total_quotation'], 2);
                 }
             }
         }
@@ -197,6 +205,8 @@ class AdminQuotationController extends FrameworkBundleAdminController
         foreach ($quotations as $key => $quotation) {
             $response[$key]['id_customer'] = $id_customer;
             $response[$key]['id_quotation'] = $quotation['id_quotation'];
+            $response[$key]['quotation_reference'] = $quotation['quotation_reference'];
+            $response[$key]['id_cart_product'] = $quotation['id_cart_product'];
             $response[$key]['date_quotation'] = date("d/m/Y", strtotime($quotation['date_quotation']));
             $response[$key]['total_quotation'] = number_format($quotation['total_quotation'], 2);
         }

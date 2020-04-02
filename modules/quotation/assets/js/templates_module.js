@@ -236,5 +236,58 @@ export const TemplateModule = {
             <td class="quotation-id text-left">---quotationId---</td>
             <td class="quotation-date text-left">---quotationDate---</td>
             <td class="quotation-total text-left">---totalQuotation---</td>
+            <td class="quotation-actions text-left">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#showQuotationModal_---id-quotation-modal---">Details</button>
+            </td>
         </tr>`,
+
+    modalCartQuotationInfos: `<div class="modal fade" id="showQuotationModal_---id-quotation-modal---" tabindex="-1" role="dialog" aria-labelledby="showCustomerModalTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                           <div class="col">
+                            <div class="card">
+                              <h2><i class="material-icons">person</i> INFORMATIONS CLIENT</h2>
+                              <div class="card-header">
+                              <h3>
+                              ---firstname--- ---lastname--- [---id-customer---]
+                              </h3>
+                              </div>
+                              <div class="card-body">
+                                <h2><i class="material-icons">content_paste</i> DEVIS [---id-quotation---] référence : ---reference---</h2>
+                                <h2><i class="material-icons">shopping_cart</i> CONTENU DU PANIER [---id-cart---]</h2>
+
+                                <table class="table">
+                                     <thead>
+                                        <tr>
+                                        <th class="text-left">Produits</th>
+                                        <th class="text-left">Prix Unitaire</th>
+                                        <th class="text-left">Quantité</th>
+                                        <th class="text-left">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    
+                                        ---quotation-cart-data---
+                                        
+                                        <tr>
+                                        <td colspan="3" class="text-left">Total produits</td>
+                                        <td class="text-left">---totalQuotation---</td>
+                                        </tr>                                        
+                                </table>
+
+                              </div>
+                            </div>
+                           </div>
+                        </div>                    
+                      </div>
+                    </div>
+                  </div>
+                </div>`,
 };

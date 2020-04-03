@@ -65,7 +65,10 @@ class QuotationRepository
     {
         return $query
             ->from($this->databasePrefix . 'quotation', 'q')
-            ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer');
+            ->addGroupBy('q.id_quotation')
+            ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+            ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart_product = cp.id_cart')
+            ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product');
     }
 
     /**
@@ -79,7 +82,9 @@ class QuotationRepository
     public function findQuotationsByFilters($name = null, $reference = null, $status = null, $start = null, $end = null)
     {
         $query = $this->connection->createQueryBuilder();
-        $query->addSelect('q.*', 'c.firstname', 'c.lastname');
+        $query->addSelect('q.*', 'c.firstname', 'c.lastname')
+            ->addSelect('SUM(p.price * cp.quantity) AS total_product_price');
+
 
         $filterSearch = [$name, $reference, $status, $start, $end];
 
@@ -91,6 +96,9 @@ class QuotationRepository
                 return $query
                     ->from($this->databasePrefix . 'customer', 'c')
                     ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
+                    ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart_product = cp.id_cart')
+                    ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
+                    ->addGroupBy('q.id_quotation')
                     ->where('(c.firstname LIKE :name OR c.lastname LIKE :name)
                         AND q.reference = :reference')
                     ->setParameters(['name' => '%' . $name . '%', 'reference' => $reference])
@@ -158,7 +166,10 @@ class QuotationRepository
                 return $query
                     ->from($this->databasePrefix . 'customer', 'c')
                     ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
+                    ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart_product = cp.id_cart')
+                    ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
                     ->where('c.firstname LIKE :name OR c.lastname LIKE :name')
+                    ->addGroupBy('q.id_quotation')
                     ->setParameter('name', '%' . $name . '%')
                     ->execute()->fetchAll();
                 break;

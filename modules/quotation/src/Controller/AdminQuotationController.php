@@ -37,10 +37,8 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $name = $this->queryQuotation($request)['name'];
             $reference = $this->queryQuotation($request)['reference'];
             $status = $this->queryQuotation($request)['status'];
-            $start = $this->queryQuotation($request)['start']['year'];
-            $end = $this->queryQuotation($request)['end']['year'];
-
-//            dump($end = $request->query->all()['quotation_search']);die();
+            $start = $this->queryQuotation($request)['start'];
+            $end = $this->queryQuotation($request)['end'];
 
             $quotations = $quotationRepository->findQuotationsByFilters($name, $reference, $status, $start, $end);
         } else {

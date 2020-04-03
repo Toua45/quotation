@@ -2,10 +2,7 @@
 
 namespace Quotation\Form;
 
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -39,10 +36,10 @@ class QuotationSearchType extends AbstractType
                 'label' => false,
                 'placeholder' => 'Afficher tous les status',
                 'choices' => [
-                    'validate' => 'validate',
-                    'validated' => 'validated',
-                    'approved' => 'approved',
-                    'refused' => 'refused'
+                    'Validate' => 'validate',
+                    'Validated' => 'validated',
+                    'Approved' => 'approved',
+                    'Refused' => 'refused'
                 ],
                 'attr' => [
                     'class' => 'input-text'
@@ -52,21 +49,13 @@ class QuotationSearchType extends AbstractType
             ->add('start', DateType::class, [
                 'required' => false,
                 'label' => false,
-                'format' => 'd-M-y',
-                'input' => 'datetime',
-//                'widget' => 'single_text',
-//                'html5' => false,
-
+                'widget' => 'single_text'
             ])
 
             ->add('end', DateType::class, [
                 'required' => false,
                 'label' => false,
-                'format' => 'd-M-y',
-                'input' => 'datetime',
-//                'widget' => 'single_text',
-//                'html5' => false,
-
+                'widget' => 'single_text'
             ])
         ;
     }
@@ -74,7 +63,7 @@ class QuotationSearchType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            // Configure your form options here
+
         ]);
     }
 }

@@ -36,10 +36,10 @@ class QuotationSearchType extends AbstractType
                 'label' => false,
                 'placeholder' => 'Afficher tous les status',
                 'choices' => [
-                    'Validate' => 'validate',
-                    'Validated' => 'validated',
-                    'Approved' => 'approved',
-                    'Refused' => 'refused'
+                    'validate' => 'validate',
+                    'validated' => 'validated',
+                    'approved' => 'approved',
+                    'refused' => 'refused'
                 ],
                 'attr' => [
                     'class' => 'input-text'
@@ -48,14 +48,14 @@ class QuotationSearchType extends AbstractType
 
             ->add('start', DateType::class, [
                 'required' => false,
-                'label' => false,
-                'widget' => 'single_text'
+                'widget' => 'single_text',
+                'label' => false
             ])
 
             ->add('end', DateType::class, [
                 'required' => false,
-                'label' => false,
-                'widget' => 'single_text'
+                'widget' => 'single_text',
+                'label' => false
             ])
         ;
     }
@@ -63,7 +63,7 @@ class QuotationSearchType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-
+            // Configure your form options here
         ]);
     }
 }

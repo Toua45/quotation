@@ -25,8 +25,7 @@
                          </div>
 
                          <a href="{{ path('quotation_admin_add') }}">
-                             <span uk-icon="icon: plus-circle" class="justify-content-end" data-toggle="modal"
-                                   data-target="#exampleModalCenter"></span>
+                             <span uk-icon="icon: plus-circle" class="justify-content-end"></span>
                          </a>
                      </div>
 
@@ -49,7 +48,7 @@
                          <div class="infobulle">
                              <div class="bloc-infobulle">
                                  <span class="text-infobulle">
-                                    Réinitialiser
+                                    Rafraîchir la liste
                                  </span>
                                  <div class="arrow"></div>
                              </div>
@@ -98,38 +97,30 @@
                  <tr class="search">
                      {{ form_start(quotationFilterForm, {'attr':{ 'id': 'filter_quotations_form'}}) }}
                      <td></td>
-                     <td>
-
-                     </td>
+                     <td></td>
                      <td>
                          {{ form_row(quotationFilterForm.reference) }}
                      </td>
                      <td>
                          {{ form_row(quotationFilterForm.name) }}
                      </td>
-                     <td>
-
-                     </td>
+                     <td></td>
                      <td>
                          <div class="d-flex input-date">
                              <span uk-icon="icon: calendar" class="d-flex justify-content-end mr-2"></span>
-                             {{ form_row(quotationFilterForm.start) }}
+                             {{ form_row(quotationFilterForm.start , {'attr':{ 'class': 'datepicker'}}) }}
                          </div>
 
                          <div class="d-flex input-date mt-1">
                              <span uk-icon="icon: calendar" class="d-flex justify-content-end mr-2"></span>
-                                {{ form_row(quotationFilterForm.end) }}
+                             {{ form_row(quotationFilterForm.end, {'attr':{ 'class': 'datepicker'}}) }}
                          </div>
                      </td>
                      <td>
                          {{ form_row(quotationFilterForm.status) }}
                      </td>
-                     <td>
-
-                     </td>
-                     <td>
-
-                     </td>
+                     <td></td>
+                     <td></td>
                      <td>
                          <button class="btn btn-light d-flex"><span uk-icon="icon: search" class="mr-1"></span>Rechercher</button>
                      </td>
@@ -201,15 +192,16 @@
 
          </div>
      </div>
-
  {% endblock %}
 
     {% block javascripts %}
-
         <script type="text/javascript" src="{{ asset('quotation-bundle/quotation-bundle.js') }}"></script>
 
         <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit-icons.min.js"></script>
 
-    {% endblock %}
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
+
+    {% endblock %}

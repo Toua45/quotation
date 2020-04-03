@@ -8,15 +8,14 @@ export const QuotationModule = {
     },
 
     getData: function (url, callback, path = null, dataFetch = false, autocomplete = []) {
-        // window.addEventListener('DOMContentLoaded', () => {
         fetch(url).then(response => response.json()).then(data => {
             if (typeof callback === 'function') {
+                // console.log('valid callback');
                 if (autocomplete.length >= 1) {
                     // autocomplete[0] => correspond au paramètre 'selector' de la fonction 'autocomplete' type=string
                     if (typeof autocomplete[0] === 'string') {
                         // autocomplete[1] => correspond au paramètre 'name' de la fonction 'autocomplete' type=string
                         if (typeof autocomplete[1] === 'string') {
-                            // autocomplete[2] => correspond au paramètre 'minLength' de la fonction 'autocomplete' type=int
                             if (typeof autocomplete[2] === 'number') {
                                 callback(autocomplete[0], autocomplete[1], autocomplete[2], data);
                             } else {
@@ -29,6 +28,7 @@ export const QuotationModule = {
                         if (path !== null) {
                             callback(path, data);
                         } else {
+                            // console.log('callback(data)');
                             callback(data);
                         }
                     } else {
@@ -37,7 +37,6 @@ export const QuotationModule = {
                 }
             }
         }).catch(error => console.log(error));
-        // });
     },
 
     substringMatcher: function (strs) {
@@ -67,16 +66,4 @@ export const QuotationModule = {
                 source: QuotationModule.substringMatcher(dataFetch)
             })
     },
-
-    // Fonction qui remplace le vide par une espace et ce qu'il y a derrière
-    getQueryURL: function (query) {
-        // Code qui est réutilisé dans app.js (cette ligne n'exécute rien)
-        return query !== ' ' || query !== '' ? query.replace(/\s(?=\w)(\w)+/, '') : false;
-    },
-
-    // Fonction qui remplace le nom de dossier admin de l'utilisateur par un autre nom par défaut
-    getShowCustomerURL: function (admin = 'admin') {
-        // Le nom de dossier est automatiquement remplacé par "admin"
-        return window.location.origin + '/' + admin + '/index.php/modules/quotation/admin/show/customer/';
-    }
 };

@@ -1,26 +1,30 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
  {% block content %}
+
+     <div class="card p-3">
+         <a href="{{ path('quotation_admin') }}" class="btn btn-primary">Retour</a>
+     </div>
+
      <div class="quotation card p-4" id="customers" data-customers="{{ asset('data-customer.js') }}">
-         <a href="{{ path('quotation_admin') }}" class="btn btn-primary mb-5">Retour</a>
 
          <div class="quotation-head mb-3 d-flex justify-content-between">
 
-             <div class="d-flex align-items-center" id="customer_search" data-searchcustomers="{{ path('quotation_admin_search_customers', { query: 'query' }) }}">
+             <div class="d-flex align-items-center"
+                  data-searchcustomers="{{ path('quotation_admin_search_customers', { query: 'query' }) }}">
                  <span uk-icon="icon: user" class="mr-2"></span>
                  <h1 class="panel-heading">Client</h1>
              </div>
 
          </div>
 
-         {% include '@Modules/quotation/templates/admin/_new/new_customer.html.twig' %}
-
-         <div id="js-output-customers"><!-- Customers here! --></div>
-
-         {% include '@Modules/quotation/templates/admin/_form.html.twig' %}
-
+         <section class="customer">
+             {% include '@Modules/quotation/templates/admin/section/_customer.html.twig' %}
+         </section>
      </div>
+
  {% endblock %}
+
 
 {% block javascripts %}
     <script type="text/javascript" src="{{ asset('quotation-bundle/quotation-bundle.js') }}"></script>
@@ -28,4 +32,3 @@
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit-icons.min.js"></script>
 {% endblock %}
-

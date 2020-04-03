@@ -10,14 +10,17 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class QuotationType extends AbstractType
+class QuotationCustomerType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->setMethod('GET')
             ->add('customerId', SearchType::class, [
-                'label' => 'Client',
+                'label' => 'Rechercher un client',
+                'label_attr' => [
+                    'class' => 'form-label'
+                ],
                 'required' => true,
                 'attr' => [
                     'class' => 'linked-select',
@@ -25,25 +28,6 @@ class QuotationType extends AbstractType
                     'placeholder' => 'Sélectionnez le client',
                 ]
             ])
-
-//            ->add('reference', TextType::class, [
-//                'label' => 'Référence',
-//                'attr' => [
-//                    'placeholder' => 'ABDY75'
-//                ]
-//            ])
-//            ->add('status', TextType::class, [
-//                'attr' => [
-//                    'placeholder' => 'A valider'
-//                ]
-//            ])
-//            ->add('messageVisible', TextareaType::class, [
-//                'label' => 'Message',
-//                'attr' => [
-//                    'placeholder' => 'Hello world',
-//                    'rows' => 5,
-//                ]
-//            ])
             ;
     }
 

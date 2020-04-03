@@ -51,8 +51,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             // console.log(customers)
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
-            let link = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/customer/';
-            let show = window.location.origin + '/adminToua/index.php/sell/customers/';
+            let link = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/show/customer/';
+            let show = window.location.origin + '/adminLionel/index.php/sell/customers/';
             customers.forEach((customer, i) => {
                 import('./templates_module').then(mod => {
                     output += mod.TemplateModule.card

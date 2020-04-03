@@ -1,4 +1,5 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
+
 {% form_theme quotationFilterForm 'bootstrap_4_layout.html.twig' %}
 
  {% block content %}
@@ -54,7 +55,7 @@
                              </div>
                          </div>
 
-                         <a onclick="window.location.reload()" href="#">
+                         <a id="refresh" href="{{ path('quotation_admin') }}">
                              <span uk-icon="icon: refresh" class="justify-content-end"></span>
                          </a>
                      </div>
@@ -95,10 +96,10 @@
                      </td>
                  </tr>
                  <tr class="search">
-                     {{ form_start(quotationFilterForm) }}
+                     {{ form_start(quotationFilterForm, {'attr':{ 'id': 'filter_quotations_form'}}) }}
                      <td></td>
                      <td>
-                         <input type="text" class="input-text" name="id_quotation" id="id_quotation">
+{#                         <input type="text" class="input-text" name="id_quotation" id="id_quotation">#}
                      </td>
                      <td>
                          {{ form_row(quotationFilterForm.reference) }}
@@ -109,19 +110,19 @@
 {#                         <input type="text" class="input-text" name="customer" id="customer">#}
                      </td>
                      <td>
-                         <input type="text" class="input-text" name="message" id="message">
+{#                         <input type="text" class="input-text" name="message" id="message">#}
                      </td>
                      <td>
                          <div class="d-flex input-date">
                              <span uk-icon="icon: calendar" class="d-flex justify-content-end mr-2"></span>
-{#                             <input type="date" name="date_add" id="date_add">#}
-                             {{ form_row(quotationFilterForm.start) }}
+{#                             <input type="date" name="date_add" id="quotation_search_start">#}
+                             {{ form_row(quotationFilterForm.start , {'attr':{ 'class': 'datepicker'}}) }}
                          </div>
 
                          <div class="d-flex input-date mt-1">
                              <span uk-icon="icon: calendar" class="d-flex justify-content-end mr-2"></span>
-{#                             <input type="date" name="date_add" id="date_add">#}
-                             {{ form_row(quotationFilterForm.end) }}
+{#                             <input type="date" name="date_add" id="quotation_search_end">#}
+                                {{ form_row(quotationFilterForm.end, {'attr':{ 'class': 'datepicker'}}) }}
                          </div>
                      </td>
                      <td>
@@ -135,7 +136,7 @@
 {#                         </select>#}
                      </td>
                      <td>
-                         <input type="text" class="input-text" name="total" id="total">
+{#                         <input type="text" class="input-text" name="total" id="total">#}
                      </td>
                      <td></td>
                      <td>
@@ -220,5 +221,10 @@
 
         <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit-icons.min.js"></script>
+
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
     {% endblock %}
 

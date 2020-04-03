@@ -17,8 +17,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
 {
 
     /**
-     * quotation_search type=array
-     * Fonction privée qui récupère toutes les données à partir du tableau 'quotation_search
+     * Fonction privée qui récupère toutes les données à partir du tableau 'quotation_search'
      */
     private function queryQuotation(Request $request)
     {
@@ -35,23 +34,15 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         $quotationFilterForm->handleRequest($request);
         if ($quotationFilterForm->isSubmitted() && $quotationFilterForm->isValid()) {
-
-//            dump($end = $request->query->all()['quotation_search']  );die();
-
             $name = $this->queryQuotation($request)['name'];
             $reference = $this->queryQuotation($request)['reference'];
             $status = $this->queryQuotation($request)['status'];
-            $start = $this->queryQuotation($request)['start']['date']['year'];
-            $end = $this->queryQuotation($request)['end']['date']['year'];
+            $start = $this->queryQuotation($request)['start']['year'];
+            $end = $this->queryQuotation($request)['end']['year'];
 
-            $_reference = $this->queryQuotation($request)['reference'];
-            $_status = $this->queryQuotation($request)['status'];
-            $_start = $this->queryQuotation($request)['start']['date']['year'];
-            $_end = $this->queryQuotation($request)['end']['date']['year'];
+//            dump($end = $request->query->all()['quotation_search']);die();
 
-            $quotations = $quotationRepository->findQuotationsByFilters($name, $reference, $status, $start, $end
-                                                                        , $_reference, $_status, $_start, $_end
-            );
+            $quotations = $quotationRepository->findQuotationsByFilters($name, $reference, $status, $start, $end);
         } else {
             $quotations = $quotationRepository->findAll();
         }
@@ -61,27 +52,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
             'quotationFilterForm' => $quotationFilterForm->createView(),
         ]);
     }
-
-//    public function searchQuotationsByFilters(Request $request, $name, $reference, $status, $start, $end
-//                                                                ,$_reference, $_status, $_start, $_end
-//    )
-//    {
-////        dump('---------------Recherche simple---------------');
-////        dump('name -> ' . $name);
-////        dump('reference -> ' . $reference);
-////        dump('status => ' . $status);
-////        dump('interval_start (supérieures) -> ' . $start);
-////        dump('interval_end (inférieures) -> ' . $end);
-////
-////
-////        dump('---------------Recherche élargie---------------');
-////        dump('_reference -> ' . $_reference);
-////        dump('_status -> ' . $_status);
-////        dump('_interval_start (_supérieures) -> ' . $_start);
-////        dump('_interval_end (_inférieures) -> ' . $_end);
-//
-
-//    }
 
     public function add(Request $request)
     {

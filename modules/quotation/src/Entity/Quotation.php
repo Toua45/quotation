@@ -38,7 +38,7 @@ class Quotation
     /**
      * @var string
      *
-     * @ORM\Column(name="reference", type="string", length=100)
+     * @ORM\Column(name="reference", type="string", length=50)
      */
     private $reference;
 

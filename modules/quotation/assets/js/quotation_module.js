@@ -1,39 +1,42 @@
 export const QuotationModule = {
-    DOM: {
-        urlCustomers: document.getElementById('customers').dataset.customers.replace(/\?(?=\d)(\w|\W)+/g, ''),
+    getParamFromURL : (matcher) => window.location.href.match(new RegExp(matcher + '(?=\\?)', 'g')),
+
+    getCustomersURL: function () {
+        if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamFromURL('add').length === 1) {
+            return document.getElementById('customers').dataset.customers.replace(/\?(?=\d)(\w|\W)+/g, '');
+        }
     },
 
     getData: function (url, callback, path = null, dataFetch = false, autocomplete = []) {
-        window.addEventListener('DOMContentLoaded', () => {
-            fetch(url).then(response => response.json()).then(data => {
-
-                if (typeof callback === 'function') {
-                    if (autocomplete.length >= 1) {
-                        // autocomplete[0] => coorespond au paramètre 'selector' de la fonction 'autocomplete' type=string
-                        if (typeof autocomplete[0] === 'string') {
-                            // autocomplete[1] => correspond au paramètre 'name' de la fonction 'autocomplete' type=string
-                            if (typeof autocomplete[1] === 'string') {
-                                if (typeof autocomplete[2] === 'number') {
-                                    callback(autocomplete[0], autocomplete[1], autocomplete[2], data);
-                                } else {
-                                    callback(autocomplete[0], autocomplete[1], 2, data);
-                                }
-                            }
-                        }
-                    } else {
-                        if (dataFetch) {
-                            if (path !== null) {
-                                callback(path, data);
+        fetch(url).then(response => response.json()).then(data => {
+            if (typeof callback === 'function') {
+                // console.log('valid callback');
+                if (autocomplete.length >= 1) {
+                    // autocomplete[0] => correspond au paramètre 'selector' de la fonction 'autocomplete' type=string
+                    if (typeof autocomplete[0] === 'string') {
+                        // autocomplete[1] => correspond au paramètre 'name' de la fonction 'autocomplete' type=string
+                        if (typeof autocomplete[1] === 'string') {
+                            if (typeof autocomplete[2] === 'number') {
+                                callback(autocomplete[0], autocomplete[1], autocomplete[2], data);
                             } else {
-                                callback(data);
+                                callback(autocomplete[0], autocomplete[1], 2, data);
                             }
-                        } else {
-                            callback();
                         }
                     }
+                } else {
+                    if (dataFetch) {
+                        if (path !== null) {
+                            callback(path, data);
+                        } else {
+                            // console.log('callback(data)');
+                            callback(data);
+                        }
+                    } else {
+                        callback();
+                    }
                 }
-            }).catch(error => console.log(error));
-        });
+            }
+        }).catch(error => console.log(error));
     },
 
     substringMatcher: function (strs) {
@@ -62,5 +65,5 @@ export const QuotationModule = {
                 name: name,
                 source: QuotationModule.substringMatcher(dataFetch)
             })
-    }
+    },
 };

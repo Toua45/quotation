@@ -1,0 +1,71 @@
+.quotation {
+
+  .table {
+
+    text-align: center;
+    vertical-align: middle;
+
+    thead {
+      tr {
+        td {
+          border: none;
+        }
+      }
+    }
+
+    $border-color: #A0D0EB;
+
+    .search {
+      background-color: #ECF6FB;
+      border-top: solid 1px $border-color;
+      border-bottom: solid 1px $border-color;
+    }
+
+    .search_button {
+      margin:auto;
+    }
+
+    .input-text, select, .input-date {
+      width: min-content;
+      padding: 4px;
+      margin:auto;
+      font-size: 11px;
+      border-radius: 3px;
+      border: solid 1px $border-color;
+      background-color: #F5F8F9;
+    }
+
+    select {
+      width: max-content;
+    }
+
+    .input-date {
+      padding: 0;
+
+      input {
+        background-color: transparent;
+        border: none;
+        align-self: center;
+      }
+
+      span {
+        border-right: solid 1px $border-color;
+        padding: 4px;
+      }
+    }
+
+    tbody {
+      tr:first-child {
+        td {
+          border-top: none;
+        }
+      }
+    }
+
+    td {
+      $border-color: $middlegrey;
+      border-top: solid 1px $border-color;
+      border-bottom: solid 1px $border-color;
+    }
+  }
+}

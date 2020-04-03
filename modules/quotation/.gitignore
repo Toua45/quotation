@@ -1,3 +1,4 @@
 vendor
 sql/*
 node_modules
+public

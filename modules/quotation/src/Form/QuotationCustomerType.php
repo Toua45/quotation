@@ -6,43 +6,26 @@ use PrestaShop\PrestaShop\Adapter\Entity\Cart;
 use PrestaShop\PrestaShop\Adapter\Entity\Customer;
 use Quotation\Entity\Quotation;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class QuotationType extends AbstractType
+class QuotationCustomerType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->setMethod('GET')
             ->add('customerId', SearchType::class, [
-                'label' => 'Client',
+                'label' => 'Rechercher un client',
+                'label_attr' => [
+                    'class' => 'form-label'
+                ],
                 'required' => true,
                 'attr' => [
                     'class' => 'linked-select',
                     'data-target' => '#quotation_cartProductId',
                     'placeholder' => 'Sélectionnez le client',
-                ]
-            ])
-
-            ->add('reference', TextType::class, [
-                'label' => 'Référence',
-                'attr' => [
-                    'placeholder' => 'ABDY75'
-                ]
-            ])
-            ->add('status', TextType::class, [
-                'attr' => [
-                    'placeholder' => 'A valider'
-                ]
-            ])
-            ->add('messageVisible', TextareaType::class, [
-                'label' => 'Message',
-                'attr' => [
-                    'placeholder' => 'Hello world',
-                    'rows' => 5,
                 ]
             ])
             ;

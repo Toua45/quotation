@@ -65,6 +65,7 @@ class QuotationRepository
     {
         return $query
             ->from($this->databasePrefix . 'quotation', 'q')
+            ->addGroupBy('q.id_quotation')
             ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
             ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart_product = cp.id_cart')
             ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product');
@@ -84,6 +85,7 @@ class QuotationRepository
         $query->addSelect('q.*', 'c.firstname', 'c.lastname')
             ->addSelect('SUM(p.price * cp.quantity) AS total_product_price');
 
+
         $filterSearch = [$name, $reference, $status, $start, $end];
 
         /**
@@ -96,9 +98,9 @@ class QuotationRepository
                     ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
                     ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart_product = cp.id_cart')
                     ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
+                    ->addGroupBy('q.id_quotation')
                     ->where('(c.firstname LIKE :name OR c.lastname LIKE :name)
                         AND q.reference = :reference')
-                    ->addGroupBy('q.id_quotation')
                     ->setParameters(['name' => '%' . $name . '%', 'reference' => $reference])
                     ->execute()->fetchAll();
                 break;
@@ -175,7 +177,6 @@ class QuotationRepository
                 $this->addQuotationFromAndJoin($query);
                 return $query
                     ->where('q.reference = :reference')
-                    ->addGroupBy('q.id_quotation')
                     ->setParameter('reference', $reference)
                     ->execute()->fetchAll();
                 break;
@@ -183,7 +184,6 @@ class QuotationRepository
                 $this->addQuotationFromAndJoin($query);
                 return $query
                     ->where('q.status = :status')
-                    ->addGroupBy('q.id_quotation')
                     ->setParameter('status', $status)
                     ->execute()->fetchAll();
                 break;
@@ -191,7 +191,6 @@ class QuotationRepository
                 $this->addQuotationFromAndJoin($query);
                 return $query
                     ->where('q.date_add >= :interval_start AND q.date_add <= :interval_end')
-                    ->addGroupBy('q.id_quotation')
                     ->setParameters(['interval_start' => $start, 'interval_end' => preg_replace('/_/', '', $end)])
                     ->orderBy('q.date_add', 'DESC')
                     ->execute()->fetchAll();
@@ -200,7 +199,6 @@ class QuotationRepository
                 $this->addQuotationFromAndJoin($query);
                 return $query
                     ->where('q.date_add >= :interval_start')
-                    ->addGroupBy('q.id_quotation')
                     ->setParameter('interval_start', $start)
                     ->orderBy('q.date_add', 'DESC')
                     ->execute()->fetchAll();
@@ -209,7 +207,6 @@ class QuotationRepository
                 $this->addQuotationFromAndJoin($query);
                 return $query
                     ->where('q.date_add <= :interval_end')
-                    ->addGroupBy('q.id_quotation')
                     ->setParameter('interval_end', preg_replace('/_/', '', $end))
                     ->orderBy('q.date_add', 'DESC')
                     ->execute()->fetchAll();

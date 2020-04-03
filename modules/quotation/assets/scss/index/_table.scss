@@ -21,9 +21,14 @@
       border-bottom: solid 1px $border-color;
     }
 
+    .search_button {
+      margin:auto;
+    }
+
     .input-text, select, .input-date {
       width: min-content;
       padding: 4px;
+      margin:auto;
       font-size: 11px;
       border-radius: 3px;
       border: solid 1px $border-color;
@@ -48,10 +53,6 @@
         padding: 4px;
       }
     }
-
-    //#quotation_search_start_time_hour, #quotation_search_start_time_minute {
-    //  display:none;
-    //}
 
     tbody {
       tr:first-child {

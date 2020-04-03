@@ -1,5 +1,7 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{% form_theme quotationFilterForm 'bootstrap_4_layout.html.twig' %}
+
  {% block content %}
 
      <div class="quotation">
@@ -46,13 +48,13 @@
                          <div class="infobulle">
                              <div class="bloc-infobulle">
                                  <span class="text-infobulle">
-                                    Rafraichir la liste
+                                    Rafraîchir la liste
                                  </span>
                                  <div class="arrow"></div>
                              </div>
                          </div>
 
-                         <a href="#">
+                         <a id="refresh" href="{{ path('quotation_admin') }}">
                              <span uk-icon="icon: refresh" class="justify-content-end"></span>
                          </a>
                      </div>
@@ -93,48 +95,36 @@
                      </td>
                  </tr>
                  <tr class="search">
+                     {{ form_start(quotationFilterForm, {'attr':{ 'id': 'filter_quotations_form'}}) }}
+                     <td></td>
                      <td></td>
                      <td>
-                         <input type="text" class="input-text" name="id_quotation" id="id_quotation">
+                         {{ form_row(quotationFilterForm.reference) }}
                      </td>
                      <td>
-                         <input type="text" class="input-text" name="reference" id="reference">
+                         {{ form_row(quotationFilterForm.name) }}
                      </td>
-                     <td>
-                         <input type="text" class="input-text" name="customer" id="customer">
-                     </td>
-                     <td>
-                         <input type="text" class="input-text" name="message" id="message">
-                     </td>
+                     <td></td>
                      <td>
                          <div class="d-flex input-date">
                              <span uk-icon="icon: calendar" class="d-flex justify-content-end mr-2"></span>
-                             <input type="date" name="date_add" id="date_add">
+                             {{ form_row(quotationFilterForm.start , {'attr':{ 'class': 'datepicker'}}) }}
                          </div>
 
                          <div class="d-flex input-date mt-1">
                              <span uk-icon="icon: calendar" class="d-flex justify-content-end mr-2"></span>
-                             <input type="date" name="date_add" id="date_add">
+                             {{ form_row(quotationFilterForm.end, {'attr':{ 'class': 'datepicker'}}) }}
                          </div>
                      </td>
                      <td>
-                         <select name="status" id="status">
-                             <option selected="selected">-</option>
-                             <option value="">Abandonné</option>
-                             <option value="">A valider</option>
-                             <option value="">Validé</option>
-                             <option value="">Commandé</option>
-                         </select>
-                     </td>
-                     <td>
-                         <input type="text" class="input-text" name="total" id="total">
+                         {{ form_row(quotationFilterForm.status) }}
                      </td>
                      <td></td>
+                     <td></td>
                      <td>
-                         <a href="#" class="btn btn-light d-flex">
-                             <span uk-icon="icon: search" class="mr-1"></span> Rechercher
-                         </a>
+                         <button class="search_button btn btn-light d-flex"><span uk-icon="icon: search" class="mr-1"></span>Rechercher</button>
                      </td>
+                     {{ form_end(quotationFilterForm) }}
                  </tr>
                  </thead>
 
@@ -209,5 +199,5 @@
 
         <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit-icons.min.js"></script>
-    {% endblock %}
 
+    {% endblock %}

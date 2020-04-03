@@ -51,8 +51,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             // console.log(customers)
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
-            let link = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/customer/';
-            let show = window.location.origin + '/adminToua/index.php/sell/customers/';
+            let link = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/show/customer/';
+            let show = window.location.origin + '/adminLionel/index.php/sell/customers/';
             customers.forEach((customer, i) => {
                 import('./templates_module').then(mod => {
                     output += mod.TemplateModule.card
@@ -143,10 +143,10 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                                 // TemplateModule.cartData correspond à cartData dans le fichier templates_module.js
                                                 modalCustomerDetailsCart += mod.TemplateModule.cartData
-                                                        .replace(/---productName---/, product.product_name)
-                                                        .replace(/---productPrice---/, product.product_price + ' €')
-                                                        .replace(/---productQuantity---/, product.product_quantity)
-                                                        .replace(/---totalProduct---/, product.total_product + ' €');
+                                                    .replace(/---productName---/, product.product_name)
+                                                    .replace(/---productPrice---/, product.product_price + ' €')
+                                                    .replace(/---productQuantity---/, product.product_quantity)
+                                                    .replace(/---totalProduct---/, product.total_product + ' €');
 
                                             }
                                             modalCustomerDetails += mod.TemplateModule.modalCartInfos
@@ -224,7 +224,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             }
                                         }
 
-                                         document.getElementById('tableOrder').insertAdjacentHTML('afterend', modalCustomerOrderDetails);
+                                        document.getElementById('tableOrder').insertAdjacentHTML('afterend', modalCustomerOrderDetails);
 
                                         /*
                                         * Quotation section

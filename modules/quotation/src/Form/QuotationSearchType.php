@@ -2,10 +2,7 @@
 
 namespace Quotation\Form;
 
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -52,23 +49,13 @@ class QuotationSearchType extends AbstractType
             ->add('start', DateType::class, [
                 'required' => false,
                 'widget' => 'single_text',
-//                'label' => false,
-//                'format' => 'd-M-y',
-//                'input' => 'datetime',
-//                'widget' => 'single_text',
-//                'html5' => false,
-
+                'label' => false
             ])
 
             ->add('end', DateType::class, [
                 'required' => false,
                 'widget' => 'single_text',
-//                'label' => false,
-//                'format' => 'd-M-y',
-//                'input' => 'datetime',
-////                'widget' => 'single_text',
-////                'html5' => false,
-
+                'label' => false
             ])
         ;
     }

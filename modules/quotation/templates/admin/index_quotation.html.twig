@@ -48,7 +48,7 @@
                          <div class="infobulle">
                              <div class="bloc-infobulle">
                                  <span class="text-infobulle">
-                                    Rafraichir la liste
+                                    Rafraîchir la liste
                                  </span>
                                  <div class="arrow"></div>
                              </div>
@@ -97,51 +97,31 @@
                  <tr class="search">
                      {{ form_start(quotationFilterForm, {'attr':{ 'id': 'filter_quotations_form'}}) }}
                      <td></td>
-                     <td>
-{#                         <input type="text" class="input-text" name="id_quotation" id="id_quotation">#}
-                     </td>
+                     <td></td>
                      <td>
                          {{ form_row(quotationFilterForm.reference) }}
-{#                         <input type="text" class="input-text" name="reference" id="reference">#}
                      </td>
                      <td>
                          {{ form_row(quotationFilterForm.name) }}
-{#                         <input type="text" class="input-text" name="customer" id="customer">#}
                      </td>
-                     <td>
-{#                         <input type="text" class="input-text" name="message" id="message">#}
-                     </td>
+                     <td></td>
                      <td>
                          <div class="d-flex input-date">
                              <span uk-icon="icon: calendar" class="d-flex justify-content-end mr-2"></span>
-{#                             <input type="date" name="date_add" id="quotation_search_start">#}
                              {{ form_row(quotationFilterForm.start , {'attr':{ 'class': 'datepicker'}}) }}
                          </div>
 
                          <div class="d-flex input-date mt-1">
                              <span uk-icon="icon: calendar" class="d-flex justify-content-end mr-2"></span>
-{#                             <input type="date" name="date_add" id="quotation_search_end">#}
                                 {{ form_row(quotationFilterForm.end, {'attr':{ 'class': 'datepicker'}}) }}
                          </div>
                      </td>
                      <td>
                          {{ form_row(quotationFilterForm.status) }}
-{#                         <select name="status" id="status">#}
-{#                             <option selected="selected">-</option>#}
-{#                             <option value="">Abandonné</option>#}
-{#                             <option value="">A valider</option>#}
-{#                             <option value="">Validé</option>#}
-{#                             <option value="">Commandé</option>#}
-{#                         </select>#}
-                     </td>
-                     <td>
-{#                         <input type="text" class="input-text" name="total" id="total">#}
                      </td>
                      <td></td>
+                     <td></td>
                      <td>
-{#                         <a href="#" class="btn btn-light d-flex">#}
-{#                             <span uk-icon="icon: search" class="mr-1"></span> Rechercher#}
-{#                         </a>#}
                          <button class="btn btn-light d-flex"><span uk-icon="icon: search" class="mr-1"></span>Rechercher</button>
                      </td>
                      {{ form_end(quotationFilterForm) }}
@@ -149,7 +129,6 @@
                  </thead>
 
                  <tbody>
-{#                 {{ dump(quotations) }}#}
                  {% for quotation in quotations %}
                      <tr class="bg-{{ loop.index0 is even ? 'light' : 'none' }}">
                          <td>

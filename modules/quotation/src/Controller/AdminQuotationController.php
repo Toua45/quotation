@@ -27,9 +27,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
     public function quotationIndex(Request $request)
     {
         $quotationRepository = $this->get('quotation_repository');
-        $quotations = $quotationRepository->findAll();
 
-        $quotationFilterForm = $this->get('form.factory')->createNamed('', QuotationSearchType::class);
         $quotationFilterForm = $this->createForm(QuotationSearchType::class);
 
         $quotationFilterForm->handleRequest($request);
@@ -39,8 +37,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $status = $this->queryQuotation($request)['status'];
             $start = $this->queryQuotation($request)['start'];
             $end = $this->queryQuotation($request)['end'];
-
-//            dump($start = $request->query->all()['quotation_search']);die();
 
             $quotations = $quotationRepository->findQuotationsByFilters($name, $reference, $status, $start, $end);
         } else {

@@ -8,19 +8,48 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Quotation\Entity\Quotation;
 use Quotation\Form\QuotationCustomerType;
+use Quotation\Form\QuotationSearchType;
 use Quotation\Service\QuotationFileSystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminQuotationController extends FrameworkBundleAdminController
 {
-    public function quotationIndex()
+
+    /**
+     * Fonction privée qui récupère toutes les données à partir du tableau 'quotation_search'
+     */
+    private function queryQuotation(Request $request)
+    {
+        return $request->query->all()['quotation_search'];
+    }
+
+    public function quotationIndex(Request $request)
     {
         $quotationRepository = $this->get('quotation_repository');
         $quotations = $quotationRepository->findAll();
 
+        $quotationFilterForm = $this->get('form.factory')->createNamed('', QuotationSearchType::class);
+        $quotationFilterForm = $this->createForm(QuotationSearchType::class);
+
+        $quotationFilterForm->handleRequest($request);
+        if ($quotationFilterForm->isSubmitted() && $quotationFilterForm->isValid()) {
+            $name = $this->queryQuotation($request)['name'];
+            $reference = $this->queryQuotation($request)['reference'];
+            $status = $this->queryQuotation($request)['status'];
+            $start = $this->queryQuotation($request)['start'];
+            $end = $this->queryQuotation($request)['end'];
+
+//            dump($start = $request->query->all()['quotation_search']);die();
+
+            $quotations = $quotationRepository->findQuotationsByFilters($name, $reference, $status, $start, $end);
+        } else {
+            $quotations = $quotationRepository->findAll();
+        }
+
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
             'quotations' => $quotations,
+            'quotationFilterForm' => $quotationFilterForm->createView(),
         ]);
     }
 

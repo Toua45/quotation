@@ -143,10 +143,10 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                                 // TemplateModule.cartData correspond à cartData dans le fichier templates_module.js
                                                 modalCustomerDetailsCart += mod.TemplateModule.cartData
-                                                        .replace(/---productName---/, product.product_name)
-                                                        .replace(/---productPrice---/, product.product_price + ' €')
-                                                        .replace(/---productQuantity---/, product.product_quantity)
-                                                        .replace(/---totalProduct---/, product.total_product + ' €');
+                                                    .replace(/---productName---/, product.product_name)
+                                                    .replace(/---productPrice---/, product.product_price + ' €')
+                                                    .replace(/---productQuantity---/, product.product_quantity)
+                                                    .replace(/---totalProduct---/, product.total_product + ' €');
 
                                             }
                                             modalCustomerDetails += mod.TemplateModule.modalCartInfos
@@ -224,7 +224,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             }
                                         }
 
-                                         document.getElementById('tableOrder').insertAdjacentHTML('afterend', modalCustomerOrderDetails);
+                                        document.getElementById('tableOrder').insertAdjacentHTML('afterend', modalCustomerOrderDetails);
 
                                         /*
                                         * Quotation section

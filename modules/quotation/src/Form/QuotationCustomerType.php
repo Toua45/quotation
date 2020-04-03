@@ -15,6 +15,7 @@ class QuotationCustomerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->setMethod('GET')
             ->add('customerId', SearchType::class, [
                 'label' => 'Rechercher un client',
                 'label_attr' => [

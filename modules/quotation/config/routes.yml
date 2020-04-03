@@ -7,6 +7,14 @@ quotation_admin:        #RouteName
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
 
+quotation_admin_search_filters:
+  path: quotation/admin/search/{name}/{reference}/{status}/{start}/{end}
+  methods: [GET]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::quotationIndex'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
 quotation_admin_add:
   path: quotation/admin/add
   methods: [GET, POST]

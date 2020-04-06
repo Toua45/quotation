@@ -100,6 +100,7 @@ export const TemplateModule = {
             <td class="cart-total text-left">---totalCart---</td>
             <td class="cart-actions text-left">
             <button class="btn btn-primary" data-toggle="modal" data-target="#showCartModal_---id-cart-modal---">Details</button>
+            <a href="---link-show-customer-cart-used---" data-idcart="---id---" class="customer-cart-to-used btn btn-outline-primary ml-3">Utiliser</a>
             </td>         
             </tr>`,
 

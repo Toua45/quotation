@@ -277,6 +277,24 @@ class QuotationRepository
     /**
      * @return mixed[]
      */
+    public function findOneCartById($id_cart)
+    {
+        $expr = $this->connection->getExpressionBuilder();
+
+        return $this->connection->createQueryBuilder()
+            ->addSelect('ca.id_cart', 'ca.date_add AS date_cart')
+            ->addSelect('SUM(p.price * cp.quantity) AS total_cart')
+            ->from($this->databasePrefix . 'cart', 'ca')
+            ->join('ca', $this->databasePrefix . 'cart_product', 'cp', 'ca.id_cart = cp.id_cart')
+            ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
+            ->where($expr->eq('ca.id_cart', ':id_cart'))
+            ->addGroupBy('ca.id_cart')
+            ->setParameter('id_cart', $id_cart)->execute()->fetchAll();
+    }
+
+    /**
+     * @return mixed[]
+     */
     public function findOrdersByCustomer($idcustomer, $idCart = null)
     {
         $query = $this->connection->createQueryBuilder()

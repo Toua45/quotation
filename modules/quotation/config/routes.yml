@@ -68,3 +68,13 @@ quotation_admin_autocompletion_ajax:
     _controller: 'Quotation\Controller\AdminQuotationController::ajaxCustomer'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
+
+quotation_admin_show_cart:
+  path: quotation/admin/show/cart/{id_cart}
+  requirements:
+    id_cart: '\d+'
+  methods: [GET]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::showCart'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'

@@ -51,8 +51,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             // console.log(customers)
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
-            let link = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/show/customer/';
-            let show = window.location.origin + '/adminLionel/index.php/sell/customers/';
+            let link = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/customer/';
+            let show = window.location.origin + '/adminToua/index.php/sell/customers/';
             customers.forEach((customer, i) => {
                 import('./templates_module').then(mod => {
                     output += mod.TemplateModule.card
@@ -91,12 +91,16 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         .replace(/---increment---/, i)
                     ;
 
+
                     if (customers.length - 1 === i) {
                         document.getElementById('js-output-customers').innerHTML = output;
 
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
+                        let linkCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/cart/';
+                        let urlCart = document.querySelector('[data-customercart]').dataset.customercart;
+                        let newurlCart;
 
                         // document.querySelectorAll renvoie tous les éléments du document qui correspondent à un sélecteur CSS, ici, tous les éléments a de la class customer-details
                         if (document.querySelectorAll('a.customer-details') !== null) {
@@ -168,7 +172,10 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                 .replace(/---cartId---/, customer.id_cart)
                                                 .replace(/---cartDate---/, customer.date_cart)
                                                 .replace(/---totalCart---/, customer.total_cart + ' €')
-                                                .replace(/---id-cart-modal---/, customer.id_cart);
+                                                .replace(/---id-cart-modal---/, customer.id_cart)
+                                                .replace(/---id---/, customer.id_cart)
+                                                .replace(/---link-show-customer-cart-used---/, linkCart+ customer.id_cart);
+                                            // console.log(outputCart)
                                         }
 
                                         document.getElementById('tableCart').insertAdjacentHTML('afterend', modalCustomerDetails);
@@ -291,9 +298,46 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                     // Ici, on récupère la class 'd-none' de l'élément id 'js-output-customer-details' et on la remplace par 'd-block'
                                     document.getElementById('js-output-customer-details').classList.replace('d-none', 'd-block');
+
+
+                                    document.getElementById('js-output-cart-infos').classList.replace('d-none', 'd-block');
                                 });
+
+                                console.log(document.querySelectorAll('a.customer-cart-to-used'));
+                            });
+
+                        }
+
+
+                        /*
+                        * cart to used
+                        */
+                        if (document.querySelectorAll('a.customer-cart-to-used') !== null) {
+                            document.querySelectorAll('a.customer-cart-to-used').forEach(function (link) {
+                                link.addEventListener('click', function (Event) {
+                                    Event.preventDefault()
+                                });
+
+                                newurlCart = window.location.origin + urlCart
+                                    .replace(/\d+/, link.dataset.idcart);
+
+                                const getCustomerCartToUsed = (data) => {
+                                    // console.log(data);
+                                    let outputCartToUsed = '';
+
+                                };
+
+                                QuotationModule.getData(
+                                    newurlCart,
+                                    getCustomerCartToUsed,
+                                    null,
+                                    true,
+                                    []
+                                );
+
                             });
                         }
+
                     }
                 });
             });

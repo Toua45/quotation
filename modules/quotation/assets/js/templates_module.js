@@ -5,7 +5,7 @@ export const TemplateModule = {
                 <h6 class="card-subtitle mb-2 text-muted">---firstname---</h6>
                 <p class="card-text">---text---</p>
                 <div class="row justify-content-between">
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#showCustomerModal_---id-customer-modal---">Details</button>   
+                    <a href="---link-show-customer---" class="btn btn-primary customer-show" data-toggle="modal" data-target="#showCustomerModal_---id-customer-modal---" data-idcustomer="---id-customer---">Details</a>   
                     <a href="---link-show-customer-carts---" data-idcustomer="---id---" class="customer-details btn btn-outline-primary mx-3">Choisir</a>
                 </div>
                 ---modal-customer-infos---         
@@ -23,6 +23,7 @@ export const TemplateModule = {
                       <div class="modal-body">
                     
                     ---personal-datas---
+                    ---customer-orders---
                     
                       </div>
                     </div>
@@ -93,6 +94,143 @@ export const TemplateModule = {
                         </div>                                
               </div>
             </div>`,
+
+    customerOrders: `<div class="card">
+                          <h3 class="card-header">
+                            <i class="material-icons">shopping_basket</i> Commandes
+                            <span class="badge badge-primary rounded">---nb-orders---</span>
+                          </h3>
+                          <div class="card-body">
+                              <div class="card">
+                                <div class="card-body">
+                                  <div class="row">
+                                    <div class="col">
+                                      Commandes valides : <span class="badge badge-success rounded">0</span>
+                                      pour un montant total de <span id="total-order-amount">0,00&nbsp;€</span>
+                                    </div>
+                                    <div class="col">
+                                      Commandes non valides : <span class="badge badge-danger rounded">5</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                        
+                              <div class="row">
+                                <div class="col">
+                                          </div>
+                              </div>
+                        
+                              <div class="row">
+                                <div class="col">
+                                              <table class="table">
+                                      <thead>
+                                        <tr>
+                                          <th>ID</th>
+                                          <th>Date</th>
+                                          <th>Paiement</th>
+                                          <th>État</th>
+                                          <th>Produits</th>
+                                          <th>Total payé</th>
+                                          <th class="text-right">Actions</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                                      
+                                        <tr>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=1&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">1</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=1&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">13/02/2020</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=1&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">Payment by check</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=1&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">Annulé</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=1&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">2</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=1&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">0,00&nbsp;€</td>
+                                          <td class="text-right">
+                                            <div class="btn-group-action">
+                                              <div class="btn-group">
+                                                <a href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=1&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0" class="btn tooltip-link dropdown-item" data-toggle="pstooltip" data-placement="top" data-original-title="Afficher">
+                                                  <i class="material-icons">zoom_in</i>
+                                                </a>
+                                              </div>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                                      
+                                        <tr>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=2&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">2</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=2&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">13/02/2020</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=2&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">Payment by check</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=2&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">En attente du paiement par chèque</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=2&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">3</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=2&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">0,00&nbsp;€</td>
+                                          <td class="text-right">
+                                            <div class="btn-group-action">
+                                              <div class="btn-group">
+                                                <a href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=2&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0" class="btn tooltip-link dropdown-item" data-toggle="pstooltip" data-placement="top" data-original-title="Afficher">
+                                                  <i class="material-icons">zoom_in</i>
+                                                </a>
+                                              </div>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                                      
+                                        <tr>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=3&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">3</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=3&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">13/02/2020</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=3&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">Payment by check</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=3&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">Erreur de paiement</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=3&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">1</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=3&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">0,00&nbsp;€</td>
+                                          <td class="text-right">
+                                            <div class="btn-group-action">
+                                              <div class="btn-group">
+                                                <a href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=3&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0" class="btn tooltip-link dropdown-item" data-toggle="pstooltip" data-placement="top" data-original-title="Afficher">
+                                                  <i class="material-icons">zoom_in</i>
+                                                </a>
+                                              </div>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                                      
+                                        <tr>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=4&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">4</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=4&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">13/02/2020</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=4&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">Payment by check</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=4&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">En attente du paiement par chèque</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=4&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">1</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=4&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">0,00&nbsp;€</td>
+                                          <td class="text-right">
+                                            <div class="btn-group-action">
+                                              <div class="btn-group">
+                                                <a href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=4&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0" class="btn tooltip-link dropdown-item" data-toggle="pstooltip" data-placement="top" data-original-title="Afficher">
+                                                  <i class="material-icons">zoom_in</i>
+                                                </a>
+                                              </div>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                                      
+                                        <tr>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=5&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">5</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=5&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">13/02/2020</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=5&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">Bank wire</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=5&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">En attente de virement bancaire</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=5&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">1</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=5&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">0,00&nbsp;€</td>
+                                          <td class="text-right">
+                                            <div class="btn-group-action">
+                                              <div class="btn-group">
+                                                <a href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=5&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0" class="btn tooltip-link dropdown-item" data-toggle="pstooltip" data-placement="top" data-original-title="Afficher">
+                                                  <i class="material-icons">zoom_in</i>
+                                                </a>
+                                              </div>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                                    </tbody>
+                                    </table>
+                                          </div>
+                              </div>
+                              </div>
+                        </div>`,
 
     tableCart: `<tr>
             <td class="cart-id text-left">---cartId---</td>

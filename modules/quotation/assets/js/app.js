@@ -48,51 +48,56 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
         const insertCustomerInDOM = (customers) => {
             let output = '';
-            // console.log(customers)
+            let modalCustomerInfos = '';
+
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
-            let link = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/customer/';
-            let show = window.location.origin + '/adminToua/index.php/sell/customers/';
+            let link = window.location.origin + '/admin130mdhxh9/index.php/modules/quotation/admin/show/customer/';
+            let show = window.location.origin + '/admin130mdhxh9/index.php/sell/customers/';
             customers.forEach((customer, i) => {
+                console.log(customer);
                 import('./templates_module').then(mod => {
+                    modalCustomerInfos += mod.TemplateModule.modalCustomerInfos
+                        .replace(/---id-customer-modal---/, customer.id_customer)
+                        .replace(/---personal-datas---/,
+                            mod.TemplateModule.personalData
+                                .replace(/---firstname---/, customer.firstname)
+                                .replace(/---lastname---/, customer.lastname)
+                                .replace(/---id-customer---/, customer.id_customer)
+                                .replace(/---customer-link-email---/, 'mailto:' + customer.email)
+                                .replace(/---customer-email---/, customer.email)
+                                .replace(/---edit---/, show + customer.id_customer + '/edit')
+                                .replace(/---gender---/, customer.title)
+                                .replace(/---old---/, Math.floor(customer.old))
+                                .replace(/---birthday---/, customer.birthday)
+                                .replace(/---registration---/, customer.registration)
+                                .replace(/---lang---/, customer.lang)
+                                .replace(/---badge-newsletter---/, (customer.newsletter === 1 ? 'badge-success' : 'badge-danger'))
+                                .replace(/---icon-newsletter---/, (customer.newsletter === 1 ? 'check' : 'cancel'))
+                                .replace(/---badge-partners---/, (customer.offer_partners === 1 ? 'badge-success' : 'badge-danger'))
+                                .replace(/---icon-partners---/, (customer.offer_partners === 1 ? 'check' : 'cancel'))
+                                .replace(/---last-update---/, customer.last_update)
+                                .replace(/---badge-is-active---/, (customer.active === 1 ? 'badge-success' : 'badge-danger'))
+                                .replace(/---icon-is-active---/, (customer.active === 1 ? 'check' : 'cancel'))
+                                .replace(/---is-active---/, (customer.active === 1 ? 'Activé' : 'Désactivé')));
+
+
                     output += mod.TemplateModule.card
-                        .replace(/---lastname---/, customer.lastname.toUpperCase())
+                        .replace(/---increment---/, i)
+                        .replace(/---lastname---/, customer.lastname)
                         .replace(/---firstname---/, customer.firstname)
                         .replace(/---text---/, 'This is a good customer!')
                         .replace(/---id-customer-modal---/, customer.id_customer)
-                        .replace(/---modal-customer-infos---/,
-                            mod.TemplateModule.modalCustomerInfos
-                                .replace(/---id-customer-modal---/, customer.id_customer)
-                                .replace(/---personal-datas---/,
-                                    mod.TemplateModule.personalData
-                                        .replace(/---firstname---/, customer.firstname)
-                                        .replace(/---lastname---/, customer.lastname)
-                                        .replace(/---id-customer---/, customer.id_customer)
-                                        .replace(/---customer-link-email---/, 'mailto:' + customer.email)
-                                        .replace(/---customer-email---/, customer.email)
-                                        .replace(/---edit---/, show + customer.id_customer + '/edit')
-                                        .replace(/---gender---/, customer.title)
-                                        .replace(/---old---/, Math.floor(customer.old))
-                                        .replace(/---birthday---/, customer.birthday)
-                                        .replace(/---registration---/, customer.registration)
-                                        .replace(/---lang---/, customer.lang)
-                                        .replace(/---last-update---/, customer.last_update)
-                                        .replace(/---badge-newsletter---/, (customer.newsletter === 1 ? 'badge-success' : 'badge-danger'))
-                                        .replace(/---icon-newsletter---/, (customer.newsletter === 1 ? 'check' : 'cancel'))
-                                        .replace(/---badge-partners---/, (customer.offer_partners === 1 ? 'badge-success' : 'badge-danger'))
-                                        .replace(/---icon-partners---/, (customer.offer_partners === 1 ? 'check' : 'cancel'))
-                                        .replace(/---badge-is-active---/, (customer.active === 1 ? 'badge-success' : 'badge-danger'))
-                                        .replace(/---icon-is-active---/, (customer.active === 1 ? 'check' : 'cancel'))
-                                        .replace(/---is-active---/, (customer.active === 1 ? 'Activé' : 'Désactivé'))
-                                )
-                        )
-                        .replace(/---id---/, customer.id_customer)
+                        .replace(/---link-show-customer---/, link + customer.id_customer)
                         .replace(/---link-show-customer-carts---/, link + customer.id_customer + '/details')
-                        .replace(/---increment---/, i)
-                    ;
+                        .replace(/---id---/, customer.id_customer)
+                        .replace(/---id-customer---/, customer.id_customer)
+                        .replace(/---modal-customer-infos---/, modalCustomerInfos);
 
                     if (customers.length - 1 === i) {
                         document.getElementById('js-output-customers').innerHTML = output;
+
+                        document.querySelectorAll('a.customer-show');
 
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
@@ -109,7 +114,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     // La méthode toggle permet de masquer ou d'afficher le paramètre hidden à l'élément class
                                     Event.currentTarget.closest('.hidden').classList.toggle('hidden');
                                     // Pour chaque cards qui aura la class hidden, ces dernières seront en display-none
-                                    document.querySelectorAll('.hidden').forEach(function (card,index) {
+                                    document.querySelectorAll('.hidden').forEach(function (card, index) {
                                         card.classList.add('d-none');
                                     });
 
@@ -143,10 +148,10 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                                 // TemplateModule.cartData correspond à cartData dans le fichier templates_module.js
                                                 modalCustomerDetailsCart += mod.TemplateModule.cartData
-                                                        .replace(/---productName---/, product.product_name)
-                                                        .replace(/---productPrice---/, product.product_price + ' €')
-                                                        .replace(/---productQuantity---/, product.product_quantity)
-                                                        .replace(/---totalProduct---/, product.total_product + ' €');
+                                                    .replace(/---productName---/, product.product_name)
+                                                    .replace(/---productPrice---/, product.product_price + ' €')
+                                                    .replace(/---productQuantity---/, product.product_quantity)
+                                                    .replace(/---totalProduct---/, product.total_product + ' €');
 
                                             }
                                             modalCustomerDetails += mod.TemplateModule.modalCartInfos
@@ -224,7 +229,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             }
                                         }
 
-                                         document.getElementById('tableOrder').insertAdjacentHTML('afterend', modalCustomerOrderDetails);
+                                        document.getElementById('tableOrder').insertAdjacentHTML('afterend', modalCustomerOrderDetails);
 
                                         /*
                                         * Quotation section
@@ -293,13 +298,55 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     document.getElementById('js-output-customer-details').classList.replace('d-none', 'd-block');
                                 });
                             });
+
+                            // let urlCustomerShow = document.querySelector('[data-customershow]').dataset.customershow;
+                            // let newUrlCustomerShow;
+                            // let links = document.querySelectorAll('a.customer-show');
+                            // let personalData = '';
+                            // for (let i = 0; i < links.length; i++) {
+                            //     links[i].addEventListener('mouseenter', Event => {
+                            //         Event.preventDefault();
+                            //
+                            //         newUrlCustomerShow = window.location.origin + urlCustomerShow
+                            //             .replace(/\d+(?=\?)/, links[i].dataset.idcustomer);
+                            //
+                            //         const getCustomerShow = (customer) => {
+                            //             console.log(customer);
+                            //
+                            //             let modalCustomerInfos = '';
+                            //
+                            //             // personalData = mod.TemplateModule.personalData
+                            //             //     .replace(/---firstname---/, customer.firstname)
+                            //             //     .replace(/---lastname---/, customer.lastname)
+                            //             //     .replace(/---id-customer---/, customer.id_customer)
+                            //             //     .replace(/---customer-link-email---/, 'mailto:' + customer.email)
+                            //             //     .replace(/---customer-email---/, customer.email)
+                            //             //     .replace(/---edit---/, show + customer.id_customer + '/edit')
+                            //             //     .replace(/---gender---/, customer.title)
+                            //             //     .replace(/---old---/, Math.floor(customer.old))
+                            //             //     .replace(/---birthday---/, customer.birthday)
+                            //             //     .replace(/---registration---/, customer.registration)
+                            //             //     .replace(/---lang---/, customer.lang)
+                            //             //     .replace(/---badge-newsletter---/, (customer.newsletter === 1 ? 'badge-success' : 'badge-danger'))
+                            //             //     .replace(/---icon-newsletter---/, (customer.newsletter === 1 ? 'check' : 'cancel'))
+                            //             //     .replace(/---badge-partners---/, (customer.offer_partners === 1 ? 'badge-success' : 'badge-danger'))
+                            //             //     .replace(/---icon-partners---/, (customer.offer_partners === 1 ? 'check' : 'cancel'))
+                            //             //     .replace(/---last-update---/, customer.last_update)
+                            //             //     .replace(/---badge-is-active---/, (customer.active === 1 ? 'badge-success' : 'badge-danger'))
+                            //             //     .replace(/---icon-is-active---/, (customer.active === 1 ? 'check' : 'cancel'))
+                            //             //     .replace(/---is-active---/, (customer.active === 1 ? 'Activé' : 'Désactivé'));
+                            //
+                            //             console.log(mod.TemplateModule.modalCustomerInfos.replace(/---personal-datas---/, personalData));
+                            //         };
+                            //         QuotationModule.getData(newUrlCustomerShow, getCustomerShow, null, true, [])
+                            //     });
+                            // }
                         }
                     }
                 });
             });
         };
 
-        // console.log(urlSearchCustomers.replace(/query/, Event.currentTarget.value));
         QuotationModule.getData(
             urlSearchCustomers.replace(/query/, Event.currentTarget.value),
             insertCustomerInDOM,

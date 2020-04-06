@@ -48,55 +48,32 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
         const insertCustomerInDOM = (customers) => {
             let output = '';
-            // console.log(customers)
+            let modalCustomerInfos = '';
+
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
             let link = window.location.origin + '/adm/index.php/modules/quotation/admin/show/customer/';
             let show = window.location.origin + '/adm/index.php/sell/customers/';
-
+            // console.log(customers)
             customers.forEach((customer, i) => {
                 import('./templates_module').then(mod => {
+
+                    modalCustomerInfos += mod.TemplateModule.modalCustomerInfos
+                        .replace(/---id-customer-modal---/, customer.id_customer)
+                        .replace(/---personal-datas---/, mod.TemplateModule.personalData);
+                    // .replace(/---customer-orders---/, )
+
                     output += mod.TemplateModule.card
                         .replace(/---increment---/, i)
                         .replace(/---lastname---/, customer.lastname)
                         .replace(/---firstname---/, customer.firstname)
                         .replace(/---text---/, 'This is a good customer!')
                         .replace(/---id-customer-modal---/, customer.id_customer)
+                        .replace(/---link-show-customer---/, link + customer.id_customer)
                         .replace(/---link-show-customer-carts---/, link + customer.id_customer + '/details')
                         .replace(/---id---/, customer.id_customer)
-                        .replace(/---modal-customer-infos---/,
-                            (mod.TemplateModule.modalCustomerInfos
-                                    .replace(/---id-customer-modal---/, customer.id_customer)
-                                    .replace(/---personal-datas---/,
-                                        (mod.TemplateModule.personalData
-                                                .replace(/---firstname---/, customer.firstname)
-                                                .replace(/---lastname---/, customer.lastname)
-                                                .replace(/---id-customer---/, customer.id_customer)
-                                                .replace(/---customer-link-email---/, 'mailto:' + customer.email)
-                                                .replace(/---customer-email---/, customer.email)
-                                                .replace(/---edit---/, show + customer.id_customer + '/edit')
-                                                .replace(/---gender---/, customer.title)
-                                                .replace(/---old---/, Math.floor(customer.old))
-                                                .replace(/---birthday---/, customer.birthday)
-                                                .replace(/---registration---/, customer.registration)
-                                                .replace(/---lang---/, customer.lang)
-                                                .replace(/---badge-newsletter---/, (customer.newsletter === 1 ? 'badge-success' : 'badge-danger'))
-                                                .replace(/---icon-newsletter---/, (customer.newsletter === 1 ? 'check' : 'cancel'))
-                                                .replace(/---badge-partners---/, (customer.offer_partners === 1 ? 'badge-success' : 'badge-danger'))
-                                                .replace(/---icon-partners---/, (customer.offer_partners === 1 ? 'check' : 'cancel'))
-                                                .replace(/---last-update---/, customer.last_update)
-                                                .replace(/---badge-is-active---/, (customer.active === 1 ? 'badge-success' : 'badge-danger'))
-                                                .replace(/---icon-is-active---/, (customer.active === 1 ? 'check' : 'cancel'))
-                                                .replace(/---is-active---/, (customer.active === 1 ? 'Activé' : 'Désactivé'))
-                                        )
-                                    )
-                                    .replace(/---customer-orders---/,
-                                        (mod.TemplateModule.customerOrders
-                                                .replace(/---nb-orders---/, (customer.customer_order === null ? 0 : customer.nb_orders))
-                                        )
-                                    )
-                            )
-                        );
+                        .replace(/---id-customer---/, customer.id_customer)
+                        .replace(/---modal-customer-infos---/, modalCustomerInfos);
 
                     if (customers.length - 1 === i) {
                         document.getElementById('js-output-customers').innerHTML = output;
@@ -229,7 +206,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             }
                                         }
 
-                                         document.getElementById('tableOrder').insertAdjacentHTML('afterend', modalCustomerOrderDetails);
+                                        document.getElementById('tableOrder').insertAdjacentHTML('afterend', modalCustomerOrderDetails);
 
                                         /*
                                         * Quotation section
@@ -265,8 +242,81 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                     // Ici, on récupère la class 'd-none' de l'élément id 'js-output-customer-details' et on la remplace par 'd-block'
                                     document.getElementById('js-output-customer-details').classList.replace('d-none', 'd-block');
+
+
+                                    // From this place on
+
+
+                                    // if (document.querySelectorAll('a.customer-show') !== null) {
+                                    //     document.querySelectorAll('a.customer-show').forEach(function (link) {
+                                    //         link.addEventListener('click', function (Event) {
+                                    //
+                                    //
+                                    //             }
+                                    //         )
+                                    //     })
+                                    // }
                                 });
                             });
+
+                            let urlCustomerShow = document.querySelector('[data-customershow]').dataset.customershow;
+                            let newUrlCustomerShow;
+                            let links = document.querySelectorAll('a.customer-show');
+
+                            for (let i = 0; i < links.length; i++) {
+                                links[i].addEventListener('click', Event => {
+                                    Event.preventDefault();
+
+                                    newUrlCustomerShow = window.location.origin + urlCustomerShow
+                                        .replace(/\d+/, links[i].dataset.idcustomer);
+
+                                    const getCustomerShow = (data) => {
+                                        console.log(data);
+
+                                        let personalData = '';
+                                        let modalCustomerInfos = '';
+
+                                        // for (let personalData of data['personalData']) {
+
+                                        // modalCustomerInfos += mod.TemplateModule.modalCustomerInfos
+                                        //     .replace(/---id-customer-modal---/, customer.id_customer)
+                                        //     .replace(/---personal-datas---/, mod.TemplateModule.personalData);
+                                        // // .replace(/---customer-orders---/, )
+
+                                        personalData += mod.TemplateModule.personalData
+                                            .replace(/---firstname---/, customer.firstname)
+                                            .replace(/---lastname---/, customer.lastname)
+                                            .replace(/---id-customer---/, customer.id_customer)
+                                            .replace(/---customer-link-email---/, 'mailto:' + customer.email)
+                                            .replace(/---customer-email---/, customer.email)
+                                            .replace(/---edit---/, show + customer.id_customer + '/edit')
+                                            .replace(/---gender---/, customer.title)
+                                            .replace(/---old---/, Math.floor(customer.old))
+                                            .replace(/---birthday---/, customer.birthday)
+                                            .replace(/---registration---/, customer.registration)
+                                            .replace(/---lang---/, customer.lang)
+                                            .replace(/---badge-newsletter---/, (customer.newsletter === 1 ? 'badge-success' : 'badge-danger'))
+                                            .replace(/---icon-newsletter---/, (customer.newsletter === 1 ? 'check' : 'cancel'))
+                                            .replace(/---badge-partners---/, (customer.offer_partners === 1 ? 'badge-success' : 'badge-danger'))
+                                            .replace(/---icon-partners---/, (customer.offer_partners === 1 ? 'check' : 'cancel'))
+                                            .replace(/---last-update---/, customer.last_update)
+                                            .replace(/---badge-is-active---/, (customer.active === 1 ? 'badge-success' : 'badge-danger'))
+                                            .replace(/---icon-is-active---/, (customer.active === 1 ? 'check' : 'cancel'))
+                                            .replace(/---is-active---/, (customer.active === 1 ? 'Activé' : 'Désactivé'));
+                                        // }
+                                    };
+
+                                    QuotationModule.getData(
+                                        newUrlCustomerShow,
+                                        getCustomerShow,
+                                        null,
+                                        true,
+                                        []
+                                    )
+
+
+                                });
+                            }
                         }
                     }
                 });

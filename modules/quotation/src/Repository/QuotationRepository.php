@@ -162,15 +162,18 @@ class QuotationRepository
     {
         return $this->connection->createQueryBuilder()
             ->addSelect('c.id_customer', 'c.firstname', 'c.lastname', 'c.email', 'c.id_gender', 'c.birthday',
-                'DATEDIFF(NOW(), c.birthday) / 365.25 AS old', 'c.date_add AS registration', 'c.id_lang',
-                'c.newsletter', 'c.optin AS offer_partners', 'c.date_upd AS last_update', 'c.active')
+                        'DATEDIFF(NOW(), c.birthday) / 365.25 AS old', 'c.date_add AS registration', 'c.id_lang',
+                        'c.newsletter', 'c.optin AS offer_partners', 'c.date_upd AS last_update', 'c.active')
             ->addSelect('g.id_gender', 'g.name AS title')
             ->addSelect('l.id_lang', 'l.name AS lang')
             ->addSelect('COUNT(o.id_order) AS nb_orders')
+
             ->from($this->databasePrefix . 'customer', 'c')
+
             ->join('c', $this->databasePrefix . 'gender_lang', 'g', 'c.id_gender = g.id_gender')
             ->join('c', $this->databasePrefix . 'lang', 'l', 'c.id_lang = l.id_lang')
             ->leftJoin('c', $this->databasePrefix . 'orders', 'o', 'o.id_customer = c.id_customer')
+
             ->orderBy('o.id_customer')
             ->where('c.id_customer = :id_customer')
             ->setParameter('id_customer', $id_customer)
@@ -184,7 +187,7 @@ class QuotationRepository
     public function findByQuery($query)
     {
         return $this->connection->createQueryBuilder()
-            ->addSelect('c.firstname', 'c.lastname')
+            ->addSelect('c.firstname', 'c.lastname', 'c.id_customer')
             ->from($this->databasePrefix . 'customer', 'c')
             ->where('c.firstname LIKE :query OR c.lastname LIKE :query')
             ->groupBy('c.id_customer')

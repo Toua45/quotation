@@ -5,7 +5,7 @@ export const TemplateModule = {
                 <h6 class="card-subtitle mb-2 text-muted">---firstname---</h6>
                 <p class="card-text">---text---</p>
                 <div class="row justify-content-between">
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#showCustomerModal_---id-customer-modal---">Details</button>   
+                    <a href="---link-show-customer---" class="btn btn-primary customer-show" data-toggle="modal" data-target="#showCustomerModal_---id-customer-modal---" data-idcustomer="---id-customer---">Details</a>   
                     <a href="---link-show-customer-carts---" data-idcustomer="---id---" class="customer-details btn btn-outline-primary mx-3">Choisir</a>
                 </div>
                 ---modal-customer-infos---         

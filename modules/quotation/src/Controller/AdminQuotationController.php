@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminQuotationController extends FrameworkBundleAdminController
 {
+    const NB_MAX_QUOTATIONS_PER_PAGE = 10;
 
     /**
      * Fonction privée qui récupère toutes les données à partir du tableau 'quotation_search'
@@ -24,7 +25,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         return $request->query->all()['quotation_search'];
     }
 
-    public function quotationIndex(Request $request)
+    public function quotationIndex(Request $request, int $page)
     {
         $quotationRepository = $this->get('quotation_repository');
 
@@ -38,13 +39,21 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $start = $this->queryQuotation($request)['start'];
             $end = $this->queryQuotation($request)['end'];
 
-            $quotations = $quotationRepository->findQuotationsByFilters($name, $reference, $status, $start, $end);
+            $quotations = $quotationRepository->findQuotationsByFilters($name, $reference, $status, $start, $end, $page);
         } else {
-            $quotations = $quotationRepository->findAll();
+            $quotations = $quotationRepository->findAll($page);
         }
+
+        $nbQuotations = count($quotationRepository->findAll());
+        $nbQuotationsFilter = count($quotationRepository->findQuotationsByFilters());
+
+//        $nbQuotations = count([$quotationRepository->findAll(), $quotationRepository->findQuotationsByFilters()]);
 
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
             'quotations' => $quotations,
+            'page' => $page,
+            'nbPages' => ceil($nbQuotations/self::NB_MAX_QUOTATIONS_PER_PAGE),
+            'nbPagesFilter' => ceil($nbQuotationsFilter/self::NB_MAX_QUOTATIONS_PER_PAGE),
             'quotationFilterForm' => $quotationFilterForm->createView(),
         ]);
     }

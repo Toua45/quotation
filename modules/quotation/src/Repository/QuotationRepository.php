@@ -4,6 +4,7 @@ namespace Quotation\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Quotation\Controller\AdminQuotationController;
 
 class QuotationRepository
 {
@@ -31,9 +32,15 @@ class QuotationRepository
     /**
      * @return mixed[]
      */
-    public function findAll()
+    public function findAll($page = null)
     {
         $query = $this->connection->createQueryBuilder();
+
+        if($page !== null) {
+            $firstResult = ($page -1) * AdminQuotationController::NB_MAX_QUOTATIONS_PER_PAGE;
+            $query->setFirstResult($firstResult)->setMaxResults((AdminQuotationController::NB_MAX_QUOTATIONS_PER_PAGE));
+        }
+
         $query
             ->addSelect('q.*', 'c.firstname', 'c.lastname', 'cp.id_cart', 'cp.quantity', 'p.price')
             ->addSelect('SUM(p.price * cp.quantity) AS total_product_price')
@@ -79,9 +86,15 @@ class QuotationRepository
      * start type=datetime
      * end type=datetime
      */
-    public function findQuotationsByFilters($name = null, $reference = null, $status = null, $start = null, $end = null)
+    public function findQuotationsByFilters($name = null, $reference = null, $status = null, $start = null, $end = null, $page = null)
     {
         $query = $this->connection->createQueryBuilder();
+
+        if($page !== null) {
+            $firstResult = ($page-1) * AdminQuotationController::NB_MAX_QUOTATIONS_PER_PAGE;
+            $query->setFirstResult($firstResult)->setMaxResults((AdminQuotationController::NB_MAX_QUOTATIONS_PER_PAGE));
+        }
+
         $query->addSelect('q.*', 'c.firstname', 'c.lastname')
             ->addSelect('SUM(p.price * cp.quantity) AS total_product_price');
 
@@ -158,6 +171,7 @@ class QuotationRepository
                     ->orderBy('q.date_add', 'DESC')
                     ->execute()->fetchAll();
                 break;
+
 
             /**
              * Conditions pour une recherche simplifiée à partir d'un seul élément

@@ -8,9 +8,9 @@ let config = {
     },
     output: {
 
-        path: path.resolve('../../adminToua/quotation-bundle'),
+        path: path.resolve('../../admin130mdhxh9/quotation-bundle'),
         filename: 'quotation-bundle.js',
-        publicPath: '/../../adminToua/quotation-bundle/'
+        publicPath: '/../../admin130mdhxh9/quotation-bundle/'
     },
     module: {
         rules: [

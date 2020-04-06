@@ -50,9 +50,10 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             let output = '';
             // console.log(customers)
             // Build show customer link based on his id.
-            // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
-            let link = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/customer/';
-            let show = window.location.origin + '/adminToua/index.php/sell/customers/';
+            // Exemple: http://localhost:8000/admin130mdhxh9/index.php/modules/quotation/admin/show/customer/2
+            let link = window.location.origin + '/admin130mdhxh9/index.php/modules/quotation/admin/show/customer/';
+            let show = window.location.origin + '/admin130mdhxh9/index.php/sell/customers/';
+
             customers.forEach((customer, i) => {
                 import('./templates_module').then(mod => {
                     output += mod.TemplateModule.card
@@ -95,10 +96,11 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                     if (customers.length - 1 === i) {
                         document.getElementById('js-output-customers').innerHTML = output;
 
+
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
-                        let linkCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/cart/';
+                        let linkCart = window.location.origin + '/admin130mdhxh9/index.php/modules/quotation/admin/show/cart/';
                         let urlCart = document.querySelector('[data-customercart]').dataset.customercart;
                         let newurlCart;
 
@@ -298,46 +300,43 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                     // Ici, on récupère la class 'd-none' de l'élément id 'js-output-customer-details' et on la remplace par 'd-block'
                                     document.getElementById('js-output-customer-details').classList.replace('d-none', 'd-block');
-
-
                                     document.getElementById('js-output-cart-infos').classList.replace('d-none', 'd-block');
+
+                                    // Implement 'Utiliser' button here to take benefit of table displaying carts, orders and quotations
+                                    /*
+                                     * cart to used
+                                     */
+                                    if (document.querySelectorAll('a.customer-cart-to-used') !== null) {
+                                        document.querySelectorAll('a.customer-cart-to-used').forEach(function (link) {
+                                            link.addEventListener('click', function (Event) {
+                                                Event.preventDefault()
+                                            });
+
+                                            newurlCart = window.location.origin + urlCart
+                                                .replace(/\d+/, link.dataset.idcart);
+
+                                            const getCustomerCartToUsed = (data) => {
+                                                console.log(data);
+                                                let outputCartToUsed = '';
+
+                                            };
+
+                                            QuotationModule.getData(
+                                                newurlCart,
+                                                getCustomerCartToUsed,
+                                                null,
+                                                true,
+                                                []
+                                            );
+
+                                        });
+                                    }
+
+
+
                                 });
-
-                                console.log(document.querySelectorAll('a.customer-cart-to-used'));
-                            });
-
-                        }
-
-
-                        /*
-                        * cart to used
-                        */
-                        if (document.querySelectorAll('a.customer-cart-to-used') !== null) {
-                            document.querySelectorAll('a.customer-cart-to-used').forEach(function (link) {
-                                link.addEventListener('click', function (Event) {
-                                    Event.preventDefault()
-                                });
-
-                                newurlCart = window.location.origin + urlCart
-                                    .replace(/\d+/, link.dataset.idcart);
-
-                                const getCustomerCartToUsed = (data) => {
-                                    // console.log(data);
-                                    let outputCartToUsed = '';
-
-                                };
-
-                                QuotationModule.getData(
-                                    newurlCart,
-                                    getCustomerCartToUsed,
-                                    null,
-                                    true,
-                                    []
-                                );
-
                             });
                         }
-
                     }
                 });
             });

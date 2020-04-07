@@ -100,7 +100,7 @@ export const TemplateModule = {
             <td class="cart-total text-left">---totalCart---</td>
             <td class="cart-actions text-left">
             <button class="btn btn-primary" data-toggle="modal" data-target="#showCartModal_---id-cart-modal---">Details</button>
-            <a href="---link-show-customer-cart-used---" data-idcart="---id---" class="customer-cart-to-used btn btn-outline-primary ml-3">Utiliser</a>
+            <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-outline-primary ml-3">Utiliser</a>
             </td>         
             </tr>`,
 
@@ -291,4 +291,17 @@ export const TemplateModule = {
                     </div>
                   </div>
                 </div>`,
+
+    quotationCartProducts: `<tr>
+                                <td class="text-left">---productName---</td>
+                                <td class="text-left">---productPrice---</td>
+                                <td class="text-left">---productQuantity---</td>
+                                <td class="text-left">---totalProduct---</td>
+                            </tr>`,
+
+    quotationCart: `<tr>
+                        <th colspan="3" class="text-left">Total produits</th>
+                        <th class="text-left">---totalCart---</th>
+                    </tr>`,
+
 };

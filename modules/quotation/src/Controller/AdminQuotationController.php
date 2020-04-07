@@ -281,28 +281,24 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $quotationRepository = $this->get('quotation_repository');
         $cart = $quotationRepository->findOneCartById($id_cart);
 
-        for ($i = 0; $i < count($cart); $i++) {
-            if ($cart[$i]['id_cart']) {
-                $cart[$i]['products'] = $quotationRepository->findProductsCustomerByCarts($cart[$i]['id_cart']);
+            if ($cart['id_cart']) {
+                $cart['products'] = $quotationRepository->findProductsCustomerByCarts($cart['id_cart']);
             }
-        }
 
-        for ($i = 0; $i < count($cart); $i++) {
-            for ($j = 0; $j < count($cart[$i]['products']); $j++) {
-                if ($cart[$i]['id_cart']) {
-                    $cart[$i]['id_cart'] = $cart[$i]['id_cart'];
-                    $cart[$i]['date_cart'] = date("d/m/Y", strtotime($cart[$i]['date_cart']));
-                    $cart[$i]['total_cart'] = number_format($cart[$i]['total_cart'], 2);
-                    if ($cart[$i]['products']) {
-                        $cart[$i]['products'][$j]['id_product'] = $cart[$i]['products'][$j]['id_product'];
-                        $cart[$i]['products'][$j]['product_name'] = $cart[$i]['products'][$j]['product_name'];
-                        $cart[$i]['products'][$j]['product_price'] = number_format($cart[$i]['products'][$j]['product_price'], 2);
-                        $cart[$i]['products'][$j]['product_quantity'] = $cart[$i]['products'][$j]['product_quantity'];
-                        $cart[$i]['products'][$j]['total_product'] = number_format($cart[$i]['products'][$j]['total_product'], 2);
+            for ($j = 0; $j < count($cart['products']); $j++) {
+                if ($cart['id_cart']) {
+                    $cart['id_cart'] = $cart['id_cart'];
+                    $cart['date_cart'] = date("d/m/Y", strtotime($cart['date_cart']));
+                    $cart['total_cart'] = number_format($cart['total_cart'], 2);
+                    if ($cart['products']) {
+                        $cart['products'][$j]['id_product'] = $cart['products'][$j]['id_product'];
+                        $cart['products'][$j]['product_name'] = $cart['products'][$j]['product_name'];
+                        $cart['products'][$j]['product_price'] = number_format($cart['products'][$j]['product_price'], 2);
+                        $cart['products'][$j]['product_quantity'] = $cart['products'][$j]['product_quantity'];
+                        $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
                     }
                 }
             }
-        }
 
         return new JsonResponse(json_encode($cart), 200, [], true);
     }

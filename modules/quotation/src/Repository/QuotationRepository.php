@@ -289,7 +289,7 @@ class QuotationRepository
             ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
             ->where($expr->eq('ca.id_cart', ':id_cart'))
             ->addGroupBy('ca.id_cart')
-            ->setParameter('id_cart', $id_cart)->execute()->fetchAll();
+            ->setParameter('id_cart', $id_cart)->execute()->fetch();
     }
 
     /**

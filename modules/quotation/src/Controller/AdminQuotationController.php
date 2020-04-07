@@ -158,7 +158,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
     /**
      * Show details customer by ID
      * @param Request $request
-     * @param $query
+     * @param $id_customer
      * @return JsonResponse
      */
     public function showCustomerDetails(Request $request, $id_customer)
@@ -268,5 +268,38 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $fileSystem->writeFile($file, $response);
         }
         return new JsonResponse(json_encode($response), 200, [], true);
+    }
+
+    /**
+     * Show cart by ID
+     * @param Request $request
+     * @param $idCart
+     * @return JsonResponse
+     */
+    public function showCart(Request $request, $id_cart)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $cart = $quotationRepository->findOneCartById($id_cart);
+
+            if ($cart['id_cart']) {
+                $cart['products'] = $quotationRepository->findProductsCustomerByCarts($cart['id_cart']);
+            }
+
+            for ($j = 0; $j < count($cart['products']); $j++) {
+                if ($cart['id_cart']) {
+                    $cart['id_cart'] = $cart['id_cart'];
+                    $cart['date_cart'] = date("d/m/Y", strtotime($cart['date_cart']));
+                    $cart['total_cart'] = number_format($cart['total_cart'], 2);
+                    if ($cart['products']) {
+                        $cart['products'][$j]['id_product'] = $cart['products'][$j]['id_product'];
+                        $cart['products'][$j]['product_name'] = $cart['products'][$j]['product_name'];
+                        $cart['products'][$j]['product_price'] = number_format($cart['products'][$j]['product_price'], 2);
+                        $cart['products'][$j]['product_quantity'] = $cart['products'][$j]['product_quantity'];
+                        $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
+                    }
+                }
+            }
+
+        return new JsonResponse(json_encode($cart), 200, [], true);
     }
 }

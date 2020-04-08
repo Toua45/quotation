@@ -48,7 +48,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
         const insertCustomerInDOM = (customers) => {
             let output = '';
-            // console.log(customers)
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
             let link = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/customer/';
@@ -301,7 +300,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         .replace(/\d+/, link.dataset.idcart);
 
                                                         const getCustomerCartToUse = (cart) => {
-                                                            // console.log(cart)
                                                             let outputCartToUse = '';
                                                             let outputCartProductsToUse = '';
 

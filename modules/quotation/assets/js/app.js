@@ -273,7 +273,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---quotationId---/, customer.id_quotation)
                                                     .replace(/---quotationDate---/, customer.date_quotation)
                                                     .replace(/---totalQuotation---/, customer.total_quotation + ' €')
-                                                    .replace(/---id-quotation-modal---/, customer.id_quotation);
+                                                    .replace(/---id-quotation-modal---/, customer.id_quotation)
+                                                    .replace(/---id---/, customer.id_cart)
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
                                             }
                                         }
 

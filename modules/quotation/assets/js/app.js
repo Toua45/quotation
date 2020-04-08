@@ -48,7 +48,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
         const insertCustomerInDOM = (customers) => {
             let output = '';
-            // console.log(customers)
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
             let link = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/customer/';
@@ -178,7 +177,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                 .replace(/---id-cart-modal---/, customer.id_cart)
                                                 .replace(/---id---/, customer.id_cart)
                                                 .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
-                                            // console.log(outputCart)
                                         }
 
                                         document.getElementById('tableCart').insertAdjacentHTML('afterend', modalCustomerDetails);
@@ -230,7 +228,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---totalOrder---/, customer.total_paid + ' €')
                                                     .replace(/---payment---/, customer.payment)
                                                     .replace(/---orderStatus---/, customer.order_status)
-                                                    .replace(/---id-order-modal---/, customer.id_order);
+                                                    .replace(/---id-order-modal---/, customer.id_order)
+                                                    .replace(/---id---/, customer.id_cart)
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
                                             }
                                         }
 

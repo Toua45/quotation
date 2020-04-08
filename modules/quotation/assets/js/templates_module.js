@@ -166,6 +166,7 @@ export const TemplateModule = {
             <td class="order-status text-left">---orderStatus---</td>
             <td class="order-actions text-left">
             <button class="btn btn-primary" data-toggle="modal" data-target="#showOrderModal_---id-order-modal---">Details</button>
+            <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-outline-primary ml-3">Utiliser</a>
             </td>
         </tr>`,
 

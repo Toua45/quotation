@@ -240,6 +240,7 @@ export const TemplateModule = {
             <td class="quotation-total text-left">---totalQuotation---</td>
             <td class="quotation-actions text-left">
             <button class="btn btn-primary" data-toggle="modal" data-target="#showQuotationModal_---id-quotation-modal---">Details</button>
+            <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-outline-primary ml-3">Utiliser</a>
             </td>
         </tr>`,
 

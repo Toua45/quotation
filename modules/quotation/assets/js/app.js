@@ -231,7 +231,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---orderStatus---/, customer.order_status)
                                                     .replace(/---id-order-modal---/, customer.id_order)
                                                     .replace(/---id---/, customer.id_cart)
-                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);;
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
                                             }
                                         }
 

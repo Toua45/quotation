@@ -178,7 +178,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                 .replace(/---id-cart-modal---/, customer.id_cart)
                                                 .replace(/---id---/, customer.id_cart)
                                                 .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
-                                            // console.log(outputCart)
                                         }
 
                                         document.getElementById('tableCart').insertAdjacentHTML('afterend', modalCustomerDetails);
@@ -230,7 +229,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---totalOrder---/, customer.total_paid + ' €')
                                                     .replace(/---payment---/, customer.payment)
                                                     .replace(/---orderStatus---/, customer.order_status)
-                                                    .replace(/---id-order-modal---/, customer.id_order);
+                                                    .replace(/---id-order-modal---/, customer.id_order)
+                                                    .replace(/---id---/, customer.id_cart)
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);;
                                             }
                                         }
 
@@ -300,6 +301,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         .replace(/\d+/, link.dataset.idcart);
 
                                                         const getCustomerCartToUse = (cart) => {
+                                                            // console.log(cart)
                                                             let outputCartToUse = '';
                                                             let outputCartProductsToUse = '';
 

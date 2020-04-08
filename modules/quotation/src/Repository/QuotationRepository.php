@@ -295,6 +295,19 @@ class QuotationRepository
     /**
      * @return mixed[]
      */
+    public function findOrderByCart($idCart)
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->addSelect('o.id_order', 'o.reference AS order_reference', 'o.id_cart', 'o.date_add AS date_order')
+            ->from($this->databasePrefix . 'orders', 'o')
+            ->where('o.id_cart = :id_cart')
+            ->setParameter('id_cart', $idCart);
+        return $query->addGroupBy('o.id_order')->execute()->fetchAll();
+    }
+
+    /**
+     * @return mixed[]
+     */
     public function findOrdersByCustomer($idcustomer, $idCart = null)
     {
         $query = $this->connection->createQueryBuilder()

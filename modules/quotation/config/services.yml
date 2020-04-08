@@ -1,9 +1,21 @@
 services:
-  _defaults:
-    public: true
+    _defaults:
+        public: true
+        autowire: true
+        autoconfigure: true
+        bind:
+#            # pass this value to any $projectDir argument for any service
+#            # that's created in this file (including controller arguments)
+#            $projectDir: '%kernel.project_dir%'
 
-  quotation_repository:
-    class: Quotation\Repository\QuotationRepository
-    arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'
+      # makes classes in src/ available to be used as services
+      # this creates a service per class whose id is the fully-qualified class name
+    Quotation\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Controller,Form,Repository,Service,Migrations,Tests,Kernel.php}'
+
+#    quotation_repository:
+#        class: Quotation\Repository\QuotationRepository
+#        arguments:
+#            - '@doctrine.dbal.default_connection'
+#            - '%database_prefix%'

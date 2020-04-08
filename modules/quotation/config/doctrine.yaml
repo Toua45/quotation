@@ -16,9 +16,9 @@ parameters:
     naming_strategy: doctrine.orm.naming_strategy.underscore
     auto_mapping: true
     mappings:
-      App:
+      Quotation:
         is_bundle: false
         type: annotation
-        dir: '%kernel.project_dir%/src/Entity'
-        prefix: 'App\Entity'
-        alias: App
+        dir: '%kernel.project_dir%/modules/quotation/src/Entity'
+        prefix: 'Quotation\Entity'
+        alias: Quotation

@@ -5,7 +5,8 @@ export const TemplateModule = {
                 <h6 class="card-subtitle mb-2 text-muted">---firstname---</h6>
                 <p class="card-text">---text---</p>
                 <div class="row justify-content-between">
-                    <a href="---link-show-customer---" class="btn btn-primary customer-show" data-toggle="modal" data-target="#showCustomerModal_---id-customer-modal---" data-idcustomer="---id-customer---">Details</a>   
+<!--                    <a href="-&#45;&#45;link-show-customer-&#45;&#45;" class="btn btn-primary customer-show" data-toggle="modal" data-target="#showCustomerModal_-&#45;&#45;id-customer-modal-&#45;&#45;" data-idcustomer="-&#45;&#45;id-customer-&#45;&#45;">Details</a>   -->
+                    <button class="customer-show btn btn-primary" data-href="link-show-customer" data-idcustomer="---id-customer---" data-toggle="modal" data-target="#showCustomerModal_---id-customer-modal---">Details</button>  
                     <a href="---link-show-customer-carts---" data-idcustomer="---id---" class="customer-details btn btn-outline-primary mx-3">Choisir</a>
                 </div>
                 ---modal-customer-infos---         
@@ -30,13 +31,12 @@ export const TemplateModule = {
                   </div>
                 </div>`,
 
-    personalData: `<div class="row">
+    personalData: `<div class="row" id="modal-personal-data-infos">
                         <div class="col">
                             <div class="card">
                               <h3 class="card-header"> <i class="material-icons">person</i>
                                 ---firstname--- ---lastname--- [---id-customer---] -
                                 <a href="---customer-link-email---">---customer-email---</a>
-                            
                                 <a href="---edit---" class="tooltip-link float-right" data-toggle="pstooltip" target="_blank" data-placement="top" data-original-title="Modifier">
                                   <i class="material-icons">edit</i>
                                 </a>
@@ -67,7 +67,7 @@ export const TemplateModule = {
                                   <div class="col-8">
                                             
                                     <span class="badge ---badge-newsletter--- rounded pt-0 pb-0">      
-                                      <i class="material-icons">---icon-newsletter---</i> Lettre d'informations
+                                      <i class="material-icons">---icon-newsletter---</i> ---newsletter--- // Lettre d'informations
                                     </span>
                             
                                     <span class="badge ---badge-partners--- rounded pt-0 pb-0">
@@ -115,14 +115,11 @@ export const TemplateModule = {
                                 </div>
                               </div>
                         
-                              <div class="row">
-                                <div class="col">
-                                          </div>
-                              </div>
+                              <div class="row"><div class="col"></div></div>
                         
                               <div class="row">
                                 <div class="col">
-                                              <table class="table">
+                                    <table class="table">
                                       <thead>
                                         <tr>
                                           <th>ID</th>
@@ -137,7 +134,7 @@ export const TemplateModule = {
                                       <tbody>
                                                       
                                         <tr>
-                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=1&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">1</td>
+                                          <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=1&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">---id-order---</td>
                                           <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=1&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">13/02/2020</td>
                                           <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=1&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">Payment by check</td>
                                           <td class="js-linkable-item cursor-pointer" data-linkable-href="http://localhost:8000/adm/index.php?controller=AdminOrders&amp;id_order=1&amp;vieworder=1&amp;token=0593cab36e56270649927604e70f0ea0">Annulé</td>

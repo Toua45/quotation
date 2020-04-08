@@ -284,6 +284,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             if ($cart['id_cart']) {
                 $cart['products'] = $quotationRepository->findProductsCustomerByCarts($cart['id_cart']);
                 $cart['order'] = $quotationRepository->findOrderByCart($cart['id_cart']);
+                $cart['quotation'] = $quotationRepository->findQuotationByCart($cart['id_cart']);
             }
 
             for ($j = 0; $j < count($cart['products']); $j++) {
@@ -298,13 +299,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
                         $cart['products'][$j]['product_quantity'] = $cart['products'][$j]['product_quantity'];
                         $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
                     }
-                }
-            }
-
-            for ($k = 0; $k < count($cart['order']); $k++) {
-                if ($cart['order']) {
-                    $cart['order'][$k]['id_order'] = $cart['order'][$k]['id_order'];
-                    $cart['order'][$k]['id_cart'] = $cart['order'][$k]['id_cart'];
                 }
             }
 

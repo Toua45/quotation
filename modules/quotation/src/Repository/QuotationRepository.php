@@ -302,7 +302,20 @@ class QuotationRepository
             ->from($this->databasePrefix . 'orders', 'o')
             ->where('o.id_cart = :id_cart')
             ->setParameter('id_cart', $idCart);
-        return $query->addGroupBy('o.id_order')->execute()->fetchAll();
+        return $query->addGroupBy('o.id_order')->execute()->fetch();
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function findQuotationByCart($idCart)
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->addSelect('q.id_quotation', 'q.reference AS quotation_reference', 'q.id_cart_product', 'q.date_add AS date_quotation')
+            ->from($this->databasePrefix . 'quotation', 'q')
+            ->where('q.id_cart_product = :id_cart')
+            ->setParameter('id_cart', $idCart);
+        return $query->addGroupBy('q.id_quotation')->execute()->fetch();
     }
 
     /**

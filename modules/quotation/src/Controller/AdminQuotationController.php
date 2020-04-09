@@ -15,46 +15,45 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminQuotationController extends FrameworkBundleAdminController
 {
-    const NB_MAX_QUOTATIONS_PER_PAGE = 10;
-
     /**
      * Fonction privée qui récupère toutes les données à partir du tableau 'quotation_search'
      */
-    private function queryQuotation(Request $request)
+    private function getReq(Request $req)
     {
-        return $request->query->all()['quotation_search'];
+        return $req->query->all()['quotation_search'];
     }
 
-    public function quotationIndex(Request $request, int $page)
+    public function quotationIndex(Request $req, int $page)
     {
         $quotationRepository = $this->get('quotation_repository');
-
         $quotationFilterForm = $this->createForm(QuotationSearchType::class);
+        $quotationFilterForm->handleRequest($req);
 
-        $quotationFilterForm->handleRequest($request);
         if ($quotationFilterForm->isSubmitted() && $quotationFilterForm->isValid()) {
-            $name = $this->queryQuotation($request)['name'];
-            $reference = $this->queryQuotation($request)['reference'];
-            $status = $this->queryQuotation($request)['status'];
-            $start = $this->queryQuotation($request)['start'];
-            $end = $this->queryQuotation($request)['end'];
+            $name = $this->getReq($req)['name'];
+            $reference = $this->getReq($req)['reference'];
+            $status = $this->getReq($req)['status'];
+            $start = $this->getReq($req)['start'];
+            $end = $this->getReq($req)['end'];
 
-            $quotations = $quotationRepository->findQuotationsByFilters($name, $reference, $status, $start, $end, $page);
+            $quotations = $quotationRepository->findQuotationsByFilters($page, $name, $reference, $status, $start, $end);
         } else {
-            $quotations = $quotationRepository->findAll($page);
+            $quotations = $quotationRepository->findQuotationsByFilters($page);
         }
 
-        $nbQuotations = count($quotationRepository->findAll());
-        $nbQuotationsFilter = count($quotationRepository->findQuotationsByFilters());
-
-//        $nbQuotations = count([$quotationRepository->findAll(), $quotationRepository->findQuotationsByFilters()]);
+//        dump('page -> ' . $page);
+//        dump($quotations);
+//        dump('nbPages -> ' . (int) ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE));
+//        dump('nbRecords -> ' . $quotations['nbRecords']);
+//        dump($quotations['records']);
+//        die;
 
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
-            'quotations' => $quotations,
+            'quotations' => $quotations['records'],
             'page' => $page,
-            'nbPages' => ceil($nbQuotations/self::NB_MAX_QUOTATIONS_PER_PAGE),
-            'nbPagesFilter' => ceil($nbQuotationsFilter/self::NB_MAX_QUOTATIONS_PER_PAGE),
-            'quotationFilterForm' => $quotationFilterForm->createView(),
+            'nbPages' => (int) ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE),
+            'nbRecords' => $quotations['nbRecords'],
+            'quotationFilterForm' => $quotationFilterForm->createView()
         ]);
     }
 

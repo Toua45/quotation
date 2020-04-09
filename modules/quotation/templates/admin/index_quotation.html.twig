@@ -193,40 +193,7 @@
              </div>
 
              <!-- Pagination -->
-
-             <div class="text-center">
-                 <p class="m-3">Page : {{ page }}</p>
-             </div>
-             <div class="text-center">
-
-                 {% if page >= 2 %}
-                     <a class="mx-5 mb-5"
-                        href="{{ path('quotation_admin', {'page': page-1}|merge(app.request.query.all)) }}">
-                         Précédent
-                     </a>
-                 {% else %}
-                     <a class=" mx-5 mb-5">
-                         Précédent
-                     </a>
-                 {% endif %}
-
-                 {% if page < nbPagesFilter  %}
-                     <a class="mx-5 mb-5"
-                        href="{{ path('quotation_admin', {'page': page+1}|merge(app.request.query.all)) }}">
-                         Suivant
-                     </a>
-                     {% elseif page < nbPages %}
-                         <a class="mx-5 mb-5"
-                            href="{{ path('quotation_admin', {'page': page+1}|merge(app.request.query.all)) }}">
-                             Suivant
-                         </a>
-                 {% else %}
-                     <a class="mx-5 mb-5">
-                         Suivant
-                     </a>
-                 {% endif %}
-             </div>
-
+                    {% include '@Modules/quotation/templates/admin/common/pagination.html.twig' %}
              <!-- End pagination -->
 
          </div>
@@ -235,8 +202,6 @@
 
     {% block javascripts %}
         <script type="text/javascript" src="{{ asset('quotation-bundle/quotation-bundle.js') }}"></script>
-
         <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit-icons.min.js"></script>
-
     {% endblock %}

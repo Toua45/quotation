@@ -170,13 +170,15 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         }
 
                                         for (let customer of data['carts']) {
-                                            outputCart += mod.TemplateModule.tableCart
-                                                .replace(/---cartId---/, customer.id_cart)
-                                                .replace(/---cartDate---/, customer.date_cart)
-                                                .replace(/---totalCart---/, customer.total_cart + ' €')
-                                                .replace(/---id-cart-modal---/, customer.id_cart)
-                                                .replace(/---id---/, customer.id_cart)
-                                                .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
+                                            if (customer.orders.length === 0) {
+                                                outputCart += mod.TemplateModule.tableCart
+                                                    .replace(/---cartId---/, customer.id_cart)
+                                                    .replace(/---cartDate---/, customer.date_cart)
+                                                    .replace(/---totalCart---/, customer.total_cart + ' €')
+                                                    .replace(/---id-cart-modal---/, customer.id_cart)
+                                                    .replace(/---id---/, customer.id_cart)
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
+                                            }
                                         }
 
                                         document.getElementById('tableCart').insertAdjacentHTML('afterend', modalCustomerDetails);

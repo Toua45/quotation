@@ -62,33 +62,28 @@ class AdminQuotationController extends FrameworkBundleAdminController
         ]);
     }
 
-    /**
-     * @return Response
-     */
-    public function pdfView(): Response
+
+    public function pdfView($id_quotation)
     {
         $quotationRepository = $this->get('quotation_repository');
-        $quotations = $quotationRepository->findAll();
+        $quotation = $quotationRepository->findQuotationById($id_quotation);
+//        dump($quotations);die();
 
-        $template = '@Modules/quotation/templates/admin/pdf/pdf_quotation.html.twig';
-        $fileName = '_test';
         $quotationPdf = new QuotationPdf();
-        $html = '';
+        $html = $this->renderView('@Modules/quotation/templates/admin/pdf/pdf_quotation.html.twig', [
+            'id_quotation' => $quotation['id_quotation'],
+            'firstname' => $quotation['firstname'],
+            'lastname' => $quotation['lastname']
+        ]);
+        $fileName = '_test';
 
-        foreach ($quotations as $quotation) {
-//            dump($quotation);
-            // Mise en place d'options pour dompdf
-            $pdfOptions = new Options();
-            $pdfOptions->set('defaultFont', 'Arial');
-            $dompdf = new Dompdf($pdfOptions);
-            $html = $this->renderView($template, [
-                'id_quotation' => $quotation['id_quotation'],
-                'firstname' => $quotation['firstname'],
-                'lastname' => $quotation['lastname'],
-            ]);
-            $quotationPdf->createPDF($html, $dompdf, $fileName);
-        }
-//        die();
+        $quotationPdf->createPDF($html, $fileName);
+
+//        return $this->render($template, [
+//            'quotations' => $quotations,
+//            'quotationPdf' => $quotationPdf->createPDF($html, $fileName),
+//            ]);
+
     }
 
     public function add(Request $request)

@@ -7,12 +7,14 @@ use Dompdf\Options;
 
 class QuotationPdf
 {
-    public function createPDF($html, Dompdf $dompdf, $fileName = null)
+    public function createPDF($html, $fileName = null)
     {
 //        // Récupère le HTML généré dans le fichier twig
 //        if ($template !== null) {
 //            $html = $this->twig->render($template, $data);
 //        }
+
+        $dompdf = new Dompdf();
 
         // Chargement de la page HTML
         $dompdf->loadHtml($html);

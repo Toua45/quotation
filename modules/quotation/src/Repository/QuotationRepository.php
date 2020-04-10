@@ -210,6 +210,22 @@ class QuotationRepository
     }
 
     /**
+     * @param $id_quotation
+     * @return mixed
+     */
+    public function findQuotationById($id_quotation)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('q.*', 'c.firstname', 'c.lastname')
+            ->from($this->databasePrefix . 'quotation', 'q')
+            ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+            ->where('q.id_quotation = :id_quotation')
+            ->setParameter('id_quotation', $id_quotation)
+            ->execute()
+            ->fetch();
+    }
+
+    /**
      * @return mixed[]
      */
     public function findAllCarts()

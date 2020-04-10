@@ -41,6 +41,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $quotations = $quotationRepository->findQuotationsByFilters($page);
         }
 
+
 //        dump('page -> ' . $page);
 //        dump($quotations);
 //        dump('nbPages -> ' . (int) ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE));
@@ -247,7 +248,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $response[$key]['id_customer'] = $id_customer;
             $response[$key]['id_quotation'] = $quotation['id_quotation'];
             $response[$key]['quotation_reference'] = $quotation['quotation_reference'];
-            $response[$key]['id_cart_product'] = $quotation['id_cart_product'];
+            $response[$key]['id_cart'] = $quotation['id_cart'];
             $response[$key]['date_quotation'] = date("d/m/Y", strtotime($quotation['date_quotation']));
             $response[$key]['total_quotation'] = number_format($quotation['total_quotation'], 2);
         }

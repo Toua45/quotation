@@ -75,15 +75,8 @@ class AdminQuotationController extends FrameworkBundleAdminController
             'firstname' => $quotation['firstname'],
             'lastname' => $quotation['lastname']
         ]);
-        $fileName = '_test';
 
-        $quotationPdf->createPDF($html, $fileName);
-
-//        return $this->render($template, [
-//            'quotations' => $quotations,
-//            'quotationPdf' => $quotationPdf->createPDF($html, $fileName),
-//            ]);
-
+        $quotationPdf->createPDF($html, 'test');
     }
 
     public function add(Request $request)

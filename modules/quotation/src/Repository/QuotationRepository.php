@@ -112,8 +112,8 @@ class QuotationRepository
                     ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart = cp.id_cart')
                     ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
                     ->addGroupBy('q.id_quotation')
-                    ->where('(c.firstname LIKE :name OR c.lastname LIKE :name) AND q.reference = :reference')
-                    ->setParameters(['name' => '%' . $name . '%', 'reference' => $reference]);
+                    ->where('(c.firstname LIKE :name OR c.lastname LIKE :name) AND q.reference LIKE :reference')
+                    ->setParameters(['name' => '%' . $name . '%', 'reference' =>  '%' . $reference . '%']);
                 break;
             case ('' !== $name && null !== $name) && ('' !== $start && null !== $start) && ('' !== $end && null !== $end):
                 $this->addQuotationFromAndJoin($query);
@@ -169,8 +169,8 @@ class QuotationRepository
                 break;
             case '' !== $reference && null !== $reference:
                 $this->addQuotationFromAndJoin($query);
-                $query->where('q.reference = :reference')
-                    ->setParameter('reference', $reference);
+                $query->where('q.reference LIKE :reference')
+                    ->setParameter('reference', '%' . $reference . '%');
                 break;
             case '' !== $status && null !== $status:
                 $this->addQuotationFromAndJoin($query);

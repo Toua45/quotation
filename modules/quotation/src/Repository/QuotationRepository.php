@@ -47,7 +47,7 @@ class QuotationRepository
             ->from($this->databasePrefix . 'quotation', 'q')
             ->addGroupBy('q.id_quotation')
             ->join('q', $this->databasePrefix . 'customer', 'c', 'q.id_customer = c.id_customer')
-            ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart_product = cp.id_cart')
+            ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart = cp.id_cart')
             ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product');
 
         return $query->execute()->fetchAll();
@@ -74,7 +74,7 @@ class QuotationRepository
             ->from($this->databasePrefix . 'quotation', 'q')
             ->addGroupBy('q.id_quotation')
             ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
-            ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart_product = cp.id_cart')
+            ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart = cp.id_cart')
             ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product');
     }
 
@@ -109,7 +109,7 @@ class QuotationRepository
             case ('' !== $name && null !== $name) && ('' !== $reference && null !== $reference):
                 $query->from($this->databasePrefix . 'customer', 'c')
                     ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
-                    ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart_product = cp.id_cart')
+                    ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart = cp.id_cart')
                     ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
                     ->addGroupBy('q.id_quotation')
                     ->where('(c.firstname LIKE :name OR c.lastname LIKE :name) AND q.reference = :reference')
@@ -161,7 +161,7 @@ class QuotationRepository
             case '' !== $name && null !== $name:
                 $query->from($this->databasePrefix . 'customer', 'c')
                     ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
-                    ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart_product = cp.id_cart')
+                    ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart = cp.id_cart')
                     ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
                     ->where('c.firstname LIKE :name OR c.lastname LIKE :name')
                     ->addGroupBy('q.id_quotation')
@@ -301,9 +301,9 @@ class QuotationRepository
     public function findQuotationByCart($idCart)
     {
         $query = $this->connection->createQueryBuilder()
-            ->addSelect('q.id_quotation', 'q.reference AS quotation_reference', 'q.id_cart_product', 'q.date_add AS date_quotation')
+            ->addSelect('q.id_quotation', 'q.reference AS quotation_reference', 'q.id_cart', 'q.date_add AS date_quotation')
             ->from($this->databasePrefix . 'quotation', 'q')
-            ->where('q.id_cart_product = :id_cart')
+            ->where('q.id_cart = :id_cart')
             ->setParameter('id_cart', $idCart);
         return $query->addGroupBy('q.id_quotation')->execute()->fetch();
     }
@@ -338,11 +338,11 @@ class QuotationRepository
     public function findQuotationsByCustomer($idcustomer, $idCart = null)
     {
         $query = $this->connection->createQueryBuilder()
-            ->addSelect('q.id_customer', 'q.id_quotation', 'q.reference AS quotation_reference', 'q.date_add AS date_quotation', 'q.id_cart_product', 'cp.quantity', 'p.price')
+            ->addSelect('q.id_customer', 'q.id_quotation', 'q.reference AS quotation_reference', 'q.date_add AS date_quotation', 'q.id_cart', 'cp.quantity', 'p.price')
             ->addSelect('SUM(p.price * cp.quantity) AS total_quotation')
             ->from($this->databasePrefix . 'quotation', 'q')
             ->addGroupBy('q.id_quotation')
-            ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart_product = cp.id_cart')
+            ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart = cp.id_cart')
             ->join('cp', $this->databasePrefix . 'cart', 'ca', 'cp.id_cart = ca.id_cart')
             ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product');
 
@@ -350,7 +350,7 @@ class QuotationRepository
             $query->where('q.id_customer = :id_customer')
                 ->setParameter('id_customer', $idcustomer);
         } else {
-            $query->where('q.id_customer = :id_customer AND q.id_cart_product = :id_cart')
+            $query->where('q.id_customer = :id_customer AND q.id_cart = :id_cart')
                 ->setParameters(['id_customer' => $idcustomer, 'id_cart' => $idCart]);
         }
 

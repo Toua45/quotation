@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Quotation
 {
+    const NB_MAX_QUOTATIONS_PER_PAGE = 10;
+
     /**
      * @var int
      *
@@ -23,10 +25,10 @@ class Quotation
     /**
      * @var int
      *
-     * @ORM\Column(name="id_cart_product", type="integer")
+     * @ORM\Column(name="id_cart", type="integer")
      * @ORM\OneToOne(targetEntity="Cart")
      */
-    private $cartProductId;
+    private $cartId;
 
     /**
      * @var int
@@ -84,18 +86,18 @@ class Quotation
     /**
      * @return int
      */
-    public function getCartProductId(): ?int
+    public function getCartId(): ?int
     {
-        return $this->cartProductId;
+        return $this->cartId;
     }
 
     /**
-     * @param int $cartProductId
+     * @param int $cartId
      * @return Quotation
      */
-    public function setCartProductId(int $cartProductId): Quotation
+    public function setCartId(int $cartId): Quotation
     {
-        $this->cartProductId = $cartProductId;
+        $this->cartId = $cartId;
         return $this;
     }
 

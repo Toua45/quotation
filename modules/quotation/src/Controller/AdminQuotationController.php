@@ -15,37 +15,46 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminQuotationController extends FrameworkBundleAdminController
 {
-
     /**
      * Fonction privée qui récupère toutes les données à partir du tableau 'quotation_search'
      */
-    private function queryQuotation(Request $request)
+    private function getReq(Request $req)
     {
-        return $request->query->all()['quotation_search'];
+        return $req->query->all()['quotation_search'];
     }
 
-    public function quotationIndex(Request $request)
+    public function quotationIndex(Request $req, int $page)
     {
         $quotationRepository = $this->get('quotation_repository');
-
         $quotationFilterForm = $this->createForm(QuotationSearchType::class);
+        $quotationFilterForm->handleRequest($req);
 
-        $quotationFilterForm->handleRequest($request);
         if ($quotationFilterForm->isSubmitted() && $quotationFilterForm->isValid()) {
-            $name = $this->queryQuotation($request)['name'];
-            $reference = $this->queryQuotation($request)['reference'];
-            $status = $this->queryQuotation($request)['status'];
-            $start = $this->queryQuotation($request)['start'];
-            $end = $this->queryQuotation($request)['end'];
+            $name = $this->getReq($req)['name'];
+            $reference = $this->getReq($req)['reference'];
+            $status = $this->getReq($req)['status'];
+            $start = $this->getReq($req)['start'];
+            $end = $this->getReq($req)['end'];
 
-            $quotations = $quotationRepository->findQuotationsByFilters($name, $reference, $status, $start, $end);
+            $quotations = $quotationRepository->findQuotationsByFilters($page, $name, $reference, $status, $start, $end);
         } else {
-            $quotations = $quotationRepository->findAll();
+            $quotations = $quotationRepository->findQuotationsByFilters($page);
         }
 
+
+//        dump('page -> ' . $page);
+//        dump($quotations);
+//        dump('nbPages -> ' . (int) ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE));
+//        dump('nbRecords -> ' . $quotations['nbRecords']);
+//        dump($quotations['records']);
+//        die;
+
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
-            'quotations' => $quotations,
-            'quotationFilterForm' => $quotationFilterForm->createView(),
+            'quotations' => $quotations['records'],
+            'page' => $page,
+            'nbPages' => (int) ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE),
+            'nbRecords' => $quotations['nbRecords'],
+            'quotationFilterForm' => $quotationFilterForm->createView()
         ]);
     }
 
@@ -158,7 +167,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
     /**
      * Show details customer by ID
      * @param Request $request
-     * @param $query
+     * @param $id_customer
      * @return JsonResponse
      */
     public function showCustomerDetails(Request $request, $id_customer)
@@ -214,38 +223,39 @@ class AdminQuotationController extends FrameworkBundleAdminController
             }
         }
 
-        $response = [];
-
         foreach ($orders as $key => $order) {
-            $response[$key]['id_customer'] = $id_customer;
-            $response[$key]['firstname'] = $order['firstname'];
-            $response[$key]['lastname'] = $order['lastname'];
-            $response[$key]['id_order'] = $order['id_order'];
-            $response[$key]['order_reference'] = $order['order_reference'];
-            $response[$key]['id_cart'] = $order['id_cart'];
-            $response[$key]['date_order'] = date("d/m/Y", strtotime($order['date_order']));
-            $response[$key]['total_products'] = number_format($order['total_products'], 2);
-            $response[$key]['total_shipping'] = number_format($order['total_shipping'], 2);
-            $response[$key]['total_paid'] = number_format($order['total_paid'], 2);
-            $response[$key]['payment'] = $order['payment'];
-            $response[$key]['order_status'] = $order['order_status'];
-            $response[$key]['address1'] = $order['address1'];
-            $response[$key]['address2'] = $order['address2'];
-            $response[$key]['postcode'] = $order['postcode'];
-            $response[$key]['city'] = $order['city'];
+            $orders[$key]['id_customer'] = $id_customer;
+            $orders[$key]['firstname'] = $order['firstname'];
+            $orders[$key]['lastname'] = $order['lastname'];
+            $orders[$key]['id_order'] = $order['id_order'];
+            $orders[$key]['order_reference'] = $order['order_reference'];
+            $orders[$key]['id_cart'] = $order['id_cart'];
+            $orders[$key]['date_order'] = date("d/m/Y", strtotime($order['date_order']));
+            $orders[$key]['total_products'] = number_format($order['total_products'], 2);
+            $orders[$key]['total_shipping'] = number_format($order['total_shipping'], 2);
+            $orders[$key]['total_paid'] = number_format($order['total_paid'], 2);
+            $orders[$key]['payment'] = $order['payment'];
+            $orders[$key]['order_status'] = $order['order_status'];
+            $orders[$key]['address1'] = $order['address1'];
+            $orders[$key]['address2'] = $order['address2'];
+            $orders[$key]['postcode'] = $order['postcode'];
+            $orders[$key]['city'] = $order['city'];
         }
+
+        $response = [];
 
         foreach ($quotations as $key => $quotation) {
             $response[$key]['id_customer'] = $id_customer;
             $response[$key]['id_quotation'] = $quotation['id_quotation'];
             $response[$key]['quotation_reference'] = $quotation['quotation_reference'];
-            $response[$key]['id_cart_product'] = $quotation['id_cart_product'];
+            $response[$key]['id_cart'] = $quotation['id_cart'];
             $response[$key]['date_quotation'] = date("d/m/Y", strtotime($quotation['date_quotation']));
             $response[$key]['total_quotation'] = number_format($quotation['total_quotation'], 2);
         }
 
         return new JsonResponse(json_encode([
             'carts' => $carts,
+            'orders' => $orders,
             'response' => $response,
         ]), 200, [], true);
     }
@@ -268,5 +278,40 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $fileSystem->writeFile($file, $response);
         }
         return new JsonResponse(json_encode($response), 200, [], true);
+    }
+
+    /**
+     * Show cart by ID
+     * @param Request $request
+     * @param $idCart
+     * @return JsonResponse
+     */
+    public function showCart(Request $request, $id_cart)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $cart = $quotationRepository->findOneCartById($id_cart);
+
+            if ($cart['id_cart']) {
+                $cart['products'] = $quotationRepository->findProductsCustomerByCarts($cart['id_cart']);
+                $cart['order'] = $quotationRepository->findOrderByCart($cart['id_cart']);
+                $cart['quotation'] = $quotationRepository->findQuotationByCart($cart['id_cart']);
+            }
+
+            for ($j = 0; $j < count($cart['products']); $j++) {
+                if ($cart['id_cart']) {
+                    $cart['id_cart'] = $cart['id_cart'];
+                    $cart['date_cart'] = date("d/m/Y", strtotime($cart['date_cart']));
+                    $cart['total_cart'] = number_format($cart['total_cart'], 2);
+                    if ($cart['products']) {
+                        $cart['products'][$j]['id_product'] = $cart['products'][$j]['id_product'];
+                        $cart['products'][$j]['product_name'] = $cart['products'][$j]['product_name'];
+                        $cart['products'][$j]['product_price'] = number_format($cart['products'][$j]['product_price'], 2);
+                        $cart['products'][$j]['product_quantity'] = $cart['products'][$j]['product_quantity'];
+                        $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
+                    }
+                }
+            }
+
+        return new JsonResponse(json_encode($cart), 200, [], true);
     }
 }

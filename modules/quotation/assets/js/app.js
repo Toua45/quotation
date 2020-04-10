@@ -48,12 +48,13 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
         const insertCustomerInDOM = (customers) => {
             let output = '';
-            // console.log(customers)
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
-            let link = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/show/customer/';
-            let show = window.location.origin + '/adminLionel/index.php/sell/customers/';
+            let link = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/customer/';
+            let show = window.location.origin + '/adminToua/index.php/sell/customers/';
+
             customers.forEach((customer, i) => {
+
                 import('./templates_module').then(mod => {
                     output += mod.TemplateModule.card
                         .replace(/---lastname---/, customer.lastname.toUpperCase())
@@ -91,12 +92,17 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         .replace(/---increment---/, i)
                     ;
 
+
                     if (customers.length - 1 === i) {
                         document.getElementById('js-output-customers').innerHTML = output;
+
 
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
+                        let linkCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/cart/';
+                        let urlCart = document.querySelector('[data-customercart]').dataset.customercart;
+                        let newUrlCart;
 
                         // document.querySelectorAll renvoie tous les éléments du document qui correspondent à un sélecteur CSS, ici, tous les éléments a de la class customer-details
                         if (document.querySelectorAll('a.customer-details') !== null) {
@@ -164,11 +170,15 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         }
 
                                         for (let customer of data['carts']) {
-                                            outputCart += mod.TemplateModule.tableCart
-                                                .replace(/---cartId---/, customer.id_cart)
-                                                .replace(/---cartDate---/, customer.date_cart)
-                                                .replace(/---totalCart---/, customer.total_cart + ' €')
-                                                .replace(/---id-cart-modal---/, customer.id_cart);
+                                            if (customer.orders.length === 0) {
+                                                outputCart += mod.TemplateModule.tableCart
+                                                    .replace(/---cartId---/, customer.id_cart)
+                                                    .replace(/---cartDate---/, customer.date_cart)
+                                                    .replace(/---totalCart---/, customer.total_cart + ' €')
+                                                    .replace(/---id-cart-modal---/, customer.id_cart)
+                                                    .replace(/---id---/, customer.id_cart)
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
+                                            }
                                         }
 
                                         document.getElementById('tableCart').insertAdjacentHTML('afterend', modalCustomerDetails);
@@ -212,7 +222,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             modalCustomerOrderDetailsCart = '';
                                         }
 
-                                        for (let customer of data['response']) {
+                                        for (let customer of data['orders']) {
                                             if (typeof customer.id_order !== 'undefined') {
                                                 outputOrder += mod.TemplateModule.tableOrder
                                                     .replace(/---orderId---/, customer.id_order)
@@ -220,7 +230,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---totalOrder---/, customer.total_paid + ' €')
                                                     .replace(/---payment---/, customer.payment)
                                                     .replace(/---orderStatus---/, customer.order_status)
-                                                    .replace(/---id-order-modal---/, customer.id_order);
+                                                    .replace(/---id-order-modal---/, customer.id_order)
+                                                    .replace(/---id---/, customer.id_cart)
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
                                             }
                                         }
 
@@ -249,7 +261,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---id-customer---/, cart.id_customer)
                                                     .replace(/---id-quotation---/, quotation.id_quotation)
                                                     .replace(/---reference---/, quotation.quotation_reference)
-                                                    .replace(/---id-cart---/, quotation.id_cart_product)
+                                                    .replace(/---id-cart---/, quotation.id_cart)
                                                     .replace(/---totalQuotation---/, quotation.total_quotation + ' €')
                                                     .replace(/---quotation-cart-data---/, modalCustomerQuotationDetailsCart);
                                             }
@@ -263,7 +275,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---quotationId---/, customer.id_quotation)
                                                     .replace(/---quotationDate---/, customer.date_quotation)
                                                     .replace(/---totalQuotation---/, customer.total_quotation + ' €')
-                                                    .replace(/---id-quotation-modal---/, customer.id_quotation);
+                                                    .replace(/---id-quotation-modal---/, customer.id_quotation)
+                                                    .replace(/---id---/, customer.id_cart)
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
                                             }
                                         }
 
@@ -276,9 +290,55 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         document.getElementById('output-customer-carts').innerHTML = outputCart;
                                         document.getElementById('output-customer-orders').innerHTML = outputOrder;
                                         document.getElementById('output-customer-quotations').innerHTML = outputQuotation;
+
+                                        // Implement 'Utiliser' button here to take benefit of table displaying carts, orders and quotations
+                                        /*
+                                         * cart to use
+                                         */
+                                        if (document.querySelectorAll('a.customer-cart-to-use') !== null) {
+                                            document.querySelectorAll('a.customer-cart-to-use').forEach(function (link) {
+                                                link.addEventListener('click', function (Event) {
+                                                    Event.preventDefault();
+
+                                                    newUrlCart = window.location.origin + urlCart
+                                                        .replace(/\d+/, link.dataset.idcart);
+
+                                                    const getCustomerCartToUse = (cart) => {
+                                                        let outputCartToUse = '';
+                                                        let outputCartProductsToUse = '';
+
+                                                        for (let product of cart['products']) {
+
+                                                            outputCartProductsToUse += mod.TemplateModule.quotationCartProducts
+                                                                .replace(/---productName---/, product.product_name)
+                                                                .replace(/---productPrice---/, product.product_price + ' €')
+                                                                .replace(/---productQuantity---/, product.product_quantity)
+                                                                .replace(/---totalProduct---/, product.total_product + ' €');
+                                                        }
+
+                                                        outputCartToUse += mod.TemplateModule.quotationCart
+                                                            .replace(/---totalCart---/, cart['total_cart'] + ' €');
+
+                                                        document.getElementById('output-cart-products-to-use').innerHTML = outputCartProductsToUse;
+                                                        document.getElementById('output-cart-to-use').innerHTML = outputCartToUse;
+                                                    };
+
+                                                    /*
+                                                    * Fonction qui récupère les données dans le json via le path 'quotation_admin_show_cart' dans le fichier _cart.html.twig
+                                                    */
+                                                    QuotationModule.getData(
+                                                        newUrlCart,
+                                                        getCustomerCartToUse,
+                                                        null,
+                                                        true,
+                                                        []
+                                                    );
+                                                });
+                                            });
+                                        }
                                     };
 
-                                    /**
+                                    /*
                                      * Fonction qui récupère les données dans le json via le path 'quotation_admin_show_customer_details'
                                      */
                                     QuotationModule.getData(
@@ -291,6 +351,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                     // Ici, on récupère la class 'd-none' de l'élément id 'js-output-customer-details' et on la remplace par 'd-block'
                                     document.getElementById('js-output-customer-details').classList.replace('d-none', 'd-block');
+                                    document.getElementById('js-output-cart-infos').classList.replace('d-none', 'd-block');
+
                                 });
                             });
                         }

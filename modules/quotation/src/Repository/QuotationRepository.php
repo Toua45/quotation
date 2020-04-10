@@ -4,6 +4,7 @@ namespace Quotation\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Quotation\Entity\Quotation;
 
 class QuotationRepository
 {
@@ -31,9 +32,15 @@ class QuotationRepository
     /**
      * @return mixed[]
      */
-    public function findAll()
+    public function findAll($page = null)
     {
         $query = $this->connection->createQueryBuilder();
+
+        if($page !== null) {
+            $firstResult = ($page -1) * Quotation::NB_MAX_QUOTATIONS_PER_PAGE;
+            $query->setFirstResult($firstResult)->setMaxResults((Quotation::NB_MAX_QUOTATIONS_PER_PAGE));
+        }
+
         $query
             ->addSelect('q.*', 'c.firstname', 'c.lastname', 'cp.id_cart', 'cp.quantity', 'p.price')
             ->addSelect('SUM(p.price * cp.quantity) AS total_product_price')
@@ -73,18 +80,25 @@ class QuotationRepository
 
     /**
      * Fonction pour filtrer les devis sur plusieurs critères
-     * name type=string
-     * reference type=integer
-     * status type=string
-     * start type=datetime
-     * end type=datetime
+     * @param int $page
+     * @param string $name
+     * @param string $reference
+     * @param string $status
+     * @param string $start
+     * @param string $end
+     * @return array
      */
-    public function findQuotationsByFilters($name = null, $reference = null, $status = null, $start = null, $end = null)
-    {
+    public function findQuotationsByFilters(
+        int $page,
+        string $name = null,
+        string $reference = null,
+        string $status = null,
+        string $start = null,
+        string $end = null
+    ): array {
         $query = $this->connection->createQueryBuilder();
         $query->addSelect('q.*', 'c.firstname', 'c.lastname')
             ->addSelect('SUM(p.price * cp.quantity) AS total_product_price');
-
 
         $filterSearch = [$name, $reference, $status, $start, $end];
 
@@ -92,131 +106,107 @@ class QuotationRepository
          * Recherches composées à partir du nom du client avec la référence de la commande et les dates
          */
         switch ($filterSearch):
-            case '' !== $name && '' !== $reference:
-                return $query
-                    ->from($this->databasePrefix . 'customer', 'c')
+            case ('' !== $name && null !== $name) && ('' !== $reference && null !== $reference):
+                $query->from($this->databasePrefix . 'customer', 'c')
                     ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
                     ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart_product = cp.id_cart')
                     ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
                     ->addGroupBy('q.id_quotation')
-                    ->where('(c.firstname LIKE :name OR c.lastname LIKE :name)
-                        AND q.reference = :reference')
-                    ->setParameters(['name' => '%' . $name . '%', 'reference' => $reference])
-                    ->execute()->fetchAll();
+                    ->where('(c.firstname LIKE :name OR c.lastname LIKE :name) AND q.reference = :reference')
+                    ->setParameters(['name' => '%' . $name . '%', 'reference' => $reference]);
                 break;
-            case '' !== $name && '' !== $start && '' !== $end:
+            case ('' !== $name && null !== $name) && ('' !== $start && null !== $start) && ('' !== $end && null !== $end):
                 $this->addQuotationFromAndJoin($query);
-                return $query
-                    ->where('(c.firstname LIKE :name OR c.lastname LIKE :name)
-                    AND q.date_add >= :interval_start AND q.date_add <= :interval_end')
+                $query->where('(c.firstname LIKE :name OR c.lastname LIKE :name) AND q.date_add >= :interval_start AND q.date_add <= :interval_end')
                     ->setParameters(['name' => '%' . $name . '%', 'interval_start' => $start,
-                        'interval_end' => preg_replace('/_/', '', $end)])
-                    ->execute()->fetchAll();
+                        'interval_end' => preg_replace('/_/', '', $end)]);
                 break;
-            case '' !== $name && '' !== $start:
+            case ('' !== $name && null !== $name) && ('' !== $start && null !== $start):
                 $this->addQuotationFromAndJoin($query);
-                return $query
-                    ->where('(c.firstname LIKE :name OR c.lastname LIKE :name)
-                    AND q.date_add >= :interval_start')
-                    ->setParameters(['name' => '%' . $name . '%', 'interval_start' => $start])
-                    ->execute()->fetchAll();
+                $query->where('(c.firstname LIKE :name OR c.lastname LIKE :name) AND q.date_add >= :interval_start')
+                    ->setParameters(['name' => '%' . $name . '%', 'interval_start' => $start]);
                 break;
-            case '' !== $name && '' !== $end:
+            case ('' !== $name && null !== $name) && ('' !== $end&& null !== $end):
                 $this->addQuotationFromAndJoin($query);
-                return $query
-                    ->where('(c.firstname LIKE :name OR c.lastname LIKE :name)
-                    AND q.date_add <= :interval_end')
-                    ->setParameters(['name' => '%' . $name . '%', 'interval_end' => preg_replace('/_/', '', $end)])
-                    ->execute()->fetchAll();
+                $query->where('(c.firstname LIKE :name OR c.lastname LIKE :name) AND q.date_add <= :interval_end')
+                    ->setParameters(['name' => '%' . $name . '%', 'interval_end' => preg_replace('/_/', '', $end)]);
                 break;
 
             /**
              * Recherches composées à partir du status de la commande avec les dates
              */
-            case '' !== $status && '' !== $start && '' !== $end:
+            case ('' !== $status && null !== $status) && ('' !== $start && null !== $start) && ('' !== $end && null !== $end):
                 $this->addQuotationFromAndJoin($query);
-                return $query
-                    ->where('q.status = :status AND q.date_add >= :interval_start AND q.date_add <= :interval_end')
+                $query->where('q.status = :status AND q.date_add >= :interval_start AND q.date_add <= :interval_end')
                     ->setParameters(['status' => $status, 'interval_start' => $start,
                         'interval_end' => preg_replace('/_/', '', $end)])
-                    ->orderBy('q.date_add', 'DESC')
-                    ->execute()->fetchAll();
+                    ->orderBy('q.date_add', 'DESC');
                 break;
-            case '' !== $status && '' !== $start:
+            case ('' !== $status && null !== $status) && ('' !== $start && null !== $start):
                 $this->addQuotationFromAndJoin($query);
-                return $query
-                    ->where('q.status = :status AND q.date_add >= :interval_start')
+                $query->where('q.status = :status AND q.date_add >= :interval_start')
                     ->setParameters(['status' => $status, 'interval_start' => $start])
-                    ->orderBy('q.date_add', 'DESC')
-                    ->execute()->fetchAll();
+                    ->orderBy('q.date_add', 'DESC');
                 break;
-            case '' !== $status && '' !== $end:
+            case ('' !== $status && null !== $status) && ('' !== $end && null !== $end):
                 $this->addQuotationFromAndJoin($query);
-                return $query
-                    ->where('q.status = :status AND q.date_add <= :interval_end')
+                $query->where('q.status = :status AND q.date_add <= :interval_end')
                     ->setParameters(['status' => $status, 'interval_end' => preg_replace('/_/', '', $end)])
-                    ->orderBy('q.date_add', 'DESC')
-                    ->execute()->fetchAll();
+                    ->orderBy('q.date_add', 'DESC');
                 break;
 
             /**
              * Conditions pour une recherche simplifiée à partir d'un seul élément
              */
-            case '' !== $name:
-                return $query
-                    ->from($this->databasePrefix . 'customer', 'c')
+            case '' !== $name && null !== $name:
+                $query->from($this->databasePrefix . 'customer', 'c')
                     ->join('c', $this->databasePrefix . 'quotation', 'q', 'q.id_customer = c.id_customer')
                     ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart_product = cp.id_cart')
                     ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
                     ->where('c.firstname LIKE :name OR c.lastname LIKE :name')
                     ->addGroupBy('q.id_quotation')
-                    ->setParameter('name', '%' . $name . '%')
-                    ->execute()->fetchAll();
+                    ->setParameter('name', '%' . $name . '%');
                 break;
-            case '' !== $reference:
+            case '' !== $reference && null !== $reference:
                 $this->addQuotationFromAndJoin($query);
-                return $query
-                    ->where('q.reference = :reference')
-                    ->setParameter('reference', $reference)
-                    ->execute()->fetchAll();
+                $query->where('q.reference = :reference')
+                    ->setParameter('reference', $reference);
                 break;
-            case '' !== $status:
+            case '' !== $status && null !== $status:
                 $this->addQuotationFromAndJoin($query);
-                return $query
-                    ->where('q.status = :status')
-                    ->setParameter('status', $status)
-                    ->execute()->fetchAll();
+                $query->where('q.status = :status')
+                    ->setParameter('status', $status);
                 break;
-            case '' !== $start && '' !== $end:
+            case ('' !== $start && null !== $start) && ('' !== $end && null !== $end):
                 $this->addQuotationFromAndJoin($query);
-                return $query
-                    ->where('q.date_add >= :interval_start AND q.date_add <= :interval_end')
+                $query->where('q.date_add >= :interval_start AND q.date_add <= :interval_end')
                     ->setParameters(['interval_start' => $start, 'interval_end' => preg_replace('/_/', '', $end)])
-                    ->orderBy('q.date_add', 'DESC')
-                    ->execute()->fetchAll();
+                    ->orderBy('q.date_add', 'DESC');
                 break;
-            case '' !== $start:
+            case '' !== $start && null !== $start:
                 $this->addQuotationFromAndJoin($query);
-                return $query
-                    ->where('q.date_add >= :interval_start')
+                $query->where('q.date_add >= :interval_start')
                     ->setParameter('interval_start', $start)
-                    ->orderBy('q.date_add', 'DESC')
-                    ->execute()->fetchAll();
+                    ->orderBy('q.date_add', 'DESC');
                 break;
-            case '' !== $end:
+            case '' !== $end && null !== $end:
                 $this->addQuotationFromAndJoin($query);
-                return $query
-                    ->where('q.date_add <= :interval_end')
+                $query->where('q.date_add <= :interval_end')
                     ->setParameter('interval_end', preg_replace('/_/', '', $end))
-                    ->orderBy('q.date_add', 'DESC')
-                    ->execute()->fetchAll();
+                    ->orderBy('q.date_add', 'DESC');
                 break;
             default:
                 $this->addQuotationFromAndJoin($query);
-                return $query
-                    ->addGroupBy('q.id_quotation')
-                    ->execute()->fetchAll();
+                $query->addGroupBy('q.id_quotation');
         endswitch;
+
+        $count = count($query->execute()->fetchAll());
+
+        if (is_numeric($page)) {
+            $firstResult = ($page - 1) * Quotation::NB_MAX_QUOTATIONS_PER_PAGE;
+            $query->setFirstResult($firstResult)->setMaxResults(Quotation::NB_MAX_QUOTATIONS_PER_PAGE);
+        }
+        return ['nbRecords' => $count, 'records' => $query->execute()->fetchAll()];
     }
 
     /**

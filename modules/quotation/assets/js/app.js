@@ -50,8 +50,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             let output = '';
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
-            let link = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/customer/';
-            let show = window.location.origin + '/adminToua/index.php/sell/customers/';
+            let link = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/show/customer/';
+            let show = window.location.origin + '/adminLionel/index.php/sell/customers/';
 
             customers.forEach((customer, i) => {
 
@@ -100,7 +100,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
-                        let linkCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/cart/';
+                        let linkCart = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/show/cart/';
                         let urlCart = document.querySelector('[data-customercart]').dataset.customercart;
                         let newUrlCart;
 
@@ -303,36 +303,36 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     newUrlCart = window.location.origin + urlCart
                                                         .replace(/\d+/, link.dataset.idcart);
 
-                                                        const getCustomerCartToUse = (cart) => {
-                                                            let outputCartToUse = '';
-                                                            let outputCartProductsToUse = '';
+                                                    const getCustomerCartToUse = (cart) => {
+                                                        let outputCartToUse = '';
+                                                        let outputCartProductsToUse = '';
 
-                                                                for (let product of cart['products']) {
+                                                        for (let product of cart['products']) {
 
-                                                                    outputCartProductsToUse += mod.TemplateModule.quotationCartProducts
-                                                                        .replace(/---productName---/, product.product_name)
-                                                                        .replace(/---productPrice---/, product.product_price + ' €')
-                                                                        .replace(/---productQuantity---/, product.product_quantity)
-                                                                        .replace(/---totalProduct---/, product.total_product + ' €');
-                                                                }
+                                                            outputCartProductsToUse += mod.TemplateModule.quotationCartProducts
+                                                                .replace(/---productName---/, product.product_name)
+                                                                .replace(/---productPrice---/, product.product_price + ' €')
+                                                                .replace(/---productQuantity---/, product.product_quantity)
+                                                                .replace(/---totalProduct---/, product.total_product + ' €');
+                                                        }
 
-                                                                outputCartToUse += mod.TemplateModule.quotationCart
-                                                                    .replace(/---totalCart---/, cart['total_cart'] + ' €');
+                                                        outputCartToUse += mod.TemplateModule.quotationCart
+                                                            .replace(/---totalCart---/, cart['total_cart'] + ' €');
 
-                                                                    document.getElementById('output-cart-products-to-use').innerHTML = outputCartProductsToUse;
-                                                                    document.getElementById('output-cart-to-use').innerHTML = outputCartToUse;
-                                                        };
+                                                        document.getElementById('output-cart-products-to-use').innerHTML = outputCartProductsToUse;
+                                                        document.getElementById('output-cart-to-use').innerHTML = outputCartToUse;
+                                                    };
 
-                                                        /*
-                                                        * Fonction qui récupère les données dans le json via le path 'quotation_admin_show_cart' dans le fichier _cart.html.twig
-                                                        */
-                                                        QuotationModule.getData(
-                                                            newUrlCart,
-                                                            getCustomerCartToUse,
-                                                            null,
-                                                            true,
-                                                            []
-                                                        );
+                                                    /*
+                                                    * Fonction qui récupère les données dans le json via le path 'quotation_admin_show_cart' dans le fichier _cart.html.twig
+                                                    */
+                                                    QuotationModule.getData(
+                                                        newUrlCart,
+                                                        getCustomerCartToUse,
+                                                        null,
+                                                        true,
+                                                        []
+                                                    );
                                                 });
                                             });
                                         }

@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Quotation
 {
+    const NB_MAX_QUOTATIONS_PER_PAGE = 10;
+
     /**
      * @var int
      *

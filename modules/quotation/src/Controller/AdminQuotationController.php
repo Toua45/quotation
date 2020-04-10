@@ -223,26 +223,26 @@ class AdminQuotationController extends FrameworkBundleAdminController
             }
         }
 
-        $response = [];
-
         foreach ($orders as $key => $order) {
-            $response[$key]['id_customer'] = $id_customer;
-            $response[$key]['firstname'] = $order['firstname'];
-            $response[$key]['lastname'] = $order['lastname'];
-            $response[$key]['id_order'] = $order['id_order'];
-            $response[$key]['order_reference'] = $order['order_reference'];
-            $response[$key]['id_cart'] = $order['id_cart'];
-            $response[$key]['date_order'] = date("d/m/Y", strtotime($order['date_order']));
-            $response[$key]['total_products'] = number_format($order['total_products'], 2);
-            $response[$key]['total_shipping'] = number_format($order['total_shipping'], 2);
-            $response[$key]['total_paid'] = number_format($order['total_paid'], 2);
-            $response[$key]['payment'] = $order['payment'];
-            $response[$key]['order_status'] = $order['order_status'];
-            $response[$key]['address1'] = $order['address1'];
-            $response[$key]['address2'] = $order['address2'];
-            $response[$key]['postcode'] = $order['postcode'];
-            $response[$key]['city'] = $order['city'];
+            $orders[$key]['id_customer'] = $id_customer;
+            $orders[$key]['firstname'] = $order['firstname'];
+            $orders[$key]['lastname'] = $order['lastname'];
+            $orders[$key]['id_order'] = $order['id_order'];
+            $orders[$key]['order_reference'] = $order['order_reference'];
+            $orders[$key]['id_cart'] = $order['id_cart'];
+            $orders[$key]['date_order'] = date("d/m/Y", strtotime($order['date_order']));
+            $orders[$key]['total_products'] = number_format($order['total_products'], 2);
+            $orders[$key]['total_shipping'] = number_format($order['total_shipping'], 2);
+            $orders[$key]['total_paid'] = number_format($order['total_paid'], 2);
+            $orders[$key]['payment'] = $order['payment'];
+            $orders[$key]['order_status'] = $order['order_status'];
+            $orders[$key]['address1'] = $order['address1'];
+            $orders[$key]['address2'] = $order['address2'];
+            $orders[$key]['postcode'] = $order['postcode'];
+            $orders[$key]['city'] = $order['city'];
         }
+
+        $response = [];
 
         foreach ($quotations as $key => $quotation) {
             $response[$key]['id_customer'] = $id_customer;
@@ -255,6 +255,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         return new JsonResponse(json_encode([
             'carts' => $carts,
+            'orders' => $orders,
             'response' => $response,
         ]), 200, [], true);
     }

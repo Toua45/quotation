@@ -222,7 +222,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             modalCustomerOrderDetailsCart = '';
                                         }
 
-                                        for (let customer of data['response']) {
+                                        for (let customer of data['orders']) {
                                             if (typeof customer.id_order !== 'undefined') {
                                                 outputOrder += mod.TemplateModule.tableOrder
                                                     .replace(/---orderId---/, customer.id_order)

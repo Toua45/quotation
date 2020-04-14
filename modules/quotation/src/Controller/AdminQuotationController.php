@@ -126,46 +126,23 @@ class AdminQuotationController extends FrameworkBundleAdminController
     public function showCustomer(Request $request, $id_customer)
     {
         $quotationRepository = $this->get('quotation_repository');
-//        $customers = $quotationRepository->findAllCustomers();
         $customer = $quotationRepository->findOneCustomerById($id_customer);
 
-//        dump($quotationRepository->findOrdersByCustomer(3, null));die;
-
-        for ($i = 0; $i < count($customer); $i++) {
-            if ($customer['id_customer']) {
-                $customer['orders'] = $quotationRepository->findOrdersByCustomer($id_customer);
-            }
+        if ($customer['id_customer']) {
+            $customer['orders'] = $quotationRepository->findOrdersByCustomer($id_customer);
         }
 
-//        $response = [];
-
-//        $orders = $quotationRepository->findOrdersByCustomer($id_customer, null);
-
-//        for ($i = 0; $i < count($customer); $i++) {
         for ($j = 0; $j < count($customer['orders']); $j++) {
             if ($customer['id_customer']) {
                 $customer['id_customer'] = $customer['id_customer'];
                 if ($customer['orders']) {
                     $customer['orders'][$j]['id_order'] = $customer['orders'][$j]['id_order'];
+                    $customer['orders'][$j]['nb_products'] = $quotationRepository->findProductsByOrder($customer['orders'][$j]['id_order']);
                 }
             }
         }
-//        }
-
-//        $response = [];
-//
-//        foreach ($orders as $key => $order) {
-//            $response[$key]['id_customer'] = $id_customer;
-//            $response[$key]['id_order'] = $order['id_order'];
-//        }
-
 
         return new JsonResponse(json_encode($customer), 200, [], true);
-
-//        return new JsonResponse(json_encode([
-//            'customer' => $customer,
-////            'orders' => $orders,
-//        ]), 200, [], true);
     }
 
     /**

@@ -317,8 +317,9 @@ class QuotationRepository
     public function findOrdersByCustomer($idcustomer, $idCart = null)
     {
         $query = $this->connection->createQueryBuilder()
-            ->addSelect('o.id_order', 'o.reference AS order_reference', 'o.id_cart', 'o.date_add AS date_order',
-                'o.total_products', 'o.total_shipping', 'o.total_paid', 'o.payment', 'osl.name AS order_status')
+            ->addSelect('o.id_order', 'o.reference AS order_reference', 'o.date_add AS date_order',
+                'o.total_products', 'o.total_shipping', 'ROUND(o.total_paid, 2) AS total_paid', 'o.payment',
+                'osl.name AS order_status')
             ->addSelect('o.id_customer', 'c.firstname', ' c.lastname', 'a.address1', 'a.address2', 'a.postcode', 'a.city')
             ->from($this->databasePrefix . 'orders', 'o')
             ->join('o', $this->databasePrefix . 'customer', 'c', 'o.id_customer = c.id_customer')
@@ -378,6 +379,18 @@ class QuotationRepository
             ->leftJoin('c', $this->databasePrefix . 'orders', 'o', 'o.id_customer = c.id_customer')
             ->where('c.id_customer = :id_customer')
             ->setParameter('id_customer', $id_customer)
+            ->execute()
+            ->fetch();
+    }
+
+    public function findProductsByOrder($id_order)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('COUNT(cp.id_product) AS nb_products')
+            ->from($this->databasePrefix . 'orders', 'o')
+            ->join('o', $this->databasePrefix . 'cart_product', 'cp', 'o.id_cart = cp.id_cart')
+            ->where('o.id_order = :id_order')
+            ->setParameter('id_order', $id_order)
             ->execute()
             ->fetch();
     }

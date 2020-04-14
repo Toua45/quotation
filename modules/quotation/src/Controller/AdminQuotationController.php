@@ -2,8 +2,6 @@
 
 namespace Quotation\Controller;
 
-use Dompdf\Dompdf;
-use Dompdf\Options;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
@@ -15,7 +13,6 @@ use Quotation\Service\QuotationFileSystem;
 use Quotation\Service\QuotationPdf;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class AdminQuotationController extends FrameworkBundleAdminController
 {
@@ -45,14 +42,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $quotations = $quotationRepository->findQuotationsByFilters($page);
         }
 
-
-//        dump('page -> ' . $page);
-//        dump($quotations);
-//        dump('nbPages -> ' . (int) ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE));
-//        dump('nbRecords -> ' . $quotations['nbRecords']);
-//        dump($quotations['records']);
-//        die;
-
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
             'quotations' => $quotations['records'],
             'page' => $page,
@@ -62,21 +51,20 @@ class AdminQuotationController extends FrameworkBundleAdminController
         ]);
     }
 
-
-    public function pdfView($id_quotation)
+    public function pdfView($id_quotation, $firstname, $lastname)
     {
         $quotationRepository = $this->get('quotation_repository');
-        $quotation = $quotationRepository->findQuotationById($id_quotation);
-//        dump($quotations);die();
+        $quotation = $quotationRepository->findQuotationById($id_quotation, $firstname, $lastname);
 
         $quotationPdf = new QuotationPdf();
+        $filename = $quotation['firstname'] . ' ' . $filename = $quotation['lastname'];
         $html = $this->renderView('@Modules/quotation/templates/admin/pdf/pdf_quotation.html.twig', [
             'id_quotation' => $quotation['id_quotation'],
             'firstname' => $quotation['firstname'],
             'lastname' => $quotation['lastname']
         ]);
 
-        $quotationPdf->createPDF($html, 'test');
+        $quotationPdf->createPDF($html, $filename);
     }
 
     public function add(Request $request)

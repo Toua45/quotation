@@ -1,0 +1,39 @@
+<div class="text-center">
+    <p class="m-3">
+        Page : {{ page }} -
+        <small><i>{{ nbRecords < 2 ? nbRecords ~ ' résultat trouvé' : nbRecords ~ ' résultats trouvés'}}</i></small>
+    </p>
+</div>
+
+{% if nbPages > 0 %}
+    <div class="text-center">
+        {% if page == 1 %}
+            <a class="mx-5 mb-5" disabled="disabled">
+                Précédent
+            </a>
+            {% if nbPages > 1 %}
+                <a class="mx-5 mb-5" href="{{ path('quotation_admin', {'page': page + 1}|merge(app.request.query.all)) }}">
+                    Suivant
+                </a>
+            {% else %}
+                <a class="mx-5 mb-5" disabled="disabled">
+                    Suivant
+                </a>
+            {% endif %}
+        {% elseif page < nbPages %}
+            <a class="mx-5 mb-5" href="{{ path('quotation_admin', {'page': page - 1}|merge(app.request.query.all)) }}">
+                Précédent
+            </a>
+            <a class="mx-5 mb-5" href="{{ path('quotation_admin', {'page': page + 1}|merge(app.request.query.all)) }}">
+                Suivant
+            </a>
+        {% else %}
+            <a class="mx-5 mb-5" href="{{ path('quotation_admin', {'page': page - 1}|merge(app.request.query.all)) }}">
+                Précédent
+            </a>
+            <a class="mx-5 mb-5" disabled="disabled">
+                Suivant
+            </a>
+        {% endif %}
+    </div>
+{% endif %}

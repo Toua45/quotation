@@ -235,6 +235,7 @@ export const TemplateModule = {
             <td class="cart-total text-left">---totalCart---</td>
             <td class="cart-actions text-left">
             <button class="btn btn-primary" data-toggle="modal" data-target="#showCartModal_---id-cart-modal---">Details</button>
+            <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-outline-primary ml-3">Utiliser</a>
             </td>         
             </tr>`,
 
@@ -300,6 +301,7 @@ export const TemplateModule = {
             <td class="order-status text-left">---orderStatus---</td>
             <td class="order-actions text-left">
             <button class="btn btn-primary" data-toggle="modal" data-target="#showOrderModal_---id-order-modal---">Details</button>
+            <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-outline-primary ml-3">Utiliser</a>
             </td>
         </tr>`,
 
@@ -373,6 +375,7 @@ export const TemplateModule = {
             <td class="quotation-total text-left">---totalQuotation---</td>
             <td class="quotation-actions text-left">
             <button class="btn btn-primary" data-toggle="modal" data-target="#showQuotationModal_---id-quotation-modal---">Details</button>
+            <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-outline-primary ml-3">Utiliser</a>
             </td>
         </tr>`,
 
@@ -425,4 +428,17 @@ export const TemplateModule = {
                     </div>
                   </div>
                 </div>`,
+
+    quotationCartProducts: `<tr>
+                                <td class="text-left">---productName---</td>
+                                <td class="text-left">---productPrice---</td>
+                                <td class="text-left">---productQuantity---</td>
+                                <td class="text-left">---totalProduct---</td>
+                            </tr>`,
+
+    quotationCart: `<tr>
+                        <th colspan="3" class="text-left">Total produits</th>
+                        <th class="text-left">---totalCart---</th>
+                    </tr>`,
+
 };

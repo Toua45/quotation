@@ -63,10 +63,13 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                     modalCustomerInfos += mod.TemplateModule.modalCustomerInfos
                         .replace(/---id-customer-modal---/, customer.id_customer)
                         .replace(/---id-customer-orders---/, customer.id_customer)
+                        .replace(/---id-customer-addresses---/, customer.id_customer)
                         .replace(/---personal-datas---/,
                             mod.TemplateModule.personalData.replace(/---id-customer-modal---/, customer.id_customer))
                         .replace(/---customer-orders---/,
-                            mod.TemplateModule.customerOrders.replace(/---id-customer-orders---/, customer.id_customer));
+                            mod.TemplateModule.customerOrders.replace(/---id-customer-orders---/, customer.id_customer))
+                        .replace(/---customer-addresses---/,
+                            mod.TemplateModule.customerAddresses.replace(/---id-customer-addresses---/, customer.id_customer));
 
                     output += mod.TemplateModule.card
                         .replace(/---increment---/, i)
@@ -102,6 +105,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         let personalData = '';
                                         let tableCustomerOrders = '';
                                         let customerOrders = '';
+                                        let tableCustomerAddresses = '';
+                                        let customerAddresses = '';
 
                                         personalData = mod.TemplateModule.personalData
                                             .replace(/---firstname---/, customer.firstname)
@@ -137,10 +142,20 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             .replace(/---nb-orders---/, customer.nb_orders)
                                             .replace(/---table-customer-orders---/, tableCustomerOrders);
 
+                                        for (let address of customer['addresses']) {
+                                            tableCustomerAddresses += mod.TemplateModule.tableCustomerAddresses;
+                                        }
+
+                                        customerAddresses = mod.TemplateModule.customerAddresses
+                                            .replace(/---id-customer-addresses---/, customer.id_customer)
+                                            .replace(/---table-customer-addresses---/, tableCustomerAddresses)
+                                        ;
+
                                         console.log(customer.orders.id_order);
 
                                         document.getElementById('modal-personal-data-infos_' + customer.id_customer).innerHTML = personalData;
                                         document.getElementById('modal-customer-orders_' + customer.id_customer).innerHTML = customerOrders;
+                                        document.getElementById('modal-customer-addresses_' + customer.id_customer).innerHTML = customerAddresses;
                                     };
 
                                     QuotationModule.getData(
@@ -152,7 +167,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     );
                                 })
                             })
-                        };
+                        }
+                        ;
 
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;

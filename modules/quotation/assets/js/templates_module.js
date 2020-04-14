@@ -25,6 +25,7 @@ export const TemplateModule = {
                     
                         <div class="card">---personal-datas---</div>
                         <div class="card">---customer-orders---</div>   
+                        <div class="card">---customer-addresses---</div>   
                                      
                       </div>
                     </div>
@@ -131,6 +132,42 @@ export const TemplateModule = {
                              <td class="js-linkable-item cursor-pointer">---nb-products---</td>
                              <td class="js-linkable-item cursor-pointer">---order-total-paid---</td>
                            </tr>`,
+
+    customerAddresses: `<div id='modal-customer-addresses_---id-customer-addresses---'>
+                            <h3 class="card-header">
+                                <i class="material-icons">location_on</i> Adresses
+                            
+                                <a href="http://localhost:8000/adm/index.php?controller=AdminAddresses&amp;id_customer=2&amp;addaddress=1&amp;token=31dd5a3984037a35958b01a48d51ecb4" class="tooltip-link float-right" data-toggle="pstooltip" title="" data-placement="top" data-original-title="Ajouter">
+                                  <i class="material-icons">add_circle</i>
+                                </a>
+                            </h3>
+                        
+                            <div class="card-body">
+                                <table class="table">
+                                    <thead>
+                                      <tr>
+                                        <th>Société</th>
+                                        <th>Nom</th>
+                                        <th>Adresse</th>
+                                        <th>Pays</th>
+                                        <th>Numéro(s) de téléphone</th>
+                                      </tr>
+                                    </thead>
+                                    
+                                    <tbody>
+                                        ---table-customer-addresses---
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>`,
+
+    tableCustomerAddresses: `<tr>
+                               <td class="js-linkable-item cursor-pointer">My Company</td>
+                               <td class="js-linkable-item cursor-pointer">John DOE</td>
+                               <td class="js-linkable-item cursor-pointer">16, Main street 2nd floor 75002 Paris </td>
+                               <td class="js-linkable-item cursor-pointer">France</td>
+                               <td class="js-linkable-item cursor-pointer">0102030405</td>
+                             </tr>`,
 
     tableCart: `<tr>
                     <td class="cart-id text-left">---cartId---</td>

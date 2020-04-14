@@ -80,6 +80,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         .replace(/---id-customer---/, customer.id_customer)
                         .replace(/---modal-customer-infos---/, modalCustomerInfos);
 
+
                     if (customers.length - 1 === i) {
                         document.getElementById('js-output-customers').innerHTML = output;
 
@@ -151,11 +152,14 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     );
                                 })
                             })
-                        }
+                        };
 
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
+                        let linkCart = window.location.origin + '/adm/index.php/modules/quotation/admin/show/cart/';
+                        let urlCart = document.querySelector('[data-customercart]').dataset.customercart;
+                        let newUrlCart;
 
                         // document.querySelectorAll renvoie tous les éléments du document qui correspondent à un sélecteur CSS, ici, tous les éléments a de la class customer-details
                         if (document.querySelectorAll('a.customer-details') !== null) {
@@ -223,11 +227,15 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         }
 
                                         for (let customer of data['carts']) {
-                                            outputCart += mod.TemplateModule.tableCart
-                                                .replace(/---cartId---/, customer.id_cart)
-                                                .replace(/---cartDate---/, customer.date_cart)
-                                                .replace(/---totalCart---/, customer.total_cart + ' €')
-                                                .replace(/---id-cart-modal---/, customer.id_cart);
+                                            if (customer.orders.length === 0) {
+                                                outputCart += mod.TemplateModule.tableCart
+                                                    .replace(/---cartId---/, customer.id_cart)
+                                                    .replace(/---cartDate---/, customer.date_cart)
+                                                    .replace(/---totalCart---/, customer.total_cart + ' €')
+                                                    .replace(/---id-cart-modal---/, customer.id_cart)
+                                                    .replace(/---id---/, customer.id_cart)
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
+                                            }
                                         }
 
                                         document.getElementById('tableCart').insertAdjacentHTML('afterend', modalCustomerDetails);
@@ -271,7 +279,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             modalCustomerOrderDetailsCart = '';
                                         }
 
-                                        for (let customer of data['response']) {
+                                        for (let customer of data['orders']) {
                                             if (typeof customer.id_order !== 'undefined') {
                                                 outputOrder += mod.TemplateModule.tableOrder
                                                     .replace(/---orderId---/, customer.id_order)
@@ -279,7 +287,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---totalOrder---/, customer.total_paid + ' €')
                                                     .replace(/---payment---/, customer.payment)
                                                     .replace(/---orderStatus---/, customer.order_status)
-                                                    .replace(/---id-order-modal---/, customer.id_order);
+                                                    .replace(/---id-order-modal---/, customer.id_order)
+                                                    .replace(/---id---/, customer.id_cart)
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
                                             }
                                         }
 
@@ -308,7 +318,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---id-customer---/, cart.id_customer)
                                                     .replace(/---id-quotation---/, quotation.id_quotation)
                                                     .replace(/---reference---/, quotation.quotation_reference)
-                                                    .replace(/---id-cart---/, quotation.id_cart_product)
+                                                    .replace(/---id-cart---/, quotation.id_cart)
                                                     .replace(/---totalQuotation---/, quotation.total_quotation + ' €')
                                                     .replace(/---quotation-cart-data---/, modalCustomerQuotationDetailsCart);
                                             }
@@ -322,7 +332,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---quotationId---/, customer.id_quotation)
                                                     .replace(/---quotationDate---/, customer.date_quotation)
                                                     .replace(/---totalQuotation---/, customer.total_quotation + ' €')
-                                                    .replace(/---id-quotation-modal---/, customer.id_quotation);
+                                                    .replace(/---id-quotation-modal---/, customer.id_quotation)
+                                                    .replace(/---id---/, customer.id_cart)
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
                                             }
                                         }
 
@@ -335,9 +347,55 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         document.getElementById('output-customer-carts').innerHTML = outputCart;
                                         document.getElementById('output-customer-orders').innerHTML = outputOrder;
                                         document.getElementById('output-customer-quotations').innerHTML = outputQuotation;
+
+                                        // Implement 'Utiliser' button here to take benefit of table displaying carts, orders and quotations
+                                        /*
+                                         * cart to use
+                                         */
+                                        if (document.querySelectorAll('a.customer-cart-to-use') !== null) {
+                                            document.querySelectorAll('a.customer-cart-to-use').forEach(function (link) {
+                                                link.addEventListener('click', function (Event) {
+                                                    Event.preventDefault();
+
+                                                    newUrlCart = window.location.origin + urlCart
+                                                        .replace(/\d+/, link.dataset.idcart);
+
+                                                    const getCustomerCartToUse = (cart) => {
+                                                        let outputCartToUse = '';
+                                                        let outputCartProductsToUse = '';
+
+                                                        for (let product of cart['products']) {
+
+                                                            outputCartProductsToUse += mod.TemplateModule.quotationCartProducts
+                                                                .replace(/---productName---/, product.product_name)
+                                                                .replace(/---productPrice---/, product.product_price + ' €')
+                                                                .replace(/---productQuantity---/, product.product_quantity)
+                                                                .replace(/---totalProduct---/, product.total_product + ' €');
+                                                        }
+
+                                                        outputCartToUse += mod.TemplateModule.quotationCart
+                                                            .replace(/---totalCart---/, cart['total_cart'] + ' €');
+
+                                                        document.getElementById('output-cart-products-to-use').innerHTML = outputCartProductsToUse;
+                                                        document.getElementById('output-cart-to-use').innerHTML = outputCartToUse;
+                                                    };
+
+                                                    /*
+                                                    * Fonction qui récupère les données dans le json via le path 'quotation_admin_show_cart' dans le fichier _cart.html.twig
+                                                    */
+                                                    QuotationModule.getData(
+                                                        newUrlCart,
+                                                        getCustomerCartToUse,
+                                                        null,
+                                                        true,
+                                                        []
+                                                    );
+                                                });
+                                            });
+                                        }
                                     };
 
-                                    /**
+                                    /*
                                      * Fonction qui récupère les données dans le json via le path 'quotation_admin_show_customer_details'
                                      */
                                     QuotationModule.getData(
@@ -350,54 +408,11 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                     // Ici, on récupère la class 'd-none' de l'élément id 'js-output-customer-details' et on la remplace par 'd-block'
                                     document.getElementById('js-output-customer-details').classList.replace('d-none', 'd-block');
+                                    document.getElementById('js-output-cart-infos').classList.replace('d-none', 'd-block');
+
                                 });
                             });
-
-                            // let urlCustomerShow = document.querySelector('[data-customershow]').dataset.customershow;
-                            // let newUrlCustomerShow;
-                            // let links = document.querySelectorAll('a.customer-show');
-                            // let personalData = '';
-                            // for (let i = 0; i < links.length; i++) {
-                            //     links[i].addEventListener('mouseenter', Event => {
-                            //         Event.preventDefault();
-                            //
-                            //         newUrlCustomerShow = window.location.origin + urlCustomerShow
-                            //             .replace(/\d+(?=\?)/, links[i].dataset.idcustomer);
-                            //
-                            //         const getCustomerShow = (customer) => {
-                            //             console.log(customer);
-                            //
-                            //             let modalCustomerInfos = '';
-                            //
-                            //             // personalData = mod.TemplateModule.personalData
-                            //             //     .replace(/---firstname---/, customer.firstname)
-                            //             //     .replace(/---lastname---/, customer.lastname)
-                            //             //     .replace(/---id-customer---/, customer.id_customer)
-                            //             //     .replace(/---customer-link-email---/, 'mailto:' + customer.email)
-                            //             //     .replace(/---customer-email---/, customer.email)
-                            //             //     .replace(/---edit---/, show + customer.id_customer + '/edit')
-                            //             //     .replace(/---gender---/, customer.title)
-                            //             //     .replace(/---old---/, Math.floor(customer.old))
-                            //             //     .replace(/---birthday---/, customer.birthday)
-                            //             //     .replace(/---registration---/, customer.registration)
-                            //             //     .replace(/---lang---/, customer.lang)
-                            //             //     .replace(/---badge-newsletter---/, (customer.newsletter === 1 ? 'badge-success' : 'badge-danger'))
-                            //             //     .replace(/---icon-newsletter---/, (customer.newsletter === 1 ? 'check' : 'cancel'))
-                            //             //     .replace(/---badge-partners---/, (customer.offer_partners === 1 ? 'badge-success' : 'badge-danger'))
-                            //             //     .replace(/---icon-partners---/, (customer.offer_partners === 1 ? 'check' : 'cancel'))
-                            //             //     .replace(/---last-update---/, customer.last_update)
-                            //             //     .replace(/---badge-is-active---/, (customer.active === 1 ? 'badge-success' : 'badge-danger'))
-                            //             //     .replace(/---icon-is-active---/, (customer.active === 1 ? 'check' : 'cancel'))
-                            //             //     .replace(/---is-active---/, (customer.active === 1 ? 'Activé' : 'Désactivé'));
-                            //
-                            //             console.log(mod.TemplateModule.modalCustomerInfos.replace(/---personal-datas---/, personalData));
-                            //         };
-                            //         QuotationModule.getData(newUrlCustomerShow, getCustomerShow, null, true, [])
-                            //     });
-                            // }
                         }
-
-
                     }
                 });
             });

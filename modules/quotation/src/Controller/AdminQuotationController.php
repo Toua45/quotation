@@ -51,10 +51,10 @@ class AdminQuotationController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function pdfView($id_quotation, $firstname, $lastname)
+    public function pdfView($id_quotation)
     {
         $quotationRepository = $this->get('quotation_repository');
-        $quotation = $quotationRepository->findQuotationById($id_quotation, $firstname, $lastname);
+        $quotation = $quotationRepository->findQuotationById($id_quotation);
 
         $quotationPdf = new QuotationPdf();
         $filename = $quotation['firstname'] . ' ' . $filename = $quotation['lastname'];

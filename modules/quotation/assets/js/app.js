@@ -178,8 +178,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     );
                                 })
                             })
-                        }
-                        ;
+                        };
 
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
@@ -204,9 +203,10 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     });
 
                                     /*
-                                     *window.location.origin renvoie le protocole, le nom d'hôte et le numéro de port d'une URL
+                                     * window.location.origin renvoie le protocole, le nom d'hôte et le numéro de port d'une URL
                                      * (ici en dev http://localhost:8000, en prod, ce sera le nom de domaine)
                                      */
+
                                     newUrlCustomersDetails = window.location.origin + urlCustomersDetails
                                         // On récupére l'id_customer (par défaut 0 ici) avec le regex et on le remplace par l'id_customer selectionné du lien
                                         .replace(/\d+(?=\/details)/, link.dataset.idcustomer);
@@ -225,6 +225,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         /*
                                         * Cart section
                                          */
+
                                         // L'instruction for...of permet de créer une boucle d'un array qui parcourt un objet itérable
                                         // Attention à l'ordre d'éxécution des boucles, on éxecute dans cartData, ensuite dans modalCartInfos et enfin tableCart
                                         for (let cart of data['carts']) {
@@ -237,8 +238,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---productPrice---/, product.product_price + ' €')
                                                     .replace(/---productQuantity---/, product.product_quantity)
                                                     .replace(/---totalProduct---/, product.total_product + ' €');
-
                                             }
+
                                             modalCustomerDetails += mod.TemplateModule.modalCartInfos
                                                 .replace(/---id-cart-modal---/, cart.id_cart)
                                                 .replace(/---id-cart-link---/, cart.id_cart)
@@ -268,8 +269,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         document.getElementById('tableCart').insertAdjacentHTML('afterend', modalCustomerDetails);
 
                                         /*
-                                        * Order section
+                                         * Order section
                                          */
+
                                         for (let cart of data['carts']) {
 
                                             for (let product of cart['products']) {
@@ -371,14 +373,17 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                          * La propriété innerHTML définit ou retourne le contenu HTML d'un élément,
                                          * ici permet d'afficher le contenu de outputCart dans l'élément <tbody id="output-customer-carts"> du fichier add_quotation.html.twig
                                          */
+
                                         document.getElementById('output-customer-carts').innerHTML = outputCart;
                                         document.getElementById('output-customer-orders').innerHTML = outputOrder;
                                         document.getElementById('output-customer-quotations').innerHTML = outputQuotation;
 
                                         // Implement 'Utiliser' button here to take benefit of table displaying carts, orders and quotations
+
                                         /*
                                          * cart to use
                                          */
+
                                         if (document.querySelectorAll('a.customer-cart-to-use') !== null) {
                                             document.querySelectorAll('a.customer-cart-to-use').forEach(function (link) {
                                                 link.addEventListener('click', function (Event) {
@@ -425,6 +430,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     /*
                                      * Fonction qui récupère les données dans le json via le path 'quotation_admin_show_customer_details'
                                      */
+
                                     QuotationModule.getData(
                                         newUrlCustomersDetails,
                                         getCustomerDetails,

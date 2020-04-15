@@ -2,12 +2,14 @@
 
 namespace Quotation\Controller;
 
+use PrestaShop\PrestaShop\Adapter\Entity\Product;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Quotation\Entity\Quotation;
 use Quotation\Form\QuotationCustomerType;
+use Quotation\Form\QuotationProductType;
 use Quotation\Form\QuotationSearchType;
 use Quotation\Service\QuotationFileSystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -98,6 +100,11 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
+        $formQuotationProduct = $this->createForm(QuotationProductType::class, $quotation);
+        $formQuotationProduct->handleRequest($request);
+
+//        dump(Product::getProducts(1, 0, 100, 'id_product', 'DESC'));die;
+
 //        if ($form->isSubmitted() && $form->isValid()) {
 //            $quotation->setDateAdd(new \DateTime('now'));
 //            $entityManager = $this->getDoctrine()->getManager();
@@ -115,6 +122,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             'minPasswordLength' => Password::MIN_LENGTH,
             'displayInIframe' => $request->query->has('submitFormAjax'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'formQuotationProduct' => $formQuotationProduct->createView(),
         ]);
     }
 
@@ -313,5 +321,69 @@ class AdminQuotationController extends FrameworkBundleAdminController
             }
 
         return new JsonResponse(json_encode($cart), 200, [], true);
+    }
+
+    public function ajaxProduct(Request $request)
+    {
+        $customerRepository = $this->get('quotation_repository');
+        $products = $customerRepository->findAllProducts();
+        $response = [];
+
+        foreach ($products as $key => $product) {
+            $response[$key]['fullname'] = $product['fullname'];
+        }
+
+//        dump($products);die;
+
+        $file = 'data-product.js';
+        $fileSystem = new QuotationFileSystem();
+        if (!is_file($file)) {
+            $fileSystem->writeFile($file, $response);
+        } else {
+            $fileSystem->writeFile($file, $response);
+        }
+        return new JsonResponse(json_encode($response), 200, [], true);
+    }
+
+    /**
+     * Search products
+     * @param Request $request
+     * @param $query
+     * @return JsonResponse
+     */
+    public function searchProducts(Request $request, $query)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $product = $quotationRepository->findProductByQuery($query);
+
+        return new JsonResponse(json_encode($product), 200, [], true);
+    }
+
+    /**
+     * Show product by ID
+     * @param Request $request
+     * @param $id_product
+     * @return JsonResponse
+     */
+    public function showProduct(Request $request, $id_product)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $product = $quotationRepository->findOneProductById($id_product);
+
+        return new JsonResponse(json_encode($product), 200, [], true);
+    }
+
+    /**
+     * Show attributes product by ID
+     * @param Request $request
+     * @param $id_product
+     * @return JsonResponse
+     */
+    public function showAttributesByProduct(Request $request, $id_product)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $product = $quotationRepository->findAttributesByProduct($id_product);
+
+        return new JsonResponse(json_encode($product), 200, [], true);
     }
 }

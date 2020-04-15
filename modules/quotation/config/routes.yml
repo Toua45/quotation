@@ -14,6 +14,14 @@ quotation_admin:
   requirements:
     page: '\d+'
 
+quotation_admin_pdf:
+  path: quotation/admin/pdf_view/{id_quotation}/{firstname} {lastname}
+  methods: [GET]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::pdfView'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
 quotation_admin_add:
   path: quotation/admin/add
   methods: [GET, POST]

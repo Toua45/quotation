@@ -10,6 +10,7 @@ use Quotation\Entity\Quotation;
 use Quotation\Form\QuotationCustomerType;
 use Quotation\Form\QuotationSearchType;
 use Quotation\Service\QuotationFileSystem;
+use Quotation\Service\QuotationPdf;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -41,14 +42,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $quotations = $quotationRepository->findQuotationsByFilters($page);
         }
 
-
-//        dump('page -> ' . $page);
-//        dump($quotations);
-//        dump('nbPages -> ' . (int) ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE));
-//        dump('nbRecords -> ' . $quotations['nbRecords']);
-//        dump($quotations['records']);
-//        die;
-
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
             'quotations' => $quotations['records'],
             'page' => $page,
@@ -56,6 +49,23 @@ class AdminQuotationController extends FrameworkBundleAdminController
             'nbRecords' => $quotations['nbRecords'],
             'quotationFilterForm' => $quotationFilterForm->createView()
         ]);
+    }
+
+    public function pdfView($id_quotation)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $quotation = $quotationRepository->findQuotationById($id_quotation);
+
+        $quotationPdf = new QuotationPdf();
+        $filename = $quotation['firstname'] . ' ' . $filename = $quotation['lastname'] .  '  - Référence ' . $filename = $quotation['reference'];
+        $html = $this->renderView('@Modules/quotation/templates/admin/pdf/pdf_quotation.html.twig', [
+            'id_quotation' => $quotation['id_quotation'],
+            'firstname' => $quotation['firstname'],
+            'lastname' => $quotation['lastname'],
+            'reference' => $quotation['reference']
+        ]);
+
+        $quotationPdf->createPDF($html, $filename);
     }
 
     public function add(Request $request)

@@ -40,7 +40,6 @@ class QuotationRepository
             $firstResult = ($page - 1) * Quotation::NB_MAX_QUOTATIONS_PER_PAGE;
             $query->setFirstResult($firstResult)->setMaxResults((Quotation::NB_MAX_QUOTATIONS_PER_PAGE));
         }
-
         $query
             ->addSelect('q.*', 'c.firstname', 'c.lastname', 'cp.id_cart', 'cp.quantity', 'p.price')
             ->addSelect('SUM(p.price * cp.quantity) AS total_product_price')
@@ -208,6 +207,22 @@ class QuotationRepository
             $query->setFirstResult($firstResult)->setMaxResults(Quotation::NB_MAX_QUOTATIONS_PER_PAGE);
         }
         return ['nbRecords' => $count, 'records' => $query->execute()->fetchAll()];
+    }
+
+    /**
+     * @param $id_quotation
+     * @return mixed
+     */
+    public function findQuotationById($id_quotation)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('q.*', 'c.firstname', 'c.lastname')
+            ->from($this->databasePrefix . 'quotation', 'q')
+            ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+            ->where('q.id_quotation = :id_quotation')
+            ->setParameter('id_quotation', $id_quotation)
+            ->execute()
+            ->fetch();
     }
 
     /**

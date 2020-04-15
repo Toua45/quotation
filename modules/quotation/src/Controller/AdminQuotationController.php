@@ -167,7 +167,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $customer['addresses'] = $quotationRepository->findAddressesByCustomer($id_customer);
         }
 
-
         for ($j = 0; $j < count($customer['orders']); $j++) {
             if ($customer['id_customer']) {
                 $customer['id_customer'] = $customer['id_customer'];
@@ -183,6 +182,11 @@ class AdminQuotationController extends FrameworkBundleAdminController
                 $customer['id_customer'] = $customer['id_customer'];
                 if ($customer['addresses']) {
                     $customer['addresses'][$k]['id_address'] = $customer['addresses'][$k]['id_address'];
+                    if ($customer['addresses']) {
+                        $customer['addresses'][$k]['further_address'] = $customer['addresses'][$k]['further_address'];
+                    } else {
+                        $customer['addresses'][$k]['further_address'] = '';
+                    }
                 }
             }
         }

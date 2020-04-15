@@ -399,7 +399,7 @@ class QuotationRepository
     {
         return $this->connection->createQueryBuilder()
             ->addSelect('a.id_address', 'a.company', 'a.firstname', 'a.lastname',
-                'a.address1', 'a.address2', 'a.postcode', 'a.city', 'cl.name AS country', 'a.phone')
+                        'a.address1 AS address', 'a.address2 AS further_address', 'a.postcode', 'a.city', 'cl.name AS country', 'a.phone')
             ->from($this->databasePrefix . 'address', 'a')
             ->join('a', $this->databasePrefix . 'customer', 'c', 'c.id_customer = a.id_customer')
             ->join('a', $this->databasePrefix . 'country_lang', 'cl', 'cl.id_country = a.id_country')

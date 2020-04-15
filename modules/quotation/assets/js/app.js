@@ -102,6 +102,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     const getCustomerShow = (customer) => {
                                         console.log(customer);
 
+                                        let addressController = window.location.origin + '/adm/index.php/?controller=AdminAddresses';
+
                                         let personalData = '';
                                         let tableCustomerOrders = '';
                                         let customerOrders = '';
@@ -143,11 +145,20 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             .replace(/---table-customer-orders---/, tableCustomerOrders);
 
                                         for (let address of customer['addresses']) {
-                                            tableCustomerAddresses += mod.TemplateModule.tableCustomerAddresses;
+                                            tableCustomerAddresses += mod.TemplateModule.tableCustomerAddresses
+                                                .replace(/---company---/, address.company)
+                                                .replace(/---firstname---/, address.firstname)
+                                                .replace(/---lastname---/, address.lastname)
+                                                .replace(/---address---/, address.address)
+                                                .replace(/---further-address---/, address.further_address)
+                                                .replace(/---postcode---/, address.postcode)
+                                                .replace(/---city---/, address.city)
+                                                .replace(/---country---/, address.country)
+                                                .replace(/---phone-number---/, address.phone);
                                         }
 
                                         customerAddresses = mod.TemplateModule.customerAddresses
-                                            .replace(/---id-customer-addresses---/, customer.id_customer)
+                                            .replace(/---add-address---/, addressController + '&id_customer=' + customer.id_customer + '&addaddress=1')
                                             .replace(/---table-customer-addresses---/, tableCustomerAddresses)
                                         ;
 

@@ -57,11 +57,12 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $quotation = $quotationRepository->findQuotationById($id_quotation);
 
         $quotationPdf = new QuotationPdf();
-        $filename = $quotation['firstname'] . ' ' . $filename = $quotation['lastname'] . ' - devis';
+        $filename = $quotation['firstname'] . ' ' . $filename = $quotation['lastname'] .  '  - Référence ' . $filename = $quotation['reference'];
         $html = $this->renderView('@Modules/quotation/templates/admin/pdf/pdf_quotation.html.twig', [
             'id_quotation' => $quotation['id_quotation'],
             'firstname' => $quotation['firstname'],
-            'lastname' => $quotation['lastname']
+            'lastname' => $quotation['lastname'],
+            'reference' => $quotation['reference']
         ]);
 
         $quotationPdf->createPDF($html, $filename);

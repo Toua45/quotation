@@ -1,13 +1,17 @@
 .quotation {
 
-  .modal-dialog {
-    max-width: 90%;
-  }
+  .customerModal {
 
-  .ordersAndCarts {
-    .card {
-      width:100%;
+    .modal-dialog {
+      max-width: 80%;
     }
+
+    .ordersAndCarts {
+      .card {
+        width: 100%;
+      }
+    }
+
   }
 
 }

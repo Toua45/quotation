@@ -13,7 +13,7 @@ export const TemplateModule = {
               </div>
             </div>`,
 
-    modalCustomerInfos: `<div class="modal fade" id="showCustomerModal_---id-customer-modal---" tabindex="-1" role="dialog" aria-labelledby="showCustomerModalTitle" aria-hidden="true">
+    modalCustomerInfos: `<div class="modal fade customerModal" id="showCustomerModal_---id-customer-modal---" tabindex="-1" role="dialog" aria-labelledby="showCustomerModalTitle" aria-hidden="true">
                               <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                 

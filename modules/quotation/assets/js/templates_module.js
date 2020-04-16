@@ -1,12 +1,11 @@
 export const TemplateModule = {
-
     card: `<div id='customer-card_---increment---' class="card hidden mr-3 mb-4" >
               <div class="card-body">
                 <h5 class="card-title">---lastname---</h5>
                 <h6 class="card-subtitle mb-2 text-muted">---firstname---</h6>
                 <p class="card-text">---text---</p>
                 <div class="row justify-content-between">
-                    <button class="customer-show btn btn-primary" data-href="link-show-customer" data-idcustomer="---id-customer---" data-toggle="modal" data-target="#showCustomerModal_---id-customer-modal---">Details</button>  
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#showCustomerModal_---id-customer-modal---">Details</button>   
                     <a href="---link-show-customer-carts---" data-idcustomer="---id---" class="customer-details btn btn-outline-primary mx-3">Choisir</a>
                 </div>
                 ---modal-customer-infos---         
@@ -14,220 +13,141 @@ export const TemplateModule = {
             </div>`,
 
     modalCustomerInfos: `<div class="modal fade" id="showCustomerModal_---id-customer-modal---" tabindex="-1" role="dialog" aria-labelledby="showCustomerModalTitle" aria-hidden="true">
-                              <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                  
-                                    <div class="modal-body">                              
-                                        <div class="card">---personal-datas---</div>
-                                        <div class="card">---customer-orders---</div>   
-                                        <div class="card">---customer-addresses---</div>   
-                                    </div>
-                                </div>
-                              </div>
-                         </div>`,
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                    
+                    ---personal-datas---
+                    
+                      </div>
+                    </div>
+                  </div>
+                </div>`,
 
-    personalData: `<div id="modal-personal-data-infos_---id-customer-modal---">
+    personalData: `<div class="row">
                         <div class="col">
+                            <div class="card">
                               <h3 class="card-header"> <i class="material-icons">person</i>
                                 ---firstname--- ---lastname--- [---id-customer---] -
                                 <a href="---customer-link-email---">---customer-email---</a>
+                            
                                 <a href="---edit---" class="tooltip-link float-right" data-toggle="pstooltip" target="_blank" data-placement="top" data-original-title="Modifier">
                                   <i class="material-icons">edit</i>
                                 </a>
                               </h3>
-                              
                               <div class="card-body">
                                 <div class="row mb-1">
-                                    <div class="col-4 text-right">Titre de civilité</div>
-                                    <div class="col-8">---gender---</div>
+                                  <div class="col-4 text-right">Titre de civilité</div>
+                                  <div class="col-8">---gender---</div>
                                 </div>
                             
                                 <div class="row mb-1">
-                                    <div class="col-4 text-right">Âge</div>
-                                    <div class="col-8">---old--- ans (date de naissance : ---birthday---)</div>
+                                  <div class="col-4 text-right">Âge</div>
+                                  <div class="col-8">---old--- ans (date de naissance : ---birthday---)</div>
                                 </div>
                             
                                 <div class="row mb-1">
-                                    <div class="col-4 text-right">Date d'inscription</div>
-                                    <div class="col-8">---registration---</div>
+                                  <div class="col-4 text-right">Date d'inscription</div>
+                                  <div class="col-8">---registration---</div>
                                 </div>                         
                                 
                                 <div class="row mb-1">
-                                    <div class="col-4 text-right">Langue</div>
-                                    <div class="col-8">---lang---</div>
+                                  <div class="col-4 text-right">Langue</div>
+                                  <div class="col-8">---lang---</div>
                                 </div>
                             
                                 <div class="row mb-1">
-                                    <div class="col-4 text-right">Inscriptions</div>
-                                    
-                                    <div class="col-8">                                            
-                                        <span class="badge ---badge-newsletter--- rounded pt-0 pb-0">      
-                                          <i class="material-icons">---icon-newsletter---</i> Lettre d'informations
-                                        </span>
+                                  <div class="col-4 text-right">Inscriptions</div>
+                                  <div class="col-8">
+                                            
+                                    <span class="badge ---badge-newsletter--- rounded pt-0 pb-0">      
+                                      <i class="material-icons">---icon-newsletter---</i> Lettre d'informations
+                                    </span>
                             
-                                        <span class="badge ---badge-partners--- rounded pt-0 pb-0">
-                                            <i class="material-icons">---icon-partners---</i> Offres partenaires
-                                        </span>
-                                    </div>
+                                    <span class="badge ---badge-partners--- rounded pt-0 pb-0">
+                                      <i class="material-icons">---icon-partners---</i> Offres partenaires
+                                    </span>
+                                  </div>
                                 </div>
                             
                                 <div class="row mb-1">
-                                    <div class="col-4 text-right">Dernière mise à Jour</div>
-                                    <div class="col-8">---last-update---</div>
+                                  <div class="col-4 text-right">Dernière mise à Jour</div>
+                                  <div class="col-8">---last-update---</div>
                                 </div>
                             
                                 <div class="row mb-1">
-                                    <div class="col-4 text-right">État</div>
-                                    <div class="col-8">
-                                        <span class="badge ---badge-is-active--- rounded pt-0 pb-0">
-                                            <i class="material-icons">---icon-is-active---</i> ---is-active---
-                                        </span>
-                                    </div>
+                                  <div class="col-4 text-right">État</div>
+                                  <div class="col-8">
+                                    <span class="badge ---badge-is-active--- rounded pt-0 pb-0">
+                                    <i class="material-icons">---icon-is-active---</i> ---is-active---
+                                    </span>
+                                  </div>
                                 </div>
+                            
                               </div>
-                              
-                        </div>
-                    </div>`,
-
-    customerOrders: `<div id="modal-customer-orders_---id-customer-orders---">
-                        <h3 class="card-header">
-                            <i class="material-icons">shopping_basket</i> Commandes
-                            <span class="badge badge-primary rounded">---nb-orders---</span>
-                        </h3>                                                 
-                          
-                        <div class="card-body">                                                
-                            <div class="row">
-                                <div class="col">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Date</th>
-                                                <th>Paiement</th>
-                                                <th>État</th>
-                                                <th>Produits</th>
-                                                <th>Total payé</th>
-                                            </tr>
-                                        </thead>
-                                      
-                                      <tbody>           
-                                        ---table-customer-orders---
-                                      </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                     </div>`,
-
-    tableCustomerOrders: `<tr>
-                             <td class="js-linkable-item cursor-pointer">---id-order---</td>
-                             <td class="js-linkable-item cursor-pointer">---date-order---</td>
-                             <td class="js-linkable-item cursor-pointer">---order-payment---</td>
-                             <td class="js-linkable-item cursor-pointer">---order-status---</td>
-                             <td class="js-linkable-item cursor-pointer">---nb-products---</td>
-                             <td class="js-linkable-item cursor-pointer">---order-total-paid---</td>
-                           </tr>`,
-
-    customerAddresses: `<div id='modal-customer-addresses_---id-customer-addresses---'>
-                            <h3 class="card-header">
-                                <i class="material-icons">location_on</i> Adresses
-                            
-                                <a href="---add-address---" class="tooltip-link float-right" target="_blank" 
-                                data-toggle="pstooltip" data-placement="top" data-original-title="Ajouter">
-                                    <i class="material-icons">add_circle</i>
-                                </a>
-                            </h3>
-                        
-                            <div class="card-body">
-                                <table class="table">
-                                    <thead>
-                                      <tr>
-                                        <th>Société</th>
-                                        <th>Nom</th>
-                                        <th>Adresse</th>
-                                        <th>Pays</th>
-                                        <th>Numéro(s) de téléphone</th>
-                                      </tr>
-                                    </thead>
-                                    
-                                    <tbody>
-                                        ---table-customer-addresses---
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>`,
-
-    tableCustomerAddresses: `<tr>
-                               <td class="js-linkable-item cursor-pointer">---company---</td>
-                               <td class="js-linkable-item cursor-pointer">---firstname--- ---lastname---</td>
-                               <td class="js-linkable-item cursor-pointer">---address--- ---further-address--- ---postcode--- ---city--- </td>
-                               <td class="js-linkable-item cursor-pointer">---country---</td>
-                               <td class="js-linkable-item cursor-pointer">---phone-number---</td>
-                             </tr>`,
+                        </div>                                
+              </div>
+            </div>`,
 
     tableCart: `<tr>
-                    <td class="cart-id text-left">---cartId---</td>
-                    <td class="cart-date text-left">---cartDate---</td>
-                    <td class="cart-total text-left">---totalCart---</td>
-                    <td class="cart-actions text-left">
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#showCartModal_---id-cart-modal---">Details</button>
-                        <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-outline-primary ml-3">Utiliser</a>
-                    </td>         
-                 </tr>`,
+            <td class="cart-id text-left">---cartId---</td>
+            <td class="cart-date text-left">---cartDate---</td>
+            <td class="cart-total text-left">---totalCart---</td>
+            <td class="cart-actions text-left">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#showCartModal_---id-cart-modal---">Details</button>
+            <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-outline-primary ml-3">Utiliser</a>
+            </td>         
+            </tr>`,
 
     modalCartInfos: `<div class="modal fade" id="showCartModal_---id-cart-modal---" tabindex="-1" role="dialog" aria-labelledby="showCustomerModalTitle" aria-hidden="true">
-                          <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
-                              
-                              <div class="modal-body">
-                                <div class="row">
-                                   <div class="col">
-                                    <div class="card">
-                                      <h2>INFORMATIONS CLIENT</h2>
-                                      <h3 class="card-header"> <i class="material-icons">person</i>
-                                      ---firstname--- ---lastname--- [---id-customer---]
-                                      </h3>
-                                      <div class="card-body">
-                                        <h2>CONTENU DU PANIER [---id-cart---]</h2>
-        
-                                        <table class="table">
-                                             <thead>
-                                                <tr>
-                                                <th class="text-left">Produits</th>
-                                                <th class="text-left">Prix Unitaire</th>
-                                                <th class="text-left">Quantité</th>
-                                                <th class="text-left">Total</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            
-                                                ---cart-data---
-                                                
-                                                <th colspan="3" class="text-left">Total produits</th>
-                                                <th class="text-left">---totalCart---</th>
-                                                </tr>
-                                        </table>
-        
-                                      </div>
-                                    </div>
-                                   </div>
-                                </div>
-                            
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                           <div class="col">
+                            <div class="card">
+                              <h2>INFORMATIONS CLIENT</h2>
+                              <h3 class="card-header"> <i class="material-icons">person</i>
+                              ---firstname--- ---lastname--- [---id-customer---]
+                              </h3>
+                              <div class="card-body">
+                                <h2>CONTENU DU PANIER [---id-cart---]</h2>
+                                <table class="table">
+                                     <thead>
+                                        <tr>
+                                        <th class="text-left">Produits</th>
+                                        <th class="text-left">Prix Unitaire</th>
+                                        <th class="text-left">Quantité</th>
+                                        <th class="text-left">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    
+                                        ---cart-data---
+                                        
+                                        <th colspan="3" class="text-left">Total produits</th>
+                                        <th class="text-left">---totalCart---</th>
+                                        </tr>
+                                </table>
                               </div>
                             </div>
-                          </div>
-                     </div>`,
+                           </div>
+                        </div>
+                    
+                      </div>
+                    </div>
+                  </div>
+                </div>`,
 
     cartData: `<tr>
                   <td class="text-left">---productName---</td>
@@ -274,7 +194,6 @@ export const TemplateModule = {
                                 <h2><i class="material-icons">credit_card</i> COMMANDE [---id-order---] référence : ---reference---</h2>
                                 <p>Etat de la commande : ---orderStatus---</p>
                                 <h2><i class="material-icons">shopping_cart</i> CONTENU DU PANIER [---id-cart---]</h2>
-
                                 <table class="table">
                                      <thead>
                                         <tr>
@@ -301,7 +220,6 @@ export const TemplateModule = {
                                         <th class="text-left">---totalPaid---</th>
                                         </tr>
                                 </table>
-
                               </div>
                             </div>
                            </div>
@@ -343,7 +261,6 @@ export const TemplateModule = {
                               <div class="card-body">
                                 <h2><i class="material-icons">content_paste</i> DEVIS [---id-quotation---] référence : ---reference---</h2>
                                 <h2><i class="material-icons">shopping_cart</i> CONTENU DU PANIER [---id-cart---]</h2>
-
                                 <table class="table">
                                      <thead>
                                         <tr>
@@ -362,7 +279,6 @@ export const TemplateModule = {
                                         <td class="text-left">---totalQuotation---</td>
                                         </tr>                                        
                                 </table>
-
                               </div>
                             </div>
                            </div>

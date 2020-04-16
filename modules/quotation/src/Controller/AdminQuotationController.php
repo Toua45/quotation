@@ -10,6 +10,7 @@ use Quotation\Entity\Quotation;
 use Quotation\Form\QuotationCustomerType;
 use Quotation\Form\QuotationSearchType;
 use Quotation\Service\QuotationFileSystem;
+use Quotation\Service\QuotationPdf;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -41,21 +42,30 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $quotations = $quotationRepository->findQuotationsByFilters($page);
         }
 
-
-//        dump('page -> ' . $page);
-//        dump($quotations);
-//        dump('nbPages -> ' . (int) ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE));
-//        dump('nbRecords -> ' . $quotations['nbRecords']);
-//        dump($quotations['records']);
-//        die;
-
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
             'quotations' => $quotations['records'],
             'page' => $page,
-            'nbPages' => (int)ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE),
+            'nbPages' => (int) ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE),
             'nbRecords' => $quotations['nbRecords'],
             'quotationFilterForm' => $quotationFilterForm->createView()
         ]);
+    }
+
+    public function pdfView($id_quotation)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $quotation = $quotationRepository->findQuotationById($id_quotation);
+
+        $quotationPdf = new QuotationPdf();
+        $filename = $quotation['firstname'] . ' ' . $filename = $quotation['lastname'] .  '  - Référence ' . $filename = $quotation['reference'];
+        $html = $this->renderView('@Modules/quotation/templates/admin/pdf/pdf_quotation.html.twig', [
+            'id_quotation' => $quotation['id_quotation'],
+            'firstname' => $quotation['firstname'],
+            'lastname' => $quotation['lastname'],
+            'reference' => $quotation['reference']
+        ]);
+
+        $quotationPdf->createPDF($html, $filename);
     }
 
     public function add(Request $request)
@@ -69,8 +79,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             return $this->redirectToRoute('quotation_admin_add');
         }
 
-        // Permet d'appeler la méthode addGroupSelectionToRequest du CustomerController
-        $this->redirect('@PrestaShop/Admin/Sell/Customer/CustomerController/addGroupSelectionToRequest');
+        $this->redirect('@PrestaShop/Admin/Sell/Customer/CustomerController/addGroupSelectionToRequest'); // Permet d'appeler la méthode addGroupSelectionToRequest du CustomerController
 
         $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')->getForm();
         $customerForm->handleRequest($request);
@@ -85,7 +94,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
                 if ($request->query->has('submitFormAjax')) {
                     /** @var ViewableCustomer $customerInformation */
-                    $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int)$customerId));
+                    $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
 
                     return $this->render('@PrestaShop/Admin/Sell/Customer/modal_create_success.html.twig', [
                         'customerId' => $customerId,
@@ -154,42 +163,13 @@ class AdminQuotationController extends FrameworkBundleAdminController
     /**
      * Show customer by ID
      * @param Request $request
-     * @param $id_customer
+     * @param $query
      * @return JsonResponse
      */
     public function showCustomer(Request $request, $id_customer)
     {
         $quotationRepository = $this->get('quotation_repository');
         $customer = $quotationRepository->findOneCustomerById($id_customer);
-
-        if ($customer['id_customer']) {
-            $customer['orders'] = $quotationRepository->findOrdersByCustomer($id_customer);
-            $customer['addresses'] = $quotationRepository->findAddressesByCustomer($id_customer);
-        }
-
-        for ($j = 0; $j < count($customer['orders']); $j++) {
-            if ($customer['id_customer']) {
-                $customer['id_customer'] = $customer['id_customer'];
-                if ($customer['orders']) {
-                    $customer['orders'][$j]['id_order'] = $customer['orders'][$j]['id_order'];
-                    $customer['orders'][$j]['nb_products'] = $quotationRepository->findProductsByOrder($customer['orders'][$j]['id_order']);
-                }
-            }
-        }
-
-        for ($k = 0; $k < count($customer['addresses']); $k++) {
-            if ($customer['id_customer']) {
-                $customer['id_customer'] = $customer['id_customer'];
-                if ($customer['addresses']) {
-                    $customer['addresses'][$k]['id_address'] = $customer['addresses'][$k]['id_address'];
-                    if ($customer['addresses']) {
-                        $customer['addresses'][$k]['further_address'] = $customer['addresses'][$k]['further_address'];
-                    } else {
-                        $customer['addresses'][$k]['further_address'] = '';
-                    }
-                }
-            }
-        }
 
         return new JsonResponse(json_encode($customer), 200, [], true);
     }
@@ -290,8 +270,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         ]), 200, [], true);
     }
 
-    public
-    function ajaxCustomer(Request $request)
+    public function ajaxCustomer(Request $request)
     {
         $customerRepository = $this->get('quotation_repository');
         $customers = $customerRepository->findAllCustomers();

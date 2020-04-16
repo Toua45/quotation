@@ -47,144 +47,60 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             Event.currentTarget.value.replace(/\s(?=\w)(\w)+/, '') : false;
 
         const insertCustomerInDOM = (customers) => {
-            console.log(customers);
             let output = '';
-            let modalCustomerInfos = '';
-
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
-            let link = window.location.origin + '/adm/index.php/modules/quotation/admin/show/customer/';
-            let show = window.location.origin + '/adm/index.php/sell/customers/';
+            let link = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/show/customer/';
+            let show = window.location.origin + '/adminLionel/index.php/sell/customers/';
 
             customers.forEach((customer, i) => {
 
                 import('./templates_module').then(mod => {
-
-                    modalCustomerInfos += mod.TemplateModule.modalCustomerInfos
-                        .replace(/---id-customer-modal---/, customer.id_customer)
-                        .replace(/---id-customer-orders---/, customer.id_customer)
-                        .replace(/---id-customer-addresses---/, customer.id_customer)
-                        .replace(/---personal-datas---/,
-                            mod.TemplateModule.personalData.replace(/---id-customer-modal---/, customer.id_customer))
-                        .replace(/---customer-orders---/,
-                            mod.TemplateModule.customerOrders.replace(/---id-customer-orders---/, customer.id_customer))
-                        .replace(/---customer-addresses---/,
-                            mod.TemplateModule.customerAddresses.replace(/---id-customer-addresses---/, customer.id_customer));
-
                     output += mod.TemplateModule.card
-                        .replace(/---increment---/, i)
-                        .replace(/---lastname---/, customer.lastname)
+                        .replace(/---lastname---/, customer.lastname.toUpperCase())
                         .replace(/---firstname---/, customer.firstname)
                         .replace(/---text---/, 'This is a good customer!')
                         .replace(/---id-customer-modal---/, customer.id_customer)
-                        .replace(/---link-show-customer---/, link + customer.id_customer)
-                        .replace(/---link-show-customer-carts---/, link + customer.id_customer + '/details')
+                        .replace(/---modal-customer-infos---/,
+                            mod.TemplateModule.modalCustomerInfos
+                                .replace(/---id-customer-modal---/, customer.id_customer)
+                                .replace(/---personal-datas---/,
+                                    mod.TemplateModule.personalData
+                                        .replace(/---firstname---/, customer.firstname)
+                                        .replace(/---lastname---/, customer.lastname)
+                                        .replace(/---id-customer---/, customer.id_customer)
+                                        .replace(/---customer-link-email---/, 'mailto:' + customer.email)
+                                        .replace(/---customer-email---/, customer.email)
+                                        .replace(/---edit---/, show + customer.id_customer + '/edit')
+                                        .replace(/---gender---/, customer.title)
+                                        .replace(/---old---/, Math.floor(customer.old))
+                                        .replace(/---birthday---/, customer.birthday)
+                                        .replace(/---registration---/, customer.registration)
+                                        .replace(/---lang---/, customer.lang)
+                                        .replace(/---last-update---/, customer.last_update)
+                                        .replace(/---badge-newsletter---/, (customer.newsletter === 1 ? 'badge-success' : 'badge-danger'))
+                                        .replace(/---icon-newsletter---/, (customer.newsletter === 1 ? 'check' : 'cancel'))
+                                        .replace(/---badge-partners---/, (customer.offer_partners === 1 ? 'badge-success' : 'badge-danger'))
+                                        .replace(/---icon-partners---/, (customer.offer_partners === 1 ? 'check' : 'cancel'))
+                                        .replace(/---badge-is-active---/, (customer.active === 1 ? 'badge-success' : 'badge-danger'))
+                                        .replace(/---icon-is-active---/, (customer.active === 1 ? 'check' : 'cancel'))
+                                        .replace(/---is-active---/, (customer.active === 1 ? 'Activé' : 'Désactivé'))
+                                )
+                        )
                         .replace(/---id---/, customer.id_customer)
-                        .replace(/---id-customer---/, customer.id_customer)
-                        .replace(/---modal-customer-infos---/, modalCustomerInfos);
+                        .replace(/---link-show-customer-carts---/, link + customer.id_customer + '/details')
+                        .replace(/---increment---/, i)
+                    ;
 
 
                     if (customers.length - 1 === i) {
                         document.getElementById('js-output-customers').innerHTML = output;
 
-                        let urlCustomerShow = document.querySelector('[data-customershow]').dataset.customershow;
-                        let newUrlCustomerShow;
-                        console.log(document.querySelectorAll('button.customer-show'));
-
-                        if (document.querySelectorAll('button.customer-show') !== null) {
-                            // On boucle sur chaque élément link auquel on attache l'évènement clic
-                            document.querySelectorAll('button.customer-show').forEach(function (link) {
-                                link.addEventListener('click', function (Event) {
-                                    newUrlCustomerShow = window.location.origin + urlCustomerShow
-                                        .replace(/\d+/, link.dataset.idcustomer);
-                                    console.log(newUrlCustomerShow);
-
-                                    const getCustomerShow = (customer) => {
-                                        console.log(customer);
-
-                                        let addressController = window.location.origin + '/adm/index.php/?controller=AdminAddresses';
-
-                                        let personalData = '';
-                                        let tableCustomerOrders = '';
-                                        let customerOrders = '';
-                                        let tableCustomerAddresses = '';
-                                        let customerAddresses = '';
-
-                                        personalData = mod.TemplateModule.personalData
-                                            .replace(/---firstname---/, customer.firstname)
-                                            .replace(/---lastname---/, customer.lastname)
-                                            .replace(/---id-customer---/, customer.id_customer)
-                                            .replace(/---customer-link-email---/, 'mailto:' + customer.email)
-                                            .replace(/---customer-email---/, customer.email)
-                                            .replace(/---edit---/, show + customer.id_customer + '/edit')
-                                            .replace(/---gender---/, customer.title)
-                                            .replace(/---old---/, Math.floor(customer.old))
-                                            .replace(/---birthday---/, customer.birthday)
-                                            .replace(/---registration---/, customer.registration)
-                                            .replace(/---lang---/, customer.lang)
-                                            .replace(/---last-update---/, customer.last_update)
-                                            .replace(/---badge-newsletter---/, (customer.newsletter === '1' ? 'badge-success' : 'badge-danger'))
-                                            .replace(/---icon-newsletter---/, (customer.newsletter === '1' ? 'check' : 'cancel'))
-                                            .replace(/---badge-partners---/, (customer.offer_partners === '1' ? 'badge-success' : 'badge-danger'))
-                                            .replace(/---icon-partners---/, (customer.offer_partners === '1' ? 'check' : 'cancel'))
-                                            .replace(/---badge-is-active---/, (customer.active === '1' ? 'badge-success' : 'badge-danger')).replace(/---icon-is-active---/, (customer['active'] === '1' ? 'check' : 'cancel'))
-                                            .replace(/---is-active---/, (customer.active === 1 ? 'Activé' : 'Désactivé'));
-
-                                        for (let order of customer['orders']) {
-                                            tableCustomerOrders += mod.TemplateModule.tableCustomerOrders
-                                                .replace(/---id-order---/, order.id_order)
-                                                .replace(/---date-order---/, order.date_order)
-                                                .replace(/---order-payment---/, order.payment)
-                                                .replace(/---order-status---/, order.order_status)
-                                                .replace(/---nb-products---/, order['nb_products'].nb_products)
-                                                .replace(/---order-total-paid---/, order.total_paid + ' €');
-                                        }
-
-                                        customerOrders = mod.TemplateModule.customerOrders
-                                            .replace(/---nb-orders---/, customer.nb_orders)
-                                            .replace(/---table-customer-orders---/, tableCustomerOrders);
-
-                                        for (let address of customer['addresses']) {
-                                            tableCustomerAddresses += mod.TemplateModule.tableCustomerAddresses
-                                                .replace(/---company---/, address.company)
-                                                .replace(/---firstname---/, address.firstname)
-                                                .replace(/---lastname---/, address.lastname)
-                                                .replace(/---address---/, address.address)
-                                                .replace(/---further-address---/, address.further_address)
-                                                .replace(/---postcode---/, address.postcode)
-                                                .replace(/---city---/, address.city)
-                                                .replace(/---country---/, address.country)
-                                                .replace(/---phone-number---/, address.phone);
-                                        }
-
-                                        customerAddresses = mod.TemplateModule.customerAddresses
-                                            .replace(/---add-address---/, addressController + '&id_customer=' + customer.id_customer + '&addaddress=1')
-                                            .replace(/---table-customer-addresses---/, tableCustomerAddresses)
-                                        ;
-
-                                        console.log(customer.orders.id_order);
-
-                                        document.getElementById('modal-personal-data-infos_' + customer.id_customer).innerHTML = personalData;
-                                        document.getElementById('modal-customer-orders_' + customer.id_customer).innerHTML = customerOrders;
-                                        document.getElementById('modal-customer-addresses_' + customer.id_customer).innerHTML = customerAddresses;
-                                    };
-
-                                    QuotationModule.getData(
-                                        newUrlCustomerShow,
-                                        getCustomerShow,
-                                        null,
-                                        true,
-                                        []
-                                    );
-                                })
-                            })
-                        }
-                        ;
 
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
-                        let linkCart = window.location.origin + '/adm/index.php/modules/quotation/admin/show/cart/';
+                        let linkCart = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/show/cart/';
                         let urlCart = document.querySelector('[data-customercart]').dataset.customercart;
                         let newUrlCart;
 
@@ -199,7 +115,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     // La méthode toggle permet de masquer ou d'afficher le paramètre hidden à l'élément class
                                     Event.currentTarget.closest('.hidden').classList.toggle('hidden');
                                     // Pour chaque cards qui aura la class hidden, ces dernières seront en display-none
-                                    document.querySelectorAll('.hidden').forEach(function (card, index) {
+                                    document.querySelectorAll('.hidden').forEach(function (card,index) {
                                         card.classList.add('d-none');
                                     });
 
@@ -316,7 +232,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---orderStatus---/, customer.order_status)
                                                     .replace(/---id-order-modal---/, customer.id_order)
                                                     .replace(/---id---/, customer.id_cart)
-                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
                                             }
                                         }
 
@@ -361,7 +277,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---totalQuotation---/, customer.total_quotation + ' €')
                                                     .replace(/---id-quotation-modal---/, customer.id_quotation)
                                                     .replace(/---id---/, customer.id_cart)
-                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
                                             }
                                         }
 
@@ -445,6 +361,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             });
         };
 
+        // console.log(urlSearchCustomers.replace(/query/, Event.currentTarget.value));
         QuotationModule.getData(
             urlSearchCustomers.replace(/query/, Event.currentTarget.value),
             insertCustomerInDOM,

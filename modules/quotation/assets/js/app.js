@@ -179,7 +179,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     );
                                 })
                             })
-                        };
+                        }
 
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;

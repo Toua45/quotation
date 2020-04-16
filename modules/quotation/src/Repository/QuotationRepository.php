@@ -248,7 +248,7 @@ class QuotationRepository
         return $this->connection->createQueryBuilder()
             ->addSelect('ca.id_cart', 'ca.date_add AS date_cart')
             ->addSelect('ca.id_customer', 'c.firstname', ' c.lastname')
-            ->addSelect('SUM(p.price * cp.quantity) AS total_cart')
+            ->addSelect('ROUND(SUM(p.price * cp.quantity), 2) AS total_cart')
             ->addSelect('carrier.name AS carrier')
             ->from($this->databasePrefix . 'cart', 'ca')
             ->join('ca', $this->databasePrefix . 'customer', 'c', 'ca.id_customer = c.id_customer')

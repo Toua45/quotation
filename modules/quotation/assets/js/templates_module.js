@@ -6,7 +6,7 @@ export const TemplateModule = {
                 <h6 class="card-subtitle mb-2 text-muted">---firstname---</h6>
                 <p class="card-text">---text---</p>
                 <div class="row justify-content-between">
-                    <button class="customer-show btn btn-primary" data-href="---link-show-customer---" data-idcustomer="---id-customer---" data-toggle="modal" data-target="#showCustomerModal_---id-customer-modal---">Details</button>  
+                    <button class="customer-show btn btn-primary" data-href="link-show-customer" data-idcustomer="---id-customer---" data-toggle="modal" data-target="#showCustomerModal_---id-customer-modal---">Details</button>  
                     <a href="---link-show-customer-carts---" data-idcustomer="---id---" class="customer-details btn btn-outline-primary mx-3">Choisir</a>
                 </div>
                 ---modal-customer-infos---         
@@ -25,8 +25,10 @@ export const TemplateModule = {
                                   
                                     <div class="modal-body">                              
                                         <div class="card">---personal-datas---</div>
-                                        <div class="card">---customer-orders---</div>   
-                                        <div class="card">---customer-carts---</div>   
+                                        <div class="d-flex ordersAndCarts">
+                                            <div class="card mr-2">---customer-orders---</div>   
+                                            <div class="card">---customer-carts---</div>   
+                                        </div>
                                         <div class="card">---customer-addresses---</div>   
                                     </div>
                                 </div>
@@ -113,7 +115,7 @@ export const TemplateModule = {
                                                 <th>Paiement</th>
                                                 <th>État</th>
                                                 <th>Produits</th>
-                                                <th>Total payé</th>
+                                                <th class="w-25">Total payé</th>
                                             </tr>
                                         </thead>
                                       

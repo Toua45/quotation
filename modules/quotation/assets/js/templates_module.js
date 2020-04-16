@@ -26,6 +26,7 @@ export const TemplateModule = {
                                     <div class="modal-body">                              
                                         <div class="card">---personal-datas---</div>
                                         <div class="card">---customer-orders---</div>   
+                                        <div class="card">---customer-carts---</div>   
                                         <div class="card">---customer-addresses---</div>   
                                     </div>
                                 </div>
@@ -134,7 +135,38 @@ export const TemplateModule = {
                              <td class="js-linkable-item cursor-pointer">---order-total-paid---</td>
                            </tr>`,
 
-    customerAddresses: `<div id='modal-customer-addresses_---id-customer-addresses---'>
+    customerCarts: `<div id="modal-customer-carts_---id-customer-carts---">
+                        <h3 class="card-header">
+                            <i class="material-icons">shopping_cart</i> Paniers
+                            <span class="badge badge-primary rounded">---nb-carts---</span>
+                        </h3>
+                        
+                      <div class="card-body">
+                        <table class="table">
+                            <thead>
+                              <tr>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th>Transporteur</th>
+                                <th>Total</th>
+                              </tr>
+                            </thead>
+                            
+                            <tbody>
+                            ---table-customer-carts---
+                            </tbody>
+                        </table>
+                      </div>
+                    </div>`,
+
+    tableCustomerCarts: `<tr>
+                             <td class="js-linkable-item cursor-pointer">---id-cart---</td>
+                             <td class="js-linkable-item cursor-pointer">---date-cart---</td>
+                             <td class="js-linkable-item cursor-pointer">---transporter---</td>
+                             <td class="js-linkable-item cursor-pointer">---price---</td>
+                         </tr>`,
+
+    customerAddresses: `<div id="modal-customer-addresses_---id-customer-addresses---">
                             <h3 class="card-header">
                                 <i class="material-icons">location_on</i> Adresses
                             

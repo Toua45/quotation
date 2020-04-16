@@ -174,14 +174,16 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         if ($customer['id_customer']) {
             $customer['orders'] = $quotationRepository->findOrdersByCustomer($id_customer);
+            $customer['nb_carts'] = $quotationRepository->findNbCartsByCustomer($id_customer);
+            $customer['carts'] = $quotationRepository->findCartsByCustomer($id_customer);
             $customer['addresses'] = $quotationRepository->findAddressesByCustomer($id_customer);
         }
 
         for ($j = 0; $j < count($customer['orders']); $j++) {
             if ($customer['id_customer']) {
-                $customer['id_customer'] = $customer['id_customer'];
+                $customer['id_customer'];
                 if ($customer['orders']) {
-                    $customer['orders'][$j]['id_order'] = $customer['orders'][$j]['id_order'];
+                    $customer['orders'][$j]['id_order'];
                     $customer['orders'][$j]['nb_products'] = $quotationRepository->findProductsByOrder($customer['orders'][$j]['id_order']);
                 }
             }

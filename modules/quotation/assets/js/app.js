@@ -395,16 +395,18 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         QuotationModule.autocomplete,
         null,
         true,
-        ['#quotation_product_cartId', 'products', 1]
+        ['#quotation_product_cartId', 'products', 2]
     );
 
     // let urlSearchProducts = document.querySelector('[data-searchproducts]').dataset.searchproducts;
 
     const getQueryProduct = (Event) => {
         if (typeof parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim()) === "number" &&
-            !Number.isNaN(parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim()))
-        ) {
+            // Number.isNaN() permet de déterminer si la valeur passée en argument est NaN
+            !Number.isNaN(parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim())))
+        {
             let urlSearchAttributesProduct = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/attributes/product/';
+            // La fonction parseInt() analyse une chaîne de caractère fournie en argument et renvoie un entier exprimé dans une base donnée
             let id = parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim());
             urlSearchAttributesProduct = urlSearchAttributesProduct + id;
             console.log(urlSearchAttributesProduct)
@@ -449,7 +451,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         //     []
         // );
     };
-
 
     const inputSearchProducts = document.getElementById('quotation_product_cartId');
     ['keyup', 'change'].forEach(event => {

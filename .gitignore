@@ -28,7 +28,6 @@
 /webservice/*
 .htaccess
 autoload.php
-composer.lock
 docker-compose.yml
 error500.html
 images.inc.php

@@ -401,4 +401,69 @@ class QuotationRepository
             ->execute()
             ->fetchAll();
     }
+
+    /**
+     * @return mixed[]
+     */
+    public function findAllProducts()
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('p.id_product', "CONCAT( p.id_product, ' - ' , pl.name) AS fullname")
+            ->from($this->databasePrefix . 'product', 'p')
+            ->join('p', $this->databasePrefix . 'product_lang', 'pl', 'p.id_product = pl.id_product')
+            ->execute()
+            ->fetchAll();
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function findProductByQuery($query)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('p.id_product', "pl.name AS product_name")
+            ->from($this->databasePrefix . 'product', 'p')
+            ->join('p', $this->databasePrefix . 'product_lang', 'pl', 'p.id_product = pl.id_product')
+            ->where('pl.name LIKE :query')
+            ->setParameter('query', '%' . $query . '%')
+            ->execute()
+            ->fetchAll()
+            ;
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function findOneProductById($id_product)
+    {
+        $expr = $this->connection->getExpressionBuilder();
+
+        return $this->connection->createQueryBuilder()
+            ->addSelect('p.id_product', 'pl.name AS product_name')
+            ->from($this->databasePrefix . 'product', 'p')
+            ->join('p', $this->databasePrefix . 'product_lang', 'pl', 'p.id_product = pl.id_product')
+            ->where($expr->eq('p.id_product', ':id_product'))
+            ->addGroupBy('p.id_product')
+            ->setParameter('id_product', $id_product)->execute()->fetch();
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function findAttributesByProduct($id_product)
+    {
+        $expr = $this->connection->getExpressionBuilder();
+
+        return $this->connection->createQueryBuilder()
+            ->addSelect('p.id_product', 'pl.name AS product_name')
+            ->addSelect('al.name')
+            ->from($this->databasePrefix . 'product', 'p')
+            ->join('p', $this->databasePrefix . 'product_lang', 'pl', 'p.id_product = pl.id_product')
+            ->join('p', $this->databasePrefix . 'product_attribute', 'pa', 'p.id_product = pa.id_product')
+            ->join('pa', $this->databasePrefix . 'product_attribute_combination', 'pac', 'pac.id_product_attribute = pa.id_product_attribute')
+            ->join('pac', $this->databasePrefix . 'attribute', 'a', 'pac.id_attribute = a.id_attribute')
+            ->join('a', $this->databasePrefix . 'attribute_lang', 'al', 'al.id_attribute = a.id_attribute')
+            ->where($expr->eq('p.id_product', ':id_product'))
+            ->setParameter('id_product', $id_product)->execute()->fetchAll();
+    }
 }

@@ -4,6 +4,7 @@ namespace Quotation\Form;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Cart;
 use PrestaShop\PrestaShop\Adapter\Entity\Customer;
+use Product;
 use Quotation\Entity\Quotation;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\AbstractType;

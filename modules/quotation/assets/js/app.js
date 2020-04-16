@@ -376,6 +376,86 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         inputSearchCustomers.addEventListener(event, getQuery, false);
 
     });
+
+    /*
+     *Search product section
+     */
+    let urlProduct = document.getElementById('js-data-product').dataset.source;
+
+    QuotationModule.getData(
+        urlProduct,
+        QuotationModule.getData,
+        QuotationModule.getProductsURL(),
+        false,
+        []
+    );
+
+    QuotationModule.getData(
+        QuotationModule.getProductsURL(),
+        QuotationModule.autocomplete,
+        null,
+        true,
+        ['#quotation_product_cartId', 'products', 1]
+    );
+
+    // let urlSearchProducts = document.querySelector('[data-searchproducts]').dataset.searchproducts;
+
+    const getQueryProduct = (Event) => {
+        if (typeof parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim()) === "number" &&
+            !Number.isNaN(parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim()))
+        ) {
+            let urlSearchAttributesProduct = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/attributes/product/';
+            let id = parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim());
+            urlSearchAttributesProduct = urlSearchAttributesProduct + id;
+            console.log(urlSearchAttributesProduct)
+
+            const getAttributesProduct = (attributes) => {
+                console.log(attributes)
+            };
+
+            QuotationModule.getData(
+                urlSearchAttributesProduct,
+                getAttributesProduct,
+                null,
+                true,
+                []
+            );
+
+           // console.log(parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim()));
+        }
+
+        // console.log(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim());
+        // let queryProduct = Event.currentTarget.value !== ' ' || Event.currentTarget.value !== '' ?
+        //     Event.currentTarget.value.replace(/\s(?=\w)(\w)+/, '') : false;
+        //
+        // const insertProductInDOM = (products) => {
+        //     // console.log(products)
+        //     let outputProduct = '';
+        //     let linkProduct = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/product/';
+        //
+        //     // products.forEach((products, i) => {
+        //     //     import('./templates_module').then(mod => {
+        //     //
+        //     //     });
+        //     // });
+        // };
+        //
+        // // console.log(urlSearchProducts.replace(/query/, Event.currentTarget.value));
+        // QuotationModule.getData(
+        //     urlSearchProducts.replace(/query/, Event.currentTarget.value),
+        //     insertProductInDOM,
+        //     null,
+        //     true,
+        //     []
+        // );
+    };
+
+
+    const inputSearchProducts = document.getElementById('quotation_product_cartId');
+    ['keyup', 'change'].forEach(event => {
+        inputSearchProducts.addEventListener(event, getQueryProduct, false);
+    });
+
 }
 
 // any SCSS you require will output into a single scss file (app.scss in this case)

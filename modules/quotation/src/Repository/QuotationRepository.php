@@ -249,10 +249,12 @@ class QuotationRepository
             ->addSelect('ca.id_cart', 'ca.date_add AS date_cart')
             ->addSelect('ca.id_customer', 'c.firstname', ' c.lastname')
             ->addSelect('SUM(p.price * cp.quantity) AS total_cart')
+            ->addSelect('carrier.name AS carrier')
             ->from($this->databasePrefix . 'cart', 'ca')
             ->join('ca', $this->databasePrefix . 'customer', 'c', 'ca.id_customer = c.id_customer')
             ->join('ca', $this->databasePrefix . 'cart_product', 'cp', 'ca.id_cart = cp.id_cart')
             ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
+            ->join('ca', $this->databasePrefix . 'carrier', 'carrier', 'ca.id_carrier = carrier.id_carrier')
             ->where($expr->eq('ca.id_customer', ':id_customer'))
             ->addGroupBy('ca.id_cart')
             ->setParameter('id_customer', $idcustomer)
@@ -422,6 +424,18 @@ class QuotationRepository
             ->setParameter('id_customer', $id_customer)
             ->execute()
             ->fetchAll();
+    }
+
+    public function findNbCartsByCustomer($id_customer)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('COUNT(ca.id_cart) AS nb_carts')
+            ->from($this->databasePrefix . 'cart', 'ca')
+            ->join('ca', $this->databasePrefix . 'customer', 'c', 'ca.id_customer = c.id_customer')
+            ->where('c.id_customer = :id_customer')
+            ->setParameter('id_customer', $id_customer)
+            ->execute()
+            ->fetch();
     }
 
     /**

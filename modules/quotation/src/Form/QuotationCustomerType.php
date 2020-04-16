@@ -28,7 +28,7 @@ class QuotationCustomerType extends AbstractType
                     'placeholder' => 'Sélectionnez le client',
                 ]
             ])
-            ;
+        ;
     }
 
     public function choicesCustomers()

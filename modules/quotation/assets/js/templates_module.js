@@ -308,7 +308,6 @@ export const TemplateModule = {
                                 <h2><i class="material-icons">credit_card</i> COMMANDE [---id-order---] référence : ---reference---</h2>
                                 <p>Etat de la commande : ---orderStatus---</p>
                                 <h2><i class="material-icons">shopping_cart</i> CONTENU DU PANIER [---id-cart---]</h2>
-
                                 <table class="table">
                                      <thead>
                                         <tr>
@@ -335,7 +334,6 @@ export const TemplateModule = {
                                         <th class="text-left">---totalPaid---</th>
                                         </tr>
                                 </table>
-
                               </div>
                             </div>
                            </div>
@@ -377,7 +375,6 @@ export const TemplateModule = {
                               <div class="card-body">
                                 <h2><i class="material-icons">content_paste</i> DEVIS [---id-quotation---] référence : ---reference---</h2>
                                 <h2><i class="material-icons">shopping_cart</i> CONTENU DU PANIER [---id-cart---]</h2>
-
                                 <table class="table">
                                      <thead>
                                         <tr>
@@ -396,7 +393,6 @@ export const TemplateModule = {
                                         <td class="text-left">---totalQuotation---</td>
                                         </tr>                                        
                                 </table>
-
                               </div>
                             </div>
                            </div>

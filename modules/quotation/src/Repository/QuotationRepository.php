@@ -40,6 +40,7 @@ class QuotationRepository
             $firstResult = ($page - 1) * Quotation::NB_MAX_QUOTATIONS_PER_PAGE;
             $query->setFirstResult($firstResult)->setMaxResults((Quotation::NB_MAX_QUOTATIONS_PER_PAGE));
         }
+
         $query
             ->addSelect('q.*', 'c.firstname', 'c.lastname', 'cp.id_cart', 'cp.quantity', 'p.price')
             ->addSelect('SUM(p.price * cp.quantity) AS total_product_price')
@@ -94,8 +95,7 @@ class QuotationRepository
         string $status = null,
         string $start = null,
         string $end = null
-    ): array
-    {
+    ): array {
         $query = $this->connection->createQueryBuilder();
         $query->addSelect('q.*', 'c.firstname', 'c.lastname')
             ->addSelect('SUM(p.price * cp.quantity) AS total_product_price');
@@ -113,7 +113,7 @@ class QuotationRepository
                     ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
                     ->addGroupBy('q.id_quotation')
                     ->where('(c.firstname LIKE :name OR c.lastname LIKE :name) AND q.reference LIKE :reference')
-                    ->setParameters(['name' => '%' . $name . '%', 'reference' => '%' . $reference . '%']);
+                    ->setParameters(['name' => '%' . $name . '%', 'reference' =>  '%' . $reference . '%']);
                 break;
             case ('' !== $name && null !== $name) && ('' !== $start && null !== $start) && ('' !== $end && null !== $end):
                 $this->addQuotationFromAndJoin($query);
@@ -126,7 +126,7 @@ class QuotationRepository
                 $query->where('(c.firstname LIKE :name OR c.lastname LIKE :name) AND q.date_add >= :interval_start')
                     ->setParameters(['name' => '%' . $name . '%', 'interval_start' => $start]);
                 break;
-            case ('' !== $name && null !== $name) && ('' !== $end && null !== $end):
+            case ('' !== $name && null !== $name) && ('' !== $end&& null !== $end):
                 $this->addQuotationFromAndJoin($query);
                 $query->where('(c.firstname LIKE :name OR c.lastname LIKE :name) AND q.date_add <= :interval_end')
                     ->setParameters(['name' => '%' . $name . '%', 'interval_end' => preg_replace('/_/', '', $end)]);
@@ -257,9 +257,7 @@ class QuotationRepository
             ->join('ca', $this->databasePrefix . 'carrier', 'carrier', 'ca.id_carrier = carrier.id_carrier')
             ->where($expr->eq('ca.id_customer', ':id_customer'))
             ->addGroupBy('ca.id_cart')
-            ->setParameter('id_customer', $idcustomer)
-            ->execute()
-            ->fetchAll();
+            ->setParameter('id_customer', $idcustomer)->execute()->fetchAll();
     }
 
     /**
@@ -334,6 +332,7 @@ class QuotationRepository
     public function findOrdersByCustomer($idcustomer, $idCart = null)
     {
         $query = $this->connection->createQueryBuilder()
+
             ->addSelect('o.id_order', 'o.id_cart', 'o.reference AS order_reference', 'o.date_add AS date_order',
                 'o.total_products', 'o.total_shipping', 'ROUND(o.total_paid, 2) AS total_paid', 'o.payment',
                 'osl.name AS order_status')
@@ -384,16 +383,8 @@ class QuotationRepository
     public function findOneCustomerById($id_customer)
     {
         return $this->connection->createQueryBuilder()
-            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname', 'c.email', 'c.id_gender', 'c.birthday',
-                'DATEDIFF(NOW(), c.birthday) / 365.25 AS old', 'c.date_add AS registration', 'c.id_lang',
-                'c.newsletter', 'c.optin AS offer_partners', 'c.date_upd AS last_update', 'c.active')
-            ->addSelect('g.id_gender', 'g.name AS title')
-            ->addSelect('l.id_lang', 'l.name AS lang')
-            ->addSelect('COUNT(o.id_order) AS nb_orders')
+            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname', 'c.email')
             ->from($this->databasePrefix . 'customer', 'c')
-            ->join('c', $this->databasePrefix . 'gender_lang', 'g', 'c.id_gender = g.id_gender')
-            ->join('c', $this->databasePrefix . 'lang', 'l', 'c.id_lang = l.id_lang')
-            ->leftJoin('c', $this->databasePrefix . 'orders', 'o', 'o.id_customer = c.id_customer')
             ->where('c.id_customer = :id_customer')
             ->setParameter('id_customer', $id_customer)
             ->execute()
@@ -444,8 +435,15 @@ class QuotationRepository
     public function findByQuery($query)
     {
         return $this->connection->createQueryBuilder()
-            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname')
+            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname', 'c.email', 'c.id_gender', 'c.birthday',
+                'DATEDIFF(NOW(), c.birthday) / 365.25 AS old', 'c.date_add AS registration', 'c.id_lang', 'c.newsletter',
+                'c.optin AS offer_partners', 'c.date_upd AS last_update', 'c.active',
+                'g.id_gender', 'g.name AS title',
+                'l.id_lang', 'l.name AS lang'
+            )
             ->from($this->databasePrefix . 'customer', 'c')
+            ->join('c', $this->databasePrefix . 'gender_lang', 'g', 'c.id_gender = g.id_gender')
+            ->join('c', $this->databasePrefix . 'lang', 'l', 'c.id_lang = l.id_lang')
             ->where('c.firstname LIKE :query OR c.lastname LIKE :query')
             ->setParameter('query', '%' . $query . '%')
             ->execute()

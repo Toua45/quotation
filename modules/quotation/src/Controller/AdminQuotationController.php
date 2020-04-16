@@ -45,7 +45,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
             'quotations' => $quotations['records'],
             'page' => $page,
-            'nbPages' => (int)ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE),
+            'nbPages' => (int) ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE),
             'nbRecords' => $quotations['nbRecords'],
             'quotationFilterForm' => $quotationFilterForm->createView()
         ]);
@@ -79,8 +79,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             return $this->redirectToRoute('quotation_admin_add');
         }
 
-        // Permet d'appeler la méthode addGroupSelectionToRequest du CustomerController
-        $this->redirect('@PrestaShop/Admin/Sell/Customer/CustomerController/addGroupSelectionToRequest');
+        $this->redirect('@PrestaShop/Admin/Sell/Customer/CustomerController/addGroupSelectionToRequest'); // Permet d'appeler la méthode addGroupSelectionToRequest du CustomerController
 
         $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')->getForm();
         $customerForm->handleRequest($request);
@@ -95,7 +94,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
                 if ($request->query->has('submitFormAjax')) {
                     /** @var ViewableCustomer $customerInformation */
-                    $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int)$customerId));
+                    $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
 
                     return $this->render('@PrestaShop/Admin/Sell/Customer/modal_create_success.html.twig', [
                         'customerId' => $customerId,
@@ -164,7 +163,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
     /**
      * Show customer by ID
      * @param Request $request
-     * @param $id_customer
+     * @param $query
      * @return JsonResponse
      */
     public function showCustomer(Request $request, $id_customer)
@@ -234,16 +233,16 @@ class AdminQuotationController extends FrameworkBundleAdminController
         for ($i = 0; $i < count($carts); $i++) {
             for ($j = 0; $j < count($carts[$i]['products']); $j++) {
                 if ($carts[$i]['id_cart']) {
-                    $carts[$i]['id_cart'] = $carts[$i]['id_cart'];
-                    $carts[$i]['firstname'] = $carts[$i]['firstname'];
-                    $carts[$i]['lastname'] = $carts[$i]['lastname'];
+                    $carts[$i]['id_cart'];
+                    $carts[$i]['firstname'];
+                    $carts[$i]['lastname'];
                     $carts[$i]['date_cart'] = date("d/m/Y", strtotime($carts[$i]['date_cart']));
                     $carts[$i]['total_cart'] = number_format($carts[$i]['total_cart'], 2);
                     if ($carts[$i]['products']) {
-                        $carts[$i]['products'][$j]['id_product'] = $carts[$i]['products'][$j]['id_product'];
-                        $carts[$i]['products'][$j]['product_name'] = $carts[$i]['products'][$j]['product_name'];
+                        $carts[$i]['products'][$j]['id_product'];
+                        $carts[$i]['products'][$j]['product_name'];
                         $carts[$i]['products'][$j]['product_price'] = number_format($carts[$i]['products'][$j]['product_price'], 2);
-                        $carts[$i]['products'][$j]['product_quantity'] = $carts[$i]['products'][$j]['product_quantity'];
+                        $carts[$i]['products'][$j]['product_quantity'];
                         $carts[$i]['products'][$j]['total_product'] = number_format($carts[$i]['products'][$j]['total_product'], 2);
                     }
                 }
@@ -302,8 +301,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         ]), 200, [], true);
     }
 
-    public
-    function ajaxCustomer(Request $request)
+    public function ajaxCustomer(Request $request)
     {
         $customerRepository = $this->get('quotation_repository');
         $customers = $customerRepository->findAllCustomers();
@@ -342,14 +340,14 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         for ($j = 0; $j < count($cart['products']); $j++) {
             if ($cart['id_cart']) {
-                $cart['id_cart'] = $cart['id_cart'];
+                $cart['id_cart'];
                 $cart['date_cart'] = date("d/m/Y", strtotime($cart['date_cart']));
                 $cart['total_cart'] = number_format($cart['total_cart'], 2);
                 if ($cart['products']) {
-                    $cart['products'][$j]['id_product'] = $cart['products'][$j]['id_product'];
-                    $cart['products'][$j]['product_name'] = $cart['products'][$j]['product_name'];
+                    $cart['products'][$j]['id_product'];
+                    $cart['products'][$j]['product_name'];
                     $cart['products'][$j]['product_price'] = number_format($cart['products'][$j]['product_price'], 2);
-                    $cart['products'][$j]['product_quantity'] = $cart['products'][$j]['product_quantity'];
+                    $cart['products'][$j]['product_quantity'];
                     $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
                 }
             }

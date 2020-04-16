@@ -47,7 +47,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             Event.currentTarget.value.replace(/\s(?=\w)(\w)+/, '') : false;
 
         const insertCustomerInDOM = (customers) => {
-            console.log(customers);
             let output = '';
             let modalCustomerInfos = '';
 
@@ -202,7 +201,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         let newUrlCustomersDetails;
 
                         let linkCart = window.location.origin + '/adm/index.php/modules/quotation/admin/show/cart/';
-
                         let urlCart = document.querySelector('[data-customercart]').dataset.customercart;
                         let newUrlCart;
 
@@ -217,7 +215,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     // La méthode toggle permet de masquer ou d'afficher le paramètre hidden à l'élément class
                                     Event.currentTarget.closest('.hidden').classList.toggle('hidden');
                                     // Pour chaque cards qui aura la class hidden, ces dernières seront en display-none
-                                    document.querySelectorAll('.hidden').forEach(function (card, index) {
+                                    document.querySelectorAll('.hidden').forEach(function (card,index) {
                                         card.classList.add('d-none');
                                     });
 
@@ -337,7 +335,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---orderStatus---/, customer.order_status)
                                                     .replace(/---id-order-modal---/, customer.id_order)
                                                     .replace(/---id---/, customer.id_cart)
-                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
                                             }
                                         }
 
@@ -382,7 +380,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---totalQuotation---/, customer.total_quotation + ' €')
                                                     .replace(/---id-quotation-modal---/, customer.id_quotation)
                                                     .replace(/---id---/, customer.id_cart)
-                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
                                             }
                                         }
 
@@ -470,6 +468,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             });
         };
 
+        // console.log(urlSearchCustomers.replace(/query/, Event.currentTarget.value));
         QuotationModule.getData(
             urlSearchCustomers.replace(/query/, Event.currentTarget.value),
             insertCustomerInDOM,

@@ -9,6 +9,9 @@
     {{ form_row(formQuotationProduct.reference) }}
 </div>
 
-<span id="js-data-product" data-source="{{ path('quotation_admin_autocompletion_ajax_product') }}"></span>
+<span id="js-data-product"
+      data-source="{{ path('quotation_admin_autocompletion_ajax_product') }}"
+      data-sourceattributes="{{ path('quotation_admin_search_attributes_product', {id_product: 0}) }}"
+></span>
 
 {{ form_end(formQuotationProduct) }}

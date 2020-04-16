@@ -88,7 +88,7 @@ quotation_admin_show_cart:
 
 quotation_admin_autocompletion_ajax_product:
   path: quotation/admin/autocompletion/product
-  methods: [GET, POST]
+  methods: [GET]
   defaults:
     _controller: 'Quotation\Controller\AdminQuotationController::ajaxProduct'
     _legacy_controller: 'AdminQuotationController'

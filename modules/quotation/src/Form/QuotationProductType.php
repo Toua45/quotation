@@ -19,7 +19,8 @@ class QuotationProductType extends AbstractType
         $builder
             ->setMethod('GET')
             ->add('cartId', SearchType::class, [
-                'label' => false,
+                'label' => 'Rechercher un produit',
+//                'label' => false,
                 'label_attr' => [
                     'class' => 'form-label'
                 ],
@@ -29,33 +30,33 @@ class QuotationProductType extends AbstractType
                 ]
             ])
 
-            ->add('reference', ChoiceType::class, [
-                'label' => false,
-                'label_attr' => [
-                    'class' => 'form-label'
-                ],
-                'multiple' => false,
-                'expanded' => false,
-                'required' => true,
-                'choices' => array_map(function ($n) {return $n;}, $this->choicesProducts()),
-                'attr' => [
-                    'class' => 'linked-select',
-                    'data-target' => '#quotation_product_cartId',
-                ]
-            ])
+//            ->add('reference', ChoiceType::class, [
+//                'label' => false,
+//                'label_attr' => [
+//                    'class' => 'form-label'
+//                ],
+//                'multiple' => false,
+//                'expanded' => false,
+//                'required' => true,
+//                'choices' => array_map(function ($n) {return $n;}, $this->choicesProducts()),
+//                'attr' => [
+//                    'class' => 'linked-select',
+//                    'data-target' => '#quotation_product_cartId',
+//                ]
+//            ])
             ;
     }
 
-    public function choicesProducts()
-    {
-        $keys = $values = [];
-        foreach(Product::getProducts(1, 0, 100, 'id_product', 'DESC') as $key => $product) {
-            $keys[] = $product['name'];
-            $values[] = $product['id_product'];
-        }
-
-        return array_combine($keys, $values);
-    }
+//    public function choicesProducts()
+//    {
+//        $keys = $values = [];
+//        foreach(Product::getProducts(1, 0, 100, 'id_product', 'DESC') as $key => $product) {
+//            $keys[] = $product['name'];
+//            $values[] = $product['id_product'];
+//        }
+//
+//        return array_combine($keys, $values);
+//    }
 
 //    public function choicesCustomers()
 //    {

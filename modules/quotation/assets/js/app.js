@@ -301,7 +301,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     Event.preventDefault();
 
                                                     newUrlCart = window.location.origin + urlCart
-                                                        .replace(/\d+/, link.dataset.idcart);
+                                                        .replace(/\d+(?=\?_token)/, link.dataset.idcart);
 
                                                     const getCustomerCartToUse = (cart) => {
                                                         let outputCartToUse = '';
@@ -316,6 +316,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                                 .replace(/---totalProduct---/, product.total_product + ' €');
                                                         }
 
+                                                        // console.log(outputCartProductsToUse)
                                                         outputCartToUse += mod.TemplateModule.quotationCart
                                                             .replace(/---totalCart---/, cart['total_cart'] + ' €');
 
@@ -395,24 +396,36 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         QuotationModule.autocomplete,
         null,
         true,
-        ['#quotation_product_cartId', 'products', 2]
+        ['#quotation_product_cartId', 'products', 1]
     );
-
-    // let urlSearchProducts = document.querySelector('[data-searchproducts]').dataset.searchproducts;
 
     const getQueryProduct = (Event) => {
         if (typeof parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim()) === "number" &&
             // Number.isNaN() permet de déterminer si la valeur passée en argument est NaN
             !Number.isNaN(parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim())))
         {
-            let urlSearchAttributesProduct = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/attributes/product/';
+            // Get route 'quotation_admin_search_attributes_product'
+            let urlSearchAttributesProduct = document.getElementById('js-data-product').dataset.sourceattributes;
             // La fonction parseInt() analyse une chaîne de caractère fournie en argument et renvoie un entier exprimé dans une base donnée
-            let id = parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim());
-            urlSearchAttributesProduct = urlSearchAttributesProduct + id;
-            console.log(urlSearchAttributesProduct)
+            let idProduct = parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim());
+            urlSearchAttributesProduct = window.location.origin + urlSearchAttributesProduct.replace(/\d+(?=\?_token)/, idProduct);
 
             const getAttributesProduct = (attributes) => {
-                console.log(attributes)
+
+                let selectAttributesProduct = '';
+
+                import('./templates_module').then(mod => {
+                    for (let attribute of attributes) {
+                    // console.log(attribute.attribute)
+
+                        selectAttributesProduct += mod.TemplateModule.selectAttributesProduct
+                        .replace(/---attributeProduct---/, attribute.attributes)
+                        // console.log(selectAttributesProduct)
+                    }
+                    // console.log(document.getElementById('js-output-attributes-products'));
+                    document.getElementById('js-output-attributes-products').innerHTML = selectAttributesProduct;
+                });
+
             };
 
             QuotationModule.getData(
@@ -423,33 +436,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                 []
             );
 
-           // console.log(parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim()));
+            document.getElementById('js-output-product-to-cart').classList.replace('d-none', 'd-block');
         }
-
-        // console.log(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim());
-        // let queryProduct = Event.currentTarget.value !== ' ' || Event.currentTarget.value !== '' ?
-        //     Event.currentTarget.value.replace(/\s(?=\w)(\w)+/, '') : false;
-        //
-        // const insertProductInDOM = (products) => {
-        //     // console.log(products)
-        //     let outputProduct = '';
-        //     let linkProduct = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/product/';
-        //
-        //     // products.forEach((products, i) => {
-        //     //     import('./templates_module').then(mod => {
-        //     //
-        //     //     });
-        //     // });
-        // };
-        //
-        // // console.log(urlSearchProducts.replace(/query/, Event.currentTarget.value));
-        // QuotationModule.getData(
-        //     urlSearchProducts.replace(/query/, Event.currentTarget.value),
-        //     insertProductInDOM,
-        //     null,
-        //     true,
-        //     []
-        // );
     };
 
     const inputSearchProducts = document.getElementById('quotation_product_cartId');

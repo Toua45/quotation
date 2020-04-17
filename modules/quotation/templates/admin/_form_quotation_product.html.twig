@@ -2,13 +2,38 @@
 
 <div class="d-flex align-items-center">
     {{ form_label(formQuotationProduct.cartId, null, {'label_attr':{'class':'form-label col-sm-6 mr-2 mt-2'}}) }}
-    {{ form_row(formQuotationProduct.cartId) }}
-</div>
-<div class="d-flex align-items-center">
-    {{ form_label(formQuotationProduct.reference, null, {'label_attr':{'class':'form-label col-sm-6 mr-2 mt-2'}}) }}
-    {{ form_row(formQuotationProduct.reference) }}
+    {{ form_widget(formQuotationProduct.cartId) }}
 </div>
 
-<span id="js-data-product" data-source="{{ path('quotation_admin_autocompletion_ajax_product') }}"></span>
+{#<div class="d-flex align-items-center">#}
+{#    {{ form_label(formQuotationProduct.reference, null, {'label_attr':{'class':'form-label col-sm-6 mr-2 mt-2'}}) }}#}
+{#    {{ form_row(formQuotationProduct.reference) }}#}
+{#</div>#}
+
+<div id="js-output-product-to-cart" class="d-none">
+    <div class="d-flex align-items-center mt-4">
+        <label class="col-sm-6">Déclinaison</label>
+        <select id="js-output-attributes-products" class="col-sm-6">
+            <!-- Attributes Products here! -->
+        </select>
+    </div>
+
+    <div class="form-group d-flex align-items-center mt-4">
+        <label class="col-sm-6">Quantité</label>
+        <input type="text" name="qty" id="quantity" class="col-sm-6" value="1"/>
+    </div>
+
+    <div class="form-group mt-4">
+        <div class="col-sm-6 offset-sm-6">
+            <button type="button" class="btn btn-outline-primary" id="submitProductToCart" />
+            Ajouter au panier
+        </div>
+    </div>
+</div>
+
+<span id="js-data-product"
+      data-source="{{ path('quotation_admin_autocompletion_ajax_product') }}"
+      data-sourceattributes="{{ path('quotation_admin_show_product', {id_product: 0}) }}">
+</span>
 
 {{ form_end(formQuotationProduct) }}

@@ -370,6 +370,21 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $quotationRepository = $this->get('quotation_repository');
         $product = $quotationRepository->findOneProductById($id_product);
 
+        for ($i = 0; $i < count($product); $i++) {
+            if ($product[$i]['id_product_attribute']) {
+                $product[$i]['attributes'] = $quotationRepository->findAttributesByProduct($id_product, $product[$i]['id_product_attribute']);
+            }
+        }
+
+        for ($i = 0; $i < count($product); $i++) {
+            $attributes = '';
+            for ($j = 0; $j < count($product[$i]['attributes']); $j++) {
+                $attributes .= $product[$i]['attributes'][$j]['attribute_details'] . ' - ';
+                $attributesDetails = $attributes . $product[$i]['product_price'];
+            }
+            $product[$i]['attributes'] = rtrim($attributesDetails,  ' - ');
+        }
+
         return new JsonResponse(json_encode($product), 200, [], true);
     }
 

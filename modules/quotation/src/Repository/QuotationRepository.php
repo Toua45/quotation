@@ -35,6 +35,12 @@ class QuotationRepository
     public function findAll($page = null)
     {
         $query = $this->connection->createQueryBuilder();
+
+        if ($page !== null) {
+            $firstResult = ($page - 1) * Quotation::NB_MAX_QUOTATIONS_PER_PAGE;
+            $query->setFirstResult($firstResult)->setMaxResults((Quotation::NB_MAX_QUOTATIONS_PER_PAGE));
+        }
+
         $query
             ->addSelect('q.*', 'c.firstname', 'c.lastname', 'cp.id_cart', 'cp.quantity', 'p.price')
             ->addSelect('SUM(p.price * cp.quantity) AS total_product_price')
@@ -242,11 +248,13 @@ class QuotationRepository
         return $this->connection->createQueryBuilder()
             ->addSelect('ca.id_cart', 'ca.date_add AS date_cart')
             ->addSelect('ca.id_customer', 'c.firstname', ' c.lastname')
-            ->addSelect('SUM(p.price * cp.quantity) AS total_cart')
+            ->addSelect('ROUND(SUM(p.price * cp.quantity), 2) AS total_cart')
+            ->addSelect('carrier.name AS carrier')
             ->from($this->databasePrefix . 'cart', 'ca')
             ->join('ca', $this->databasePrefix . 'customer', 'c', 'ca.id_customer = c.id_customer')
             ->join('ca', $this->databasePrefix . 'cart_product', 'cp', 'ca.id_cart = cp.id_cart')
             ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
+            ->join('ca', $this->databasePrefix . 'carrier', 'carrier', 'ca.id_carrier = carrier.id_carrier')
             ->where($expr->eq('ca.id_customer', ':id_customer'))
             ->addGroupBy('ca.id_cart')
             ->setParameter('id_customer', $idcustomer)->execute()->fetchAll();
@@ -324,8 +332,10 @@ class QuotationRepository
     public function findOrdersByCustomer($idcustomer, $idCart = null)
     {
         $query = $this->connection->createQueryBuilder()
-            ->addSelect('o.id_order', 'o.reference AS order_reference', 'o.id_cart', 'o.date_add AS date_order',
-                'o.total_products', 'o.total_shipping', 'o.total_paid', 'o.payment', 'osl.name AS order_status')
+
+            ->addSelect('o.id_order', 'o.id_cart', 'o.reference AS order_reference', 'o.date_add AS date_order',
+                'o.total_products', 'o.total_shipping', 'ROUND(o.total_paid, 2) AS total_paid', 'o.payment',
+                'osl.name AS order_status')
             ->addSelect('o.id_customer', 'c.firstname', ' c.lastname', 'a.address1', 'a.address2', 'a.postcode', 'a.city')
             ->from($this->databasePrefix . 'orders', 'o')
             ->join('o', $this->databasePrefix . 'customer', 'c', 'o.id_customer = c.id_customer')
@@ -375,6 +385,44 @@ class QuotationRepository
         return $this->connection->createQueryBuilder()
             ->addSelect('c.id_customer', 'c.firstname', 'c.lastname', 'c.email')
             ->from($this->databasePrefix . 'customer', 'c')
+            ->where('c.id_customer = :id_customer')
+            ->setParameter('id_customer', $id_customer)
+            ->execute()
+            ->fetch();
+    }
+
+    public function findProductsByOrder($id_order)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('COUNT(cp.id_product) AS nb_products')
+            ->from($this->databasePrefix . 'orders', 'o')
+            ->join('o', $this->databasePrefix . 'cart_product', 'cp', 'o.id_cart = cp.id_cart')
+            ->where('o.id_order = :id_order')
+            ->setParameter('id_order', $id_order)
+            ->execute()
+            ->fetch();
+    }
+
+    public function findAddressesByCustomer($id_customer)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('a.id_address', 'a.company', 'a.firstname', 'a.lastname',
+                        'a.address1 AS address', 'a.address2 AS further_address', 'a.postcode', 'a.city', 'cl.name AS country', 'a.phone')
+            ->from($this->databasePrefix . 'address', 'a')
+            ->join('a', $this->databasePrefix . 'customer', 'c', 'c.id_customer = a.id_customer')
+            ->join('a', $this->databasePrefix . 'country_lang', 'cl', 'cl.id_country = a.id_country')
+            ->where('c.id_customer = :id_customer')
+            ->setParameter('id_customer', $id_customer)
+            ->execute()
+            ->fetchAll();
+    }
+
+    public function findNbCartsByCustomer($id_customer)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('COUNT(ca.id_cart) AS nb_carts')
+            ->from($this->databasePrefix . 'cart', 'ca')
+            ->join('ca', $this->databasePrefix . 'customer', 'c', 'ca.id_customer = c.id_customer')
             ->where('c.id_customer = :id_customer')
             ->setParameter('id_customer', $id_customer)
             ->execute()

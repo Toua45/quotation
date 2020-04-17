@@ -98,13 +98,10 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                             document.querySelectorAll('button.customer-show').forEach(function (link) {
                                 link.addEventListener('click', function (Event) {
                                     newUrlCustomerShow = window.location.origin + urlCustomerShow
-                                        .replace(/\d+/, link.dataset.idcustomer);
-                                    console.log(newUrlCustomerShow);
+                                        .replace(/\d+(?=\?_token)/, link.dataset.idcustomer);
 
                                     const getCustomerShow = (customer) => {
-                                        console.log(customer);
-
-                                        let addressController = window.location.origin + '/adm/index.php/?controller=AdminAddresses';
+                                        let addressController = window.location.origin + '/admin130mdhxh9/index.php/?controller=AdminAddresses';
 
                                         let personalData = '';
                                         let tableCustomerOrders = '';
@@ -405,7 +402,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     Event.preventDefault();
 
                                                     newUrlCart = window.location.origin + urlCart
-                                                        .replace(/\d+/, link.dataset.idcart);
+                                                        .replace(/\d+(?=\?_token)/, link.dataset.idcart);
 
                                                     const getCustomerCartToUse = (cart) => {
                                                         let outputCartToUse = '';

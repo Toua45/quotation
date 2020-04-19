@@ -99,7 +99,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                             document.querySelectorAll('button.customer-show').forEach(function (link) {
                                 link.addEventListener('click', function (Event) {
                                     newUrlCustomerShow = window.location.origin + urlCustomerShow
-                                        .replace(/\d+/, link.dataset.idcustomer);
+                                        .replace(/\d+(?=\?_token)/, link.dataset.idcustomer);
                                     console.log(newUrlCustomerShow);
 
                                     const getCustomerShow = (customer) => {

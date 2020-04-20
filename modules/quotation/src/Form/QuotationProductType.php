@@ -20,7 +20,6 @@ class QuotationProductType extends AbstractType
             ->setMethod('GET')
             ->add('cartId', SearchType::class, [
                 'label' => 'Rechercher un produit',
-//                'label' => false,
                 'label_attr' => [
                     'class' => 'form-label'
                 ],

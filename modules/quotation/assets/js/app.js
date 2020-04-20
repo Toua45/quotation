@@ -316,7 +316,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                                 .replace(/---totalProduct---/, product.total_product + ' €');
                                                         }
 
-                                                        // console.log(outputCartProductsToUse)
                                                         outputCartToUse += mod.TemplateModule.quotationCart
                                                             .replace(/---totalCart---/, cart['total_cart'] + ' €');
 
@@ -362,7 +361,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             });
         };
 
-        // console.log(urlSearchCustomers.replace(/query/, Event.currentTarget.value));
         QuotationModule.getData(
             urlSearchCustomers.replace(/query/, Event.currentTarget.value),
             insertCustomerInDOM,
@@ -410,20 +408,49 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             let idProduct = parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim());
             urlSearchAttributesProduct = window.location.origin + urlSearchAttributesProduct.replace(/\d+(?=\?_token)/, idProduct);
 
+            const getQtyProduct = (quantity) => {
+                document.getElementById('js-output-attributes-products').addEventListener('change', Event => console.log(quantity));
+            };
+
             const getAttributesProduct = (attributes) => {
 
                 let selectAttributesProduct = '';
 
                 import('./templates_module').then(mod => {
-                    for (let attribute of attributes) {
-                    // console.log(attribute.attribute)
 
-                        selectAttributesProduct += mod.TemplateModule.selectAttributesProduct
-                        .replace(/---attributeProduct---/, attribute.attributes)
-                        // console.log(selectAttributesProduct)
+                    // const getQuantityProduct = (quantity) => {
+                    //
+                    //     let quantityInStock = '';
+                    //
+                    //     quantityInStock += mod.TemplateModule.productQuantity
+                    //         .replace(/---quantityInStock---/, quantity);
+                    //
+                    //     document.getElementById('quantity-in-stock').innerHTML = quantityInStock;
+                    //
+                    // };
+
+
+                    for (let product of attributes) {
+                        // console.log(product.quantity);
+                        if (typeof product.attributes === 'undefined') {
+                            // document.getElementById('js-output-attributes-products').addEventListener('change', Event => {
+                            //     let quantityInStock = '';
+                            //     console.log(product.quantity);
+                                // quantityInStock += mod.TemplateModule.productQuantity.replace(/---quantityInStock---/, product.quantity);
+
+                            //     document.getElementById('quantity-in-stock').innerHTML = quantityInStock;
+                            // });
+                            document.getElementById('section-attributes-product').classList.replace('d-flex','d-none');
+                        } else {
+                            selectAttributesProduct += mod.TemplateModule.selectAttributesProduct
+                                .replace(/---attributeProduct---/, product.attributes);
+                            document.getElementById('js-output-attributes-products').innerHTML = selectAttributesProduct;
+                            document.getElementById('section-attributes-product').classList.replace('d-none','d-flex');
+                        }
+                        getQtyProduct(product.quantity);
                     }
-                    // console.log(document.getElementById('js-output-attributes-products'));
-                    document.getElementById('js-output-attributes-products').innerHTML = selectAttributesProduct;
+
+
                 });
 
             };

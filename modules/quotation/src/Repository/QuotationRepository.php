@@ -425,11 +425,13 @@ class QuotationRepository
             ->addSelect('p.id_product', 'pl.name AS product_name')
             ->addSelect("CONCAT(ROUND(p.price, 2), ' €') AS product_price")
             ->addSelect('pac.id_product_attribute')
+            ->addSelect('sa.quantity')
             ->from($this->databasePrefix . 'product', 'p')
             ->join('p', $this->databasePrefix . 'product_lang', 'pl', 'p.id_product = pl.id_product')
-            ->join('p', $this->databasePrefix . 'product_attribute', 'pa', 'p.id_product = pa.id_product')
-            ->join('pa', $this->databasePrefix . 'product_attribute_combination', 'pac', 'pac.id_product_attribute = pa.id_product_attribute')
-            ->join('pac', $this->databasePrefix . 'attribute', 'a', 'pac.id_attribute = a.id_attribute')
+            ->leftJoin('p', $this->databasePrefix . 'product_attribute', 'pa', 'p.id_product = pa.id_product')
+            ->leftJoin('pa', $this->databasePrefix . 'product_attribute_combination', 'pac', 'pac.id_product_attribute = pa.id_product_attribute')
+            ->leftJoin('pac', $this->databasePrefix . 'attribute', 'a', 'pac.id_attribute = a.id_attribute')
+            ->leftJoin('pac', $this->databasePrefix . 'stock_available', 'sa', 'pac.id_product_attribute = sa.id_product_attribute')
             ->where($expr->eq('p.id_product', ':id_product'))
             ->addGroupBy('pac.id_product_attribute')
             ->setParameter('id_product', $id_product)->execute()->fetchAll();
@@ -455,14 +457,40 @@ class QuotationRepository
             ->join('pac', $this->databasePrefix . 'attribute', 'a', 'pac.id_attribute = a.id_attribute')
             ->join('a', $this->databasePrefix . 'attribute_lang', 'al', 'al.id_attribute = a.id_attribute')
             ->join('a', $this->databasePrefix . 'attribute_group_lang', 'agl', 'agl.id_attribute_group = a.id_attribute_group');
-        if ($id_product_attribute == null) {
+        if ($id_product_attribute === null) {
             $query->where('p.id_product = :id_product')
                 ->setParameter('id_product', $id_product);
         } else {
             $query->where('p.id_product = :id_product AND pac.id_product_attribute = :id_product_attribute')
                 ->setParameters(['id_product' => $id_product, 'id_product_attribute' => $id_product_attribute]);
         }
-        return $query ->execute()->fetchAll();
+        return $query->execute()->fetchAll();
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function findQuantityByProduct(
+        $id_product,
+        $id_product_attribute = null
+    )
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->addSelect('sa.quantity')
+            ->from($this->databasePrefix . 'product', 'p')
+            ->join('p', $this->databasePrefix . 'product_lang', 'pl', 'p.id_product = pl.id_product')
+            ->leftJoin('p', $this->databasePrefix . 'product_attribute', 'pa', 'p.id_product = pa.id_product')
+            ->leftJoin('pa', $this->databasePrefix . 'product_attribute_combination', 'pac', 'pac.id_product_attribute = pa.id_product_attribute')
+            ->leftJoin('pac', $this->databasePrefix . 'attribute', 'a', 'pac.id_attribute = a.id_attribute')
+            ->leftJoin('p', $this->databasePrefix . 'stock_available', 'sa', 'p.id_product = sa.id_product');
+        if ($id_product_attribute === null) {
+            $query->where('p.id_product = :id_product')
+                ->setParameter('id_product', $id_product);
+        } else {
+            $query->where('p.id_product = :id_product AND pac.id_product_attribute = :id_product_attribute')
+                ->setParameters(['id_product' => $id_product, 'id_product_attribute' => $id_product_attribute]);
+        }
+        return $query->execute()->fetch();
     }
 
 }

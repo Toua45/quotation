@@ -1,8 +1,10 @@
 {{ form_start(formQuotationProduct, {'attr':{'class':'mt-4'}}) }}
 
 <div class="d-flex align-items-center">
-    {{ form_label(formQuotationProduct.cartId, null, {'label_attr':{'class':'form-label col-sm-6 mr-2 mt-2'}}) }}
-    {{ form_widget(formQuotationProduct.cartId) }}
+    {{ form_label(formQuotationProduct.cartId, null, {'label_attr':{'class':'form-label col-sm-6 mt-2'}}) }}
+    <div class="col-sm-12">
+        {{ form_widget(formQuotationProduct.cartId) }}
+    </div>
 </div>
 
 {#<div class="d-flex align-items-center">#}
@@ -11,21 +13,26 @@
 {#</div>#}
 
 <div id="js-output-product-to-cart" class="d-none">
-    <div class="d-flex align-items-center mt-4">
+    <div id="section-attributes-product" class="form-group d-flex align-items-center mt-4">
         <label class="col-sm-6">Déclinaison</label>
-        <select id="js-output-attributes-products" class="col-sm-6">
-            <!-- Attributes Products here! -->
-        </select>
+        <div class="col-sm-12">
+            <select id="js-output-attributes-products" class="col-sm-12">
+                <!-- Attributes Products here! -->
+            </select>
+        </div>
     </div>
 
-    <div class="form-group d-flex align-items-center mt-4">
-        <label class="col-sm-6">Quantité</label>
-        <input type="text" name="qty" id="quantity" class="col-sm-6" value="1"/>
+    <div id="section-quantity" class="form-group d-flex align-items-center mt-4">
+        <label class="col-sm-6 mb-4">Quantité</label>
+        <div class="col-sm-12">
+            <input type="text" name="qty" id="product-quantity" class="col-sm-12" value="1"/>
+            <p>En stock <span id="quantity-in-stock"><!-- Quantity Products here! --></span></p>
+        </div>
     </div>
 
     <div class="form-group mt-4">
         <div class="col-sm-6 offset-sm-6">
-            <button type="button" class="btn btn-outline-primary" id="submitProductToCart" />
+            <button type="button" class="btn btn-outline-primary" id="submitProductToCart"/>
             Ajouter au panier
         </div>
     </div>

@@ -78,6 +78,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         .replace(/---increment---/, i)
                         .replace(/---lastname---/, customer.lastname)
                         .replace(/---firstname---/, customer.firstname)
+                        .replace(/---customer-id---/, customer.id_customer)
                         .replace(/---email---/, customer.email)
                         .replace(/---birthday---/, customer.birthday)
                         .replace(/---id-customer-modal---/, customer.id_customer)

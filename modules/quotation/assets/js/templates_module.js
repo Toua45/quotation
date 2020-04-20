@@ -1,9 +1,9 @@
 export const TemplateModule = {
 
-    card: `<div id='customer-card_---increment---' class="customerCard col-lg-4 card hidden mr-3 mb-4" >
-                <div class="card-header">    
+    card: `<div id='customer-card_---increment---' class="card hidden customerCard" >
+                <div class="card-header card-header-customer">    
                     <h2>---lastname--- ---firstname---</h2>
-                    <h2>#---id-customer---</h2>             
+                    <h2>#---customer-id---</h2>             
                 </div>
                 <div class="card-body">
                     <p class="card-text">---email---</p>

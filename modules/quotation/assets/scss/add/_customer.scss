@@ -22,8 +22,10 @@
     border: solid 1px $middlegrey;
     box-shadow: none;
     padding: 0;
+    margin:5px;
+    width: 32%;
 
-    .card-header {
+    .card-header-customer {
       padding-bottom: 0;
       display: flex;
       justify-content: space-between;

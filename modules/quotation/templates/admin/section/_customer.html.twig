@@ -5,11 +5,12 @@
 </div>
 
 <div class="container-fluid">
-    <div class="row justify-content-between">
-        <div class="col-lg-12 col-md-8 col-sm-4">
-            <div id="js-output-customers" class="d-flex"><!-- Customers here! --></div>
-        </div>
-    </div>
+{#    <div class="row justify-content-between">#}
+{#        <div class="col-lg-12 col-md-8 col-sm-4">#}
+            <div id="js-output-customers" class="container-fluid d-flex flex-wrap justify-content-center"><!-- Customers here! -->
+            </div>
+{#        </div>#}
+{#    </div>#}
 </div>
 
 <span data-customershow="{{ path('quotation_admin_show_customer', { id_customer: 0 }) }}"></span>

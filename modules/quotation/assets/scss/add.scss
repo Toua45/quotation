@@ -2,6 +2,12 @@
 @import "add/_cart";
 @import "add/modaleShowCustomer";
 
+$search-size:750px;
+
+span.twitter-typeahead {
+  width: $search-size;
+}
 .twitter-typeahead {
-  margin-right: 10px;
+  margin: 0 10px 0 10px;
+  width: $search-size;
 }

@@ -43,7 +43,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $quotations = $quotationRepository->findQuotationsByFilters($page);
         }
 
-
 //        dump('page -> ' . $page);
 //        dump($quotations);
 //        dump('nbPages -> ' . (int) ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE));
@@ -102,8 +101,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         $formQuotationProduct = $this->createForm(QuotationProductType::class, $quotation);
         $formQuotationProduct->handleRequest($request);
-
-//        dump(Product::getProducts(1, 0, 100, 'id_product', 'DESC'));die;
 
 //        if ($form->isSubmitted() && $form->isValid()) {
 //            $quotation->setDateAdd(new \DateTime('now'));
@@ -333,8 +330,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $response[$key]['fullname'] = $product['fullname'];
         }
 
-//        dump($products);die;
-
         $file = 'data-product.js';
         $fileSystem = new QuotationFileSystem();
         if (!is_file($file)) {
@@ -370,7 +365,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $quotationRepository = $this->get('quotation_repository');
         $product = $quotationRepository->findOneProductById($id_product);
 
-//        dump($quotationRepository->findQuantityByProduct(6, null));die;
         for ($i = 0; $i < count($product); $i++) {
             if ($product[$i]['id_product_attribute']) {
                 $product[$i]['attributes'] = $quotationRepository->findAttributesByProduct($id_product, $product[$i]['id_product_attribute']);
@@ -379,7 +373,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
                 $product[$i]['quantity'] = $quotationRepository->findQuantityByProduct($id_product, $product[$i]['id_product_attribute'])['quantity'];
             }
         }
-
 
         for ($i = 0; $i < count($product); $i++) {
             $attributes = '';
@@ -407,5 +400,10 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $product = $quotationRepository->findAttributesByProduct($id_product);
 
         return new JsonResponse(json_encode($product), 200, [], true);
+    }
+
+    public function createNewCart (Request $request)
+    {
+        dump($request->query->all());die;
     }
 }

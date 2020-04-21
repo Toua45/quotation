@@ -112,12 +112,12 @@ quotation_admin_show_product:
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
 
-quotation_admin_search_attributes_product:
-  path: quotation/admin/show/attributes/product/{id_product}
+quotation_admin_create_new_cart:
+  path: quotation/admin/create/new/cart
   requirements:
-    id_product: '\d+'
-  methods: [GET]
+    id_cart: '\d+'
+  methods: [POST]
   defaults:
-    _controller: 'Quotation\Controller\AdminQuotationController::showAttributesByProduct'
+    _controller: 'Quotation\Controller\AdminQuotationController::createNewCart'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'

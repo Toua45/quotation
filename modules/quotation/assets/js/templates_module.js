@@ -414,4 +414,7 @@ export const TemplateModule = {
                         <th class="text-left">---totalCart---</th>
                     </tr>`,
 
+    selectAttributesProduct: `<option>---attributeProduct---</option>`,
+
+    productQuantity: `---quantityInStock---`,
 };

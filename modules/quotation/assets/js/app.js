@@ -19,7 +19,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         url,
         QuotationModule.getData,
         QuotationModule.getCustomersURL(),
-        false,
+        true,
         []
     );
 
@@ -409,7 +409,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     Event.preventDefault();
 
                                                     newUrlCart = window.location.origin + urlCart
-                                                        .replace(/\d+/, link.dataset.idcart);
+                                                        .replace(/\d+(?=\?_token)/, link.dataset.idcart);
 
                                                     const getCustomerCartToUse = (cart) => {
                                                         let outputCartToUse = '';
@@ -470,7 +470,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             });
         };
 
-        // console.log(urlSearchCustomers.replace(/query/, Event.currentTarget.value));
         QuotationModule.getData(
             urlSearchCustomers.replace(/query/, Event.currentTarget.value),
             insertCustomerInDOM,
@@ -485,6 +484,103 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         inputSearchCustomers.addEventListener(event, getQuery, false);
 
     });
+
+    /*
+     *Search product section
+     */
+    let urlProduct = document.getElementById('js-data-product').dataset.source;
+
+    QuotationModule.getData(
+        urlProduct,
+        QuotationModule.getData,
+        QuotationModule.getProductsURL(),
+        true,
+        []
+    );
+
+    QuotationModule.getData(
+        QuotationModule.getProductsURL(),
+        QuotationModule.autocomplete,
+        null,
+        true,
+        ['#quotation_product_cartId', 'products', 1]
+    );
+
+    const getQueryProduct = (Event) => {
+        if (typeof parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim()) === "number" &&
+            // Number.isNaN() permet de déterminer si la valeur passée en argument est NaN
+            !Number.isNaN(parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim())))
+        {
+            // Get route 'quotation_admin_search_attributes_product'
+            let urlSearchAttributesProduct = document.getElementById('js-data-product').dataset.sourceattributes;
+
+            // La fonction parseInt() analyse une chaîne de caractère fournie en argument et renvoie un entier exprimé dans une base donnée
+            let idProduct = parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim());
+            urlSearchAttributesProduct = window.location.origin + urlSearchAttributesProduct.replace(/\d+(?=\?_token)/, idProduct);
+
+            const getAttributesProduct = (attributes) => {
+                let index = 0;
+                let selectProductAttributes = document.getElementById('js-output-attributes-products');
+                let quantityInStock = document.getElementById('quantity-in-stock');
+                let sectionProductAttributes = document.getElementById('section-attributes-product');
+
+                for (let product of attributes) {
+
+                    // Nous allons calculer la longueur du tableau
+                    if (selectProductAttributes.length !== 0) {
+                        for (let i = 0; i < selectProductAttributes.length; i++) {
+                            if (selectProductAttributes[i].dataset.idproduct !== product.id_product) {
+                                // Nous supprimons tous les éléments html options qui n'ont pas le même id_product
+                                selectProductAttributes[i].remove();
+                            }
+                        }
+                    }
+
+                    if (typeof product.attributes !== 'undefined') {
+                        // On crée un nouvel élément html option
+                        selectProductAttributes[index] = new Option(product.attributes, product.id_product_attribute, false, false);
+                        // On lui ajouter un attribut data-instock auquel on affecte la quantité
+                        selectProductAttributes[index].setAttribute('data-instock', product.quantity);
+                        selectProductAttributes[index].setAttribute('data-idproduct', product.id_product);
+                        sectionProductAttributes.classList.replace('d-none','d-flex');
+                    } else {
+                        sectionProductAttributes.classList.replace('d-flex','d-none');
+                    }
+
+                    if (index === 0 || typeof product.attributes === 'undefined') {
+                        quantityInStock.innerHTML = product.quantity;
+                    }
+                    index++;
+                }
+
+                selectProductAttributes.addEventListener('change', Event => {
+                    for (let j = 0; j < selectProductAttributes.length; j++) {
+
+                        if (selectProductAttributes[j].value === Event.currentTarget.value) {
+                            quantityInStock.innerHTML = selectProductAttributes[j].dataset.instock;
+                            break;
+                        }
+                    }
+                });
+            };
+
+            QuotationModule.getData(
+                urlSearchAttributesProduct,
+                getAttributesProduct,
+                null,
+                true,
+                []
+            );
+
+            document.getElementById('js-output-product-to-cart').classList.replace('d-none', 'd-block');
+        }
+    };
+
+    const inputSearchProducts = document.getElementById('quotation_product_cartId');
+    ['keyup', 'change'].forEach(event => {
+        inputSearchProducts.addEventListener(event, getQueryProduct, false);
+    });
+
 }
 
 // any SCSS you require will output into a single scss file (app.scss in this case)

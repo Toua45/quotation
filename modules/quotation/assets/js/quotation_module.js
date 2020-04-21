@@ -7,10 +7,15 @@ export const QuotationModule = {
         }
     },
 
+    getProductsURL: function () {
+        if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamFromURL('add').length === 1) {
+            return document.getElementById('products').dataset.products.replace(/\?(?=\d)(\w|\W)+/g, '');
+        }
+    },
+
     getData: function (url, callback, path = null, dataFetch = false, autocomplete = []) {
         fetch(url).then(response => response.json()).then(data => {
             if (typeof callback === 'function') {
-                // console.log('valid callback');
                 if (autocomplete.length >= 1) {
                     // autocomplete[0] => correspond au paramètre 'selector' de la fonction 'autocomplete' type=string
                     if (typeof autocomplete[0] === 'string') {
@@ -28,7 +33,6 @@ export const QuotationModule = {
                         if (path !== null) {
                             callback(path, data);
                         } else {
-                            // console.log('callback(data)');
                             callback(data);
                         }
                     } else {

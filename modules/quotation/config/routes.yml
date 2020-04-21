@@ -85,3 +85,39 @@ quotation_admin_show_cart:
     _controller: 'Quotation\Controller\AdminQuotationController::showCart'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
+
+quotation_admin_autocompletion_ajax_product:
+  path: quotation/admin/autocompletion/product
+  methods: [GET]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::ajaxProduct'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_search_products:
+  path: quotation/admin/search/products/{query}
+  methods: [GET]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::searchProducts'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_show_product:
+  path: quotation/admin/show/product/{id_product}
+  requirements:
+    id_product: '\d+'
+  methods: [GET]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::showProduct'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_create_new_cart:
+  path: quotation/admin/create/new/cart
+  requirements:
+    id_cart: '\d+'
+  methods: [POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::createNewCart'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'

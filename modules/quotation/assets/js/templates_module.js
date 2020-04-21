@@ -423,4 +423,6 @@ export const TemplateModule = {
                         <th class="text-left">---totalCart---</th>
                     </tr>`,
 
+    productQuantity: `---quantityInStock---`,
+
 };

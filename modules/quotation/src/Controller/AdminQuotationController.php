@@ -12,6 +12,7 @@ use Quotation\Form\QuotationCustomerType;
 use Quotation\Form\QuotationProductType;
 use Quotation\Form\QuotationSearchType;
 use Quotation\Service\QuotationFileSystem;
+use Quotation\Service\QuotationPdf;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -43,13 +44,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $quotations = $quotationRepository->findQuotationsByFilters($page);
         }
 
-//        dump('page -> ' . $page);
-//        dump($quotations);
-//        dump('nbPages -> ' . (int) ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE));
-//        dump('nbRecords -> ' . $quotations['nbRecords']);
-//        dump($quotations['records']);
-//        die;
-
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
             'quotations' => $quotations['records'],
             'page' => $page,
@@ -57,6 +51,23 @@ class AdminQuotationController extends FrameworkBundleAdminController
             'nbRecords' => $quotations['nbRecords'],
             'quotationFilterForm' => $quotationFilterForm->createView()
         ]);
+    }
+
+    public function pdfView($id_quotation)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $quotation = $quotationRepository->findQuotationById($id_quotation);
+
+        $quotationPdf = new QuotationPdf();
+        $filename = $quotation['firstname'] . ' ' . $filename = $quotation['lastname'] .  '  - Référence ' . $filename = $quotation['reference'];
+        $html = $this->renderView('@Modules/quotation/templates/admin/pdf/pdf_quotation.html.twig', [
+            'id_quotation' => $quotation['id_quotation'],
+            'firstname' => $quotation['firstname'],
+            'lastname' => $quotation['lastname'],
+            'reference' => $quotation['reference']
+        ]);
+
+        $quotationPdf->createPDF($html, $filename);
     }
 
     public function add(Request $request)
@@ -166,6 +177,37 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $quotationRepository = $this->get('quotation_repository');
         $customer = $quotationRepository->findOneCustomerById($id_customer);
 
+        if ($customer['id_customer']) {
+            $customer['orders'] = $quotationRepository->findOrdersByCustomer($id_customer);
+            $customer['nb_carts'] = $quotationRepository->findNbCartsByCustomer($id_customer);
+            $customer['carts'] = $quotationRepository->findCartsByCustomer($id_customer);
+            $customer['addresses'] = $quotationRepository->findAddressesByCustomer($id_customer);
+        }
+
+        for ($j = 0; $j < count($customer['orders']); $j++) {
+            if ($customer['id_customer']) {
+                $customer['id_customer'];
+                if ($customer['orders']) {
+                    $customer['orders'][$j]['id_order'];
+                    $customer['orders'][$j]['nb_products'] = $quotationRepository->findProductsByOrder($customer['orders'][$j]['id_order']);
+                }
+            }
+        }
+
+        for ($k = 0; $k < count($customer['addresses']); $k++) {
+            if ($customer['id_customer']) {
+                $customer['id_customer'];
+                if ($customer['addresses']) {
+                    $customer['addresses'][$k]['id_address'];
+                    if ($customer['addresses']) {
+                        $customer['addresses'][$k]['further_address'];
+                    } else {
+                        $customer['addresses'][$k]['further_address'] = '';
+                    }
+                }
+            }
+        }
+
         return new JsonResponse(json_encode($customer), 200, [], true);
     }
 
@@ -197,16 +239,16 @@ class AdminQuotationController extends FrameworkBundleAdminController
         for ($i = 0; $i < count($carts); $i++) {
             for ($j = 0; $j < count($carts[$i]['products']); $j++) {
                 if ($carts[$i]['id_cart']) {
-                    $carts[$i]['id_cart'] = $carts[$i]['id_cart'];
-                    $carts[$i]['firstname'] = $carts[$i]['firstname'];
-                    $carts[$i]['lastname'] = $carts[$i]['lastname'];
+                    $carts[$i]['id_cart'];
+                    $carts[$i]['firstname'];
+                    $carts[$i]['lastname'];
                     $carts[$i]['date_cart'] = date("d/m/Y", strtotime($carts[$i]['date_cart']));
                     $carts[$i]['total_cart'] = number_format($carts[$i]['total_cart'], 2);
                     if ($carts[$i]['products']) {
-                        $carts[$i]['products'][$j]['id_product'] = $carts[$i]['products'][$j]['id_product'];
-                        $carts[$i]['products'][$j]['product_name'] = $carts[$i]['products'][$j]['product_name'];
+                        $carts[$i]['products'][$j]['id_product'];
+                        $carts[$i]['products'][$j]['product_name'];
                         $carts[$i]['products'][$j]['product_price'] = number_format($carts[$i]['products'][$j]['product_price'], 2);
-                        $carts[$i]['products'][$j]['product_quantity'] = $carts[$i]['products'][$j]['product_quantity'];
+                        $carts[$i]['products'][$j]['product_quantity'];
                         $carts[$i]['products'][$j]['total_product'] = number_format($carts[$i]['products'][$j]['total_product'], 2);
                     }
                 }
@@ -296,26 +338,26 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $quotationRepository = $this->get('quotation_repository');
         $cart = $quotationRepository->findOneCartById($id_cart);
 
-            if ($cart['id_cart']) {
-                $cart['products'] = $quotationRepository->findProductsCustomerByCarts($cart['id_cart']);
-                $cart['order'] = $quotationRepository->findOrderByCart($cart['id_cart']);
-                $cart['quotation'] = $quotationRepository->findQuotationByCart($cart['id_cart']);
-            }
+        if ($cart['id_cart']) {
+            $cart['products'] = $quotationRepository->findProductsCustomerByCarts($cart['id_cart']);
+            $cart['order'] = $quotationRepository->findOrderByCart($cart['id_cart']);
+            $cart['quotation'] = $quotationRepository->findQuotationByCart($cart['id_cart']);
+        }
 
-            for ($j = 0; $j < count($cart['products']); $j++) {
-                if ($cart['id_cart']) {
-                    $cart['id_cart'] = $cart['id_cart'];
-                    $cart['date_cart'] = date("d/m/Y", strtotime($cart['date_cart']));
-                    $cart['total_cart'] = number_format($cart['total_cart'], 2);
-                    if ($cart['products']) {
-                        $cart['products'][$j]['id_product'] = $cart['products'][$j]['id_product'];
-                        $cart['products'][$j]['product_name'] = $cart['products'][$j]['product_name'];
-                        $cart['products'][$j]['product_price'] = number_format($cart['products'][$j]['product_price'], 2);
-                        $cart['products'][$j]['product_quantity'] = $cart['products'][$j]['product_quantity'];
-                        $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
-                    }
+        for ($j = 0; $j < count($cart['products']); $j++) {
+            if ($cart['id_cart']) {
+                $cart['id_cart'];
+                $cart['date_cart'] = date("d/m/Y", strtotime($cart['date_cart']));
+                $cart['total_cart'] = number_format($cart['total_cart'], 2);
+                if ($cart['products']) {
+                    $cart['products'][$j]['id_product'];
+                    $cart['products'][$j]['product_name'];
+                    $cart['products'][$j]['product_price'] = number_format($cart['products'][$j]['product_price'], 2);
+                    $cart['products'][$j]['product_quantity'];
+                    $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
                 }
             }
+        }
 
         return new JsonResponse(json_encode($cart), 200, [], true);
     }

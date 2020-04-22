@@ -19,3 +19,20 @@
   padding: 0 5px;
   width: max-content;
 }
+
+.quotation-cart-section {
+  .btn-light {
+    padding: 8px;
+  }
+
+  select, .quantity-product {
+    background-color: $light;
+    border-radius: 3px;
+    border: solid 1px #BBCDD2;
+    padding: 4px 4px 4px 10px;
+  }
+
+  .form-label {
+    margin-left: -11px;
+  }
+}

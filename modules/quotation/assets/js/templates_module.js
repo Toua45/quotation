@@ -1,16 +1,25 @@
 export const TemplateModule = {
 
-    card: `<div id='customer-card_---increment---' class="card hidden mr-3 mb-4" >
-              <div class="card-body">
-                <h5 class="card-title">---lastname---</h5>
-                <h6 class="card-subtitle mb-2 text-muted">---firstname---</h6>
-                <p class="card-text">---text---</p>
-                <div class="row justify-content-between">
-                    <button class="customer-show btn btn-primary" data-href="link-show-customer" data-idcustomer="---id-customer---" data-toggle="modal" data-target="#showCustomerModal_---id-customer-modal---">Details</button>  
-                    <a href="---link-show-customer-carts---" data-idcustomer="---id---" class="customer-details btn btn-outline-primary mx-3">Choisir</a>
+    card: `<div id='customer-card_---increment---' class="card hidden customerCard" >
+                <div class="card-header card-header-customer">    
+                    <h2>---firstname--- ---lastname---</h2>
+                    <h2>#---customer-id---</h2>             
                 </div>
-                ---modal-customer-infos---         
-              </div>
+                <div class="card-body">
+                    <p class="card-text">---email---</p>
+                    <p class="text-muted">---birthday---</p>
+                </div>
+
+                <div class="card-footer">
+                    <button class="customer-show btn btn-primary" data-href="link-show-customer" data-idcustomer="---id-customer---" data-toggle="modal" data-target="#showCustomerModal_---id-customer-modal---">
+                        <span uk-icon="icon: search" class="mr-1 search-icon"></span> Details
+                    </button>  
+                    <a href="---link-show-customer-carts---" data-idcustomer="---id---" class="customer-details btn btn-outline-primary">
+                        <span uk-icon="icon: arrow-right" class="mr-1"></span> Choisir
+                    </a>
+                </div>
+                    
+                    ---modal-customer-infos---         
             </div>`,
 
     modalCustomerInfos: `<div class="modal fade customerModal" id="showCustomerModal_---id-customer-modal---" tabindex="-1" role="dialog" aria-labelledby="showCustomerModalTitle" aria-hidden="true">
@@ -413,5 +422,7 @@ export const TemplateModule = {
                         <th colspan="3" class="text-left">Total produits</th>
                         <th class="text-left">---totalCart---</th>
                     </tr>`,
+
+    productQuantity: `---quantityInStock---`,
 
 };

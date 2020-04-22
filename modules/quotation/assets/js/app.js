@@ -19,6 +19,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         url,
         QuotationModule.getData,
         QuotationModule.getCustomersURL(),
+        null,
+        false,
         true,
         []
     );
@@ -35,6 +37,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         QuotationModule.getCustomersURL(),
         QuotationModule.autocomplete,
         null,
+        null,
+        false,
         true,
         ['#quotation_customer_customerId', 'customers', 1]
     );
@@ -53,8 +57,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
 
-            let link = window.location.origin + '/adm/index.php/modules/quotation/admin/show/customer/';
-            let show = window.location.origin + '/adm/index.php/sell/customers/';
+            let link = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/customer/';
+            let show = window.location.origin + '/adminToua/index.php/sell/customers/';
 
             customers.forEach((customer, i) => {
 
@@ -107,7 +111,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     const getCustomerShow = (customer) => {
                                         console.log(customer);
 
-                                        let addressController = window.location.origin + '/adm/index.php/?controller=AdminAddresses';
+                                        let addressController = window.location.origin + '/adm/index.php/?controller=adminTouainAddresses';
 
                                         let personalData = '';
                                         let tableCustomerOrders = '';
@@ -191,6 +195,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         newUrlCustomerShow,
                                         getCustomerShow,
                                         null,
+                                        null,
+                                        false,
                                         true,
                                         []
                                     );
@@ -202,7 +208,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
 
-                        let linkCart = window.location.origin + '/adm/index.php/modules/quotation/admin/show/cart/';
+                        let linkCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/cart/';
                         let urlCart = document.querySelector('[data-customercart]').dataset.customercart;
                         let newUrlCart;
 
@@ -438,6 +444,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         newUrlCart,
                                                         getCustomerCartToUse,
                                                         null,
+                                                        null,
+                                                        false,
                                                         true,
                                                         []
                                                     );
@@ -454,6 +462,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         newUrlCustomersDetails,
                                         getCustomerDetails,
                                         null,
+                                        null,
+                                        false,
                                         true,
                                         []
                                     );
@@ -474,6 +484,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             urlSearchCustomers.replace(/query/, Event.currentTarget.value),
             insertCustomerInDOM,
             null,
+            null,
+            false,
             true,
             []
         );
@@ -494,6 +506,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         urlProduct,
         QuotationModule.getData,
         QuotationModule.getProductsURL(),
+        null,
+        false,
         true,
         []
     );
@@ -502,6 +516,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         QuotationModule.getProductsURL(),
         QuotationModule.autocomplete,
         null,
+        null,
+        false,
         true,
         ['#quotation_product_cartId', 'products', 1]
     );
@@ -562,12 +578,37 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         }
                     }
                 });
+
+                document.getElementById('add-product-to-cart').addEventListener('submit', Event => {
+                    Event.preventDefault();
+
+                    let urlPost = Event.currentTarget.dataset.urlpost;
+
+                    let form = {
+                        'attributes': document.getElementById('js-output-attributes-products').value,
+                        'qty': document.getElementById('product-quantity').value
+                    };
+
+                    QuotationModule.getData(
+                        urlPost,
+                       null,
+                       null,
+                       'POST',
+                        form,
+                       false,
+                       []
+                    );
+
+                });
+
             };
 
             QuotationModule.getData(
                 urlSearchAttributesProduct,
                 getAttributesProduct,
                 null,
+                null,
+                false,
                 true,
                 []
             );

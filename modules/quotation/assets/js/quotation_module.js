@@ -13,9 +13,10 @@ export const QuotationModule = {
         }
     },
 
-    getData: function (url, callback, path = null, dataFetch = false, autocomplete = []) {
-        fetch(url).then(response => response.json()).then(data => {
+    getData: function (url, callback, path = null, method = 'GET', body = null, dataFetch = false, autocomplete = []) {
+        fetch(url, {method: method, body: body}).then(response => response.json()).then(data => {
             if (typeof callback === 'function') {
+                // console.log('valid callback');
                 if (autocomplete.length >= 1) {
                     // autocomplete[0] => correspond au paramètre 'selector' de la fonction 'autocomplete' type=string
                     if (typeof autocomplete[0] === 'string') {

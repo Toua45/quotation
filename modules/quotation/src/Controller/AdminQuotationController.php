@@ -444,6 +444,10 @@ class AdminQuotationController extends FrameworkBundleAdminController
         return new JsonResponse(json_encode($product), 200, [], true);
     }
 
+    /**
+     * Create a new cart
+     * @param Request $request
+     */
     public function createNewCart (Request $request)
     {
         dump($request->query->all());die;

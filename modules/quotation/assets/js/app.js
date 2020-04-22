@@ -470,7 +470,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             });
         };
 
-        // console.log(urlSearchCustomers.replace(/query/, Event.currentTarget.value));
         QuotationModule.getData(
             urlSearchCustomers.replace(/query/, Event.currentTarget.value),
             insertCustomerInDOM,

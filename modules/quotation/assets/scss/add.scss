@@ -2,6 +2,20 @@
 @import "add/_cart";
 @import "add/modaleShowCustomer";
 
+.search-box {
+  width: 750px;
+}
+
 .twitter-typeahead {
-  margin-right: 10px;
+  margin: 0 10px 0 10px;
+}
+
+$menu-color:#FAFBFC;
+
+.tt-menu {
+  background-color: $menu-color;
+  border-radius: 0 0 5px 5px;
+  border:solid 1px darken($menu-color, 10%);
+  padding:5px;
+  width: 100%;
 }

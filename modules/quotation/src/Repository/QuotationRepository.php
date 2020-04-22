@@ -443,7 +443,7 @@ class QuotationRepository
     public function findByQuery($query)
     {
         return $this->connection->createQueryBuilder()
-            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname')
+            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname', 'c.email', 'c.birthday')
             ->from($this->databasePrefix . 'customer', 'c')
             ->where('c.firstname LIKE :query OR c.lastname LIKE :query')
             ->setParameter('query', '%' . $query . '%')

@@ -20,7 +20,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         QuotationModule.getData,
         QuotationModule.getCustomersURL(),
         null,
-        false,
         true,
         []
     );
@@ -38,7 +37,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         QuotationModule.autocomplete,
         null,
         null,
-        false,
         true,
         ['#quotation_customer_customerId', 'customers', 1]
     );
@@ -193,7 +191,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         getCustomerShow,
                                         null,
                                         null,
-                                        false,
                                         true,
                                         []
                                     );
@@ -442,7 +439,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         getCustomerCartToUse,
                                                         null,
                                                         null,
-                                                        false,
                                                         true,
                                                         []
                                                     );
@@ -460,7 +456,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         getCustomerDetails,
                                         null,
                                         null,
-                                        false,
                                         true,
                                         []
                                     );
@@ -482,7 +477,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             insertCustomerInDOM,
             null,
             null,
-            false,
             true,
             []
         );
@@ -504,7 +498,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         QuotationModule.getData,
         QuotationModule.getProductsURL(),
         null,
-        false,
         true,
         []
     );
@@ -514,7 +507,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         QuotationModule.autocomplete,
         null,
         null,
-        false,
         true,
         ['#quotation_product_cartId', 'products', 1]
     );
@@ -552,9 +544,12 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                     if (typeof product.attributes !== 'undefined') {
                         // On crée un nouvel élément html option
                         selectProductAttributes[index] = new Option(product.attributes, product.id_product_attribute, false, false);
-                        // On lui ajouter un attribut data-instock auquel on affecte la quantité
+                        // On lui ajoute un attribut data-instock auquel on affecte la quantité
                         selectProductAttributes[index].setAttribute('data-instock', product.quantity);
                         selectProductAttributes[index].setAttribute('data-idproduct', product.id_product);
+
+                        // Create attribute idprodut on form.add-product-to-cart
+                        document.getElementById('add-product-to-cart').setAttribute('data-idproduct', product.id_product);
                         sectionProductAttributes.classList.replace('d-none','d-flex');
                     } else {
                         sectionProductAttributes.classList.replace('d-flex','d-none');
@@ -579,25 +574,22 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                 document.getElementById('add-product-to-cart').addEventListener('submit', Event => {
                     Event.preventDefault();
 
+                    let argsURL = '/' +
+                        document.getElementById('add-product-to-cart').dataset.idproduct + '/' + // Get id_product
+                        document.getElementById('js-output-attributes-products').value + '/' + // Get id_attribute
+                        document.getElementById('product-quantity').value; // Get qty
+
                     let urlPost = Event.currentTarget.dataset.urlpost;
 
-                    let form = {
-                        'attributes': document.getElementById('js-output-attributes-products').value,
-                        'qty': document.getElementById('product-quantity').value
-                    };
-
                     QuotationModule.getData(
-                        urlPost,
+                        urlPost.replace(/(\/\d+){3}(?=\?_token)/, argsURL),
                        null,
                        null,
                        'POST',
-                        form,
                        false,
                        []
                     );
-
                 });
-
             };
 
             QuotationModule.getData(
@@ -605,7 +597,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                 getAttributesProduct,
                 null,
                 null,
-                false,
                 true,
                 []
             );

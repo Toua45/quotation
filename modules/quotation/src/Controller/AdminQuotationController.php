@@ -445,11 +445,17 @@ class AdminQuotationController extends FrameworkBundleAdminController
     }
 
     /**
-     * Create a new cart
-     * @param Request $request
+     * @param $id_product
+     * @param $id_attribute
+     * @param $qty
      */
-    public function createNewCart (Request $request)
+    public function createNewCart($id_product, $id_attribute, $qty)
     {
-        dump($request->query->all());die;
+        dump($id_product);
+        dump($id_attribute);
+        dump($qty);
+
+//        $this->get('quotation_repository')->createCart($param1, $param2);
+        die;
     }
 }

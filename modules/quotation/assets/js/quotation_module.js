@@ -13,8 +13,9 @@ export const QuotationModule = {
         }
     },
 
-    getData: function (url, callback, path = null, method = 'GET', body = null, dataFetch = false, autocomplete = []) {
-        fetch(url, {method: method, body: body}).then(response => response.json()).then(data => {
+    getData: function (url, callback, path = null, method = null, dataFetch = false, autocomplete = []) {
+        let Mth = method !== null ? method.toUpperCase() : 'GET';
+        fetch(url, {method: Mth}).then(response => response.json()).then(data => {
             if (typeof callback === 'function') {
                 // console.log('valid callback');
                 if (autocomplete.length >= 1) {

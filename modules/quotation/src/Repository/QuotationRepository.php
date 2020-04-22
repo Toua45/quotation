@@ -534,6 +534,8 @@ class QuotationRepository
     }
 
     /**
+     * @param $id_product
+     * @param null $id_product_attribute
      * @return mixed[]
      */
     public function findQuantityByProduct(
@@ -559,4 +561,13 @@ class QuotationRepository
         return $query->execute()->fetch();
     }
 
+    public function createCart($param1, $param2)
+    {
+        return $this->connection->createQueryBuilder()
+            ->insert($this->databasePrefix . 'cart')
+            ->values(['key1' => ':value1', 'key2' => ':value2'])
+            ->setParameters(['value1' => $param1, 'value2' => $param2])
+            ->execute()
+            ;
+    }
 }

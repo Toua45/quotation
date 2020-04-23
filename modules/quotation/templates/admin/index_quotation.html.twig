@@ -144,8 +144,8 @@
                          <td>{{ quotation.status }}</td>
                          <td>{{ quotation.total_product_price|number_format(2) }} €</td>
                          <td>
-                             <a href="#">
-                                 <span uk-icon="icon: pdf-file" class="justify-content-end"></span>
+                             <a href="{{ path('quotation_admin_pdf', { id_quotation: quotation.id_quotation, firstname: quotation.firstname, lastname: quotation.lastname}) }}" target="_blank">
+                                 <span uk-icon="icon: file-pdf; ratio: 1.2" class="d-flex justify-content-center"></span>
                              </a>
                          </td>
                          <td>

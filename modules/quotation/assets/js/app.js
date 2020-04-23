@@ -231,6 +231,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         .replace(/\d+(?=\/details)/, link.dataset.idcustomer);
 
                                     const getCustomerDetails = (data) => {
+                                        console.log(data);
                                         let outputCart = '';
                                         let outputOrder = '';
                                         let outputQuotation = '';
@@ -445,6 +446,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                 });
                                             });
                                         }
+                                        document.getElementById('add-product-to-cart').setAttribute('data-idcustomer', data['response'][0].id_customer);
+                                        console.log(document.getElementById('add-product-to-cart'));
                                     };
 
                                     /*
@@ -544,9 +547,12 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                     if (typeof product.attributes !== 'undefined') {
                         // On crée un nouvel élément html option
                         selectProductAttributes[index] = new Option(product.attributes, product.id_product_attribute, false, false);
-                        // On lui ajouter un attribut data-instock auquel on affecte la quantité
+                        // On lui ajoute un attribut data-instock auquel on affecte la quantité
                         selectProductAttributes[index].setAttribute('data-instock', product.quantity);
                         selectProductAttributes[index].setAttribute('data-idproduct', product.id_product);
+
+                        // Create attribute idprodut on form.add-product-to-cart
+                        document.getElementById('add-product-to-cart').setAttribute('data-idproduct', product.id_product);
                         sectionProductAttributes.classList.replace('d-none','d-flex');
                     } else {
                         sectionProductAttributes.classList.replace('d-flex','d-none');
@@ -571,22 +577,22 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                 document.getElementById('add-product-to-cart').addEventListener('submit', Event => {
                     Event.preventDefault();
 
+                    let argsURL = '/' +
+                        document.getElementById('add-product-to-cart').dataset.idproduct + '/' + // Get id_product
+                        document.getElementById('js-output-attributes-products').value + '/' + // Get id_attribute
+                        document.getElementById('product-quantity').value + '/' + // Get qty
+                        document.getElementById('add-product-to-cart').dataset.idcustomer; // Get id_customer
+
                     let urlPost = Event.currentTarget.dataset.urlpost;
-
-                    let form = {
-                        'attributes': document.getElementById('js-output-attributes-products').value,
-                        'qty': document.getElementById('product-quantity').value
-                    };
-                    console.log(form);
-
+                    console.log(argsURL);
+                    console.log(urlPost.replace(/(\/\d+){4}(?=\?_token)/, argsURL));
                     QuotationModule.getData(
-                        urlPost,
-                       null,
-                       null,
-                       'POST',
-                       true,
-                       [],
-                       []
+                        urlPost.replace(/(\/\d+){4}(?=\?_token)/, argsURL),
+                        null,
+                        null,
+                        'POST',
+                        false,
+                        []
                     );
                 });
 

@@ -2,6 +2,7 @@
 
 namespace Quotation\Controller;
 
+use PrestaShop\PrestaShop\Adapter\Entity\Cart;
 use PrestaShop\PrestaShop\Adapter\Entity\Product;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
@@ -431,25 +432,58 @@ class AdminQuotationController extends FrameworkBundleAdminController
     }
 
     /**
-     * Show attributes product by ID
-     * @param Request $request
      * @param $id_product
-     * @return JsonResponse
+     * @param $id_attribute
+     * @param $qty
+     * @param $id_customer
      */
-    public function showAttributesByProduct(Request $request, $id_product)
+    public function createNewCart($id_product, $id_attribute, $qty, $id_customer)
     {
         $quotationRepository = $this->get('quotation_repository');
-        $product = $quotationRepository->findAttributesByProduct($id_product);
+        $customer = $quotationRepository->getCustomerInfoById($id_customer);
 
-        return new JsonResponse(json_encode($product), 200, [], true);
-    }
+        if ($customer['is_guest'] !== 0) {
+            $customer['id_guest'] = $quotationRepository->findGuestCustomer($customer['id_customer'], $customer['is_guest'])['id_guest'];
+        }
 
-    /**
-     * Create a new cart
-     * @param Request $request
-     */
-    public function createNewCart (Request $request)
-    {
-        dump($request->query->all());die;
+        $idShopGroup = $this->getContext()->shop->id_shop_group;
+        $idShop = $this->getContextShopId();
+        $idLang = $this->getContext()->language->id;
+        $idAdressDelivery = $customer['id_address'];
+        $idAdressInvoice = $customer['id_address'];
+        $idCurrency = $this->getContext()->currency->id;
+        $idGuest = $id_customer;
+        $secureKey = $customer['secure_key'];
+        $dateAdd = date_format(new \DateTime('now'), 'Y-m-d H:i:s');
+        $dateUpd = date_format(new \DateTime('now'), 'Y-m-d H:i:s');
+
+        $cart = $quotationRepository->insertToCart(
+            $idShopGroup,
+            $idShop,
+            $idLang,
+            $idAdressDelivery,
+            $idAdressInvoice,
+            $idCurrency,
+            $id_customer,
+            $idGuest,
+            $secureKey,
+            $dateAdd,
+            $dateUpd,
+            0,
+            '',
+            0,
+            0,
+            0,
+            0
+        );
+
+        $cartByCustomer = $quotationRepository->findLastCartByCustomerId($id_customer);
+
+        $id_customization = 0;
+
+        $cartProduct = $quotationRepository->insertProductsToCart($cartByCustomer[0]['id_cart'], $id_product, $idAdressDelivery, $idShop, $id_attribute, $id_customization, $qty, $dateAdd);
+
+        return new JsonResponse('Cart inserted successfully', 200, [], true);
+
     }
 }

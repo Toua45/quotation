@@ -1,16 +1,25 @@
 export const TemplateModule = {
 
-    card: `<div id='customer-card_---increment---' class="card hidden mr-3 mb-4" >
-              <div class="card-body">
-                <h5 class="card-title">---lastname---</h5>
-                <h6 class="card-subtitle mb-2 text-muted">---firstname---</h6>
-                <p class="card-text">---text---</p>
-                <div class="row justify-content-between">
-                    <button class="customer-show btn btn-primary" data-href="link-show-customer" data-idcustomer="---id-customer---" data-toggle="modal" data-target="#showCustomerModal_---id-customer-modal---">Details</button>  
-                    <a href="---link-show-customer-carts---" data-idcustomer="---id---" class="customer-details btn btn-outline-primary mx-3">Choisir</a>
+    card: `<div id='customer-card_---increment---' class="card hidden customerCard" >
+                <div class="card-header card-header-customer">    
+                    <h2>---firstname--- ---lastname---</h2>
+                    <h2>#---customer-id---</h2>             
                 </div>
-                ---modal-customer-infos---         
-              </div>
+                <div class="card-body">
+                    <p class="card-text">---email---</p>
+                    <p class="text-muted">---birthday---</p>
+                </div>
+
+                <div class="card-footer">
+                    <button class="customer-show btn btn-primary" data-href="link-show-customer" data-idcustomer="---id-customer---" data-toggle="modal" data-target="#showCustomerModal_---id-customer-modal---">
+                        <span uk-icon="icon: search" class="mr-1 search-icon"></span> Details
+                    </button>  
+                    <a href="---link-show-customer-carts---" data-idcustomer="---id---" class="customer-details btn btn-outline-primary">
+                        <span uk-icon="icon: arrow-right" class="mr-1"></span> Choisir
+                    </a>
+                </div>
+                    
+                    ---modal-customer-infos---         
             </div>`,
 
     modalCustomerInfos: `<div class="modal fade customerModal" id="showCustomerModal_---id-customer-modal---" tabindex="-1" role="dialog" aria-labelledby="showCustomerModalTitle" aria-hidden="true">
@@ -209,9 +218,13 @@ export const TemplateModule = {
                     <td class="cart-id text-left">---cartId---</td>
                     <td class="cart-date text-left">---cartDate---</td>
                     <td class="cart-total text-left">---totalCart---</td>
-                    <td class="cart-actions text-left">
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#showCartModal_---id-cart-modal---">Details</button>
-                        <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-outline-primary ml-3">Utiliser</a>
+                    <td class="cart-actions d-flex">
+                        <button class="btn btn-light d-flex" data-toggle="modal" data-target="#showCartModal_---id-cart-modal---">
+                            <span uk-icon="icon: search" class="mr-1 search-icon"></span> Details
+                        </button>
+                        <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-light d-flex ml-3">
+                            <span uk-icon="icon: arrow-right" class="mr-1"></span> Utiliser
+                        </a>
                     </td>         
                  </tr>`,
 
@@ -276,9 +289,13 @@ export const TemplateModule = {
             <td class="order-total text-left">---totalOrder---</td>
             <td class="order-payment text-left">---payment---</td>
             <td class="order-status text-left">---orderStatus---</td>
-            <td class="order-actions text-left">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#showOrderModal_---id-order-modal---">Details</button>
-            <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-outline-primary ml-3">Utiliser</a>
+            <td class="order-actions d-flex">
+                <button class="btn btn-light d-flex" data-toggle="modal" data-target="#showOrderModal_---id-order-modal---">
+                     <span uk-icon="icon: search" class="mr-1 search-icon"></span> Details
+                </button>
+                <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-light d-flex ml-3">
+                    <span uk-icon="icon: arrow-right" class="mr-1"></span> Utiliser
+                </a>
             </td>
         </tr>`,
 
@@ -348,9 +365,13 @@ export const TemplateModule = {
             <td class="quotation-id text-left">---quotationId---</td>
             <td class="quotation-date text-left">---quotationDate---</td>
             <td class="quotation-total text-left">---totalQuotation---</td>
-            <td class="quotation-actions text-left">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#showQuotationModal_---id-quotation-modal---">Details</button>
-            <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-outline-primary ml-3">Utiliser</a>
+            <td class="quotation-actions d-flex">
+                <button class="btn btn-light d-flex" data-toggle="modal" data-target="#showQuotationModal_---id-quotation-modal---">
+                    <span uk-icon="icon: search" class="mr-1 search-icon"></span> Details
+                </button>
+                <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-light d-flex ml-3">
+                    <span uk-icon="icon: arrow-right" class="mr-1"></span> Utiliser
+                </a>
             </td>
         </tr>`,
 
@@ -413,5 +434,7 @@ export const TemplateModule = {
                         <th colspan="3" class="text-left">Total produits</th>
                         <th class="text-left">---totalCart---</th>
                     </tr>`,
+
+    productQuantity: `---quantityInStock---`,
 
 };

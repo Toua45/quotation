@@ -41,11 +41,14 @@
 
     .input-date {
       padding: 0;
+      height:30px;
 
       input {
         background-color: transparent;
         border: none;
         align-self: center;
+        font-size: 11px;
+        padding: 4px;
       }
 
       span {

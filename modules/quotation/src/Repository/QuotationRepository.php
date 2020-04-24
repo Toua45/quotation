@@ -565,35 +565,11 @@ class QuotationRepository
     public function getCustomerInfoById($id_customer)
     {
         return $this->connection->createQueryBuilder()
-            ->addSelect('c.id_customer', 'c.secure_key', 'c.is_guest')
-            ->addSelect('a.id_address')
+            ->addSelect('c.id_customer', 'c.secure_key')
             ->from($this->databasePrefix . 'customer', 'c')
-            ->join('c', $this->databasePrefix . 'address', 'a', 'c.id_customer = a.id_customer')
             ->where('c.id_customer = :id_customer')
             ->setParameter('id_customer', $id_customer)
             ->execute()->fetch();
-    }
-
-    /**
-     * @return mixed[]
-     */
-    public function findGuestCustomer(
-        $id_customer,
-        $is_guest = 0
-    )
-    {
-        $query = $this->connection->createQueryBuilder()
-            ->addSelect('g.id_guest')
-            ->from($this->databasePrefix . 'guest', 'g')
-            ->join('g', $this->databasePrefix . 'customer', 'c', 'g.id_customer = c.id_customer');
-        if ($is_guest === 0) {
-            $query->where('c.id_customer = :id_customer')
-                ->setParameter('id_customer', $id_customer);
-        } else {
-            $query->where('c.id_customer = :id_customer AND c.is_guest = :is_guest')
-                ->setParameters(['id_customer' => $id_customer, 'is_guest' => $is_guest]);
-        }
-        return $query->execute()->fetch();
     }
 
     /**
@@ -606,59 +582,58 @@ class QuotationRepository
                                    int $idAdressInvoice,
                                    int $idCurrency,
                                    int $id_customer,
-                                   $idGuest,
+                                   int $idGuest,
                                    string $secureKey,
                                    $dateAdd,
                                    $dateUpd,
                                    int $idCarrier = 0,
                                    string $deliveryOption = '',
                                    $recyclable = 0,
-                                    $gift = 0,
-                                    $mobileTheme = 0,
-                                    $allowSeperatedPackage = 0)
+                                   $gift = 0,
+                                   $mobileTheme = 0,
+                                   $allowSeperatedPackage = 0)
     {
         return $this->connection->createQueryBuilder()
             ->insert($this->databasePrefix . 'cart')
             ->values([
-                'id_shop_group' => ':value1',
-                'id_shop' => ':value2',
-                'id_carrier' => ':value3',
-                'delivery_option' => ':value4',
-                'id_lang' => ':value5',
-                'id_address_delivery' => ':value6',
-                'id_address_invoice' => ':value7',
-                'id_currency' => ':value8',
-                'id_customer' => ':value9',
-                'id_guest' => ':value10',
-                'secure_key' => ':value11',
-                'recyclable' => ':value12',
-                'gift' => ':value13',
-                'mobile_theme' => ':value14',
-                'allow_seperated_package' => ':value15',
-                'date_add' => ':value16',
-                'date_upd' => ':value17',
+                'id_shop_group' => ':id_shop_group',
+                'id_shop' => ':id_shop',
+                'id_carrier' => ':id_carrier',
+                'delivery_option' => ':delivery_option',
+                'id_lang' => ':id_lang',
+                'id_address_delivery' => ':id_address_delivery',
+                'id_address_invoice' => ':id_address_invoice',
+                'id_currency' => ':id_currency',
+                'id_customer' => ':id_customer',
+                'id_guest' => ':id_guest',
+                'secure_key' => ':secure_key',
+                'recyclable' => ':recyclable',
+                'gift' => ':gift',
+                'mobile_theme' => ':mobile_theme',
+                'allow_seperated_package' => ':allow_seperated_package',
+                'date_add' => ':date_add',
+                'date_upd' => ':date_upd',
             ])
             ->setParameters([
-                'value1' => $idShopGroup,
-                'value2' => $idShop,
-                'value3' => $idCarrier,
-                'value4' => $deliveryOption,
-                'value5' => $idLang,
-                'value6' => $idAdressDelivery,
-                'value7' => $idAdressInvoice,
-                'value8' => $idCurrency,
-                'value9' => $id_customer,
-                'value10' => $idGuest,
-                'value11' => $secureKey,
-                'value12' => $recyclable,
-                'value13' => $gift,
-                'value14' => $mobileTheme,
-                'value15' => $allowSeperatedPackage,
-                'value16' => $dateAdd,
-                'value17' => $dateUpd
+                'id_shop_group' => $idShopGroup,
+                'id_shop' => $idShop,
+                'id_carrier' => $idCarrier,
+                'delivery_option' => $deliveryOption,
+                'id_lang' => $idLang,
+                'id_address_delivery' => $idAdressDelivery,
+                'id_address_invoice' => $idAdressInvoice,
+                'id_currency' => $idCurrency,
+                'id_customer' => $id_customer,
+                'id_guest' => $idGuest,
+                'secure_key' => $secureKey,
+                'recyclable' => $recyclable,
+                'gift' => $gift,
+                'mobile_theme' => $mobileTheme,
+                'allow_seperated_package' => $allowSeperatedPackage,
+                'date_add' => $dateAdd,
+                'date_upd' => $dateUpd
             ])
-            ->execute()
-            ;
+            ->execute();
     }
 
     /**
@@ -680,7 +655,7 @@ class QuotationRepository
     /**
      * Insert products into Cart
      */
-    public function insertProductsToCart($id_cart, $id_product, $idAdressDelivery, $idShop, $id_attribute, $id_customization, $qty, $dateAdd)
+    public function insertProductsToCart($id_cart, $id_product, $idAdressDelivery, $idShop, $id_product_attribute, $id_customization, $quantity, $dateAdd)
     {
         return $this->connection->createQueryBuilder()
             ->insert($this->databasePrefix . 'cart_product')
@@ -699,12 +674,11 @@ class QuotationRepository
                 'id_product' => $id_product,
                 'id_address_delivery' => $idAdressDelivery,
                 'id_shop' => $idShop,
-                'id_product_attribute' => $id_attribute,
+                'id_product_attribute' => $id_product_attribute,
                 'id_customization' => $id_customization,
-                'quantity' => $qty,
+                'quantity' => $quantity,
                 'date_add' => $dateAdd
             ])
-            ->execute()
-            ;
+            ->execute();
     }
 }

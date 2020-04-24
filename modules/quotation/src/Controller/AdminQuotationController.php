@@ -2,8 +2,6 @@
 
 namespace Quotation\Controller;
 
-use PrestaShop\PrestaShop\Adapter\Entity\Cart;
-use PrestaShop\PrestaShop\Adapter\Entity\Product;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
@@ -71,6 +69,26 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $quotationPdf->createPDF($html, $filename);
     }
 
+    public function ajaxCustomer(Request $request)
+    {
+        $customerRepository = $this->get('quotation_repository');
+        $customers = $customerRepository->findAllCustomers();
+        $response = [];
+
+        foreach ($customers as $key => $customer) {
+            $response[$key]['fullname'] = $customer['fullname'];
+        }
+
+        $file = 'data-customer.js';
+        $fileSystem = new QuotationFileSystem();
+        if (!is_file($file)) {
+            $fileSystem->writeFile($file, $response);
+        } else {
+            $fileSystem->writeFile($file, $response);
+        }
+        return new JsonResponse(json_encode($response), 200, [], true);
+    }
+
     public function add(Request $request)
     {
         $quotation = new Quotation();
@@ -82,7 +100,8 @@ class AdminQuotationController extends FrameworkBundleAdminController
             return $this->redirectToRoute('quotation_admin_add');
         }
 
-        $this->redirect('@PrestaShop/Admin/Sell/Customer/CustomerController/addGroupSelectionToRequest'); // Permet d'appeler la méthode addGroupSelectionToRequest du CustomerController
+        // Permet d'appeler la méthode addGroupSelectionToRequest du CustomerController
+        $this->redirect('@PrestaShop/Admin/Sell/Customer/CustomerController/addGroupSelectionToRequest');
 
         $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')->getForm();
         $customerForm->handleRequest($request);
@@ -150,6 +169,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $response[$key]['date_cart'] = date("d/m/Y", strtotime($cart['date_add']));
             $response[$key]['id_customer'] = $idCustomer;
         }
+
         return new JsonResponse(json_encode($response), 200, [], true);
     }
 
@@ -221,12 +241,17 @@ class AdminQuotationController extends FrameworkBundleAdminController
     public function showCustomerDetails(Request $request, $id_customer)
     {
         $quotationRepository = $this->get('quotation_repository');
+        $customer = $quotationRepository->getCustomerInfoById($id_customer);
         $carts = $quotationRepository->findCartsByCustomer($id_customer);
 
+        // On boucle sur les carts
         for ($i = 0; $i < count($carts); $i++) {
             if ($carts[$i]['id_cart']) {
+                // En fonction des carts qui ont été récupérés, on récupère les produits liés à ce cart avec la méthode findProductsCustomerByCarts
                 $carts[$i]['products'] = $quotationRepository->findProductsCustomerByCarts($carts[$i]['id_cart']);
+                // En fonction des carts qui ont été récupérés, on récupère les commandes liés à ce cart avec la méthode findOrdersByCustomer
                 $carts[$i]['orders'] = $quotationRepository->findOrdersByCustomer($id_customer, $carts[$i]['id_cart']);
+                // En fonction des carts qui ont été récupérés, on récupère les quotations liés à ce cart avec la méthode findQuotationsByCustomer
                 $carts[$i]['quotations'] = $quotationRepository->findQuotationsByCustomer($id_customer, $carts[$i]['id_cart']);
             }
         }
@@ -302,30 +327,11 @@ class AdminQuotationController extends FrameworkBundleAdminController
         }
 
         return new JsonResponse(json_encode([
+            'customer' => $customer,
             'carts' => $carts,
             'orders' => $orders,
             'response' => $response,
         ]), 200, [], true);
-    }
-
-    public function ajaxCustomer(Request $request)
-    {
-        $customerRepository = $this->get('quotation_repository');
-        $customers = $customerRepository->findAllCustomers();
-        $response = [];
-
-        foreach ($customers as $key => $customer) {
-            $response[$key]['fullname'] = $customer['fullname'];
-        }
-
-        $file = 'data-customer.js';
-        $fileSystem = new QuotationFileSystem();
-        if (!is_file($file)) {
-            $fileSystem->writeFile($file, $response);
-        } else {
-            $fileSystem->writeFile($file, $response);
-        }
-        return new JsonResponse(json_encode($response), 200, [], true);
     }
 
     /**
@@ -432,25 +438,31 @@ class AdminQuotationController extends FrameworkBundleAdminController
     }
 
     /**
+     * Create new cart
      * @param $id_product
-     * @param $id_attribute
-     * @param $qty
+     * @param $id_product_attribute
+     * @param $quantity
      * @param $id_customer
+     * @return JsonResponse
      */
-    public function createNewCart($id_product, $id_attribute, $qty, $id_customer)
+    public function createNewCart($id_product, $id_product_attribute, $quantity, $id_customer)
     {
         $quotationRepository = $this->get('quotation_repository');
         $customer = $quotationRepository->getCustomerInfoById($id_customer);
 
-        if ($customer['is_guest'] !== 0) {
-            $customer['id_guest'] = $quotationRepository->findGuestCustomer($customer['id_customer'], $customer['is_guest'])['id_guest'];
+        if ($customer['id_customer']) {
+            $customer['addresses'] = $quotationRepository->findAddressesByCustomer($id_customer);
+            if ($customer['addresses'] === []) {
+                $customerIdAddress['id_address'] = $customer['addresses'] === [] ? '0' : $customer['addresses'];
+                array_push($customer['addresses'], $customerIdAddress);
+            }
         }
 
         $idShopGroup = $this->getContext()->shop->id_shop_group;
         $idShop = $this->getContextShopId();
         $idLang = $this->getContext()->language->id;
-        $idAdressDelivery = $customer['id_address'];
-        $idAdressInvoice = $customer['id_address'];
+        $idAdressDelivery = $customer['addresses'][0]['id_address'];
+        $idAdressInvoice = $customer['addresses'][0]['id_address'];
         $idCurrency = $this->getContext()->currency->id;
         $idGuest = $id_customer;
         $secureKey = $customer['secure_key'];
@@ -469,7 +481,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $secureKey,
             $dateAdd,
             $dateUpd,
-            0,
+            1,
             '',
             0,
             0,
@@ -481,7 +493,15 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         $id_customization = 0;
 
-        $cartProduct = $quotationRepository->insertProductsToCart($cartByCustomer[0]['id_cart'], $id_product, $idAdressDelivery, $idShop, $id_attribute, $id_customization, $qty, $dateAdd);
+        $cartProduct = $quotationRepository->insertProductsToCart(
+            $cartByCustomer[0]['id_cart'],
+            $id_product,
+            $idAdressDelivery,
+            $idShop,
+            $id_product_attribute,
+            $id_customization,
+            $quantity,
+            $dateAdd);
 
         return new JsonResponse('Cart inserted successfully', 200, [], true);
 

@@ -231,7 +231,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         .replace(/\d+(?=\/details)/, link.dataset.idcustomer);
 
                                     const getCustomerDetails = (data) => {
-                                        console.log(data);
                                         let outputCart = '';
                                         let outputOrder = '';
                                         let outputQuotation = '';
@@ -446,8 +445,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                 });
                                             });
                                         }
-                                        document.getElementById('add-product-to-cart').setAttribute('data-idcustomer', data['response'][0].id_customer);
-                                        console.log(document.getElementById('add-product-to-cart'));
+
+                                        // on ajoute l'attribut data-idcustomer à l'élément html add-product-to-cart pour récupérer l'id_customer qui nous servira pour la section search product section
+                                        document.getElementById('add-product-to-cart').setAttribute('data-idcustomer', data['customer'].id_customer);
                                     };
 
                                     /*
@@ -579,13 +579,11 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                     let argsURL = '/' +
                         document.getElementById('add-product-to-cart').dataset.idproduct + '/' + // Get id_product
-                        document.getElementById('js-output-attributes-products').value + '/' + // Get id_attribute
-                        document.getElementById('product-quantity').value + '/' + // Get qty
+                        document.getElementById('js-output-attributes-products').value + '/' + // Get id_product_attribute
+                        document.getElementById('product-quantity').value + '/' + // Get quantity
                         document.getElementById('add-product-to-cart').dataset.idcustomer; // Get id_customer
 
                     let urlPost = Event.currentTarget.dataset.urlpost;
-                    console.log(argsURL);
-                    console.log(urlPost.replace(/(\/\d+){4}(?=\?_token)/, argsURL));
                     QuotationModule.getData(
                         urlPost.replace(/(\/\d+){4}(?=\?_token)/, argsURL),
                         null,
@@ -612,7 +610,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     };
 
     const inputSearchProducts = document.getElementById('quotation_product_cartId');
-    ['keyup', 'change'].forEach(event => {
+    ['keyup'].forEach(event => {
         inputSearchProducts.addEventListener(event, getQueryProduct, false);
     });
 

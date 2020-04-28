@@ -356,9 +356,9 @@ class AdminQuotationController extends FrameworkBundleAdminController
                     $cart['products'][$j]['product_quantity'];
                     $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
                     $cart['products'][$j]['id_image'];
-                    $cart['products'][$j]['nb_char_image'] = $cart['products'][$j]['id_image'];
-                    if ($cart['products'][$j]['nb_char_image']) {
-                        $cart['products'][$j]['nb_char_image'] = str_split($cart['products'][$j]['nb_char_image']);
+                    $cart['products'][$j]['path'] = $cart['products'][$j]['id_image'];
+                    if ($cart['products'][$j]['path']) {
+                        $cart['products'][$j]['path'] = str_split($cart['products'][$j]['path']);
                     }
                 }
             }

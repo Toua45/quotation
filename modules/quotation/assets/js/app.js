@@ -418,7 +418,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                                         for (let product of cart['products']) {
                                                             outputCartProductsToUse += mod.TemplateModule.quotationCartProducts
-                                                                .replace(/---picture---/, picture + product.nb_char_image.join('/') + '/' + product.id_image + '-small_default.jpg')
+                                                                .replace(/---picture---/, picture + product.path.join('/') + '/' + product.id_image + '-small_default.jpg')
                                                                 .replace(/---productName---/, product.product_name)
                                                                 .replace(/---productPrice---/, product.product_price + ' €')
                                                                 .replace(/---productQuantity---/, product.product_quantity)

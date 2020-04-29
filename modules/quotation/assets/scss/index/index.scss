@@ -72,7 +72,7 @@
       flex-direction: column;
       align-items: center;
       margin-top: -80px;
-      width:5px;
+      width: 5px;
 
       .text-infobulle {
         background-color: $darkgrey;
@@ -138,14 +138,31 @@
     }
   }
 
-  .btn-light:hover {
-    $bg-color: #00AFF0;
+  $bg-color: #00AFF0;
+
+  .btn-light:hover, {
     color: $light;
     background-color: $bg-color;
     border-color: darken($bg-color, 5%);
 
     circle, path {
       stroke: $light;
+    }
+  }
+
+  .btn-disabled, .btn-disabled:hover {
+    background-color: $lightgrey;
+    padding: 6px 8px 6px 8px;
+  }
+
+  .btn-disabled:hover {
+    border: solid 1px darken($bg-color, 5%);
+  }
+
+  .pagination-buttons {
+    .btn {
+      width: 100px;
+      justify-content: center;
     }
   }
 

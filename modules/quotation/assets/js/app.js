@@ -412,12 +412,13 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         .replace(/\d+(?=\?_token)/, link.dataset.idcart);
 
                                                     const getCustomerCartToUse = (cart) => {
+                                                        let picture = window.location.origin + '/img/p/';
                                                         let outputCartToUse = '';
                                                         let outputCartProductsToUse = '';
 
                                                         for (let product of cart['products']) {
-
                                                             outputCartProductsToUse += mod.TemplateModule.quotationCartProducts
+                                                                .replace(/---picture---/, picture + product.path.join('/') + '/' + product.id_image + '-small_default.jpg')
                                                                 .replace(/---productName---/, product.product_name)
                                                                 .replace(/---productPrice---/, product.product_price + ' €')
                                                                 .replace(/---productQuantity---/, product.product_quantity)

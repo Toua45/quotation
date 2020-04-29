@@ -47,7 +47,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
             'quotations' => $quotations['records'],
             'page' => $page,
-            'nbPages' => (int) ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE),
+            'nbPages' => (int)ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE),
             'nbRecords' => $quotations['nbRecords'],
             'quotationFilterForm' => $quotationFilterForm->createView()
         ]);
@@ -59,7 +59,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $quotation = $quotationRepository->findQuotationById($id_quotation);
 
         $quotationPdf = new QuotationPdf();
-        $filename = $quotation['firstname'] . ' ' . $filename = $quotation['lastname'] .  '  - Référence ' . $filename = $quotation['reference'];
+        $filename = $quotation['firstname'] . ' ' . $filename = $quotation['lastname'] . '  - Référence ' . $filename = $quotation['reference'];
         $html = $this->renderView('@Modules/quotation/templates/admin/pdf/pdf_quotation.html.twig', [
             'id_quotation' => $quotation['id_quotation'],
             'firstname' => $quotation['firstname'],
@@ -96,7 +96,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
                 if ($request->query->has('submitFormAjax')) {
                     /** @var ViewableCustomer $customerInformation */
-                    $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
+                    $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int)$customerId));
 
                     return $this->render('@PrestaShop/Admin/Sell/Customer/modal_create_success.html.twig', [
                         'customerId' => $customerId,
@@ -355,6 +355,11 @@ class AdminQuotationController extends FrameworkBundleAdminController
                     $cart['products'][$j]['product_price'] = number_format($cart['products'][$j]['product_price'], 2);
                     $cart['products'][$j]['product_quantity'];
                     $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
+                    $cart['products'][$j]['id_image'];
+                    $cart['products'][$j]['path'] = $cart['products'][$j]['id_image'];
+                    if ($cart['products'][$j]['path']) {
+                        $cart['products'][$j]['path'] = str_split($cart['products'][$j]['path']);
+                    }
                 }
             }
         }
@@ -423,7 +428,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
                     $attributes .= $product[$i]['attributes'][$j]['attribute_details'] . ' - ';
                     $attributesDetails = $attributes . $product[$i]['product_price'];
                 }
-                $product[$i]['attributes'] = rtrim($attributesDetails,  ' - ');
+                $product[$i]['attributes'] = rtrim($attributesDetails, ' - ');
             }
         }
 
@@ -444,8 +449,9 @@ class AdminQuotationController extends FrameworkBundleAdminController
         return new JsonResponse(json_encode($product), 200, [], true);
     }
 
-    public function createNewCart (Request $request)
+    public function createNewCart(Request $request)
     {
-        dump($request->query->all());die;
+        dump($request->query->all());
+        die;
     }
 }

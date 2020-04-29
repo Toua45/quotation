@@ -534,7 +534,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                 let sectionProductAttributes = document.getElementById('section-attributes-product');
 
                 for (let product of attributes) {
-                    console.log(product);
+                    // console.log(product);
                     // Nous allons calculer la longueur du tableau
                     if (selectProductAttributes.length !== 0) {
                         for (let i = 0; i < selectProductAttributes.length; i++) {
@@ -588,7 +588,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         document.getElementById('add-product-to-cart').dataset.idcustomer + '/' + // Get id_customer
                         document.getElementById('add-product-to-cart').dataset.idcart; // Get id_cart
 
-                    console.log(argsURL);
+                    // console.log(argsURL);
 
                     let urlPost = Event.currentTarget.dataset.urlpost;
 

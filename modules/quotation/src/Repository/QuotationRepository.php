@@ -655,7 +655,7 @@ class QuotationRepository
     /**
      * Insert products into Cart
      */
-    public function insertProductsToCart($id_cart, $id_product, $idAdressDelivery, $idShop, $id_product_attribute, $id_customization, $quantity, $dateAdd)
+    public function insertProductsToCart($id_cart, $id_product, $idAddressDelivery, $idShop, $id_product_attribute, $id_customization, $quantity, $dateAdd)
     {
         return $this->connection->createQueryBuilder()
             ->insert($this->databasePrefix . 'cart_product')
@@ -672,7 +672,7 @@ class QuotationRepository
             ->setParameters([
                 'id_cart' => $id_cart,
                 'id_product' => $id_product,
-                'id_address_delivery' => $idAdressDelivery,
+                'id_address_delivery' => $idAddressDelivery,
                 'id_shop' => $idShop,
                 'id_product_attribute' => $id_product_attribute,
                 'id_customization' => $id_customization,
@@ -680,5 +680,44 @@ class QuotationRepository
                 'date_add' => $dateAdd
             ])
             ->execute();
+    }
+
+    /**
+     * Add other products into Cart
+     */
+    public function updateCart($id_cart, $id_product, $idAddressDelivery, $idShop, $id_product_attribute, $id_customization, $quantity, $dateAdd)
+//    public function updateCart($id_cart, $id_product, $idAddressDelivery, $idShop, $id_product_attribute, $id_customization, $quantity, $dateAdd, array $productsToCart = [])
+//    public function updateCart($id_cart, array $productsToCart = [], $idAddressDelivery, $idShop,$id_customization,$dateAdd)
+    {
+         $query = $this->connection->createQueryBuilder()
+            ->insert($this->databasePrefix . 'cart_product');
+
+//         if (count($productsToCart) !== 0) {
+//             for ($i = 0; $i < count($productsToCart); $i++) {
+
+                 $query->values([
+                     'id_cart' => ':id_cart',
+                     'id_product' => ':id_product',
+                     'id_address_delivery' => ':id_address_delivery',
+                     'id_shop' => ':id_shop',
+                     'id_product_attribute' => ':id_product_attribute',
+                     'id_customization' => ':id_customization',
+                     'quantity' => ':quantity',
+                     'date_add' => ':date_add',
+                 ])
+                     ->setParameters([
+                         'id_cart' => $id_cart,
+                         'id_product' => $id_product,
+                         'id_address_delivery' => $idAddressDelivery,
+                         'id_shop' => $idShop,
+                         'id_product_attribute' => $id_product_attribute,
+                         'id_customization' => $id_customization,
+                         'quantity' => $quantity,
+                         'date_add' => $dateAdd
+                     ]);
+//             }
+//         }
+
+            return $query->execute();
     }
 }

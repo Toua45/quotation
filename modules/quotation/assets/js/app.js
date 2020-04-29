@@ -448,6 +448,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                         // on ajoute l'attribut data-idcustomer à l'élément html add-product-to-cart pour récupérer l'id_customer qui nous servira pour la section search product section
                                         document.getElementById('add-product-to-cart').setAttribute('data-idcustomer', data['customer'].id_customer);
+                                        document.getElementById('add-product-to-cart').setAttribute('data-idcart', 0);
                                     };
 
                                     /*
@@ -533,7 +534,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                 let sectionProductAttributes = document.getElementById('section-attributes-product');
 
                 for (let product of attributes) {
-
+                    console.log(product);
                     // Nous allons calculer la longueur du tableau
                     if (selectProductAttributes.length !== 0) {
                         for (let i = 0; i < selectProductAttributes.length; i++) {
@@ -553,8 +554,10 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                         // Create attribute idprodut on form.add-product-to-cart
                         document.getElementById('add-product-to-cart').setAttribute('data-idproduct', product.id_product);
+
                         sectionProductAttributes.classList.replace('d-none','d-flex');
                     } else {
+                        document.getElementById('add-product-to-cart').setAttribute('data-idproduct', product.id_product);
                         sectionProductAttributes.classList.replace('d-flex','d-none');
                     }
 
@@ -577,19 +580,26 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                 document.getElementById('add-product-to-cart').addEventListener('submit', Event => {
                     Event.preventDefault();
 
+                    let id_prod_attr = document.getElementById('js-output-attributes-products').value == '' ? 0 : document.getElementById('js-output-attributes-products').value;
                     let argsURL = '/' +
                         document.getElementById('add-product-to-cart').dataset.idproduct + '/' + // Get id_product
-                        document.getElementById('js-output-attributes-products').value + '/' + // Get id_product_attribute
+                        id_prod_attr + '/' + // Get id_product_attribute
                         document.getElementById('product-quantity').value + '/' + // Get quantity
-                        document.getElementById('add-product-to-cart').dataset.idcustomer; // Get id_customer
+                        document.getElementById('add-product-to-cart').dataset.idcustomer + '/' + // Get id_customer
+                        document.getElementById('add-product-to-cart').dataset.idcart; // Get id_cart
+
+                    console.log(argsURL);
 
                     let urlPost = Event.currentTarget.dataset.urlpost;
+
+                    const getCustomerLastCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = cart[0]['id_cart'];
+
                     QuotationModule.getData(
-                        urlPost.replace(/(\/\d+){4}(?=\?_token)/, argsURL),
-                        null,
+                        urlPost.replace(/(\/\d+){5}(?=\?_token)/, argsURL),
+                        getCustomerLastCart,
                         null,
                         'POST',
-                        false,
+                        true,
                         []
                     );
                 });

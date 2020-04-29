@@ -3,6 +3,7 @@
 namespace Quotation\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Quotation\Entity\Quotation;
 
@@ -561,4 +562,169 @@ class QuotationRepository
         return $query->execute()->fetch();
     }
 
+    /**
+     * @return mixed[]
+     */
+    public function getCustomerInfoById($id_customer)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('c.id_customer', 'c.secure_key')
+            ->from($this->databasePrefix . 'customer', 'c')
+            ->where('c.id_customer = :id_customer')
+            ->setParameter('id_customer', $id_customer)
+            ->execute()->fetch();
+    }
+
+    /**
+     * Insert into Cart
+     */
+    public function insertToCart(  int $idShopGroup,
+                                   int $idShop,
+                                   int $idLang,
+                                   int $idAdressDelivery,
+                                   int $idAdressInvoice,
+                                   int $idCurrency,
+                                   int $id_customer,
+                                   int $idGuest,
+                                   string $secureKey,
+                                   $dateAdd,
+                                   $dateUpd,
+                                   int $idCarrier = 0,
+                                   string $deliveryOption = '',
+                                   $recyclable = 0,
+                                   $gift = 0,
+                                   $mobileTheme = 0,
+                                   $allowSeperatedPackage = 0)
+    {
+        return $this->connection->createQueryBuilder()
+            ->insert($this->databasePrefix . 'cart')
+            ->values([
+                'id_shop_group' => ':id_shop_group',
+                'id_shop' => ':id_shop',
+                'id_carrier' => ':id_carrier',
+                'delivery_option' => ':delivery_option',
+                'id_lang' => ':id_lang',
+                'id_address_delivery' => ':id_address_delivery',
+                'id_address_invoice' => ':id_address_invoice',
+                'id_currency' => ':id_currency',
+                'id_customer' => ':id_customer',
+                'id_guest' => ':id_guest',
+                'secure_key' => ':secure_key',
+                'recyclable' => ':recyclable',
+                'gift' => ':gift',
+                'mobile_theme' => ':mobile_theme',
+                'allow_seperated_package' => ':allow_seperated_package',
+                'date_add' => ':date_add',
+                'date_upd' => ':date_upd',
+            ])
+            ->setParameters([
+                'id_shop_group' => $idShopGroup,
+                'id_shop' => $idShop,
+                'id_carrier' => $idCarrier,
+                'delivery_option' => $deliveryOption,
+                'id_lang' => $idLang,
+                'id_address_delivery' => $idAdressDelivery,
+                'id_address_invoice' => $idAdressInvoice,
+                'id_currency' => $idCurrency,
+                'id_customer' => $id_customer,
+                'id_guest' => $idGuest,
+                'secure_key' => $secureKey,
+                'recyclable' => $recyclable,
+                'gift' => $gift,
+                'mobile_theme' => $mobileTheme,
+                'allow_seperated_package' => $allowSeperatedPackage,
+                'date_add' => $dateAdd,
+                'date_upd' => $dateUpd
+            ])
+            ->execute();
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function findLastCartByCustomerId($idcustomer)
+    {
+        $expr = $this->connection->getExpressionBuilder();
+
+        return $this->connection->createQueryBuilder()
+            ->addSelect('ca.id_cart', 'ca.date_add AS date_cart')
+            ->from($this->databasePrefix . 'cart', 'ca')
+            ->where($expr->eq('ca.id_customer', ':id_customer'))
+            ->orderBy('ca.date_add', 'DESC')
+            ->setMaxResults(1)
+            ->setParameter('id_customer', $idcustomer)->execute()->fetch();
+    }
+
+    /**
+     * Insert products into Cart
+     */
+    public function insertProductsToCart($id_cart, $id_product, $idAddressDelivery, $idShop, $id_product_attribute, $id_customization, $quantity, $dateAdd)
+    {
+        return $this->connection->createQueryBuilder()
+            ->insert($this->databasePrefix . 'cart_product')
+            ->values([
+                'id_cart' => ':id_cart',
+                'id_product' => ':id_product',
+                'id_address_delivery' => ':id_address_delivery',
+                'id_shop' => ':id_shop',
+                'id_product_attribute' => ':id_product_attribute',
+                'id_customization' => ':id_customization',
+                'quantity' => ':quantity',
+                'date_add' => ':date_add',
+            ])
+            ->setParameters([
+                'id_cart' => $id_cart,
+                'id_product' => $id_product,
+                'id_address_delivery' => $idAddressDelivery,
+                'id_shop' => $idShop,
+                'id_product_attribute' => $id_product_attribute,
+                'id_customization' => $id_customization,
+                'quantity' => $quantity,
+                'date_add' => $dateAdd
+            ])
+            ->execute();
+    }
+
+    /**
+     * Add other products into Cart
+     * @param int $id_cart
+     * @param array $products
+     * @param $idAddressDelivery
+     * @param $idShop
+     * @param $id_customization
+     * @param $dateAdd
+     * @return Statement|int
+     */
+    public function updateCart(int $id_cart, array $products, $idAddressDelivery, $idShop, $id_customization, $dateAdd)
+    {
+         $query = $this->connection->createQueryBuilder()
+            ->insert($this->databasePrefix . 'cart_product');
+
+         if (gettype($products) === 'array') {
+             for ($i = 0; $i < count($products); $i++) {
+
+                 $query->values([
+                     'id_cart' => ':id_cart',
+                     'id_product' => ':id_product',
+                     'id_address_delivery' => ':id_address_delivery',
+                     'id_shop' => ':id_shop',
+                     'id_product_attribute' => ':id_product_attribute',
+                     'id_customization' => ':id_customization',
+                     'quantity' => ':quantity',
+                     'date_add' => ':date_add',
+                 ])
+                     ->setParameters([
+                         'id_cart' => $id_cart,
+                         'id_product' => $products[$i]['id_product'],
+                         'id_address_delivery' => $idAddressDelivery,
+                         'id_shop' => $idShop,
+                         'id_product_attribute' => $products[$i]['id_product_attribute'],
+                         'id_customization' => $id_customization,
+                         'quantity' => $products[$i]['quantity'],
+                         'date_add' => $dateAdd
+                     ]);
+             }
+         }
+         return $query->execute();
+    }
 }

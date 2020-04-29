@@ -19,6 +19,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         url,
         QuotationModule.getData,
         QuotationModule.getCustomersURL(),
+        null,
         true,
         []
     );
@@ -34,6 +35,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     QuotationModule.getData(
         QuotationModule.getCustomersURL(),
         QuotationModule.autocomplete,
+        null,
         null,
         true,
         ['#quotation_customer_customerId', 'customers', 1]
@@ -93,7 +95,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                         let urlCustomerShow = document.querySelector('[data-customershow]').dataset.customershow;
                         let newUrlCustomerShow;
-                        console.log(document.querySelectorAll('button.customer-show'));
 
                         if (document.querySelectorAll('button.customer-show') !== null) {
                             // On boucle sur chaque élément link auquel on attache l'évènement clic
@@ -104,7 +105,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                     const getCustomerShow = (customer) => {
                                         let addressController = window.location.origin + '/admin130mdhxh9/index.php/?controller=AdminAddresses';
-
                                         let personalData = '';
                                         let tableCustomerOrders = '';
                                         let customerOrders = '';
@@ -186,6 +186,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     QuotationModule.getData(
                                         newUrlCustomerShow,
                                         getCustomerShow,
+                                        null,
                                         null,
                                         true,
                                         []
@@ -434,12 +435,17 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         newUrlCart,
                                                         getCustomerCartToUse,
                                                         null,
+                                                        null,
                                                         true,
                                                         []
                                                     );
                                                 });
                                             });
                                         }
+
+                                        // on ajoute l'attribut data-idcustomer à l'élément html add-product-to-cart pour récupérer l'id_customer qui nous servira pour la section search product section
+                                        document.getElementById('add-product-to-cart').setAttribute('data-idcustomer', data['customer'].id_customer);
+                                        document.getElementById('add-product-to-cart').setAttribute('data-idcart', 0);
                                     };
 
                                     /*
@@ -449,6 +455,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     QuotationModule.getData(
                                         newUrlCustomersDetails,
                                         getCustomerDetails,
+                                        null,
                                         null,
                                         true,
                                         []
@@ -470,6 +477,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             urlSearchCustomers.replace(/query/, Event.currentTarget.value),
             insertCustomerInDOM,
             null,
+            null,
             true,
             []
         );
@@ -490,6 +498,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         urlProduct,
         QuotationModule.getData,
         QuotationModule.getProductsURL(),
+        null,
         true,
         []
     );
@@ -497,6 +506,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     QuotationModule.getData(
         QuotationModule.getProductsURL(),
         QuotationModule.autocomplete,
+        null,
         null,
         true,
         ['#quotation_product_cartId', 'products', 1]
@@ -521,7 +531,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                 let sectionProductAttributes = document.getElementById('section-attributes-product');
 
                 for (let product of attributes) {
-
+                    console.log(product);
                     // Nous allons calculer la longueur du tableau
                     if (selectProductAttributes.length !== 0) {
                         for (let i = 0; i < selectProductAttributes.length; i++) {
@@ -535,11 +545,16 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                     if (typeof product.attributes !== 'undefined') {
                         // On crée un nouvel élément html option
                         selectProductAttributes[index] = new Option(product.attributes, product.id_product_attribute, false, false);
-                        // On lui ajouter un attribut data-instock auquel on affecte la quantité
+                        // On lui ajoute un attribut data-instock auquel on affecte la quantité
                         selectProductAttributes[index].setAttribute('data-instock', product.quantity);
                         selectProductAttributes[index].setAttribute('data-idproduct', product.id_product);
+
+                        // Create attribute idprodut on form.add-product-to-cart
+                        document.getElementById('add-product-to-cart').setAttribute('data-idproduct', product.id_product);
+
                         sectionProductAttributes.classList.replace('d-none','d-flex');
                     } else {
+                        document.getElementById('add-product-to-cart').setAttribute('data-idproduct', product.id_product);
                         sectionProductAttributes.classList.replace('d-flex','d-none');
                     }
 
@@ -558,11 +573,40 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         }
                     }
                 });
+
+                document.getElementById('add-product-to-cart').addEventListener('submit', Event => {
+                    Event.preventDefault();
+
+                    let id_prod_attr = document.getElementById('js-output-attributes-products').value == '' ? 0 : document.getElementById('js-output-attributes-products').value;
+                    let argsURL = '/' +
+                        document.getElementById('add-product-to-cart').dataset.idproduct + '/' + // Get id_product
+                        id_prod_attr + '/' + // Get id_product_attribute
+                        document.getElementById('product-quantity').value + '/' + // Get quantity
+                        document.getElementById('add-product-to-cart').dataset.idcustomer + '/' + // Get id_customer
+                        document.getElementById('add-product-to-cart').dataset.idcart; // Get id_cart
+
+                    console.log(argsURL);
+
+                    let urlPost = Event.currentTarget.dataset.urlpost;
+
+                    const getCustomerLastCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = cart.id_cart;
+
+                    QuotationModule.getData(
+                        urlPost.replace(/(\/\d+){5}(?=\?_token)/, argsURL),
+                        getCustomerLastCart,
+                        null,
+                        'POST',
+                        true,
+                        []
+                    );
+                });
+
             };
 
             QuotationModule.getData(
                 urlSearchAttributesProduct,
                 getAttributesProduct,
+                null,
                 null,
                 true,
                 []
@@ -573,7 +617,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     };
 
     const inputSearchProducts = document.getElementById('quotation_product_cartId');
-    ['keyup', 'change'].forEach(event => {
+    ['keyup'].forEach(event => {
         inputSearchProducts.addEventListener(event, getQueryProduct, false);
     });
 

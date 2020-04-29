@@ -53,20 +53,25 @@ class AdminQuotationController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function pdfView($id_quotation)
+    /**
+     * @param $id_quotation
+     * Fonction qui fait appelle au service "QuotationPdf" pour créer un nouveau document et renvoie les informations du devis de chaque client
+     */
+    public function quotationPdf($id_quotation)
     {
         $quotationRepository = $this->get('quotation_repository');
         $quotation = $quotationRepository->findQuotationById($id_quotation);
-
+        // Récupération des méthodes "findAddressesByCustomer", et "findAddressesByCustomer" pour les adresses des clients et les produits associés au devis
+        if($quotation['id_quotation']) {
+            $quotation['addresses'] = $quotationRepository->findAddressesByCustomer($quotation['id_customer']);
+            $quotation['products'] = $quotationRepository->findProductsCustomerByCarts($quotation['id_cart']);
+        }
         $quotationPdf = new QuotationPdf();
-        $filename = $quotation['firstname'] . ' ' . $filename = $quotation['lastname'] . '  - Référence ' . $filename = $quotation['reference'];
+        // Nom du fichier pdf qui comprend le nom et prénom du client et le numéro de devis
+        $filename = $quotation['firstname'] . ' ' . $filename = $quotation['lastname'] .  '  - Référence n° ' . $filename = $quotation['reference'];
         $html = $this->renderView('@Modules/quotation/templates/admin/pdf/pdf_quotation.html.twig', [
-            'id_quotation' => $quotation['id_quotation'],
-            'firstname' => $quotation['firstname'],
-            'lastname' => $quotation['lastname'],
-            'reference' => $quotation['reference']
+            'quotation' => $quotation,
         ]);
-
         $quotationPdf->createPDF($html, $filename);
     }
 

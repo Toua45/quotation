@@ -54,7 +54,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
-
             let link = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/customer/';
             let show = window.location.origin + '/adminToua/index.php/sell/customers/';
 
@@ -105,9 +104,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         .replace(/\d+(?=\?_token)/, link.dataset.idcustomer);
 
                                     const getCustomerShow = (customer) => {
-
-                                        let addressController = window.location.origin + '/adm/index.php/?controller=adminTouainAddresses';
-
+                                        let addressController = window.location.origin + '/adminToua/index.php/?controller=AdminAddresses';
                                         let personalData = '';
                                         let tableCustomerOrders = '';
                                         let customerOrders = '';
@@ -201,7 +198,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
-
                         let linkCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/cart/';
                         let urlCart = document.querySelector('[data-customercart]').dataset.customercart;
                         let newUrlCart;
@@ -412,12 +408,13 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         .replace(/\d+(?=\?_token)/, link.dataset.idcart);
 
                                                     const getCustomerCartToUse = (cart) => {
+                                                        let picture = window.location.origin + '/img/p/';
                                                         let outputCartToUse = '';
                                                         let outputCartProductsToUse = '';
 
                                                         for (let product of cart['products']) {
-
                                                             outputCartProductsToUse += mod.TemplateModule.quotationCartProducts
+                                                                .replace(/---picture---/, picture + product.path.join('/') + '/' + product.id_image + '-small_default.jpg')
                                                                 .replace(/---productName---/, product.product_name)
                                                                 .replace(/---productPrice---/, product.product_price + ' €')
                                                                 .replace(/---productQuantity---/, product.product_quantity)
@@ -542,6 +539,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                 // Nous supprimons tous les éléments html options qui n'ont pas le même id_product
                                 selectProductAttributes[i].remove();
                             }
+                            console.log(selectProductAttributes[i].dataset.idproduct);
                         }
                     }
 
@@ -555,10 +553,10 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         // Create attribute idprodut on form.add-product-to-cart
                         document.getElementById('add-product-to-cart').setAttribute('data-idproduct', product.id_product);
 
-                        sectionProductAttributes.classList.replace('d-none','d-flex');
+                        // sectionProductAttributes.classList.replace('d-none','d-flex');
                     } else {
                         document.getElementById('add-product-to-cart').setAttribute('data-idproduct', product.id_product);
-                        sectionProductAttributes.classList.replace('d-flex','d-none');
+                        // sectionProductAttributes.classList.replace('d-flex','d-none');
                     }
 
                     if (index === 0 || typeof product.attributes === 'undefined') {
@@ -580,7 +578,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                 document.getElementById('add-product-to-cart').addEventListener('submit', Event => {
                     Event.preventDefault();
 
-                    let id_prod_attr = document.getElementById('js-output-attributes-products').value == '' ? 0 : document.getElementById('js-output-attributes-products').value;
+                    let id_prod_attr = document.getElementById('js-output-attributes-products').value === '' ? 0 : document.getElementById('js-output-attributes-products').value;
+                    // console.log(id_prod_attr);
+
                     let argsURL = '/' +
                         document.getElementById('add-product-to-cart').dataset.idproduct + '/' + // Get id_product
                         id_prod_attr + '/' + // Get id_product_attribute
@@ -592,7 +592,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                     let urlPost = Event.currentTarget.dataset.urlpost;
 
-                    const getCustomerLastCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = cart[0]['id_cart'];
+                    const getCustomerLastCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = cart.id_cart;
 
                     QuotationModule.getData(
                         urlPost.replace(/(\/\d+){5}(?=\?_token)/, argsURL),

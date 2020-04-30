@@ -649,75 +649,83 @@ class QuotationRepository
             ->where($expr->eq('ca.id_customer', ':id_customer'))
             ->orderBy('ca.date_add', 'DESC')
             ->setMaxResults(1)
-            ->setParameter('id_customer', $idcustomer)->execute()->fetchAll();
+            ->setParameter('id_customer', $idcustomer)->execute()->fetch();
     }
 
-    /**
-     * Insert products into Cart
-     */
-    public function insertProductsToCart($id_cart, $id_product, $idAddressDelivery, $idShop, $id_product_attribute, $id_customization, $quantity, $dateAdd)
-    {
-        return $this->connection->createQueryBuilder()
-            ->insert($this->databasePrefix . 'cart_product')
-            ->values([
-                'id_cart' => ':id_cart',
-                'id_product' => ':id_product',
-                'id_address_delivery' => ':id_address_delivery',
-                'id_shop' => ':id_shop',
-                'id_product_attribute' => ':id_product_attribute',
-                'id_customization' => ':id_customization',
-                'quantity' => ':quantity',
-                'date_add' => ':date_add',
-            ])
-            ->setParameters([
-                'id_cart' => $id_cart,
-                'id_product' => $id_product,
-                'id_address_delivery' => $idAddressDelivery,
-                'id_shop' => $idShop,
-                'id_product_attribute' => $id_product_attribute,
-                'id_customization' => $id_customization,
-                'quantity' => $quantity,
-                'date_add' => $dateAdd
-            ])
-            ->execute();
-    }
+//    /**
+//     * Insert products into Cart
+//     */
+//    public function insertProductsToCart(int $id_cart, array $products, $idAddressDelivery, $idShop, $id_customization, $dateAdd)
+//    {
+//        $query = $this->connection->createQueryBuilder()
+//            ->insert($this->databasePrefix . 'cart_product');
+//
+//                $query->values([
+//                    'id_cart' => ':id_cart',
+//                    'id_product' => ':id_product',
+//                    'id_address_delivery' => ':id_address_delivery',
+//                    'id_shop' => ':id_shop',
+//                    'id_product_attribute' => ':id_product_attribute',
+//                    'id_customization' => ':id_customization',
+//                    'quantity' => ':quantity',
+//                    'date_add' => ':date_add',
+//                ])
+//                    ->setParameters([
+//                        'id_cart' => $id_cart,
+//                        'id_product' => $products[0]['id_product'],
+//                        'id_address_delivery' => $idAddressDelivery,
+//                        'id_shop' => $idShop,
+//                        'id_product_attribute' => $products[0]['id_product_attribute'],
+//                        'id_customization' => $id_customization,
+//                        'quantity' => $products[0]['quantity'],
+//                        'date_add' => $dateAdd
+//                    ]);
+//
+//        return $query->execute();
+//    }
 
     /**
      * Add other products into Cart
+     * @param int $id_cart
+     * @param int $id_product
+     * @param int $idAddressDelivery
+     * @param int $idShop
+     * @param int $id_product_attribute
+     * @param int $id_customization
+     * @param $quantity
+     * @param $dateAdd
+     * @return \Doctrine\DBAL\Driver\Statement|int
      */
-    public function updateCart($id_cart, $id_product, $idAddressDelivery, $idShop, $id_product_attribute, $id_customization, $quantity, $dateAdd)
-//    public function updateCart($id_cart, $id_product, $idAddressDelivery, $idShop, $id_product_attribute, $id_customization, $quantity, $dateAdd, array $productsToCart = [])
-//    public function updateCart($id_cart, array $productsToCart = [], $idAddressDelivery, $idShop,$id_customization,$dateAdd)
+    public function insertProductsToCart(int $id_cart, int $id_product, int $idAddressDelivery, int $idShop, int $id_product_attribute, int $id_customization, $quantity, $dateAdd)
     {
-         $query = $this->connection->createQueryBuilder()
+        $query = $this->connection->createQueryBuilder()
             ->insert($this->databasePrefix . 'cart_product');
 
-//         if (count($productsToCart) !== 0) {
-//             for ($i = 0; $i < count($productsToCart); $i++) {
+//        if (gettype($products) === 'array') {
+//            for ($i = 0; $i < count($products); $i++) {
 
-                 $query->values([
-                     'id_cart' => ':id_cart',
-                     'id_product' => ':id_product',
-                     'id_address_delivery' => ':id_address_delivery',
-                     'id_shop' => ':id_shop',
-                     'id_product_attribute' => ':id_product_attribute',
-                     'id_customization' => ':id_customization',
-                     'quantity' => ':quantity',
-                     'date_add' => ':date_add',
-                 ])
-                     ->setParameters([
-                         'id_cart' => $id_cart,
-                         'id_product' => $id_product,
-                         'id_address_delivery' => $idAddressDelivery,
-                         'id_shop' => $idShop,
-                         'id_product_attribute' => $id_product_attribute,
-                         'id_customization' => $id_customization,
-                         'quantity' => $quantity,
-                         'date_add' => $dateAdd
-                     ]);
-//             }
-//         }
-
-            return $query->execute();
+                $query->values([
+                    'id_cart' => ':id_cart',
+                    'id_product' => ':id_product',
+                    'id_address_delivery' => ':id_address_delivery',
+                    'id_shop' => ':id_shop',
+                    'id_product_attribute' => ':id_product_attribute',
+                    'id_customization' => ':id_customization',
+                    'quantity' => ':quantity',
+                    'date_add' => ':date_add',
+                ])
+                    ->setParameters([
+                        'id_cart' => $id_cart,
+                        'id_product' => $id_product,
+                        'id_address_delivery' => $idAddressDelivery,
+                        'id_shop' => $idShop,
+                        'id_product_attribute' => $id_product_attribute,
+                        'id_customization' => $id_customization,
+                        'quantity' => $quantity,
+                        'date_add' => $dateAdd
+                    ]);
+//            }
+//        }
+        return $query->execute();
     }
 }

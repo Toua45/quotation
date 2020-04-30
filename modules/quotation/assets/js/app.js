@@ -462,6 +462,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     // Ici, on récupère la class 'd-none' de l'élément id 'js-output-customer-details' et on la remplace par 'd-block'
                                     document.getElementById('js-output-customer-details').classList.replace('d-none', 'd-block');
                                     document.getElementById('js-output-cart-infos').classList.replace('d-none', 'd-block');
+                                    document.getElementById('js-output-address').classList.replace('d-none', 'd-block');
 
                                 });
                             });

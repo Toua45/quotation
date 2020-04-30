@@ -1,6 +1,6 @@
 <span data-customercart="{{ path('quotation_admin_show_cart', { id_cart: 0 }) }}"></span>
 
-<div id="js-output-cart-infos" class="address d-none">
+<div id="js-output-cart-infos" class="cart-infos d-none">
 
     <div class="quotation card p-4" id="products" data-products="{{ asset('data-product.js') }}">
         <div class="quotation-head mb-3 d-flex justify-content-between">
@@ -47,7 +47,5 @@
             </div>
         </div>
     </div>
-
-{#    {% include '@Modules/quotation/templates/admin/section/_address.html.twig' %}#}
 
 </div>

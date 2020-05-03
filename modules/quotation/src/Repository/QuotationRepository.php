@@ -281,7 +281,6 @@ class QuotationRepository
             ->addSelect('p.price * cp.quantity AS total_product')
             ->addSelect('i.id_image')
             ->addSelect('t.rate')
-            ->addSelect('p.price * t.rate / 100 AS total_tva_product')
             ->from($this->databasePrefix . 'product', 'p')
             ->join('p', $this->databasePrefix . 'cart_product', 'cp', 'cp.id_product = p.id_product')
             ->join('cp', $this->databasePrefix . 'cart', 'ca', 'cp.id_cart = ca.id_cart')

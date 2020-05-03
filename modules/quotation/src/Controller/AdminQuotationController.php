@@ -72,7 +72,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         // Calcul de la TVA à partir de chaque produit, de la réduction et des frais de port
         $price_tva = 0;
         for ($i = 0; $i < count($quotation['products']); $i++) {
-            $price_tva += $quotation['products'][$i]['total_tva_product'];
+            $price_tva += $quotation['products'][$i]['total_product'] * $quotation['products'][$i]['rate'] / 100;
         }
         $price_tva -= $quotation['tva_reduction_amount'];
         $price_tva += $quotation['tva_shipping'];

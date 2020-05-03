@@ -146,36 +146,31 @@
     </thead>
 
     <tbody class="tab_body">
-
     <!-- Récupération des produits et des tarifs-->
     {% for product in quotation.products %}
-
-    <tr>
-        <td class="text-left">{{ product.product_name }}</td>
-        <td>{{ product.product_price|number_format(2) }} €</td>
-        <td>{{ product.product_quantity }}</td>
-        <td>{{ product.total_product|number_format(2) }} €</td>
-    </tr>
+        <tr>
+            <td class="text-left">{{ product.product_name }}</td>
+            <td>{{ product.product_price|number_format(2) }} €</td>
+            <td>{{ product.product_quantity }}</td>
+            <td>{{ product.total_product|number_format(2) }} €</td>
+        </tr>
+    {% endfor %}
     </tbody>
 
-    {% endfor %}
 </table>
 
 <div class="total_quotation">
-    <p><span class="font-weight-bold">Total HT :</span> {{ quotation.total_product_price|number_format(2) }} €</p>
+    <p><span class="font-weight-bold">Montant HT :</span> {{ quotation.total_product_price|number_format(2) }} €</p>
     <p><span class="font-weight-bold">Remise :</span> {{ quotation.reduction_amount|number_format(2) }} €</p>
     <p><span class="font-weight-bold">Frais de port :</span> {{ quotation.total_shipping|number_format(2) }} €</p>
 
     <!-- Calcul montant HT -->
     {% set total_price_without_tva =  quotation.total_product_price  -  quotation.reduction_amount +  quotation.total_shipping %}
-
-    <!-- Calcul de la TVA -->
-    {% set calcul_tva = total_price_without_tva * 20 / 100 %}
-    <p><span class="font-weight-bold">TVA : </span>{{ calcul_tva }} €</p>
+    <p><span class="font-weight-bold">TVA :</span> {{ price_tva|number_format(2) }} €</p>
 
     <!-- Calcul montant TTC -->
-    {% set total_TTC = total_price_without_tva + calcul_tva %}
-    <p><span class="font-weight-bold">Total TTC : </span>{{ total_TTC }} €</p>
+    {% set total_ttc = total_price_without_tva + price_tva %}
+    <p><span class="font-weight-bold">Montant TTC :</span> {{ total_ttc|number_format(2) }} €</p>
 </div>
 
 <p class="text-right mt-5">Signature du client (précédé de la mention « Bon pour accord »)</p>

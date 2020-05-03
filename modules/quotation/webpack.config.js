@@ -7,9 +7,9 @@ let config = {
         app: './assets/js/app.js'
     },
     output: {
-        path: path.resolve('../../adm/quotation-bundle'),
+        path: path.resolve('../../adminLionel/quotation-bundle'),
         filename: 'quotation-bundle.js',
-        publicPath: '/../../adm/quotation-bundle/'
+        publicPath: '/../../adminLionel/quotation-bundle/'
     },
     module: {
         rules: [

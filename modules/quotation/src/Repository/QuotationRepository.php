@@ -217,8 +217,17 @@ class QuotationRepository
     {
         return $this->connection->createQueryBuilder()
             ->addSelect('q.*', 'c.firstname', 'c.lastname')
+            ->addSelect('SUM(p.price * cp.quantity) AS total_product_price')
+            ->addSelect('o.total_shipping')
+            ->addSelect('o.total_shipping * 20 / 100 AS tva_shipping')
+            ->addSelect('cr.reduction_amount')
+            ->addSelect('cr.reduction_amount * 20 / 100 AS tva_reduction_amount')
             ->from($this->databasePrefix . 'quotation', 'q')
             ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+            ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart = cp.id_cart')
+            ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
+            ->join('c', $this->databasePrefix . 'orders', 'o', 'c.id_customer = o.id_customer')
+            ->join('c', $this->databasePrefix . 'cart_rule', 'cr', 'cr.id_customer = c.id_customer')
             ->where('q.id_quotation = :id_quotation')
             ->setParameter('id_quotation', $id_quotation)
             ->execute()
@@ -263,7 +272,6 @@ class QuotationRepository
     /**
      * @return array
      */
-
     public function findProductsCustomerByCarts($idCart)
     {
         $expr = $this->connection->getExpressionBuilder();
@@ -272,13 +280,17 @@ class QuotationRepository
             ->addSelect('p.id_product', 'pl.name AS product_name', 'p.reference AS product_reference', 'p.price AS product_price', 'cp.quantity AS product_quantity')
             ->addSelect('p.price * cp.quantity AS total_product')
             ->addSelect('i.id_image')
+            ->addSelect('t.rate')
             ->from($this->databasePrefix . 'product', 'p')
             ->join('p', $this->databasePrefix . 'cart_product', 'cp', 'cp.id_product = p.id_product')
             ->join('cp', $this->databasePrefix . 'cart', 'ca', 'cp.id_cart = ca.id_cart')
             ->join('ca', $this->databasePrefix . 'customer', 'c', 'ca.id_customer = c.id_customer')
             ->join('p', $this->databasePrefix . 'product_lang', 'pl', 'p.id_product = pl.id_product')
             ->join('p', $this->databasePrefix . 'image', 'i', 'p.id_product = i.id_product')
+            ->join('p', $this->databasePrefix . 'tax_rule', 'tr', 'p.id_tax_rules_group = tr.id_tax_rules_group')
+            ->join('tr', $this->databasePrefix . 'tax', 't', 'tr.id_tax = t.id_tax')
             ->where($expr->eq('ca.id_cart', ':id_cart'))
+            ->andWhere('tr.id_country = 8')
             ->setParameter('id_cart', $idCart)
             ->execute()
             ->fetchAll();

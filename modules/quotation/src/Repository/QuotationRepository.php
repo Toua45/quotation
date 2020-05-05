@@ -576,9 +576,27 @@ class QuotationRepository
     }
 
     /**
-     * Insert into Cart
+     * Add a new cart
+     * @param int $idShopGroup
+     * @param int $idShop
+     * @param int $idLang
+     * @param int $idAdressDelivery
+     * @param int $idAdressInvoice
+     * @param int $idCurrency
+     * @param int $id_customer
+     * @param int $idGuest
+     * @param string $secureKey
+     * @param $dateAdd
+     * @param $dateUpd
+     * @param int $idCarrier
+     * @param string $deliveryOption
+     * @param int $recyclable
+     * @param int $gift
+     * @param int $mobileTheme
+     * @param int $allowSeperatedPackage
+     * @return Statement|int
      */
-    public function insertToCart(  int $idShopGroup,
+    public function addNewCart(  int $idShopGroup,
                                    int $idShop,
                                    int $idLang,
                                    int $idAdressDelivery,
@@ -656,9 +674,18 @@ class QuotationRepository
     }
 
     /**
-     * Insert products into Cart
+     * Add products into Cart
+     * @param int $id_cart
+     * @param int $id_product
+     * @param int $idAddressDelivery
+     * @param int $idShop
+     * @param int $id_product_attribute
+     * @param int $id_customization
+     * @param $quantity
+     * @param $dateAdd
+     * @return Statement|int
      */
-    public function insertProductsToCart($id_cart, $id_product, $idAddressDelivery, $idShop, $id_product_attribute, $id_customization, $quantity, $dateAdd)
+    public function insertProductsToCart(int $id_cart, int $id_product, int $idAddressDelivery, int $idShop, int $id_product_attribute, int $id_customization, $quantity, $dateAdd)
     {
         return $this->connection->createQueryBuilder()
             ->insert($this->databasePrefix . 'cart_product')

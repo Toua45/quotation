@@ -534,9 +534,11 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                 if (attributes.id_product_attribute === '0') {
                     if (selectProductAttributes.length > 0) {
-                        document.getElementById('js-output-attributes-products').remove(); // Remove select
+                        for (let i = 0; i < selectProductAttributes.length; i++) {
+                            selectProductAttributes[i] = new Option('', attributes.id_product_attribute, i === 0);
+                            selectProductAttributes[i].hidden = true;
+                        }
                         formAddProductToCart.setAttribute('data-idproduct', attributes.id_product);
-                        formAddProductToCart.setAttribute('data-idprodattr', attributes.id_product_attribute); // Create data-idprodattr
                         sectionProductAttributes.classList.replace('d-flex','d-none'); // Hide select section
                     }
                 } else {
@@ -547,17 +549,21 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                         // Create attribute idproduct on form.add-product-to-cart
                         formAddProductToCart.setAttribute('data-idproduct', product.id_product);
-                        // sectionProductAttributes.classList.replace('d-none','d-flex');
+                        sectionProductAttributes.classList.replace('d-none','d-flex');
 
                         if (index === 0 || typeof product.attributes === 'undefined') {
                             quantityInStock.innerHTML = product.quantity;
                         }
                         index++;
                     }
-                    if (selectProductAttributes.length !== attributes.length) {
-                        for (let i = 0; selectProductAttributes.length; i++) {
+
+                    // Remove attributes not belonging to current product
+                    let count = attributes.length !== selectProductAttributes.length ? Math.max(attributes.length, selectProductAttributes.length) : false;
+
+                    if (count) {
+                        for (let i = 0; i < count; i++) {
                             if (selectProductAttributes[i].dataset.idproduct !== formAddProductToCart.dataset.idproduct) {
-                                selectProductAttributes[i].remove();
+                                selectProductAttributes[i].hidden = true;
                             }
                         }
                     }
@@ -574,19 +580,21 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                 document.getElementById('add-product-to-cart').addEventListener('submit', Event => {
                     Event.preventDefault();
+                    let id_prod_attr = document.getElementById('js-output-attributes-products').value;
 
                     let argsURL = '/' +
                         formAddProductToCart.dataset.idproduct + '/' + // Get id_product
-                        formAddProductToCart.dataset.idprodattr + '/' + // Get id_product_attribute
+                        id_prod_attr + '/' + // Get id_product_attribute
                         document.getElementById('product-quantity').value + '/' + // Get quantity
                         formAddProductToCart.dataset.idcustomer + '/' + // Get id_customer
                         formAddProductToCart.dataset.idcart; // Get id_cart
 
                     let urlPost = Event.currentTarget.dataset.urlpost;
+                    const getCustomerLastCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = cart.id_cart;
 
                     QuotationModule.getData(
                         urlPost.replace(/(\/\d+){5}(?=\?_token)/, argsURL),
-                        (cart) => formAddProductToCart.dataset.idcart = cart.id_cart,
+                        getCustomerLastCart,
                         null,
                         'POST',
                         true,

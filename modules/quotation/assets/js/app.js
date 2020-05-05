@@ -1,5 +1,5 @@
 import '../scss/app.scss';
-import {QuotationModule} from "./quotation_module";
+import { QuotationModule } from "./quotation_module";
 
 if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamFromURL('add').length === 1) {
     // Récupère le chemin du JSON par l'id 'js-data'
@@ -548,17 +548,18 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         // Create attribute idproduct on form.add-product-to-cart
                         formAddProductToCart.setAttribute('data-idproduct', product.id_product);
                         // sectionProductAttributes.classList.replace('d-none','d-flex');
-                        // }
-
-                        //else {
-                        //     document.getElementById('add-product-to-cart').setAttribute('data-idproduct', product.id_product);
-                                                    // sectionProductAttributes.classList.replace('d-flex','d-none');}
-                                                //console.log(selectProductAttributes[index]);
 
                         if (index === 0 || typeof product.attributes === 'undefined') {
                             quantityInStock.innerHTML = product.quantity;
                         }
                         index++;
+                    }
+                    if (selectProductAttributes.length !== attributes.length) {
+                        for (let i = 0; selectProductAttributes.length; i++) {
+                            if (selectProductAttributes[i].dataset.idproduct !== formAddProductToCart.dataset.idproduct) {
+                                selectProductAttributes[i].remove();
+                            }
+                        }
                     }
                 }
 

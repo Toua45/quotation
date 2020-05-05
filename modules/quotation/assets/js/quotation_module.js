@@ -64,10 +64,10 @@ export const QuotationModule = {
         $(selector).typeahead({
                 hint: true,
                 highlight: true,
-                minLength: minLength
+                minLength
             },
             {
-                name: name,
+                name,
                 source: QuotationModule.substringMatcher(dataFetch)
             })
     },

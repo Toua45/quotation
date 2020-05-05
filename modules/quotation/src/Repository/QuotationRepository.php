@@ -573,9 +573,9 @@ class QuotationRepository
     }
 
     /**
-     * Insert into Cart
+     * Add a new cart
      */
-    public function insertToCart(  int $idShopGroup,
+    public function addNewCart(  int $idShopGroup,
                                    int $idShop,
                                    int $idLang,
                                    int $idAdressDelivery,
@@ -652,40 +652,8 @@ class QuotationRepository
             ->setParameter('id_customer', $idcustomer)->execute()->fetch();
     }
 
-//    /**
-//     * Insert products into Cart
-//     */
-//    public function insertProductsToCart(int $id_cart, array $products, $idAddressDelivery, $idShop, $id_customization, $dateAdd)
-//    {
-//        $query = $this->connection->createQueryBuilder()
-//            ->insert($this->databasePrefix . 'cart_product');
-//
-//                $query->values([
-//                    'id_cart' => ':id_cart',
-//                    'id_product' => ':id_product',
-//                    'id_address_delivery' => ':id_address_delivery',
-//                    'id_shop' => ':id_shop',
-//                    'id_product_attribute' => ':id_product_attribute',
-//                    'id_customization' => ':id_customization',
-//                    'quantity' => ':quantity',
-//                    'date_add' => ':date_add',
-//                ])
-//                    ->setParameters([
-//                        'id_cart' => $id_cart,
-//                        'id_product' => $products[0]['id_product'],
-//                        'id_address_delivery' => $idAddressDelivery,
-//                        'id_shop' => $idShop,
-//                        'id_product_attribute' => $products[0]['id_product_attribute'],
-//                        'id_customization' => $id_customization,
-//                        'quantity' => $products[0]['quantity'],
-//                        'date_add' => $dateAdd
-//                    ]);
-//
-//        return $query->execute();
-//    }
-
     /**
-     * Add other products into Cart
+     * Add products into Cart
      * @param int $id_cart
      * @param int $id_product
      * @param int $idAddressDelivery
@@ -700,9 +668,6 @@ class QuotationRepository
     {
         $query = $this->connection->createQueryBuilder()
             ->insert($this->databasePrefix . 'cart_product');
-
-//        if (gettype($products) === 'array') {
-//            for ($i = 0; $i < count($products); $i++) {
 
                 $query->values([
                     'id_cart' => ':id_cart',
@@ -724,8 +689,6 @@ class QuotationRepository
                         'quantity' => $quantity,
                         'date_add' => $dateAdd
                     ]);
-//            }
-//        }
         return $query->execute();
     }
 }

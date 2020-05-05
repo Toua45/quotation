@@ -414,16 +414,28 @@ class AdminQuotationController extends FrameworkBundleAdminController
     {
         $quotationRepository = $this->get('quotation_repository');
         $product = $quotationRepository->findOneProductById($id_product);
+        $mug = [];
 
         for ($i = 0; $i < count($product); $i++) {
             if ($product[$i]['id_product_attribute']) {
                 $product[$i]['attributes'] = $quotationRepository->findAttributesByProduct($id_product, $product[$i]['id_product_attribute']);
-            }
-            if (is_null($product[$i]['id_product_attribute'])) {
-                $product[$i]['quantity'] = $quotationRepository->findQuantityByProduct($id_product, $product[$i]['id_product_attribute'])['quantity'];
-                $product[$i]['id_product_attribute'] = '0';
-            }
         }
+
+        }
+
+        if (is_null($product[0]['id_product_attribute'])) {
+            $mug['quantity'] = $quotationRepository->findQuantityByProduct($id_product, $product[0]['id_product_attribute'])['quantity'];
+            $mug['id_product_attribute'] = '0';
+            $mug['id_product'] = $product[0]['id_product'];
+            $mug['product_name'] = $product[0]['product_name'];
+            $mug['product_price'] = $product[0]['product_price'];
+            $product = $mug;
+            //$product[$i]['quantity'] = $quotationRepository->findQuantityByProduct($id_product, $product[$i]['id_product_attribute'])['quantity'];
+            //$product[$i]['id_product_attribute'] = '0';
+        }
+
+//        dump($product);
+//        die;
 
         for ($i = 0; $i < count($product); $i++) {
             $attributes = '';
@@ -478,7 +490,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         if ($id_cart == 0) {
             // On crée ici un nouveau panier
-            $cart = $quotationRepository->insertToCart(
+            $cart = $quotationRepository->addNewCart(
                 $idShopGroup,
                 $idShop,
                 $idLang,
@@ -502,7 +514,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $currentCart = $quotationRepository->findLastCartByCustomerId($id_customer);
             // Get id of customer's last cart
             $currentCartId = $currentCart['id_cart'];
-
+            // On va utiliser les sessions pour stocker les données
             $session->set('cart',
                 [
                     'id_cart' => $currentCartId,
@@ -514,8 +526,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
                     ]
                 ]
             );
-
-//            $quotationRepository->insertProductsToCart($session->get('cart')['id_cart'], $session->get('cart')['product'], $idAddressDelivery, $idShop, $id_customization, $dateAdd);
+            // Une fois récupéré, on insert les données récupérées la première fois en base de données
             $quotationRepository->insertProductsToCart(
                 $session->get('cart')['id_cart'],
                 $session->get('cart')['product']['id_product'],
@@ -527,12 +538,13 @@ class AdminQuotationController extends FrameworkBundleAdminController
                 $dateAdd
             );
         } else {
+            // On sort de la condition puisque le panier est différent de 0, on créé un nouveau tableau pour récupérer le nouveau produit
             $newProduct = [
                 'id_product' => $id_product,
                 'id_product_attribute' => $id_product_attribute,
                 'quantity' => $quantity
             ];
-
+            // On va utiliser les sessions pour stocker les nouvelles données
             $session->set('cart',
                 [
                     'id_cart' => $session->get('cart')['id_cart'],
@@ -540,13 +552,13 @@ class AdminQuotationController extends FrameworkBundleAdminController
                     'product' => $newProduct
                 ]
             );
-
+            // On récupère le dernier cart du client
             $products = $quotationRepository->findProductsCustomerByCarts($session->get('cart')['id_cart']);
-
+            // On va crée un tableau pour récupérer tous les id_product
             $productsID = array_map(function($product) {
                 return $product['id_product'];
             }, $products);
-
+            // On vérifie si l'id_product existe dans le tableau, s'il n'existe pas, on insert les données en base de données
             if (!in_array($session->get('cart')['product']['id_product'], $productsID)) {
                 $quotationRepository->insertProductsToCart(
                     $session->get('cart')['id_cart'],

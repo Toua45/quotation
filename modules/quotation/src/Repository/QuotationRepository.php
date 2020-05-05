@@ -250,6 +250,7 @@ class QuotationRepository
             ->addSelect('ca.id_customer', 'c.firstname', ' c.lastname')
             ->addSelect('ROUND(SUM(p.price * cp.quantity), 2) AS total_cart')
             ->addSelect('carrier.name AS carrier')
+            ->addSelect('ca.id_address_delivery', 'ca.id_address_invoice')
             ->from($this->databasePrefix . 'cart', 'ca')
             ->join('ca', $this->databasePrefix . 'customer', 'c', 'ca.id_customer = c.id_customer')
             ->join('ca', $this->databasePrefix . 'cart_product', 'cp', 'ca.id_cart = cp.id_cart')
@@ -416,7 +417,7 @@ class QuotationRepository
     public function findAddressesByCustomer($id_customer)
     {
         return $this->connection->createQueryBuilder()
-            ->addSelect('a.id_address', 'a.company', 'a.firstname', 'a.lastname',
+            ->addSelect('a.alias', 'a.id_address', 'a.company', 'a.firstname', 'a.lastname',
                         'a.address1 AS address', 'a.address2 AS further_address', 'a.postcode', 'a.city', 'cl.name AS country', 'a.phone')
             ->from($this->databasePrefix . 'address', 'a')
             ->join('a', $this->databasePrefix . 'customer', 'c', 'c.id_customer = a.id_customer')

@@ -94,7 +94,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                         let urlCustomerShow = document.querySelector('[data-customershow]').dataset.customershow;
                         let newUrlCustomerShow;
-                        console.log(document.querySelectorAll('button.customer-show'));
 
                         if (document.querySelectorAll('button.customer-show') !== null) {
                             // On boucle sur chaque élément link auquel on attache l'évènement clic
@@ -102,10 +101,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                 link.addEventListener('click', function (Event) {
                                     newUrlCustomerShow = window.location.origin + urlCustomerShow
                                         .replace(/\d+(?=\?_token)/, link.dataset.idcustomer);
-                                    console.log(newUrlCustomerShow);
 
                                     const getCustomerShow = (customer) => {
-                                        console.log(customer);
 
                                         let addressController = window.location.origin + '/adm/index.php/?controller=AdminAddresses';
 
@@ -194,6 +191,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         true,
                                         []
                                     );
+
                                 })
                             })
                         }
@@ -217,7 +215,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     // La méthode toggle permet de masquer ou d'afficher le paramètre hidden à l'élément class
                                     Event.currentTarget.closest('.hidden').classList.toggle('hidden');
                                     // Pour chaque cards qui aura la class hidden, ces dernières seront en display-none
-                                    document.querySelectorAll('.hidden').forEach(function (card,index) {
+                                    document.querySelectorAll('.hidden').forEach(function (card, index) {
                                         card.classList.add('d-none');
                                     });
 
@@ -240,6 +238,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         let modalCustomerOrderDetailsCart = '';
                                         let modalCustomerQuotationDetails = '';
                                         let modalCustomerQuotationDetailsCart = '';
+                                        let selectAddress = '';
+                                        let addressSelected = '';
+
 
                                         /*
                                         * Cart section
@@ -337,7 +338,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---orderStatus---/, customer.order_status)
                                                     .replace(/---id-order-modal---/, customer.id_order)
                                                     .replace(/---id---/, customer.id_cart)
-                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
                                             }
                                         }
 
@@ -382,7 +383,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---totalQuotation---/, customer.total_quotation + ' €')
                                                     .replace(/---id-quotation-modal---/, customer.id_quotation)
                                                     .replace(/---id---/, customer.id_cart)
-                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
                                             }
                                         }
 
@@ -445,6 +446,57 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                 });
                                             });
                                         }
+
+                                        /**
+                                         * Addresses block
+                                         */
+
+                                        let addresses = data['addresses'];
+
+                                        for (let addressList of addresses) {
+                                            selectAddress += mod.TemplateModule.selectAddress
+                                                .replace(/---id-address---/, addressList.id_address)
+                                                .replace(/---alias---/, addressList.alias)
+                                        }
+
+                                        // addressSelected = mod.TemplateModule.addressSelected
+                                        //     .replace(/---firstname---/, addresses[0].firstname)
+                                        //     .replace(/---lastname---/, addresses[0].lastname)
+                                        //     .replace(/---company---/, addresses[0].company)
+                                        //     .replace(/---address---/, addresses[0].address)
+                                        //     .replace(/---further_address---/, addresses[0].further_address)
+                                        //     .replace(/---postcode---/, addresses[0].postcode)
+                                        //     .replace(/---city---/, addresses[0].city)
+                                        //     .replace(/---country---/, addresses[0].country)
+                                        //     .replace(/---phone---/, addresses[0].phone)
+
+                                        if (document.querySelectorAll('.delivery') !== null) {
+                                            document.querySelectorAll('.delivery').forEach(function (link) {
+                                                link.addEventListener('change', function (Event) {
+
+                                                    console.log(link.value)
+                                                    console.log(addresses.filter(address => address.id_address === link.value))
+
+                                                    for (let address of addresses.filter(address => address.id_address === link.value)) {
+                                                        addressSelected = mod.TemplateModule.addressSelected
+                                                            .replace(/---firstname---/, address.firstname)
+                                                            .replace(/---lastname---/, address.lastname)
+                                                            .replace(/---company---/, address.company)
+                                                            .replace(/---address---/, address.address)
+                                                            .replace(/---further_address---/, address.further_address)
+                                                            .replace(/---postcode---/, address.postcode)
+                                                            .replace(/---city---/, address.city)
+                                                            .replace(/---country---/, address.country)
+                                                            .replace(/---phone---/, address.phone);
+                                                    }
+
+                                                    document.getElementById('address-delivery-selected').innerHTML = addressSelected;
+                                                })
+                                            })
+                                        }
+
+                                        document.getElementById('address-delivery').innerHTML = selectAddress;
+                                        // document.getElementById('address-delivery-selected').innerHTML = addressSelected;
                                     };
 
                                     /*
@@ -463,10 +515,11 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     document.getElementById('js-output-customer-details').classList.replace('d-none', 'd-block');
                                     document.getElementById('js-output-cart-infos').classList.replace('d-none', 'd-block');
                                     document.getElementById('js-output-address').classList.replace('d-none', 'd-block');
-
                                 });
                             });
                         }
+
+                        // here
                     }
                 });
             });
@@ -511,8 +564,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     const getQueryProduct = (Event) => {
         if (typeof parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim()) === "number" &&
             // Number.isNaN() permet de déterminer si la valeur passée en argument est NaN
-            !Number.isNaN(parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim())))
-        {
+            !Number.isNaN(parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim()))) {
             // Get route 'quotation_admin_search_attributes_product'
             let urlSearchAttributesProduct = document.getElementById('js-data-product').dataset.sourceattributes;
 
@@ -544,9 +596,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         // On lui ajouter un attribut data-instock auquel on affecte la quantité
                         selectProductAttributes[index].setAttribute('data-instock', product.quantity);
                         selectProductAttributes[index].setAttribute('data-idproduct', product.id_product);
-                        sectionProductAttributes.classList.replace('d-none','d-flex');
+                        sectionProductAttributes.classList.replace('d-none', 'd-flex');
                     } else {
-                        sectionProductAttributes.classList.replace('d-flex','d-none');
+                        sectionProductAttributes.classList.replace('d-flex', 'd-none');
                     }
 
                     if (index === 0 || typeof product.attributes === 'undefined') {

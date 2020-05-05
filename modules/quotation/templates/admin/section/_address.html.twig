@@ -14,39 +14,35 @@
             </div>
         </div>
 
-        <div class="d-flex mt-5">
+        <div class="d-flex mt-4">
             <div class="d-flex flex-column col-lg-6">
-                <h2><i class="material-icons mr-2">local_shipping</i> Livraison</h2>
 
-                <select name="address" id="address">
-                    <option value="">Lorem ipsum dolor</option>
+                <label for="address-delivery">
+                    <h2><i class="material-icons mr-2">local_shipping</i> Livraison</h2>
+                </label>
+
+                <select name="address-delivery" id="address-delivery" class="delivery">
+                    <!-- alias addresses -->
                 </select>
 
-                <div class="card address-card mt-3 mb-4">
-                    <div class="float-right btn btn-light"><i class="material-icons">edit</i> Modifier</div>
-                    John DOE <br>
-                    My Company<br>
-                    16, Main street<br>
-                    2nd floor<br>
-                    75002 Paris<br>
-                    France<br>
-                    0102030405<br>
+                <div class="card address-card mt-3 mb-4" id="address-delivery-selected">
+                    <!--- address delivery -->
                 </div>
             </div>
 
             <div class="d-flex flex-column col-lg-6">
-                <h2><i class="material-icons mr-2">description</i> Facture</h2>
 
-                <select name="address" id="address">
-                    <option value="">Lorem ipsum dolor</option>
+                <label for="address-invoice">
+                    <h2><i class="material-icons mr-2">description</i> Facture</h2>
+                </label>
+
+                <select name="address-invoice" id="address-invoice">
+                    <!-- alias addresses -->
                 </select>
 
-                <div class="card address-card mt-3 mb-4">
+                <div class="card address-card mt-3 mb-4" id="address-invoice-selected">
                     <div class="float-right btn btn-light"><i class="material-icons">edit</i> Modifier</div>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est, facere harum illo quibusdam sapiente
-                    similique? Adipisci amet aut autem ipsam laborum mollitia neque quae, quaerat quia sapiente
-                    similique
-                    sunt voluptatum.
+                    <!-- address invoice -->
                 </div>
             </div>
         </div>

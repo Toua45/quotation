@@ -440,10 +440,11 @@ export const TemplateModule = {
 
     productQuantity: `---quantityInStock---`,
 
+    placeholderAddress:`<option value="placeholder" selected="selected">Selectionnez une adresse</option>`,
+
     selectAddress: `<option value="---id-address---">---alias---</option>`,
 
-    addressSelected: `<div class="float-right btn btn-light"><i class="material-icons">edit</i> Modifier</div>
-                      ---firstname--- ---lastname---<br>
+    addressSelected: `---firstname--- ---lastname---<br>
                       ---company---<br>
                       ---address---<br>
                       ---further_address--- <br>

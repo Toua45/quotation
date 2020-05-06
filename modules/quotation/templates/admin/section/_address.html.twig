@@ -1,14 +1,8 @@
-<span data-customershow="{{ path('quotation_admin_show_customer', { id_customer: 0 }) }}"></span>
-
 <div id="js-output-address" class="d-none">
 
-    <div class="quotation card p-4"
-            {#         id="products" data-products="{{ asset('data-product.js') }}"#}
-    >
+    <div class="quotation card p-4">
         <div class="quotation-head mb-3 d-flex">
-            <div class="d-flex align-items-center"
-                    {#                 data-searchproducts="{{ path('quotation_admin_search_addresses', { query: 'query' }) }}"#}
-            >
+            <div class="d-flex align-items-center">
                 <i class="material-icons">location_on</i>
                 <h1 class="panel-heading">Adresses</h1>
             </div>
@@ -36,12 +30,11 @@
                     <h2><i class="material-icons mr-2">description</i> Facture</h2>
                 </label>
 
-                <select name="address-invoice" id="address-invoice">
+                <select name="address-invoice" id="address-invoice" class="invoice">
                     <!-- alias addresses -->
                 </select>
 
                 <div class="card address-card mt-3 mb-4" id="address-invoice-selected">
-                    <div class="float-right btn btn-light"><i class="material-icons">edit</i> Modifier</div>
                     <!-- address invoice -->
                 </div>
             </div>

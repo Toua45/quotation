@@ -453,29 +453,17 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                         let addresses = data['addresses'];
 
+                                        selectAddress = mod.TemplateModule.placeholderAddress;
+
                                         for (let addressList of addresses) {
                                             selectAddress += mod.TemplateModule.selectAddress
                                                 .replace(/---id-address---/, addressList.id_address)
                                                 .replace(/---alias---/, addressList.alias)
                                         }
 
-                                        // addressSelected = mod.TemplateModule.addressSelected
-                                        //     .replace(/---firstname---/, addresses[0].firstname)
-                                        //     .replace(/---lastname---/, addresses[0].lastname)
-                                        //     .replace(/---company---/, addresses[0].company)
-                                        //     .replace(/---address---/, addresses[0].address)
-                                        //     .replace(/---further_address---/, addresses[0].further_address)
-                                        //     .replace(/---postcode---/, addresses[0].postcode)
-                                        //     .replace(/---city---/, addresses[0].city)
-                                        //     .replace(/---country---/, addresses[0].country)
-                                        //     .replace(/---phone---/, addresses[0].phone)
-
                                         if (document.querySelectorAll('.delivery') !== null) {
                                             document.querySelectorAll('.delivery').forEach(function (link) {
                                                 link.addEventListener('change', function (Event) {
-
-                                                    console.log(link.value)
-                                                    console.log(addresses.filter(address => address.id_address === link.value))
 
                                                     for (let address of addresses.filter(address => address.id_address === link.value)) {
                                                         addressSelected = mod.TemplateModule.addressSelected
@@ -495,8 +483,30 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             })
                                         }
 
+                                        if (document.querySelectorAll('.invoice') !== null) {
+                                            document.querySelectorAll('.invoice').forEach(function (link) {
+                                                link.addEventListener('change', function (Event) {
+
+                                                    for (let address of addresses.filter(address => address.id_address === link.value)) {
+                                                        addressSelected = mod.TemplateModule.addressSelected
+                                                            .replace(/---firstname---/, address.firstname)
+                                                            .replace(/---lastname---/, address.lastname)
+                                                            .replace(/---company---/, address.company)
+                                                            .replace(/---address---/, address.address)
+                                                            .replace(/---further_address---/, address.further_address)
+                                                            .replace(/---postcode---/, address.postcode)
+                                                            .replace(/---city---/, address.city)
+                                                            .replace(/---country---/, address.country)
+                                                            .replace(/---phone---/, address.phone);
+                                                    }
+
+                                                    document.getElementById('address-invoice-selected').innerHTML = addressSelected;
+                                                })
+                                            })
+                                        }
+
                                         document.getElementById('address-delivery').innerHTML = selectAddress;
-                                        // document.getElementById('address-delivery-selected').innerHTML = addressSelected;
+                                        document.getElementById('address-invoice').innerHTML = selectAddress;
                                     };
 
                                     /*

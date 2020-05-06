@@ -218,9 +218,13 @@ export const TemplateModule = {
                     <td class="cart-id text-left">---cartId---</td>
                     <td class="cart-date text-left">---cartDate---</td>
                     <td class="cart-total text-left">---totalCart---</td>
-                    <td class="cart-actions text-left">
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#showCartModal_---id-cart-modal---">Details</button>
-                        <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-outline-primary ml-3">Utiliser</a>
+                    <td class="cart-actions d-flex">
+                        <button class="btn btn-light d-flex" data-toggle="modal" data-target="#showCartModal_---id-cart-modal---">
+                            <span uk-icon="icon: search" class="mr-1 search-icon"></span> Details
+                        </button>
+                        <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-light d-flex ml-3">
+                            <span uk-icon="icon: arrow-right" class="mr-1"></span> Utiliser
+                        </a>
                     </td>         
                  </tr>`,
 
@@ -273,11 +277,11 @@ export const TemplateModule = {
                      </div>`,
 
     cartData: `<tr>
-                  <td class="text-left">---productName---</td>
-                  <td class="text-left">---productPrice---</td>
-                  <td class="text-left">---productQuantity---</td>
-                  <td class="text-left">---totalProduct---</td>
-                  <tr>`,
+                    <td class="text-left">---productName---</td>
+                    <td class="text-left">---productPrice---</td>
+                    <td class="text-left">---productQuantity---</td>
+                    <td class="text-left">---totalProduct---</td>
+                <tr>`,
 
     tableOrder: `<tr>
             <td class="order-id text-left">---orderId---</td>
@@ -285,9 +289,13 @@ export const TemplateModule = {
             <td class="order-total text-left">---totalOrder---</td>
             <td class="order-payment text-left">---payment---</td>
             <td class="order-status text-left">---orderStatus---</td>
-            <td class="order-actions text-left">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#showOrderModal_---id-order-modal---">Details</button>
-            <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-outline-primary ml-3">Utiliser</a>
+            <td class="order-actions d-flex">
+                <button class="btn btn-light d-flex" data-toggle="modal" data-target="#showOrderModal_---id-order-modal---">
+                     <span uk-icon="icon: search" class="mr-1 search-icon"></span> Details
+                </button>
+                <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-light d-flex ml-3">
+                    <span uk-icon="icon: arrow-right" class="mr-1"></span> Utiliser
+                </a>
             </td>
         </tr>`,
 
@@ -357,9 +365,13 @@ export const TemplateModule = {
             <td class="quotation-id text-left">---quotationId---</td>
             <td class="quotation-date text-left">---quotationDate---</td>
             <td class="quotation-total text-left">---totalQuotation---</td>
-            <td class="quotation-actions text-left">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#showQuotationModal_---id-quotation-modal---">Details</button>
-            <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-outline-primary ml-3">Utiliser</a>
+            <td class="quotation-actions d-flex">
+                <button class="btn btn-light d-flex" data-toggle="modal" data-target="#showQuotationModal_---id-quotation-modal---">
+                    <span uk-icon="icon: search" class="mr-1 search-icon"></span> Details
+                </button>
+                <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-light d-flex ml-3">
+                    <span uk-icon="icon: arrow-right" class="mr-1"></span> Utiliser
+                </a>
             </td>
         </tr>`,
 
@@ -377,22 +389,23 @@ export const TemplateModule = {
                             <div class="card">
                               <h2><i class="material-icons">person</i> INFORMATIONS CLIENT</h2>
                               <div class="card-header">
-                              <h3>
-                              ---firstname--- ---lastname--- [---id-customer---]
-                              </h3>
+                                  <h3>
+                                  ---firstname--- ---lastname--- [---id-customer---]
+                                  </h3>
                               </div>
                               <div class="card-body">
                                 <h2><i class="material-icons">content_paste</i> DEVIS [---id-quotation---] référence : ---reference---</h2>
                                 <h2><i class="material-icons">shopping_cart</i> CONTENU DU PANIER [---id-cart---]</h2>
                                 <table class="table">
-                                     <thead>
+                                    <thead>
                                         <tr>
-                                        <th class="text-left">Produits</th>
-                                        <th class="text-left">Prix Unitaire</th>
-                                        <th class="text-left">Quantité</th>
-                                        <th class="text-left">Total</th>
+                                            <th class="text-left">Produits</th>
+                                            <th class="text-left">Prix Unitaire</th>
+                                            <th class="text-left">Quantité</th>
+                                            <th class="text-left">Total</th>
                                         </tr>
                                     </thead>
+                                    
                                     <tbody>
                                     
                                         ---quotation-cart-data---
@@ -400,7 +413,8 @@ export const TemplateModule = {
                                         <tr>
                                         <td colspan="3" class="text-left">Total produits</td>
                                         <td class="text-left">---totalQuotation---</td>
-                                        </tr>                                        
+                                        </tr>   
+                                    </tbody>                                     
                                 </table>
                               </div>
                             </div>
@@ -412,6 +426,7 @@ export const TemplateModule = {
                 </div>`,
 
     quotationCartProducts: `<tr>
+                                <td class="text-left"><img src="---picture---"></td>
                                 <td class="text-left">---productName---</td>
                                 <td class="text-left">---productPrice---</td>
                                 <td class="text-left">---productQuantity---</td>

@@ -44,6 +44,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $quotations = $quotationRepository->findQuotationsByFilters($page);
         }
 
+
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
             'quotations' => $quotations['records'],
             'page' => $page,
@@ -53,20 +54,37 @@ class AdminQuotationController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function pdfView($id_quotation)
+    /**
+     * @param $id_quotation
+     * Fonction qui fait appelle au service "QuotationPdf" pour créer un nouveau document et renvoyer les informations du devis de chaque client
+     */
+    public function quotationPdf($id_quotation)
     {
         $quotationRepository = $this->get('quotation_repository');
         $quotation = $quotationRepository->findQuotationById($id_quotation);
 
-        $quotationPdf = new QuotationPdf();
-        $filename = $quotation['firstname'] . ' ' . $filename = $quotation['lastname'] . '  - Référence ' . $filename = $quotation['reference'];
-        $html = $this->renderView('@Modules/quotation/templates/admin/pdf/pdf_quotation.html.twig', [
-            'id_quotation' => $quotation['id_quotation'],
-            'firstname' => $quotation['firstname'],
-            'lastname' => $quotation['lastname'],
-            'reference' => $quotation['reference']
-        ]);
+        // Récupération des méthodes "findAddressesByCustomer", et "findAddressesByCustomer" pour les adresses des clients et les produits associés au devis
+        if ($quotation['id_quotation']) {
+            $quotation['addresses'] = $quotationRepository->findAddressesByCustomer($quotation['id_customer']);
+            $quotation['products'] = $quotationRepository->findProductsCustomerByCarts($quotation['id_cart']);
+        }
 
+        // Calcul de la TVA à partir de chaque produit, de la réduction et des frais de port
+        $price_tva = 0;
+        for ($i = 0; $i < count($quotation['products']); $i++) {
+            $price_tva += $quotation['products'][$i]['total_product'] * $quotation['products'][$i]['rate'] / 100;
+        }
+        $price_tva -= $quotation['tva_reduction_amount'];
+        $price_tva += $quotation['tva_shipping'];
+
+        $quotationPdf = new QuotationPdf();
+
+        // Nom du fichier pdf qui comprend le nom et prénom du client et le numéro de devis
+        $filename = $quotation['firstname'] . ' ' . $filename = $quotation['lastname'] . '  - Référence n° ' . $filename = $quotation['reference'];
+        $html = $this->renderView('@Modules/quotation/templates/admin/pdf/pdf_quotation.html.twig', [
+            'quotation' => $quotation,
+            'price_tva' => $price_tva
+        ]);
         $quotationPdf->createPDF($html, $filename);
     }
 
@@ -363,6 +381,11 @@ class AdminQuotationController extends FrameworkBundleAdminController
                     $cart['products'][$j]['product_price'] = number_format($cart['products'][$j]['product_price'], 2);
                     $cart['products'][$j]['product_quantity'];
                     $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
+                    $cart['products'][$j]['id_image'];
+                    $cart['products'][$j]['path'] = $cart['products'][$j]['id_image'];
+                    if ($cart['products'][$j]['path']) {
+                        $cart['products'][$j]['path'] = str_split($cart['products'][$j]['path']);
+                    }
                 }
             }
         }
@@ -566,7 +589,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
                 );
             }
         }
-
         return new JsonResponse(json_encode($session->get('cart')), 200, [], true);
     }
 }

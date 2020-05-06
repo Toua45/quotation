@@ -7,7 +7,7 @@
         <div class="quotation card p-4" id="products" data-products="{{ asset('data-product.js') }}">
             <div class="quotation-head mb-3 d-flex justify-content-between">
                 <div class="d-flex align-items-center" data-searchproducts="{{ path('quotation_admin_search_products', { query: 'query' }) }}">
-                    <span uk-icon="icon: cart" class="mr-2"></span>
+                    <i class="material-icons mr-2">shopping_cart</i>
                     <h1 class="panel-heading">Panier</h1>
                 </div>
             </div>
@@ -22,6 +22,7 @@
                 <table class="table">
                     <thead>
                     <tr>
+                        <th class="text-left">Miniature</th>
                         <th class="text-left">Produits</th>
                         <th class="text-left">Prix Unitaire</th>
                         <th class="text-left">Quantité</th>

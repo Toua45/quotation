@@ -16,13 +16,14 @@
       padding: 0 5px;
       width: max-content;
     }
+
   }
 
   .customerCard {
     border: solid 1px $middlegrey;
     box-shadow: none;
     padding: 0;
-    margin:5px;
+    margin: 5px;
     width: 32%;
 
     .card-header-customer {
@@ -67,22 +68,38 @@
         display: flex;
       }
 
-      .search-icon {
-        $svg-size: 15px;
-
-        svg {
-          width: $svg-size;
-          height: $svg-size;
-        }
-      }
+      //.search-icon {
+      //  $svg-size: 15px;
+      //
+      //  svg {
+      //    width: $svg-size;
+      //    height: $svg-size;
+      //  }
+      //}
 
       line {
         stroke-width: 1.3;
       }
+
       polyline {
         stroke-width: 1.1;
       }
-
     }
   }
+
+  .search-icon {
+    $svg-size: 15px;
+
+    svg {
+      width: $svg-size;
+      height: $svg-size;
+    }
+  }
+
+  .tab-content {
+    line, polyline {
+      stroke-width: 2;
+    }
+  }
+
 }

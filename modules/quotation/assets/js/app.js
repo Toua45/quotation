@@ -56,7 +56,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
             let link = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/customer/';
             let show = window.location.origin + '/adminToua/index.php/sell/customers/';
-
+          
             customers.forEach((customer, i) => {
 
                 import('./templates_module').then(mod => {
@@ -408,13 +408,13 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         .replace(/\d+(?=\?_token)/, link.dataset.idcart);
 
                                                     const getCustomerCartToUse = (cart) => {
-                                                        // let picture = window.location.origin + '/img/p/';
+                                                        let picture = window.location.origin + '/img/p/';
                                                         let outputCartToUse = '';
                                                         let outputCartProductsToUse = '';
 
                                                         for (let product of cart['products']) {
                                                             outputCartProductsToUse += mod.TemplateModule.quotationCartProducts
-                                                                // .replace(/---picture---/, picture + product.path.join('/') + '/' + product.id_image + '-small_default.jpg')
+                                                                .replace(/---picture---/, picture + product.path.join('/') + '/' + product.id_image + '-small_default.jpg')
                                                                 .replace(/---productName---/, product.product_name)
                                                                 .replace(/---productPrice---/, product.product_price + ' €')
                                                                 .replace(/---productQuantity---/, product.product_quantity)
@@ -605,7 +605,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         []
                     );
                 });
-
             };
 
             QuotationModule.getData(

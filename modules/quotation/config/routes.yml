@@ -18,7 +18,7 @@ quotation_admin_pdf:
   path: quotation/admin/pdf_view/{id_quotation}/{firstname} {lastname}
   methods: [GET]
   defaults:
-    _controller: 'Quotation\Controller\AdminQuotationController::pdfView'
+    _controller: 'Quotation\Controller\AdminQuotationController::quotationPdf'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
 

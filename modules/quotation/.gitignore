@@ -2,3 +2,4 @@ vendor
 sql/*
 node_modules
 public
+!composer.lock

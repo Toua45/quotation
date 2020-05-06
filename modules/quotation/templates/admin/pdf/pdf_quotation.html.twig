@@ -1,3 +1,191 @@
-{{ firstname }}
-{{ lastname }}
-{{ id_quotation }}
+<!--  Partie CSS  -->
+
+<style>
+
+    /* Logo de l'entreprise */
+    .logo_company {
+        width: 38%;
+        height: auto;
+        max-height: 60%;
+        float: left;
+    }
+
+
+    /* Référence du devis et date */
+    .quotation_block {
+        float: right;
+        text-align: left;
+        line-height: 0.6;
+        border: 1px solid;
+        border-radius: 20px;
+        padding-left: 18px;
+        padding-top: 12px;
+        width: 25%;
+    }
+
+    .quotation_number {
+        text-decoration: underline;
+        font-weight: 800;
+        font-size: 18px;
+    }
+
+
+    /* Coordonnées de l'entreprise */
+    .company_block {
+        font-size: 16px;
+        line-height: 0.7;
+        margin-top: 170px;
+        width: 100%;
+    }
+
+    .siren {
+        text-decoration: underline;
+    }
+
+
+    /* Coordonnées du client */
+    .customer_block {
+        font-size: 15px;
+        text-align: left;
+        line-height: 0.7;
+        margin-left: 70%;
+        margin-top: -160px;
+        padding-top: 10px;
+        width: 100%;
+    }
+
+    .customer_address {
+        font-size: 20px;
+        text-decoration: underline;
+    }
+
+
+    /* Tableau devis */
+    table {
+        border-collapse: collapse;
+    }
+
+    td, th {
+        border: 1px solid black;
+        padding: 0.3rem;
+        text-align: center;
+    }
+
+    .quotation_tab {
+        text-align: left;
+        margin-top: 50px;
+        width: 100%;
+    }
+
+    .head_tab {
+        text-align: center;
+        font-size: 18px;
+        background-color: #D3D3D3;
+    }
+
+
+    /* Récapitulatif total du devis */
+    .total_quotation {
+        font-size: 15px;
+        text-align: left;
+        line-height: 0.5;
+        border: 1px solid;
+        border-radius: 20px;
+        margin-left: 70%;
+        margin-top: 2%;
+        padding-top: 18px;
+        padding-left: 20px;
+        width: 100%;
+    }
+
+</style>
+
+<!-- Partie HTML -->
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+<img src="https://zupimages.net/up/20/17/rfpy.png" class="logo_company" alt="Company's logo Aquapure France"/>
+
+<div class="quotation_block">
+    <p class="quotation_number">Devis : N° {{ quotation.reference }}</p>
+    <p class="">Date : {{ quotation.date_add|date("m/d/Y") }}</p>
+    <p class="">Devis valable jusqu'au : <span style="line-height: 1.3;">05/05/2020</span></p>
+</div>
+
+<div class="company_block">
+    <p>1 Avenue du Champs de Mars</p>
+    <p>45100 Orléans</p>
+    <p>02 38 69 82 83</p>
+    <p>contact@aquapure.fr</p>
+    <p><span class="siren">SIREN :</span> 528 715 170</p>
+</div>
+
+<!-- Récupération des adresses des clients -->
+{% for address in quotation.addresses %}
+    <div class="customer_block">
+        <h2 class="customer_address" style="line-height: 1.3;">Adresse du client</h2>
+        <p>{{ address.company }}</p>
+        <p>{{ quotation.firstname }} {{ quotation.lastname }}</p>
+        <p>{{ address.address }},</p>
+        <p>{{ address.postcode }} {{ address.city }}</p>
+        <p>{{ address.phone }}</p>
+    </div>
+{% endfor %}
+
+<table class="quotation_tab">
+
+    <thead class="head_tab">
+    <tr>
+        <th class="description w-100">Description</th>
+        <th class="text-center w-25">Prix unitaire</th>
+        <th class="w-25">Quantité</th>
+        <th class="w-25">Montant</th>
+    </tr>
+    </thead>
+
+    <tbody class="tab_body">
+    <!-- Récupération des produits et des tarifs-->
+    {% for product in quotation.products %}
+        <tr>
+            <td class="text-left">{{ product.product_name }}</td>
+            <td>{{ product.product_price|number_format(2) }} €</td>
+            <td>{{ product.product_quantity }}</td>
+            <td>{{ product.total_product|number_format(2) }} €</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+
+</table>
+
+<div class="total_quotation">
+    <p><span class="font-weight-bold">Montant HT :</span> {{ quotation.total_product_price|number_format(2) }} €</p>
+    <p><span class="font-weight-bold">Remise :</span> {{ quotation.reduction_amount|number_format(2) }} €</p>
+    <p><span class="font-weight-bold">Frais de port :</span> {{ quotation.total_shipping|number_format(2) }} €</p>
+
+    <!-- Calcul montant HT -->
+    {% set total_price_without_tva =  quotation.total_product_price  -  quotation.reduction_amount +  quotation.total_shipping %}
+    <p><span class="font-weight-bold">TVA :</span> {{ price_tva|number_format(2) }} €</p>
+
+    <!-- Calcul montant TTC -->
+    {% set total_ttc = total_price_without_tva + price_tva %}
+    <p><span class="font-weight-bold">Montant TTC :</span> {{ total_ttc|number_format(2) }} €</p>
+</div>
+
+<p class="text-right mt-5">Signature du client (précédé de la mention « Bon pour accord »)</p>
+
+<!-- Pagination -->
+<script type="text/php">
+if (isset($pdf) ) {
+    $pdf->page_script('
+        if ($PAGE_COUNT > 0) {
+            $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
+            $size = 12;
+            $pageText = "Page " . $PAGE_NUM;
+            $y = 800;
+            $x = 520;
+            $pdf->text($x, $y, $pageText, $font, $size);
+        }
+    ');
+}
+</script>

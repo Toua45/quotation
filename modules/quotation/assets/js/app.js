@@ -19,6 +19,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         url,
         QuotationModule.getData,
         QuotationModule.getCustomersURL(),
+        null,
         true,
         []
     );
@@ -34,6 +35,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     QuotationModule.getData(
         QuotationModule.getCustomersURL(),
         QuotationModule.autocomplete,
+        null,
         null,
         true,
         ['#quotation_customer_customerId', 'customers', 1]
@@ -52,7 +54,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
-
             let link = window.location.origin + '/adm/index.php/modules/quotation/admin/show/customer/';
             let show = window.location.origin + '/adm/index.php/sell/customers/';
 
@@ -188,6 +189,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         newUrlCustomerShow,
                                         getCustomerShow,
                                         null,
+                                        null,
                                         true,
                                         []
                                     );
@@ -199,7 +201,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
-
                         let linkCart = window.location.origin + '/adm/index.php/modules/quotation/admin/show/cart/';
                         let urlCart = document.querySelector('[data-customercart]').dataset.customercart;
                         let newUrlCart;
@@ -241,10 +242,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         let selectAddress = '';
                                         let addressSelected = '';
 
-
                                         /*
                                         * Cart section
-                                         */
+                                        */
 
                                         // L'instruction for...of permet de créer une boucle d'un array qui parcourt un objet itérable
                                         // Attention à l'ordre d'éxécution des boucles, on éxecute dans cartData, ensuite dans modalCartInfos et enfin tableCart
@@ -440,6 +440,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         newUrlCart,
                                                         getCustomerCartToUse,
                                                         null,
+                                                        null,
                                                         true,
                                                         []
                                                     );
@@ -447,24 +448,32 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             });
                                         }
 
+                                        // on ajoute l'attribut data-idcustomer à l'élément html add-product-to-cart pour récupérer l'id_customer qui nous servira pour la section search product section
+                                        document.getElementById('add-product-to-cart').setAttribute('data-idcustomer', data['customer'].id_customer);
+                                        document.getElementById('add-product-to-cart').setAttribute('data-idcart', 0);
+
                                         /**
                                          * Addresses block
                                          */
 
                                         let addresses = data['addresses'];
 
+                                        // placeholder, 1st option of the select
                                         selectAddress = mod.TemplateModule.placeholderAddress;
 
+                                        // obtenir la liste des alias d'addresses dans les 2 selects
                                         for (let addressList of addresses) {
                                             selectAddress += mod.TemplateModule.selectAddress
                                                 .replace(/---id-address---/, addressList.id_address)
                                                 .replace(/---alias---/, addressList.alias)
                                         }
 
+                                        // remplir le block par l'addresse de livraison sélectionnée
                                         if (document.querySelectorAll('.address-delivery') !== null) {
                                             document.querySelectorAll('.address-delivery').forEach(function (link) {
                                                 link.addEventListener('change', function (Event) {
 
+                                                    // filter (fonction js de base) permet de récupérer l'objet dont la value de l'option est égale à l'id_address
                                                     for (let address of addresses.filter(address => address.id_address === link.value)) {
                                                         addressSelected = mod.TemplateModule.addressSelected
                                                             .replace(/---firstname---/, address.firstname)
@@ -517,6 +526,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         newUrlCustomersDetails,
                                         getCustomerDetails,
                                         null,
+                                        null,
                                         true,
                                         []
                                     );
@@ -539,6 +549,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             urlSearchCustomers.replace(/query/, Event.currentTarget.value),
             insertCustomerInDOM,
             null,
+            null,
             true,
             []
         );
@@ -559,6 +570,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         urlProduct,
         QuotationModule.getData,
         QuotationModule.getProductsURL(),
+        null,
         true,
         []
     );
@@ -567,70 +579,110 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         QuotationModule.getProductsURL(),
         QuotationModule.autocomplete,
         null,
+        null,
         true,
-        ['#quotation_product_cartId', 'products', 1]
+        ['#quotation_product_cartId', 'products', 2]
     );
 
     const getQueryProduct = (Event) => {
         if (typeof parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim()) === "number" &&
             // Number.isNaN() permet de déterminer si la valeur passée en argument est NaN
-            !Number.isNaN(parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim()))) {
+            !Number.isNaN(parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim()))
+        ) {
             // Get route 'quotation_admin_search_attributes_product'
             let urlSearchAttributesProduct = document.getElementById('js-data-product').dataset.sourceattributes;
 
             // La fonction parseInt() analyse une chaîne de caractère fournie en argument et renvoie un entier exprimé dans une base donnée
             let idProduct = parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim());
             urlSearchAttributesProduct = window.location.origin + urlSearchAttributesProduct.replace(/\d+(?=\?_token)/, idProduct);
+            document.getElementById('js-output-attributes-products');
 
             const getAttributesProduct = (attributes) => {
                 let index = 0;
                 let selectProductAttributes = document.getElementById('js-output-attributes-products');
                 let quantityInStock = document.getElementById('quantity-in-stock');
                 let sectionProductAttributes = document.getElementById('section-attributes-product');
+                let formAddProductToCart = document.getElementById('add-product-to-cart');
 
-                for (let product of attributes) {
-
-                    // Nous allons calculer la longueur du tableau
-                    if (selectProductAttributes.length !== 0) {
+                // On cherche si l'id_product = 0
+                if (attributes.id_product_attribute === '0') {
+                    // On calcule la longueur du select et de ces options
+                    if (selectProductAttributes.length > 0) {
+                        // Si le tableau existe, on créé des options auquel on attribut la valeur à 0 et on les cache
                         for (let i = 0; i < selectProductAttributes.length; i++) {
-                            if (selectProductAttributes[i].dataset.idproduct !== product.id_product) {
-                                // Nous supprimons tous les éléments html options qui n'ont pas le même id_product
-                                selectProductAttributes[i].remove();
+                            selectProductAttributes[i] = new Option('', attributes.id_product_attribute, i === 0);
+                            selectProductAttributes[i].hidden = true;
+                        }
+                        // On ajoute l'attribut data-idproduct auquel on affecte l'id_product au form
+                        formAddProductToCart.setAttribute('data-idproduct', attributes.id_product);
+                        sectionProductAttributes.classList.replace('d-flex','d-none'); // Hide select section
+                    }
+                } else {
+                    for (let product of attributes) {
+                        selectProductAttributes[index] = new Option(product.attributes, product.id_product_attribute, false, false);
+                        selectProductAttributes[index].setAttribute('data-instock', product.quantity);
+                        selectProductAttributes[index].setAttribute('data-idproduct', product.id_product);
+
+                        // Create attribute idproduct on form.add-product-to-cart
+                        formAddProductToCart.setAttribute('data-idproduct', product.id_product);
+                        sectionProductAttributes.classList.replace('d-none','d-flex');
+
+                        if (index === 0 || typeof product.attributes === 'undefined') {
+                            quantityInStock.innerHTML = product.quantity;
+                        }
+                        index++;
+                    }
+
+                    // Remove attributes not belonging to current product
+                    let count = attributes.length !== selectProductAttributes.length ? Math.max(attributes.length, selectProductAttributes.length) : false;
+
+                    if (count) {
+                        for (let i = 0; i < count; i++) {
+                            if (selectProductAttributes[i].dataset.idproduct !== formAddProductToCart.dataset.idproduct) {
+                                selectProductAttributes[i].hidden = true;
                             }
                         }
                     }
-
-                    if (typeof product.attributes !== 'undefined') {
-                        // On crée un nouvel élément html option
-                        selectProductAttributes[index] = new Option(product.attributes, product.id_product_attribute, false, false);
-                        // On lui ajouter un attribut data-instock auquel on affecte la quantité
-                        selectProductAttributes[index].setAttribute('data-instock', product.quantity);
-                        selectProductAttributes[index].setAttribute('data-idproduct', product.id_product);
-                        sectionProductAttributes.classList.replace('d-none', 'd-flex');
-                    } else {
-                        sectionProductAttributes.classList.replace('d-flex', 'd-none');
-                    }
-
-                    if (index === 0 || typeof product.attributes === 'undefined') {
-                        quantityInStock.innerHTML = product.quantity;
-                    }
-                    index++;
                 }
 
                 selectProductAttributes.addEventListener('change', Event => {
                     for (let j = 0; j < selectProductAttributes.length; j++) {
-
                         if (selectProductAttributes[j].value === Event.currentTarget.value) {
                             quantityInStock.innerHTML = selectProductAttributes[j].dataset.instock;
                             break;
                         }
                     }
                 });
+
+                document.getElementById('add-product-to-cart').addEventListener('submit', Event => {
+                    Event.preventDefault();
+                    let id_prod_attr = document.getElementById('js-output-attributes-products').value;
+
+                    let argsURL = '/' +
+                        formAddProductToCart.dataset.idproduct + '/' + // Get id_product
+                        id_prod_attr + '/' + // Get id_product_attribute
+                        document.getElementById('product-quantity').value + '/' + // Get quantity
+                        formAddProductToCart.dataset.idcustomer + '/' + // Get id_customer
+                        formAddProductToCart.dataset.idcart; // Get id_cart
+
+                    let urlPost = Event.currentTarget.dataset.urlpost;
+                    const getCustomerLastCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = cart.id_cart;
+
+                    QuotationModule.getData(
+                        urlPost.replace(/(\/\d+){5}(?=\?_token)/, argsURL),
+                        getCustomerLastCart,
+                        null,
+                        'POST',
+                        true,
+                        []
+                    );
+                });
             };
 
             QuotationModule.getData(
                 urlSearchAttributesProduct,
                 getAttributesProduct,
+                null,
                 null,
                 true,
                 []
@@ -641,10 +693,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     };
 
     const inputSearchProducts = document.getElementById('quotation_product_cartId');
-    ['keyup', 'change'].forEach(event => {
+    ['keyup'].forEach(event => {
         inputSearchProducts.addEventListener(event, getQueryProduct, false);
     });
-
 }
 
 // any SCSS you require will output into a single scss file (app.scss in this case)

@@ -18,7 +18,7 @@ quotation_admin_pdf:
   path: quotation/admin/pdf_view/{id_quotation}/{firstname} {lastname}
   methods: [GET]
   defaults:
-    _controller: 'Quotation\Controller\AdminQuotationController::pdfView'
+    _controller: 'Quotation\Controller\AdminQuotationController::quotationPdf'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
 
@@ -113,10 +113,14 @@ quotation_admin_show_product:
     _legacy_link: 'AdminQuotationController'
 
 quotation_admin_create_new_cart:
-  path: quotation/admin/create/new/cart
+  path: quotation/admin/create/new/cart/{id_product}/{id_product_attribute}/{quantity}/{id_customer}/{id_cart}
   requirements:
+    id_product: '\d+'
+    id_product_attribute: '\d+'
+    quantity: '\d+'
+    id_customer: '\d+'
     id_cart: '\d+'
-  methods: [POST]
+  methods: [GET, POST]
   defaults:
     _controller: 'Quotation\Controller\AdminQuotationController::createNewCart'
     _legacy_controller: 'AdminQuotationController'

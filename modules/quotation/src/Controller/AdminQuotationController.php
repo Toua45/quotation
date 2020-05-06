@@ -47,7 +47,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
             'quotations' => $quotations['records'],
             'page' => $page,
-            'nbPages' => (int) ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE),
+            'nbPages' => (int)ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE),
             'nbRecords' => $quotations['nbRecords'],
             'quotationFilterForm' => $quotationFilterForm->createView()
         ]);
@@ -59,7 +59,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $quotation = $quotationRepository->findQuotationById($id_quotation);
 
         $quotationPdf = new QuotationPdf();
-        $filename = $quotation['firstname'] . ' ' . $filename = $quotation['lastname'] .  '  - Référence ' . $filename = $quotation['reference'];
+        $filename = $quotation['firstname'] . ' ' . $filename = $quotation['lastname'] . '  - Référence ' . $filename = $quotation['reference'];
         $html = $this->renderView('@Modules/quotation/templates/admin/pdf/pdf_quotation.html.twig', [
             'id_quotation' => $quotation['id_quotation'],
             'firstname' => $quotation['firstname'],
@@ -117,7 +117,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
                 if ($request->query->has('submitFormAjax')) {
                     /** @var ViewableCustomer $customerInformation */
-                    $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
+                    $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int)$customerId));
 
                     return $this->render('@PrestaShop/Admin/Sell/Customer/modal_create_success.html.twig', [
                         'customerId' => $customerId,
@@ -414,28 +414,22 @@ class AdminQuotationController extends FrameworkBundleAdminController
     {
         $quotationRepository = $this->get('quotation_repository');
         $product = $quotationRepository->findOneProductById($id_product);
-        $mug = [];
+        $productWithoutAttributes = [];
 
         for ($i = 0; $i < count($product); $i++) {
             if ($product[$i]['id_product_attribute']) {
                 $product[$i]['attributes'] = $quotationRepository->findAttributesByProduct($id_product, $product[$i]['id_product_attribute']);
-        }
-
+            }
         }
 
         if (is_null($product[0]['id_product_attribute'])) {
-            $mug['quantity'] = $quotationRepository->findQuantityByProduct($id_product, $product[0]['id_product_attribute'])['quantity'];
-            $mug['id_product_attribute'] = '0';
-            $mug['id_product'] = $product[0]['id_product'];
-            $mug['product_name'] = $product[0]['product_name'];
-            $mug['product_price'] = $product[0]['product_price'];
-            $product = $mug;
-            //$product[$i]['quantity'] = $quotationRepository->findQuantityByProduct($id_product, $product[$i]['id_product_attribute'])['quantity'];
-            //$product[$i]['id_product_attribute'] = '0';
+            $productWithoutAttributes['id_product'] = $product[0]['id_product'];
+            $productWithoutAttributes['product_name'] = $product[0]['product_name'];
+            $productWithoutAttributes['product_price'] = $product[0]['product_price'];
+            $productWithoutAttributes['id_product_attribute'] = '0';
+            $productWithoutAttributes['quantity'] = $quotationRepository->findQuantityByProduct($id_product, $product[0]['id_product_attribute'])['quantity'];
+            $product = $productWithoutAttributes;
         }
-
-//        dump($product);
-//        die;
 
         for ($i = 0; $i < count($product); $i++) {
             $attributes = '';
@@ -444,7 +438,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
                     $attributes .= $product[$i]['attributes'][$j]['attribute_details'] . ' - ';
                     $attributesDetails = $attributes . $product[$i]['product_price'];
                 }
-                $product[$i]['attributes'] = rtrim($attributesDetails,  ' - ');
+                $product[$i]['attributes'] = rtrim($attributesDetails, ' - ');
             }
         }
 
@@ -520,9 +514,9 @@ class AdminQuotationController extends FrameworkBundleAdminController
                     'id_cart' => $currentCartId,
                     'id_customer' => $id_customer,
                     'product' => [
-                            'id_product' => $id_product,
-                            'id_product_attribute' => $id_product_attribute,
-                            'quantity' => $quantity
+                        'id_product' => $id_product,
+                        'id_product_attribute' => $id_product_attribute,
+                        'quantity' => $quantity
                     ]
                 ]
             );
@@ -555,7 +549,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             // On récupère le dernier cart du client
             $products = $quotationRepository->findProductsCustomerByCarts($session->get('cart')['id_cart']);
             // On va crée un tableau pour récupérer tous les id_product
-            $productsID = array_map(function($product) {
+            $productsID = array_map(function ($product) {
                 return $product['id_product'];
             }, $products);
             // On vérifie si l'id_product existe dans le tableau, s'il n'existe pas, on insert les données en base de données

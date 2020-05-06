@@ -515,82 +515,63 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     const getQueryProduct = (Event) => {
         if (typeof parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim()) === "number" &&
             // Number.isNaN() permet de déterminer si la valeur passée en argument est NaN
-            !Number.isNaN(parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim())))
-        {
+            !Number.isNaN(parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim()))
+        ) {
             // Get route 'quotation_admin_search_attributes_product'
             let urlSearchAttributesProduct = document.getElementById('js-data-product').dataset.sourceattributes;
 
             // La fonction parseInt() analyse une chaîne de caractère fournie en argument et renvoie un entier exprimé dans une base donnée
             let idProduct = parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim());
             urlSearchAttributesProduct = window.location.origin + urlSearchAttributesProduct.replace(/\d+(?=\?_token)/, idProduct);
-            let selectProductAttributes = document.getElementById('js-output-attributes-products');
-            selectProductAttributes = [];
-
+            document.getElementById('js-output-attributes-products');
 
             const getAttributesProduct = (attributes) => {
-                console.log(attributes);
-
                 let index = 0;
                 let selectProductAttributes = document.getElementById('js-output-attributes-products');
                 let quantityInStock = document.getElementById('quantity-in-stock');
                 let sectionProductAttributes = document.getElementById('section-attributes-product');
-                let id_product = null;
+                let formAddProductToCart = document.getElementById('add-product-to-cart');
 
-                if (selectProductAttributes.length > 0) {
-                    for (let i = 0; i < selectProductAttributes.length; i++) {
-                        if (selectProductAttributes[i].dataset.idproduct != attributes.id_product) {
-                            // Nous supprimons tous les éléments html options qui n'ont pas le même id_product
-                            selectProductAttributes = [];
-                            // console.log(selectProductAttributes[i]);
-                            selectProductAttributes[i].remove();
+                // On cherche si l'id_product = 0
+                if (attributes.id_product_attribute === '0') {
+                    // On calcule la longueur du select et de ces options
+                    if (selectProductAttributes.length > 0) {
+                        // Si le tableau existe, on créé des options auquel on attribut la valeur à 0 et on les cache
+                        for (let i = 0; i < selectProductAttributes.length; i++) {
+                            selectProductAttributes[i] = new Option('', attributes.id_product_attribute, i === 0);
+                            selectProductAttributes[i].hidden = true;
                         }
+                        // On ajoute l'attribut data-idproduct auquel on affecte l'id_product au form
+                        formAddProductToCart.setAttribute('data-idproduct', attributes.id_product);
+                        sectionProductAttributes.classList.replace('d-flex','d-none'); // Hide select section
                     }
-                }
-
-
-                if (attributes.id_product_attribute == '0') {
-
-                    console.log('mug!');
-                    //if (selectProductAttributes.length !== 0) {
-                    console.log(selectProductAttributes.length);
-
-                    //}
-                    // sectionProductAttributes.classList.replace('d-flex','d-none');
                 } else {
                     for (let product of attributes) {
-
-
-                        // Nous allons calculer la longueur du tableau
-
-                        //console.log(typeof product.attributes == 'undefined');
-                        //if (typeof product.attributes !== 'undefined') {
-                        // On crée un nouvel élément html option
                         selectProductAttributes[index] = new Option(product.attributes, product.id_product_attribute, false, false);
-                        // On lui ajoute un attribut data-instock auquel on affecte la quantité
                         selectProductAttributes[index].setAttribute('data-instock', product.quantity);
                         selectProductAttributes[index].setAttribute('data-idproduct', product.id_product);
 
                         // Create attribute idproduct on form.add-product-to-cart
-                        document.getElementById('add-product-to-cart').setAttribute('data-idproduct', product.id_product);
-                        // sectionProductAttributes.classList.replace('d-none','d-flex');
-                        // }
+                        formAddProductToCart.setAttribute('data-idproduct', product.id_product);
+                        sectionProductAttributes.classList.replace('d-none','d-flex');
 
-                        //else {
-                        //     document.getElementById('add-product-to-cart').setAttribute('data-idproduct', product.id_product);
-                                                    // sectionProductAttributes.classList.replace('d-flex','d-none');}
-                                                //console.log(selectProductAttributes[index]);
-
-                            if (index === 0 || typeof product.attributes === 'undefined') {
-                                quantityInStock.innerHTML = product.quantity;
-                            }
+                        if (index === 0 || typeof product.attributes === 'undefined') {
+                            quantityInStock.innerHTML = product.quantity;
+                        }
                         index++;
+                    }
 
+                    // Remove attributes not belonging to current product
+                    let count = attributes.length !== selectProductAttributes.length ? Math.max(attributes.length, selectProductAttributes.length) : false;
+
+                    if (count) {
+                        for (let i = 0; i < count; i++) {
+                            if (selectProductAttributes[i].dataset.idproduct !== formAddProductToCart.dataset.idproduct) {
+                                selectProductAttributes[i].hidden = true;
+                            }
+                        }
+                    }
                 }
-
-                }
-
-
-
 
                 selectProductAttributes.addEventListener('change', Event => {
                     for (let j = 0; j < selectProductAttributes.length; j++) {
@@ -603,21 +584,16 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                 document.getElementById('add-product-to-cart').addEventListener('submit', Event => {
                     Event.preventDefault();
-
-                    let id_prod_attr = document.getElementById('js-output-attributes-products').value === '' ? 0 : document.getElementById('js-output-attributes-products').value;
-                    console.log(id_prod_attr);
+                    let id_prod_attr = document.getElementById('js-output-attributes-products').value;
 
                     let argsURL = '/' +
-                        document.getElementById('add-product-to-cart').dataset.idproduct + '/' + // Get id_product
+                        formAddProductToCart.dataset.idproduct + '/' + // Get id_product
                         id_prod_attr + '/' + // Get id_product_attribute
                         document.getElementById('product-quantity').value + '/' + // Get quantity
-                        document.getElementById('add-product-to-cart').dataset.idcustomer + '/' + // Get id_customer
-                        document.getElementById('add-product-to-cart').dataset.idcart; // Get id_cart
-
-                    // console.log(argsURL);
+                        formAddProductToCart.dataset.idcustomer + '/' + // Get id_customer
+                        formAddProductToCart.dataset.idcart; // Get id_cart
 
                     let urlPost = Event.currentTarget.dataset.urlpost;
-
                     const getCustomerLastCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = cart.id_cart;
 
                     QuotationModule.getData(
@@ -642,14 +618,13 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             );
 
             document.getElementById('js-output-product-to-cart').classList.replace('d-none', 'd-block');
-        };
-     };
+        }
+    };
 
     const inputSearchProducts = document.getElementById('quotation_product_cartId');
     ['keyup'].forEach(event => {
         inputSearchProducts.addEventListener(event, getQueryProduct, false);
     });
-
 }
 
 // any SCSS you require will output into a single scss file (app.scss in this case)

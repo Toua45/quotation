@@ -5,35 +5,58 @@
     </p>
 </div>
 
-{% if nbPages > 0 %}
-    <div class="text-center">
-        {% if page == 1 %}
-            <a class="mx-5 mb-5" disabled="disabled">
-                Précédent
-            </a>
-            {% if nbPages > 1 %}
-                <a class="mx-5 mb-5" href="{{ path('quotation_admin', {'page': page + 1}|merge(app.request.query.all)) }}">
-                    Suivant
-                </a>
-            {% else %}
-                <a class="mx-5 mb-5" disabled="disabled">
-                    Suivant
-                </a>
-            {% endif %}
-        {% elseif page < nbPages %}
-            <a class="mx-5 mb-5" href="{{ path('quotation_admin', {'page': page - 1}|merge(app.request.query.all)) }}">
-                Précédent
-            </a>
-            <a class="mx-5 mb-5" href="{{ path('quotation_admin', {'page': page + 1}|merge(app.request.query.all)) }}">
-                Suivant
-            </a>
-        {% else %}
-            <a class="mx-5 mb-5" href="{{ path('quotation_admin', {'page': page - 1}|merge(app.request.query.all)) }}">
-                Précédent
-            </a>
-            <a class="mx-5 mb-5" disabled="disabled">
-                Suivant
-            </a>
-        {% endif %}
-    </div>
-{% endif %}
+{#{% if nbPages > 0 %}#}
+{#    <div class="text-center">#}
+{#        {% if page == 1 %}#}
+{#            <a class="mx-5 mb-5" disabled="disabled">#}
+{#                Précédent#}
+{#            </a>#}
+{#            {% if nbPages > 1 %}#}
+{#                <a class="mx-5 mb-5" href="{{ path('quotation_admin', {'page': page + 1}|merge(app.request.query.all)) }}">#}
+{#                    Suivant#}
+{#                </a>#}
+{#            {% else %}#}
+{#                <a class="mx-5 mb-5" disabled="disabled">#}
+{#                    Suivant#}
+{#                </a>#}
+{#            {% endif %}#}
+{#        {% elseif page < nbPages %}#}
+{#            <a class="mx-5 mb-5" href="{{ path('quotation_admin', {'page': page - 1}|merge(app.request.query.all)) }}">#}
+{#                Précédent#}
+{#            </a>#}
+{#            <a class="mx-5 mb-5" href="{{ path('quotation_admin', {'page': page + 1}|merge(app.request.query.all)) }}">#}
+{#                Suivant#}
+{#            </a>#}
+{#        {% else %}#}
+{#            <a class="mx-5 mb-5" href="{{ path('quotation_admin', {'page': page - 1}|merge(app.request.query.all)) }}">#}
+{#                Précédent#}
+{#            </a>#}
+{#            <a class="mx-5 mb-5" disabled="disabled">#}
+{#                Suivant#}
+{#            </a>#}
+{#        {% endif %}#}
+{#    </div>#}
+{#{% endif %}#}
+
+<div class="text-center">
+    {% if page >= 2 %}
+        <a class="btn btn-gold mx-5 mb-5"
+           href="{{ path('quotation_admin', {'page': page-1}|merge(app.request.query.all)) }}">
+            <i class="far fa-arrow-alt-circle-left"></i> Précédent
+        </a>
+    {% else %}
+        <a class="btn btn-inactive mx-5 mb-5">
+            <i class="far fa-arrow-alt-circle-left"></i> Précédent
+        </a>
+    {% endif %}
+    {% if page < nbPages %}
+        <a class="btn btn-gold mx-5 mb-5"
+           href="{{ path('quotation_admin', {'page': page+1}|merge(app.request.query.all)) }}">
+            Suivant <i class="far fa-arrow-alt-circle-right"></i>
+        </a>
+    {% else %}
+        <a class="btn btn-inactive mx-5 mb-5">
+            Suivant <i class="far fa-arrow-alt-circle-right"></i>
+        </a>
+    {% endif %}
+</div>

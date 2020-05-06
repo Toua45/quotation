@@ -461,8 +461,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                 .replace(/---alias---/, addressList.alias)
                                         }
 
-                                        if (document.querySelectorAll('.delivery') !== null) {
-                                            document.querySelectorAll('.delivery').forEach(function (link) {
+                                        if (document.querySelectorAll('.address-delivery') !== null) {
+                                            document.querySelectorAll('.address-delivery').forEach(function (link) {
                                                 link.addEventListener('change', function (Event) {
 
                                                     for (let address of addresses.filter(address => address.id_address === link.value)) {
@@ -483,8 +483,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             })
                                         }
 
-                                        if (document.querySelectorAll('.invoice') !== null) {
-                                            document.querySelectorAll('.invoice').forEach(function (link) {
+                                        if (document.querySelectorAll('.address-invoice') !== null) {
+                                            document.querySelectorAll('.address-invoice').forEach(function (link) {
                                                 link.addEventListener('change', function (Event) {
 
                                                     for (let address of addresses.filter(address => address.id_address === link.value)) {

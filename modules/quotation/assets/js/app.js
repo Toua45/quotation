@@ -54,9 +54,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
-            let link = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/customer/';
-            let show = window.location.origin + '/adminToua/index.php/sell/customers/';
-          
+            let link = window.location.origin + '/adm/index.php/modules/quotation/admin/show/customer/';
+            let show = window.location.origin + '/adm/index.php/sell/customers/';
+
             customers.forEach((customer, i) => {
 
                 import('./templates_module').then(mod => {
@@ -104,7 +104,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         .replace(/\d+(?=\?_token)/, link.dataset.idcustomer);
 
                                     const getCustomerShow = (customer) => {
-                                        let addressController = window.location.origin + '/adminToua/index.php/?controller=AdminAddresses';
+
+                                        let addressController = window.location.origin + '/adm/index.php/?controller=AdminAddresses';
+
                                         let personalData = '';
                                         let tableCustomerOrders = '';
                                         let customerOrders = '';
@@ -191,6 +193,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         true,
                                         []
                                     );
+
                                 })
                             })
                         }
@@ -198,7 +201,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
-                        let linkCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/cart/';
+                        let linkCart = window.location.origin + '/adm/index.php/modules/quotation/admin/show/cart/';
                         let urlCart = document.querySelector('[data-customercart]').dataset.customercart;
                         let newUrlCart;
 
@@ -213,7 +216,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     // La méthode toggle permet de masquer ou d'afficher le paramètre hidden à l'élément class
                                     Event.currentTarget.closest('.hidden').classList.toggle('hidden');
                                     // Pour chaque cards qui aura la class hidden, ces dernières seront en display-none
-                                    document.querySelectorAll('.hidden').forEach(function (card,index) {
+                                    document.querySelectorAll('.hidden').forEach(function (card, index) {
                                         card.classList.add('d-none');
                                     });
 
@@ -236,10 +239,12 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         let modalCustomerOrderDetailsCart = '';
                                         let modalCustomerQuotationDetails = '';
                                         let modalCustomerQuotationDetailsCart = '';
+                                        let selectAddress = '';
+                                        let addressSelected = '';
 
                                         /*
                                         * Cart section
-                                         */
+                                        */
 
                                         // L'instruction for...of permet de créer une boucle d'un array qui parcourt un objet itérable
                                         // Attention à l'ordre d'éxécution des boucles, on éxecute dans cartData, ensuite dans modalCartInfos et enfin tableCart
@@ -333,7 +338,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---orderStatus---/, customer.order_status)
                                                     .replace(/---id-order-modal---/, customer.id_order)
                                                     .replace(/---id---/, customer.id_cart)
-                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
                                             }
                                         }
 
@@ -378,7 +383,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---totalQuotation---/, customer.total_quotation + ' €')
                                                     .replace(/---id-quotation-modal---/, customer.id_quotation)
                                                     .replace(/---id---/, customer.id_cart)
-                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
                                             }
                                         }
 
@@ -446,6 +451,71 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         // on ajoute l'attribut data-idcustomer à l'élément html add-product-to-cart pour récupérer l'id_customer qui nous servira pour la section search product section
                                         document.getElementById('add-product-to-cart').setAttribute('data-idcustomer', data['customer'].id_customer);
                                         document.getElementById('add-product-to-cart').setAttribute('data-idcart', 0);
+
+                                        /**
+                                         * Addresses block
+                                         */
+
+                                        let addresses = data['addresses'];
+
+                                        // placeholder, 1st option of the select
+                                        selectAddress = mod.TemplateModule.placeholderAddress;
+
+                                        // obtenir la liste des alias d'addresses dans les 2 selects
+                                        for (let addressList of addresses) {
+                                            selectAddress += mod.TemplateModule.selectAddress
+                                                .replace(/---id-address---/, addressList.id_address)
+                                                .replace(/---alias---/, addressList.alias)
+                                        }
+
+                                        // remplir le block par l'addresse de livraison sélectionnée
+                                        if (document.querySelectorAll('.address-delivery') !== null) {
+                                            document.querySelectorAll('.address-delivery').forEach(function (link) {
+                                                link.addEventListener('change', function (Event) {
+
+                                                    // filter (fonction js de base) permet de récupérer l'objet dont la value de l'option est égale à l'id_address
+                                                    for (let address of addresses.filter(address => address.id_address === link.value)) {
+                                                        addressSelected = mod.TemplateModule.addressSelected
+                                                            .replace(/---firstname---/, address.firstname)
+                                                            .replace(/---lastname---/, address.lastname)
+                                                            .replace(/---company---/, address.company)
+                                                            .replace(/---address---/, address.address)
+                                                            .replace(/---further_address---/, address.further_address)
+                                                            .replace(/---postcode---/, address.postcode)
+                                                            .replace(/---city---/, address.city)
+                                                            .replace(/---country---/, address.country)
+                                                            .replace(/---phone---/, address.phone);
+                                                    }
+
+                                                    document.getElementById('address-delivery-selected').innerHTML = addressSelected;
+                                                })
+                                            })
+                                        }
+
+                                        if (document.querySelectorAll('.address-invoice') !== null) {
+                                            document.querySelectorAll('.address-invoice').forEach(function (link) {
+                                                link.addEventListener('change', function (Event) {
+
+                                                    for (let address of addresses.filter(address => address.id_address === link.value)) {
+                                                        addressSelected = mod.TemplateModule.addressSelected
+                                                            .replace(/---firstname---/, address.firstname)
+                                                            .replace(/---lastname---/, address.lastname)
+                                                            .replace(/---company---/, address.company)
+                                                            .replace(/---address---/, address.address)
+                                                            .replace(/---further_address---/, address.further_address)
+                                                            .replace(/---postcode---/, address.postcode)
+                                                            .replace(/---city---/, address.city)
+                                                            .replace(/---country---/, address.country)
+                                                            .replace(/---phone---/, address.phone);
+                                                    }
+
+                                                    document.getElementById('address-invoice-selected').innerHTML = addressSelected;
+                                                })
+                                            })
+                                        }
+
+                                        document.getElementById('address-delivery').innerHTML = selectAddress;
+                                        document.getElementById('address-invoice').innerHTML = selectAddress;
                                     };
 
                                     /*
@@ -464,10 +534,12 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     // Ici, on récupère la class 'd-none' de l'élément id 'js-output-customer-details' et on la remplace par 'd-block'
                                     document.getElementById('js-output-customer-details').classList.replace('d-none', 'd-block');
                                     document.getElementById('js-output-cart-infos').classList.replace('d-none', 'd-block');
-
+                                    document.getElementById('js-output-address').classList.replace('d-none', 'd-block');
                                 });
                             });
                         }
+
+                        // here
                     }
                 });
             });

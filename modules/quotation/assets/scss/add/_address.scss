@@ -1,0 +1,28 @@
+.address {
+  h2 {
+    @include panel-font;
+    font-size: 15px;
+    font-weight: normal
+  }
+
+  $input-color : #f5f8f9;
+
+  select, .address-card {
+    border: solid 1px darken($input-color, 12%);
+    color:$darkgrey;
+    font-size:12px;
+  }
+
+  select {
+    background-color: $input-color;
+    border-radius: 3px;
+    padding: 6px 8px;
+  }
+
+  .address-card {
+    background-color: lighten($input-color, 2%);
+    box-shadow: inset 0 0 1px darken($input-color, 20%);
+    padding: 20px;
+    height: 100%;
+  }
+}

@@ -334,6 +334,8 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $orders[$key]['city'] = $order['city'];
         }
 
+        $addresses = $quotationRepository->findAddressesByCustomer($id_customer);
+
         $response = [];
 
         foreach ($quotations as $key => $quotation) {
@@ -349,7 +351,8 @@ class AdminQuotationController extends FrameworkBundleAdminController
             'customer' => $customer,
             'carts' => $carts,
             'orders' => $orders,
-            'response' => $response,
+            'addresses' => $addresses,
+            'response' => $response
         ]), 200, [], true);
     }
 

@@ -217,8 +217,17 @@ class QuotationRepository
     {
         return $this->connection->createQueryBuilder()
             ->addSelect('q.*', 'c.firstname', 'c.lastname')
+            ->addSelect('SUM(p.price * cp.quantity) AS total_product_price')
+            ->addSelect('o.total_shipping')
+            ->addSelect('o.total_shipping * 20 / 100 AS tva_shipping')
+            ->addSelect('cr.reduction_amount')
+            ->addSelect('cr.reduction_amount * 20 / 100 AS tva_reduction_amount')
             ->from($this->databasePrefix . 'quotation', 'q')
             ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
+            ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart = cp.id_cart')
+            ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
+            ->join('c', $this->databasePrefix . 'orders', 'o', 'c.id_customer = o.id_customer')
+            ->join('c', $this->databasePrefix . 'cart_rule', 'cr', 'cr.id_customer = c.id_customer')
             ->where('q.id_quotation = :id_quotation')
             ->setParameter('id_quotation', $id_quotation)
             ->execute()
@@ -250,6 +259,7 @@ class QuotationRepository
             ->addSelect('ca.id_customer', 'c.firstname', ' c.lastname')
             ->addSelect('ROUND(SUM(p.price * cp.quantity), 2) AS total_cart')
             ->addSelect('carrier.name AS carrier')
+            ->addSelect('ca.id_address_delivery', 'ca.id_address_invoice')
             ->from($this->databasePrefix . 'cart', 'ca')
             ->join('ca', $this->databasePrefix . 'customer', 'c', 'ca.id_customer = c.id_customer')
             ->join('ca', $this->databasePrefix . 'cart_product', 'cp', 'ca.id_cart = cp.id_cart')
@@ -263,7 +273,6 @@ class QuotationRepository
     /**
      * @return array
      */
-
     public function findProductsCustomerByCarts($idCart)
     {
         $expr = $this->connection->getExpressionBuilder();
@@ -271,12 +280,18 @@ class QuotationRepository
         return $this->connection->createQueryBuilder()
             ->addSelect('p.id_product', 'pl.name AS product_name', 'p.reference AS product_reference', 'p.price AS product_price', 'cp.quantity AS product_quantity')
             ->addSelect('p.price * cp.quantity AS total_product')
+            ->addSelect('i.id_image')
+            ->addSelect('t.rate')
             ->from($this->databasePrefix . 'product', 'p')
             ->join('p', $this->databasePrefix . 'cart_product', 'cp', 'cp.id_product = p.id_product')
             ->join('cp', $this->databasePrefix . 'cart', 'ca', 'cp.id_cart = ca.id_cart')
             ->join('ca', $this->databasePrefix . 'customer', 'c', 'ca.id_customer = c.id_customer')
             ->join('p', $this->databasePrefix . 'product_lang', 'pl', 'p.id_product = pl.id_product')
+            ->join('p', $this->databasePrefix . 'image', 'i', 'p.id_product = i.id_product')
+            ->join('p', $this->databasePrefix . 'tax_rule', 'tr', 'p.id_tax_rules_group = tr.id_tax_rules_group')
+            ->join('tr', $this->databasePrefix . 'tax', 't', 'tr.id_tax = t.id_tax')
             ->where($expr->eq('ca.id_cart', ':id_cart'))
+            ->andWhere('tr.id_country = 8')
             ->setParameter('id_cart', $idCart)
             ->execute()
             ->fetchAll();
@@ -414,7 +429,7 @@ class QuotationRepository
     public function findAddressesByCustomer($id_customer)
     {
         return $this->connection->createQueryBuilder()
-            ->addSelect('a.id_address', 'a.company', 'a.firstname', 'a.lastname',
+            ->addSelect('a.alias', 'a.id_address', 'a.company', 'a.firstname', 'a.lastname',
                         'a.address1 AS address', 'a.address2 AS further_address', 'a.postcode', 'a.city', 'cl.name AS country', 'a.phone')
             ->from($this->databasePrefix . 'address', 'a')
             ->join('a', $this->databasePrefix . 'customer', 'c', 'c.id_customer = a.id_customer')
@@ -559,4 +574,136 @@ class QuotationRepository
         return $query->execute()->fetch();
     }
 
+    /**
+     * @return mixed[]
+     */
+    public function getCustomerInfoById($id_customer)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('c.id_customer', 'c.secure_key')
+            ->from($this->databasePrefix . 'customer', 'c')
+            ->where('c.id_customer = :id_customer')
+            ->setParameter('id_customer', $id_customer)
+            ->execute()->fetch();
+    }
+
+    /**
+     * Add a new cart
+     */
+    public function addNewCart(  int $idShopGroup,
+                                   int $idShop,
+                                   int $idLang,
+                                   int $idAdressDelivery,
+                                   int $idAdressInvoice,
+                                   int $idCurrency,
+                                   int $id_customer,
+                                   int $idGuest,
+                                   string $secureKey,
+                                   $dateAdd,
+                                   $dateUpd,
+                                   int $idCarrier = 0,
+                                   string $deliveryOption = '',
+                                   $recyclable = 0,
+                                   $gift = 0,
+                                   $mobileTheme = 0,
+                                   $allowSeperatedPackage = 0)
+    {
+        return $this->connection->createQueryBuilder()
+            ->insert($this->databasePrefix . 'cart')
+            ->values([
+                'id_shop_group' => ':id_shop_group',
+                'id_shop' => ':id_shop',
+                'id_carrier' => ':id_carrier',
+                'delivery_option' => ':delivery_option',
+                'id_lang' => ':id_lang',
+                'id_address_delivery' => ':id_address_delivery',
+                'id_address_invoice' => ':id_address_invoice',
+                'id_currency' => ':id_currency',
+                'id_customer' => ':id_customer',
+                'id_guest' => ':id_guest',
+                'secure_key' => ':secure_key',
+                'recyclable' => ':recyclable',
+                'gift' => ':gift',
+                'mobile_theme' => ':mobile_theme',
+                'allow_seperated_package' => ':allow_seperated_package',
+                'date_add' => ':date_add',
+                'date_upd' => ':date_upd',
+            ])
+            ->setParameters([
+                'id_shop_group' => $idShopGroup,
+                'id_shop' => $idShop,
+                'id_carrier' => $idCarrier,
+                'delivery_option' => $deliveryOption,
+                'id_lang' => $idLang,
+                'id_address_delivery' => $idAdressDelivery,
+                'id_address_invoice' => $idAdressInvoice,
+                'id_currency' => $idCurrency,
+                'id_customer' => $id_customer,
+                'id_guest' => $idGuest,
+                'secure_key' => $secureKey,
+                'recyclable' => $recyclable,
+                'gift' => $gift,
+                'mobile_theme' => $mobileTheme,
+                'allow_seperated_package' => $allowSeperatedPackage,
+                'date_add' => $dateAdd,
+                'date_upd' => $dateUpd
+            ])
+            ->execute();
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function findLastCartByCustomerId($idcustomer)
+    {
+        $expr = $this->connection->getExpressionBuilder();
+
+        return $this->connection->createQueryBuilder()
+            ->addSelect('ca.id_cart', 'ca.date_add AS date_cart')
+            ->from($this->databasePrefix . 'cart', 'ca')
+            ->where($expr->eq('ca.id_customer', ':id_customer'))
+            ->orderBy('ca.date_add', 'DESC')
+            ->setMaxResults(1)
+            ->setParameter('id_customer', $idcustomer)->execute()->fetch();
+    }
+
+    /**
+     * Add products into Cart
+     * @param int $id_cart
+     * @param int $id_product
+     * @param int $idAddressDelivery
+     * @param int $idShop
+     * @param int $id_product_attribute
+     * @param int $id_customization
+     * @param $quantity
+     * @param $dateAdd
+     * @return \Doctrine\DBAL\Driver\Statement|int
+     */
+    public function insertProductsToCart(int $id_cart, int $id_product, int $idAddressDelivery, int $idShop, int $id_product_attribute, int $id_customization, $quantity, $dateAdd)
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->insert($this->databasePrefix . 'cart_product');
+
+                $query->values([
+                    'id_cart' => ':id_cart',
+                    'id_product' => ':id_product',
+                    'id_address_delivery' => ':id_address_delivery',
+                    'id_shop' => ':id_shop',
+                    'id_product_attribute' => ':id_product_attribute',
+                    'id_customization' => ':id_customization',
+                    'quantity' => ':quantity',
+                    'date_add' => ':date_add',
+                ])
+                    ->setParameters([
+                        'id_cart' => $id_cart,
+                        'id_product' => $id_product,
+                        'id_address_delivery' => $idAddressDelivery,
+                        'id_shop' => $idShop,
+                        'id_product_attribute' => $id_product_attribute,
+                        'id_customization' => $id_customization,
+                        'quantity' => $quantity,
+                        'date_add' => $dateAdd
+                    ]);
+        return $query->execute();
+    }
 }

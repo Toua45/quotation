@@ -10,9 +10,9 @@
 
          <div class="quotation-head mb-3 d-flex justify-content-between">
 
-             <div class="d-flex align-items-center"
+             <div class="d-flex"
                   data-searchcustomers="{{ path('quotation_admin_search_customers', { query: 'query' }) }}">
-                 <span uk-icon="icon: user" class="mr-2"></span>
+                 <i class="material-icons mr-2">person</i>
                  <h1 class="panel-heading">Client</h1>
              </div>
 
@@ -23,7 +23,17 @@
          </section>
      </div>
 
-     {% include '@Modules/quotation/templates/admin/section/_cart.html.twig' %}
+     <section class="cart">
+         {% include '@Modules/quotation/templates/admin/section/_cart.html.twig' %}
+     </section>
+
+     <section class="reduction">
+{#         include de la partie bons de réduction#}
+     </section>
+
+     <section class="address">
+         {% include '@Modules/quotation/templates/admin/section/_address.html.twig' %}
+     </section>
 
  {% endblock %}
 

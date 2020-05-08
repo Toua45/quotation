@@ -19,6 +19,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         url,
         QuotationModule.getData,
         QuotationModule.getCustomersURL(),
+        null,
         true,
         []
     );
@@ -34,6 +35,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     QuotationModule.getData(
         QuotationModule.getCustomersURL(),
         QuotationModule.autocomplete,
+        null,
         null,
         true,
         ['#quotation_customer_customerId', 'customers', 1]
@@ -52,7 +54,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
-
             let link = window.location.origin + '/adm/index.php/modules/quotation/admin/show/customer/';
             let show = window.location.origin + '/adm/index.php/sell/customers/';
 
@@ -94,7 +95,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                         let urlCustomerShow = document.querySelector('[data-customershow]').dataset.customershow;
                         let newUrlCustomerShow;
-                        console.log(document.querySelectorAll('button.customer-show'));
 
                         if (document.querySelectorAll('button.customer-show') !== null) {
                             // On boucle sur chaque élément link auquel on attache l'évènement clic
@@ -102,10 +102,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                 link.addEventListener('click', function (Event) {
                                     newUrlCustomerShow = window.location.origin + urlCustomerShow
                                         .replace(/\d+(?=\?_token)/, link.dataset.idcustomer);
-                                    console.log(newUrlCustomerShow);
 
                                     const getCustomerShow = (customer) => {
-                                        console.log(customer);
 
                                         let addressController = window.location.origin + '/adm/index.php/?controller=AdminAddresses';
 
@@ -191,9 +189,11 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         newUrlCustomerShow,
                                         getCustomerShow,
                                         null,
+                                        null,
                                         true,
                                         []
                                     );
+
                                 })
                             })
                         }
@@ -201,7 +201,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
-
                         let linkCart = window.location.origin + '/adm/index.php/modules/quotation/admin/show/cart/';
                         let urlCart = document.querySelector('[data-customercart]').dataset.customercart;
                         let newUrlCart;
@@ -217,7 +216,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     // La méthode toggle permet de masquer ou d'afficher le paramètre hidden à l'élément class
                                     Event.currentTarget.closest('.hidden').classList.toggle('hidden');
                                     // Pour chaque cards qui aura la class hidden, ces dernières seront en display-none
-                                    document.querySelectorAll('.hidden').forEach(function (card,index) {
+                                    document.querySelectorAll('.hidden').forEach(function (card, index) {
                                         card.classList.add('d-none');
                                     });
 
@@ -240,10 +239,12 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         let modalCustomerOrderDetailsCart = '';
                                         let modalCustomerQuotationDetails = '';
                                         let modalCustomerQuotationDetailsCart = '';
+                                        let selectAddress = '';
+                                        let addressSelected = '';
 
                                         /*
                                         * Cart section
-                                         */
+                                        */
 
                                         // L'instruction for...of permet de créer une boucle d'un array qui parcourt un objet itérable
                                         // Attention à l'ordre d'éxécution des boucles, on éxecute dans cartData, ensuite dans modalCartInfos et enfin tableCart
@@ -337,7 +338,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---orderStatus---/, customer.order_status)
                                                     .replace(/---id-order-modal---/, customer.id_order)
                                                     .replace(/---id---/, customer.id_cart)
-                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
                                             }
                                         }
 
@@ -382,7 +383,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---totalQuotation---/, customer.total_quotation + ' €')
                                                     .replace(/---id-quotation-modal---/, customer.id_quotation)
                                                     .replace(/---id---/, customer.id_cart)
-                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
                                             }
                                         }
 
@@ -412,12 +413,13 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         .replace(/\d+(?=\?_token)/, link.dataset.idcart);
 
                                                     const getCustomerCartToUse = (cart) => {
+                                                        let picture = window.location.origin + '/img/p/';
                                                         let outputCartToUse = '';
                                                         let outputCartProductsToUse = '';
 
                                                         for (let product of cart['products']) {
-
                                                             outputCartProductsToUse += mod.TemplateModule.quotationCartProducts
+                                                                .replace(/---picture---/, picture + product.path.join('/') + '/' + product.id_image + '-small_default.jpg')
                                                                 .replace(/---productName---/, product.product_name)
                                                                 .replace(/---productPrice---/, product.product_price + ' €')
                                                                 .replace(/---productQuantity---/, product.product_quantity)
@@ -438,12 +440,82 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         newUrlCart,
                                                         getCustomerCartToUse,
                                                         null,
+                                                        null,
                                                         true,
                                                         []
                                                     );
                                                 });
                                             });
                                         }
+
+                                        // on ajoute l'attribut data-idcustomer à l'élément html add-product-to-cart pour récupérer l'id_customer qui nous servira pour la section search product section
+                                        document.getElementById('add-product-to-cart').setAttribute('data-idcustomer', data['customer'].id_customer);
+                                        document.getElementById('add-product-to-cart').setAttribute('data-idcart', 0);
+
+                                        /**
+                                         * Addresses block
+                                         */
+
+                                        let addresses = data['addresses'];
+
+                                        // placeholder, 1st option of the select
+                                        selectAddress = mod.TemplateModule.placeholderAddress;
+
+                                        // obtenir la liste des alias d'addresses dans les 2 selects
+                                        for (let addressList of addresses) {
+                                            selectAddress += mod.TemplateModule.selectAddress
+                                                .replace(/---id-address---/, addressList.id_address)
+                                                .replace(/---alias---/, addressList.alias)
+                                        }
+
+                                        // remplir le block par l'addresse de livraison sélectionnée
+                                        if (document.querySelectorAll('.address-delivery') !== null) {
+                                            document.querySelectorAll('.address-delivery').forEach(function (link) {
+                                                link.addEventListener('change', function (Event) {
+
+                                                    // filter (fonction js de base) permet de récupérer l'objet dont la value de l'option est égale à l'id_address
+                                                    for (let address of addresses.filter(address => address.id_address === link.value)) {
+                                                        addressSelected = mod.TemplateModule.addressSelected
+                                                            .replace(/---firstname---/, address.firstname)
+                                                            .replace(/---lastname---/, address.lastname)
+                                                            .replace(/---company---/, address.company)
+                                                            .replace(/---address---/, address.address)
+                                                            .replace(/---further_address---/, address.further_address)
+                                                            .replace(/---postcode---/, address.postcode)
+                                                            .replace(/---city---/, address.city)
+                                                            .replace(/---country---/, address.country)
+                                                            .replace(/---phone---/, address.phone);
+                                                    }
+
+                                                    document.getElementById('address-delivery-selected').innerHTML = addressSelected;
+                                                })
+                                            })
+                                        }
+
+                                        if (document.querySelectorAll('.address-invoice') !== null) {
+                                            document.querySelectorAll('.address-invoice').forEach(function (link) {
+                                                link.addEventListener('change', function (Event) {
+
+                                                    for (let address of addresses.filter(address => address.id_address === link.value)) {
+                                                        addressSelected = mod.TemplateModule.addressSelected
+                                                            .replace(/---firstname---/, address.firstname)
+                                                            .replace(/---lastname---/, address.lastname)
+                                                            .replace(/---company---/, address.company)
+                                                            .replace(/---address---/, address.address)
+                                                            .replace(/---further_address---/, address.further_address)
+                                                            .replace(/---postcode---/, address.postcode)
+                                                            .replace(/---city---/, address.city)
+                                                            .replace(/---country---/, address.country)
+                                                            .replace(/---phone---/, address.phone);
+                                                    }
+
+                                                    document.getElementById('address-invoice-selected').innerHTML = addressSelected;
+                                                })
+                                            })
+                                        }
+
+                                        document.getElementById('address-delivery').innerHTML = selectAddress;
+                                        document.getElementById('address-invoice').innerHTML = selectAddress;
                                     };
 
                                     /*
@@ -454,6 +526,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         newUrlCustomersDetails,
                                         getCustomerDetails,
                                         null,
+                                        null,
                                         true,
                                         []
                                     );
@@ -461,10 +534,12 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     // Ici, on récupère la class 'd-none' de l'élément id 'js-output-customer-details' et on la remplace par 'd-block'
                                     document.getElementById('js-output-customer-details').classList.replace('d-none', 'd-block');
                                     document.getElementById('js-output-cart-infos').classList.replace('d-none', 'd-block');
-
+                                    document.getElementById('js-output-address').classList.replace('d-none', 'd-block');
                                 });
                             });
                         }
+
+                        // here
                     }
                 });
             });
@@ -473,6 +548,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         QuotationModule.getData(
             urlSearchCustomers.replace(/query/, Event.currentTarget.value),
             insertCustomerInDOM,
+            null,
             null,
             true,
             []
@@ -494,6 +570,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         urlProduct,
         QuotationModule.getData,
         QuotationModule.getProductsURL(),
+        null,
         true,
         []
     );
@@ -502,71 +579,110 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         QuotationModule.getProductsURL(),
         QuotationModule.autocomplete,
         null,
+        null,
         true,
-        ['#quotation_product_cartId', 'products', 1]
+        ['#quotation_product_cartId', 'products', 2]
     );
 
     const getQueryProduct = (Event) => {
         if (typeof parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim()) === "number" &&
             // Number.isNaN() permet de déterminer si la valeur passée en argument est NaN
-            !Number.isNaN(parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim())))
-        {
+            !Number.isNaN(parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim()))
+        ) {
             // Get route 'quotation_admin_search_attributes_product'
             let urlSearchAttributesProduct = document.getElementById('js-data-product').dataset.sourceattributes;
 
             // La fonction parseInt() analyse une chaîne de caractère fournie en argument et renvoie un entier exprimé dans une base donnée
             let idProduct = parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim());
             urlSearchAttributesProduct = window.location.origin + urlSearchAttributesProduct.replace(/\d+(?=\?_token)/, idProduct);
+            document.getElementById('js-output-attributes-products');
 
             const getAttributesProduct = (attributes) => {
                 let index = 0;
                 let selectProductAttributes = document.getElementById('js-output-attributes-products');
                 let quantityInStock = document.getElementById('quantity-in-stock');
                 let sectionProductAttributes = document.getElementById('section-attributes-product');
+                let formAddProductToCart = document.getElementById('add-product-to-cart');
 
-                for (let product of attributes) {
-
-                    // Nous allons calculer la longueur du tableau
-                    if (selectProductAttributes.length !== 0) {
+                // On cherche si l'id_product = 0
+                if (attributes.id_product_attribute === '0') {
+                    // On calcule la longueur du select et de ces options
+                    if (selectProductAttributes.length > 0) {
+                        // Si le tableau existe, on créé des options auquel on attribut la valeur à 0 et on les cache
                         for (let i = 0; i < selectProductAttributes.length; i++) {
-                            if (selectProductAttributes[i].dataset.idproduct !== product.id_product) {
-                                // Nous supprimons tous les éléments html options qui n'ont pas le même id_product
-                                selectProductAttributes[i].remove();
+                            selectProductAttributes[i] = new Option('', attributes.id_product_attribute, i === 0);
+                            selectProductAttributes[i].hidden = true;
+                        }
+                        // On ajoute l'attribut data-idproduct auquel on affecte l'id_product au form
+                        formAddProductToCart.setAttribute('data-idproduct', attributes.id_product);
+                        sectionProductAttributes.classList.replace('d-flex','d-none'); // Hide select section
+                    }
+                } else {
+                    for (let product of attributes) {
+                        selectProductAttributes[index] = new Option(product.attributes, product.id_product_attribute, false, false);
+                        selectProductAttributes[index].setAttribute('data-instock', product.quantity);
+                        selectProductAttributes[index].setAttribute('data-idproduct', product.id_product);
+
+                        // Create attribute idproduct on form.add-product-to-cart
+                        formAddProductToCart.setAttribute('data-idproduct', product.id_product);
+                        sectionProductAttributes.classList.replace('d-none','d-flex');
+
+                        if (index === 0 || typeof product.attributes === 'undefined') {
+                            quantityInStock.innerHTML = product.quantity;
+                        }
+                        index++;
+                    }
+
+                    // Remove attributes not belonging to current product
+                    let count = attributes.length !== selectProductAttributes.length ? Math.max(attributes.length, selectProductAttributes.length) : false;
+
+                    if (count) {
+                        for (let i = 0; i < count; i++) {
+                            if (selectProductAttributes[i].dataset.idproduct !== formAddProductToCart.dataset.idproduct) {
+                                selectProductAttributes[i].hidden = true;
                             }
                         }
                     }
-
-                    if (typeof product.attributes !== 'undefined') {
-                        // On crée un nouvel élément html option
-                        selectProductAttributes[index] = new Option(product.attributes, product.id_product_attribute, false, false);
-                        // On lui ajouter un attribut data-instock auquel on affecte la quantité
-                        selectProductAttributes[index].setAttribute('data-instock', product.quantity);
-                        selectProductAttributes[index].setAttribute('data-idproduct', product.id_product);
-                        sectionProductAttributes.classList.replace('d-none','d-flex');
-                    } else {
-                        sectionProductAttributes.classList.replace('d-flex','d-none');
-                    }
-
-                    if (index === 0 || typeof product.attributes === 'undefined') {
-                        quantityInStock.innerHTML = product.quantity;
-                    }
-                    index++;
                 }
 
                 selectProductAttributes.addEventListener('change', Event => {
                     for (let j = 0; j < selectProductAttributes.length; j++) {
-
                         if (selectProductAttributes[j].value === Event.currentTarget.value) {
                             quantityInStock.innerHTML = selectProductAttributes[j].dataset.instock;
                             break;
                         }
                     }
                 });
+
+                document.getElementById('add-product-to-cart').addEventListener('submit', Event => {
+                    Event.preventDefault();
+                    let id_prod_attr = document.getElementById('js-output-attributes-products').value;
+
+                    let argsURL = '/' +
+                        formAddProductToCart.dataset.idproduct + '/' + // Get id_product
+                        id_prod_attr + '/' + // Get id_product_attribute
+                        document.getElementById('product-quantity').value + '/' + // Get quantity
+                        formAddProductToCart.dataset.idcustomer + '/' + // Get id_customer
+                        formAddProductToCart.dataset.idcart; // Get id_cart
+
+                    let urlPost = Event.currentTarget.dataset.urlpost;
+                    const getCustomerLastCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = cart.id_cart;
+
+                    QuotationModule.getData(
+                        urlPost.replace(/(\/\d+){5}(?=\?_token)/, argsURL),
+                        getCustomerLastCart,
+                        null,
+                        'POST',
+                        true,
+                        []
+                    );
+                });
             };
 
             QuotationModule.getData(
                 urlSearchAttributesProduct,
                 getAttributesProduct,
+                null,
                 null,
                 true,
                 []
@@ -577,10 +693,32 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     };
 
     const inputSearchProducts = document.getElementById('quotation_product_cartId');
-    ['keyup', 'change'].forEach(event => {
+    ['keyup'].forEach(event => {
         inputSearchProducts.addEventListener(event, getQueryProduct, false);
     });
+}
 
+var current_page = document.getElementById("index_page").dataset.page;
+console.log(current_page);
+
+if (window.location.pathname.replace(/.*(?=\/quotation\/admin\/research)/, '') === '/quotation/admin/research' || '/quotation/admin/research/') {
+    document.getElementById('filter_page').addEventListener('click', Event => {
+        Event.preventDefault();
+        let form = Event.currentTarget.closest('thead').querySelector('form'); // Get form
+        const _url = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/research?';
+        const params = {
+            tokenSearch: 'quotation_search[_token]=' + document.getElementById('quotation_search__token').value,
+            end: 'quotation_search[end]=' + document.getElementById('quotation_search_end').value,
+            name: 'quotation_search[name]=' + document.getElementById('quotation_search_name').value,
+            reference: 'quotation_search[reference]=' + document.getElementById('quotation_search_reference').value,
+            start: 'quotation_search[start]=' + document.getElementById('quotation_search_start').value,
+            status: 'quotation_search[status]=' + document.getElementById('quotation_search_status').value,
+        };
+        const url = Object.values(params).join('&');
+        form.method = 'GET';
+        form.action = _url + url;
+        form.submit();
+    });
 }
 
 // any SCSS you require will output into a single scss file (app.scss in this case)

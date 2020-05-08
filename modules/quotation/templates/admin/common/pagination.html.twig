@@ -1,39 +1,49 @@
 <div class="text-center">
     <p class="m-3">
-        Page : {{ page }} -
-        <small><i>{{ nbRecords < 2 ? nbRecords ~ ' résultat trouvé' : nbRecords ~ ' résultats trouvés'}}</i></small>
+        Page : {{ currentPage }} -
+        <small><i>{{ nbRecords < 2 ? nbRecords ~ ' résultat trouvé' : nbRecords ~ ' résultats trouvés' }}</i></small>
     </p>
 </div>
 
-{% if nbPages > 0 %}
-    <div class="text-center">
-        {% if page == 1 %}
-            <a class="mx-5 mb-5" disabled="disabled">
-                Précédent
-            </a>
-            {% if nbPages > 1 %}
-                <a class="mx-5 mb-5" href="{{ path('quotation_admin', {'page': page + 1}|merge(app.request.query.all)) }}">
-                    Suivant
-                </a>
+<div class="text-center">
+    {% if maxPages > 1 %}
+        <ul class="pagination">
+            {% if currentPage == 1 %}
+                <li>
+                    <a class="mx-5 mb-5 btn btn-light d-flex btn-disabled disabled" disabled="disabled">« Précédent</a>
+                </li>
             {% else %}
-                <a class="mx-5 mb-5" disabled="disabled">
-                    Suivant
-                </a>
+                <li>
+                    <a class="mx-5 mb-5 pl-0 pr-2 btn btn-light d-flex"
+                       href="{{ path('quotation_admin', {'page': currentPage - 1}|merge(app.request.query.all)) }}">
+                        <span uk-icon="chevron-double-left" class="ml-1 mr-1"></span> Précédent
+                    </a>
+                </li>
             {% endif %}
-        {% elseif page < nbPages %}
-            <a class="mx-5 mb-5" href="{{ path('quotation_admin', {'page': page - 1}|merge(app.request.query.all)) }}">
-                Précédent
-            </a>
-            <a class="mx-5 mb-5" href="{{ path('quotation_admin', {'page': page + 1}|merge(app.request.query.all)) }}">
-                Suivant
-            </a>
-        {% else %}
-            <a class="mx-5 mb-5" href="{{ path('quotation_admin', {'page': page - 1}|merge(app.request.query.all)) }}">
-                Précédent
-            </a>
-            <a class="mx-5 mb-5" disabled="disabled">
-                Suivant
-            </a>
-        {% endif %}
-    </div>
-{% endif %}
+
+            <!-- Page actuelle à afficher -->
+            {% for i in 1..maxPages %}
+                <li {{ currentPage == i }}>
+                    <a href="{{ path('quotation_admin', {'page': i}|merge(app.request.query.all)) }}">{{ i }}</a>
+                </li>
+            {% endfor %}
+
+            {% if currentPage == maxPages %}
+                <li>
+                    <a class="mx-5 mb-5 btn btn-light d-flex btn-disabled disabled" disabled="disabled">
+                        Suivant »
+                    </a>
+                </li>
+            {% else %}
+                <li>
+                    <a class="mx-5 mb-5 pl-2 pr-0 btn btn-light d-flex"
+                       href="{{ path('quotation_admin', {'page': currentPage + 1}|merge(app.request.query.all)) }}">
+                        Suivant <span uk-icon="chevron-double-right" class="mr-1 ml-1"></span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    {% endif %}
+</div>
+
+<span id="index_page" data-page="{{ currentPage }}"></span>

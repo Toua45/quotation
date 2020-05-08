@@ -94,8 +94,8 @@
                          <label for="actions">Actions</label>
                      </td>
                  </tr>
+                 {{ form_start(quotationFilterForm, {'attr':{ 'id': 'filter_quotations_form'}}) }}
                  <tr class="search">
-                     {{ form_start(quotationFilterForm, {'attr':{ 'id': 'filter_quotations_form'}}) }}
                      <td></td>
                      <td></td>
                      <td>
@@ -122,12 +122,12 @@
                      <td></td>
                      <td></td>
                      <td>
-                         <button class="search_button btn btn-light d-flex"><span uk-icon="icon: search"
-                                                                                  class="mr-1"></span>Rechercher
+                         <button type="button" class="search_button btn btn-light d-flex" id="filter_page"><span uk-icon="icon: search"
+                                                                                                                 class="mr-1"></span>Rechercher
                          </button>
                      </td>
-                     {{ form_end(quotationFilterForm) }}
                  </tr>
+                 {{ form_end(quotationFilterForm) }}
                  </thead>
 
                  <tbody>
@@ -144,7 +144,7 @@
                          <td>{{ quotation.status }}</td>
                          <td>{{ quotation.total_product_price|number_format(2) }} €</td>
                          <td>
-                             <a href="{{ path('quotation_admin_pdf', { id_quotation: quotation.id_quotation, firstname: quotation.firstname, lastname: quotation.lastname}) }}" target="_blank">
+                             <a href="{{ path('quotation_admin_pdf', { id_quotation: quotation.id_quotation, firstname: quotation.firstname, lastname: quotation.lastname}) }}" id="token_query" target="_blank">
                                  <span uk-icon="icon: file-pdf; ratio: 1.2" class="d-flex justify-content-center"></span>
                              </a>
                          </td>

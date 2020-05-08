@@ -698,6 +698,29 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     });
 }
 
+var current_page = document.getElementById("index_page").dataset.page;
+console.log(current_page);
+
+if (window.location.pathname.replace(/.*(?=\/quotation\/admin\/research)/, '') === '/quotation/admin/research' || '/quotation/admin/research/') {
+    document.getElementById('filter_page').addEventListener('click', Event => {
+        Event.preventDefault();
+        let form = Event.currentTarget.closest('thead').querySelector('form'); // Get form
+        const _url = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/research?';
+        const params = {
+            tokenSearch: 'quotation_search[_token]=' + document.getElementById('quotation_search__token').value,
+            end: 'quotation_search[end]=' + document.getElementById('quotation_search_end').value,
+            name: 'quotation_search[name]=' + document.getElementById('quotation_search_name').value,
+            reference: 'quotation_search[reference]=' + document.getElementById('quotation_search_reference').value,
+            start: 'quotation_search[start]=' + document.getElementById('quotation_search_start').value,
+            status: 'quotation_search[status]=' + document.getElementById('quotation_search_status').value,
+        };
+        const url = Object.values(params).join('&');
+        form.method = 'GET';
+        form.action = _url + url;
+        form.submit();
+    });
+}
+
 // any SCSS you require will output into a single scss file (app.scss in this case)
 
 // or you can include specific pieces

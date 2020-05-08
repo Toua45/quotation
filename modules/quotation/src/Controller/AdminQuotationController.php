@@ -44,11 +44,13 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $quotations = $quotationRepository->findQuotationsByFilters($page);
         }
 
+        $currentPage = $page;
 
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
             'quotations' => $quotations['records'],
             'page' => $page,
-            'nbPages' => (int)ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE),
+            'currentPage' => $currentPage,
+            'maxPages' => (int)ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE),
             'nbRecords' => $quotations['nbRecords'],
             'quotationFilterForm' => $quotationFilterForm->createView()
         ]);

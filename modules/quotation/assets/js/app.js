@@ -54,8 +54,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
-            let link = window.location.origin + '/adm/index.php/modules/quotation/admin/show/customer/';
-            let show = window.location.origin + '/adm/index.php/sell/customers/';
+            let link = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/show/customer/';
+            let show = window.location.origin + '/adminLionel/index.php/sell/customers/';
 
             customers.forEach((customer, i) => {
 
@@ -105,7 +105,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                     const getCustomerShow = (customer) => {
 
-                                        let addressController = window.location.origin + '/adm/index.php/?controller=AdminAddresses';
+                                        let addressController = window.location.origin + '/adminLionel/index.php/?controller=AdminAddresses';
 
                                         let personalData = '';
                                         let tableCustomerOrders = '';
@@ -201,7 +201,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
-                        let linkCart = window.location.origin + '/adm/index.php/modules/quotation/admin/show/cart/';
+                        let linkCart = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/show/cart/';
                         let urlCart = document.querySelector('[data-customercart]').dataset.customercart;
                         let newUrlCart;
 
@@ -699,9 +699,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 }
 
 var current_page = document.getElementById("index_page").dataset.page;
-console.log(current_page);
 
-if (window.location.pathname.replace(/.*(?=\/quotation\/admin\/research)/, '') === '/quotation/admin/research' || '/quotation/admin/research/') {
+if (window.location.pathname.replace(/.*(?=\/quotation\/admin\/research)/ || /.*(?=\/quotation\/admin\/research\/)/, '') === '/quotation/admin/research' || '/quotation/admin/research/' + current_page) {
     document.getElementById('filter_page').addEventListener('click', Event => {
         Event.preventDefault();
         let form = Event.currentTarget.closest('thead').querySelector('form'); // Get form

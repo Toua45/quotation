@@ -1,3 +1,6 @@
+<!-- Variable pour limiter l'affichage du nombre de pages disponibles aux alentours -->
+{% set nearByPagesLimit = 3 %}
+
 <div class="text-center">
     <p class="m-3">
         Page : {{ currentPage }} -
@@ -8,6 +11,7 @@
 <div class="text-center">
     {% if maxPages > 1 %}
         <ul class="pagination">
+            <!-- Condition pour désactiver le bouton "Précédent" si l'utilisateur se situe à la première page -->
             {% if currentPage == 1 %}
                 <li>
                     <a class="mx-5 mb-5 btn btn-light d-flex btn-disabled disabled" disabled="disabled">« Précédent</a>
@@ -21,13 +25,31 @@
                 </li>
             {% endif %}
 
-            <!-- Page actuelle à afficher -->
+            <!-- Itération sur le nombre de pages disponibles pour afficher toutes les quantités nécessaires à l'aide de calculs -->
             {% for i in 1..maxPages %}
-                <li {{ currentPage == i }}>
-                    <a href="{{ path('quotation_admin', {'page': i}|merge(app.request.query.all)) }}">{{ i }}</a>
-                </li>
+
+                <!-- Condition pour afficher les premiers "..." en étant positionné sur l'itération actuelle -->
+                {% if 1 == (currentPage - nearByPagesLimit) - loop.index %}
+                    <li class="disabled"><p>...</p></li>
+
+                    <!-- Condition pour afficher les derniers "..." en étant positionné sur l'itération actuelle -->
+                {% elseif 1 == (currentPage + nearByPagesLimit) - loop.index %}
+                    <li class="disabled"><p>...</p></li>
+
+                    <!-- Condition pour cacher les premières pages selon la variable "nearByPagesLimit" en étant positionné sur l'itération actuelle -->
+                {% elseif 1 < (currentPage - nearByPagesLimit) - loop.index %}
+
+                    <!-- Condition pour cacher les dernières pages selon la variable "nearByPagesLimit" en étant positionné sur l'itération actuelle -->
+                {% elseif 1 > (currentPage + nearByPagesLimit) - loop.index %}
+
+                {% else %}
+                    <li {{ currentPage == loop.index }}>
+                        <a href="{{ path('quotation_admin', {'page': loop.index}|merge(app.request.query.all)) }}">{{ loop.index }}</a>
+                    </li>
+                {% endif %}
             {% endfor %}
 
+            <!-- Condition pour désactiver le bouton "Suivant" si l'utilisateur se situe à la dernière page -->
             {% if currentPage == maxPages %}
                 <li>
                     <a class="mx-5 mb-5 btn btn-light d-flex btn-disabled disabled" disabled="disabled">
@@ -45,5 +67,6 @@
         </ul>
     {% endif %}
 </div>
+
 
 <span id="index_page" data-page="{{ currentPage }}"></span>

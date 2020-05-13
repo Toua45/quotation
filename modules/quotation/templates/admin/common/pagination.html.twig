@@ -8,65 +8,71 @@
     </p>
 </div>
 
+<!-- Début pagination -->
 <div class="text-center">
     {% if maxPages > 1 %}
-        <ul class="pagination">
-            <!-- Condition pour désactiver le bouton "Précédent" si l'utilisateur se situe à la première page -->
-            {% if currentPage == 1 %}
-                <li>
-                    <a class="mx-5 mb-5 btn btn-light d-flex btn-disabled disabled" disabled="disabled">« Précédent</a>
-                </li>
-            {% else %}
-                <li>
-                    <a class="mx-5 mb-5 pl-0 pr-2 btn btn-light d-flex"
-                       href="{{ path('quotation_admin', {'page': currentPage - 1}|merge(app.request.query.all)) }}">
-                        <span uk-icon="chevron-double-left" class="ml-1 mr-1"></span> Précédent
-                    </a>
-                </li>
-            {% endif %}
-
-            <!-- Itération sur le nombre de pages disponibles pour afficher toutes les quantités nécessaires à l'aide de calculs -->
-            {% for i in 1..maxPages %}
-
-                <!-- Condition pour afficher les premiers "..." en étant positionné sur l'itération actuelle -->
-                {% if 1 == (currentPage - nearByPagesLimit) - loop.index %}
-                    <li class="disabled"><p>...</p></li>
-
-                    <!-- Condition pour afficher les derniers "..." en étant positionné sur l'itération actuelle -->
-                {% elseif 1 == (currentPage + nearByPagesLimit) - loop.index %}
-                    <li class="disabled"><p>...</p></li>
-
-                    <!-- Condition pour cacher les premières pages selon la variable "nearByPagesLimit" en étant positionné sur l'itération actuelle -->
-                {% elseif 1 < (currentPage - nearByPagesLimit) - loop.index %}
-
-                    <!-- Condition pour cacher les dernières pages selon la variable "nearByPagesLimit" en étant positionné sur l'itération actuelle -->
-                {% elseif 1 > (currentPage + nearByPagesLimit) - loop.index %}
-
+        <nav aria-label="page navigation">
+            <ul class="pagination pagination-circle pg-blue d-flex justify-content-center">
+                <!-- Condition pour désactiver le bouton "Précédent" si l'utilisateur se situe à la première page -->
+                {% if currentPage == 1 %}
+                    <li class="mt-1">
+                        <a class="mx-2 mb-5 pl-0 pr-2 btn btn-light d-flex btn-disabled disabled" disabled="disabled">
+                            <span uk-icon="chevron-double-left" class="ml-1 mr-1"></span> Précédent
+                        </a>
+                    </li>
                 {% else %}
-                    <li {{ currentPage == loop.index }}>
-                        <a href="{{ path('quotation_admin', {'page': loop.index}|merge(app.request.query.all)) }}">{{ loop.index }}</a>
+                    <li class="mt-1">
+                        <a class="mx-2 mb-5 pl-0 pr-2 btn btn-light d-flex"
+                           href="{{ path('quotation_admin', {'page': currentPage - 1}|merge(app.request.query.all)) }}">
+                            <span uk-icon="chevron-double-left" class="ml-1 mr-1"></span> Précédent
+                        </a>
                     </li>
                 {% endif %}
-            {% endfor %}
 
-            <!-- Condition pour désactiver le bouton "Suivant" si l'utilisateur se situe à la dernière page -->
-            {% if currentPage == maxPages %}
-                <li>
-                    <a class="mx-5 mb-5 btn btn-light d-flex btn-disabled disabled" disabled="disabled">
-                        Suivant »
-                    </a>
-                </li>
-            {% else %}
-                <li>
-                    <a class="mx-5 mb-5 pl-2 pr-0 btn btn-light d-flex"
-                       href="{{ path('quotation_admin', {'page': currentPage + 1}|merge(app.request.query.all)) }}">
-                        Suivant <span uk-icon="chevron-double-right" class="mr-1 ml-1"></span>
-                    </a>
-                </li>
-            {% endif %}
-        </ul>
+                <!-- Itération sur le nombre de pages disponibles pour afficher toutes les quantités nécessaires à l'aide de calculs -->
+                {% for i in 1..maxPages %}
+
+                    <!-- Condition pour afficher les premiers "..." en étant positionné sur l'itération actuelle -->
+                    {% if 1 == (currentPage - nearByPagesLimit) - loop.index0 %}
+                        <li class="disabled mt-2"><p>...</p></li>
+
+                        <!-- Condition pour afficher les derniers "..." en étant positionné sur l'itération actuelle -->
+                    {% elseif 1 == (currentPage + nearByPagesLimit) - loop.index0 %}
+                        <li class="disabled mt-2"><p>...</p></li>
+
+                        <!-- Condition pour cacher les premières pages selon la variable "nearByPagesLimit" en étant positionné sur l'itération actuelle -->
+                    {% elseif 1 < (currentPage - nearByPagesLimit) - loop.index0 %}
+
+                        <!-- Condition pour cacher les dernières pages selon la variable "nearByPagesLimit" en étant positionné sur l'itération actuelle -->
+                    {% elseif 1 > (currentPage + nearByPagesLimit) - loop.index0 %}
+
+                    {% else %}
+                        <li {{ currentPage == loop.index }} class="page-item">
+                            <a href="{{ path('quotation_admin', {'page': loop.index}|merge(app.request.query.all)) }}"
+                               class="page-link active">{{ loop.index }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                <!-- Condition pour désactiver le bouton "Suivant" si l'utilisateur se situe à la dernière page -->
+                {% if currentPage == maxPages %}
+                    <li class="mt-1">
+                        <a class="mx-2 mb-5 pl-2 pr-0 btn btn-light d-flex btn-disabled disabled" disabled="disabled">
+                            Suivant <span uk-icon="chevron-double-right" class="mr-1 ml-1"></span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="mt-1">
+                        <a class="mx-2 mb-5 pl-2 pr-0 btn btn-light d-flex"
+                           href="{{ path('quotation_admin', {'page': currentPage + 1}|merge(app.request.query.all)) }}">
+                            Suivant <span uk-icon="chevron-double-right" class="mr-1 ml-1"></span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
     {% endif %}
 </div>
-
+<!-- Fin pagination -->
 
 <span id="index_page" data-page="{{ currentPage }}"></span>

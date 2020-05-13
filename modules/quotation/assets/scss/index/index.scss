@@ -3,6 +3,12 @@
 }
 
 .quotation {
+  //
+  //.pagination a.active {
+  //  color:red;
+  //}
+  //
+  //.pagination a:hover:not(.active) {background-color: blue;}
 
   .data-toggle {
     background-color: red;
@@ -130,7 +136,7 @@
     svg {
       height: $svg-size;
       width: $svg-size;
-      margin-top: 1px;
+      margin-top: 1.70px;
     }
 
     circle, path {

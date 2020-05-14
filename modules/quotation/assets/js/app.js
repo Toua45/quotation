@@ -56,7 +56,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
             let link = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/customer/';
             let show = window.location.origin + '/adminToua/index.php/sell/customers/';
-          
+
             customers.forEach((customer, i) => {
 
                 import('./templates_module').then(mod => {
@@ -213,7 +213,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     // La méthode toggle permet de masquer ou d'afficher le paramètre hidden à l'élément class
                                     Event.currentTarget.closest('.hidden').classList.toggle('hidden');
                                     // Pour chaque cards qui aura la class hidden, ces dernières seront en display-none
-                                    document.querySelectorAll('.hidden').forEach(function (card,index) {
+                                    document.querySelectorAll('.hidden').forEach(function (card, index) {
                                         card.classList.add('d-none');
                                     });
 
@@ -227,6 +227,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         .replace(/\d+(?=\/details)/, link.dataset.idcustomer);
 
                                     const getCustomerDetails = (data) => {
+                                        // console.log(data);
                                         let outputCart = '';
                                         let outputOrder = '';
                                         let outputQuotation = '';
@@ -333,7 +334,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---orderStatus---/, customer.order_status)
                                                     .replace(/---id-order-modal---/, customer.id_order)
                                                     .replace(/---id---/, customer.id_cart)
-                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
                                             }
                                         }
 
@@ -378,7 +379,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---totalQuotation---/, customer.total_quotation + ' €')
                                                     .replace(/---id-quotation-modal---/, customer.id_quotation)
                                                     .replace(/---id---/, customer.id_cart)
-                                                    .replace(/---link-show-customer-cart-use---/, linkCart+ customer.id_cart);
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
                                             }
                                         }
 
@@ -408,14 +409,17 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         .replace(/\d+(?=\?_token)/, link.dataset.idcart);
 
                                                     const getCustomerCartToUse = (cart) => {
+                                                        // console.log(cart);
                                                         let picture = window.location.origin + '/img/p/';
                                                         let outputCartToUse = '';
                                                         let outputCartProductsToUse = '';
 
                                                         for (let product of cart['products']) {
+                                                            console.log(picture + product.path.join('/') + '/' + product.id_image + '-small_default.jpg');
                                                             outputCartProductsToUse += mod.TemplateModule.quotationCartProducts
                                                                 .replace(/---picture---/, picture + product.path.join('/') + '/' + product.id_image + '-small_default.jpg')
                                                                 .replace(/---productName---/, product.product_name)
+                                                                .replace(/---productAttribute---/, product.attributes)
                                                                 .replace(/---productPrice---/, product.product_price + ' €')
                                                                 .replace(/---productQuantity---/, product.product_quantity)
                                                                 .replace(/---totalProduct---/, product.total_product + ' €');
@@ -445,7 +449,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                         // on ajoute l'attribut data-idcustomer à l'élément html add-product-to-cart pour récupérer l'id_customer qui nous servira pour la section search product section
                                         document.getElementById('add-product-to-cart').setAttribute('data-idcustomer', data['customer'].id_customer);
-                                        document.getElementById('add-product-to-cart').setAttribute('data-idcart', 0);
+                                        // on ajoute l'attribut data-idcustomer à l'élément html add-product-to-cart pour récupérer l'id_customer qui nous servira pour la section search product section
+                                        document.getElementById('add-product-to-cart').setAttribute('data-idcart', data.id_last_cart);
                                     };
 
                                     /*
@@ -543,17 +548,20 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         }
                         // On ajoute l'attribut data-idproduct auquel on affecte l'id_product au form
                         formAddProductToCart.setAttribute('data-idproduct', attributes.id_product);
-                        sectionProductAttributes.classList.replace('d-flex','d-none'); // Hide select section
+                        // formAddProductToCart.setAttribute('data-idcart', attributes.id_last_cart);
                     }
+                    sectionProductAttributes.classList.replace('d-flex', 'd-none'); // Hide select section
                 } else {
                     for (let product of attributes) {
+                        // console.log(product);
                         selectProductAttributes[index] = new Option(product.attributes, product.id_product_attribute, false, false);
                         selectProductAttributes[index].setAttribute('data-instock', product.quantity);
                         selectProductAttributes[index].setAttribute('data-idproduct', product.id_product);
 
                         // Create attribute idproduct on form.add-product-to-cart
                         formAddProductToCart.setAttribute('data-idproduct', product.id_product);
-                        sectionProductAttributes.classList.replace('d-none','d-flex');
+                        // formAddProductToCart.setAttribute('data-idcart', product.id_last_cart);
+                        sectionProductAttributes.classList.replace('d-none', 'd-flex');
 
                         if (index === 0 || typeof product.attributes === 'undefined') {
                             quantityInStock.innerHTML = product.quantity;
@@ -582,28 +590,85 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                     }
                 });
 
-                document.getElementById('add-product-to-cart').addEventListener('submit', Event => {
-                    Event.preventDefault();
-                    let id_prod_attr = document.getElementById('js-output-attributes-products').value;
+                // console.log(formAddProductToCart);
 
-                    let argsURL = '/' +
-                        formAddProductToCart.dataset.idproduct + '/' + // Get id_product
-                        id_prod_attr + '/' + // Get id_product_attribute
-                        document.getElementById('product-quantity').value + '/' + // Get quantity
-                        formAddProductToCart.dataset.idcustomer + '/' + // Get id_customer
-                        formAddProductToCart.dataset.idcart; // Get id_cart
+                import('./templates_module').then(mod => {
 
-                    let urlPost = Event.currentTarget.dataset.urlpost;
-                    const getCustomerLastCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = cart.id_cart;
+                    let urlProductToCart = document.querySelector('[data-customercart]').dataset.customercart;
+                    let newUrlProductToCart;
 
-                    QuotationModule.getData(
-                        urlPost.replace(/(\/\d+){5}(?=\?_token)/, argsURL),
-                        getCustomerLastCart,
-                        null,
-                        'POST',
-                        true,
-                        []
-                    );
+                    document.getElementById('add-product-to-cart').addEventListener('submit', Event => {
+                        Event.preventDefault();
+                        /*
+                         * Insert product to cart on bdd
+                         */
+                        let id_prod_attr = document.getElementById('js-output-attributes-products').value;
+
+                        let argsURL = '/' +
+                            formAddProductToCart.dataset.idproduct + '/' + // Get id_product
+                            id_prod_attr + '/' + // Get id_product_attribute
+                            document.getElementById('product-quantity').value + '/' + // Get quantity
+                            formAddProductToCart.dataset.idcustomer + '/' + // Get id_customer
+                            formAddProductToCart.dataset.idcart; // Get id_cart
+
+                        console.log(argsURL);
+
+                        let urlPost = Event.currentTarget.dataset.urlpost;
+                        const getCustomerLastCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = cart.id_cart;
+
+                        QuotationModule.getData(
+                            urlPost.replace(/(\/\d+){5}(?=\?_token)/, argsURL),
+                            getCustomerLastCart,
+                            null,
+                            'POST',
+                            true,
+                            []
+                        );
+
+                        /*
+                         * show product on cart
+                         */
+                        // let paramsShowCart = formAddProductToCart.dataset.idcart + '/' + id_prod_attr;
+                        let paramsShowCart = formAddProductToCart.dataset.idcart;
+                        console.log(paramsShowCart);
+                        newUrlProductToCart = window.location.origin + urlProductToCart.replace(/\d+(?=\?_token)/, paramsShowCart);
+                        console.log(newUrlProductToCart);
+
+                        const showProductsOnCart = (cart) => {
+                            // console.log(cart);
+                            let picture = window.location.origin + '/img/p/';
+                            let outputCartTotal = '';
+                            let outputProductOnCart = '';
+
+                            for (let product of cart['products']) {
+                                console.log(product);
+                                outputProductOnCart += mod.TemplateModule.quotationCartProducts
+                                    .replace(/---picture---/, picture + product.path.join('/') + '/' + product.id_image + '-small_default.jpg')
+                                    .replace(/---productName---/, product.product_name)
+                                    .replace(/---productAttribute---/, product.attributes)
+                                    .replace(/---productPrice---/, product.product_price + ' €')
+                                    .replace(/---productQuantity---/, product.product_quantity)
+                                    .replace(/---totalProduct---/, product.total_product + ' €');
+                            }
+
+                            outputCartTotal += mod.TemplateModule.quotationCart
+                                .replace(/---totalCart---/, cart['total_cart'] + ' €');
+
+                            document.getElementById('output-cart-products-to-use').innerHTML = outputProductOnCart;
+                            document.getElementById('output-cart-to-use').innerHTML = outputCartTotal;
+                        };
+
+                        QuotationModule.getData(
+                            newUrlProductToCart,
+                            showProductsOnCart,
+                            null,
+                            null,
+                            true,
+                            []
+                        );
+
+                    });
+
                 });
             };
 
@@ -621,7 +686,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     };
 
     const inputSearchProducts = document.getElementById('quotation_product_cartId');
-    ['keyup'].forEach(event => {
+    ['keyup', 'click'].forEach(event => {
         inputSearchProducts.addEventListener(event, getQueryProduct, false);
     });
 }

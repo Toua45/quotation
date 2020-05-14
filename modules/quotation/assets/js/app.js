@@ -227,7 +227,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         .replace(/\d+(?=\/details)/, link.dataset.idcustomer);
 
                                     const getCustomerDetails = (data) => {
-                                        // console.log(data);
                                         let outputCart = '';
                                         let outputOrder = '';
                                         let outputQuotation = '';
@@ -409,13 +408,11 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         .replace(/\d+(?=\?_token)/, link.dataset.idcart);
 
                                                     const getCustomerCartToUse = (cart) => {
-                                                        // console.log(cart);
                                                         let picture = window.location.origin + '/img/p/';
                                                         let outputCartToUse = '';
                                                         let outputCartProductsToUse = '';
 
                                                         for (let product of cart['products']) {
-                                                            console.log(picture + product.path.join('/') + '/' + product.id_image + '-small_default.jpg');
                                                             outputCartProductsToUse += mod.TemplateModule.quotationCartProducts
                                                                 .replace(/---picture---/, picture + product.path.join('/') + '/' + product.id_image + '-small_default.jpg')
                                                                 .replace(/---productName---/, product.product_name)
@@ -537,7 +534,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                 let sectionProductAttributes = document.getElementById('section-attributes-product');
                 let formAddProductToCart = document.getElementById('add-product-to-cart');
 
-                // On cherche si l'id_product = 0
+                // On cherche si l'id_product_attribute = 0
                 if (attributes.id_product_attribute === '0') {
                     // On calcule la longueur du select et de ces options
                     if (selectProductAttributes.length > 0) {
@@ -548,19 +545,16 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         }
                         // On ajoute l'attribut data-idproduct auquel on affecte l'id_product au form
                         formAddProductToCart.setAttribute('data-idproduct', attributes.id_product);
-                        // formAddProductToCart.setAttribute('data-idcart', attributes.id_last_cart);
                     }
                     sectionProductAttributes.classList.replace('d-flex', 'd-none'); // Hide select section
                 } else {
                     for (let product of attributes) {
-                        // console.log(product);
                         selectProductAttributes[index] = new Option(product.attributes, product.id_product_attribute, false, false);
                         selectProductAttributes[index].setAttribute('data-instock', product.quantity);
                         selectProductAttributes[index].setAttribute('data-idproduct', product.id_product);
 
-                        // Create attribute idproduct on form.add-product-to-cart
+                        // Create attribute id_product on form.add-product-to-cart
                         formAddProductToCart.setAttribute('data-idproduct', product.id_product);
-                        // formAddProductToCart.setAttribute('data-idcart', product.id_last_cart);
                         sectionProductAttributes.classList.replace('d-none', 'd-flex');
 
                         if (index === 0 || typeof product.attributes === 'undefined') {
@@ -590,8 +584,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                     }
                 });
 
-                // console.log(formAddProductToCart);
-
                 import('./templates_module').then(mod => {
 
                     let urlProductToCart = document.querySelector('[data-customercart]').dataset.customercart;
@@ -599,6 +591,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                     document.getElementById('add-product-to-cart').addEventListener('submit', Event => {
                         Event.preventDefault();
+
                         /*
                          * Insert product to cart on bdd
                          */
@@ -610,8 +603,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                             document.getElementById('product-quantity').value + '/' + // Get quantity
                             formAddProductToCart.dataset.idcustomer + '/' + // Get id_customer
                             formAddProductToCart.dataset.idcart; // Get id_cart
-
-                        console.log(argsURL);
 
                         let urlPost = Event.currentTarget.dataset.urlpost;
                         const getCustomerLastCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = cart.id_cart;
@@ -628,20 +619,15 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         /*
                          * show product on cart
                          */
-                        // let paramsShowCart = formAddProductToCart.dataset.idcart + '/' + id_prod_attr;
                         let paramsShowCart = formAddProductToCart.dataset.idcart;
-                        console.log(paramsShowCart);
                         newUrlProductToCart = window.location.origin + urlProductToCart.replace(/\d+(?=\?_token)/, paramsShowCart);
-                        console.log(newUrlProductToCart);
 
                         const showProductsOnCart = (cart) => {
-                            // console.log(cart);
                             let picture = window.location.origin + '/img/p/';
                             let outputCartTotal = '';
                             let outputProductOnCart = '';
 
                             for (let product of cart['products']) {
-                                console.log(product);
                                 outputProductOnCart += mod.TemplateModule.quotationCartProducts
                                     .replace(/---picture---/, picture + product.path.join('/') + '/' + product.id_image + '-small_default.jpg')
                                     .replace(/---productName---/, product.product_name)

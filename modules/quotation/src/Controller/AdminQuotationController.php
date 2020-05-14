@@ -350,7 +350,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             'carts' => $carts,
             'orders' => $orders,
             'response' => $response,
-            'id_last_cart' => $idLastCart = $quotationRepository->findLastCartByCustomerId()['id_cart'] + 1,
+            'id_last_cart' => $idLastCart = $quotationRepository->findLastCartByCustomerId()['id_cart'] + 1,  // Permet de récupérer le dernier cart d'un customer que l'on récupère ensuite en js via le json
         ]), 200, [], true);
     }
 
@@ -360,14 +360,12 @@ class AdminQuotationController extends FrameworkBundleAdminController
      * @param $idCart
      * @return JsonResponse
      */
-//    public function showCart(Request $request, $id_cart, $id_product_attribute)
     public function showCart(Request $request, $id_cart)
     {
         $quotationRepository = $this->get('quotation_repository');
         $cart = $quotationRepository->findOneCartById($id_cart);
 
         if ($cart['id_cart']) {
-//            $cart['products'] = $quotationRepository->findProductsCustomerByCarts($cart['id_cart'], $id_product_attribute);
             $cart['products'] = $quotationRepository->findProductsCustomerByCarts($cart['id_cart']);
             $cart['order'] = $quotationRepository->findOrderByCart($cart['id_cart']);
             $cart['quotation'] = $quotationRepository->findQuotationByCart($cart['id_cart']);
@@ -379,23 +377,19 @@ class AdminQuotationController extends FrameworkBundleAdminController
                 $cart['date_cart'] = date("d/m/Y", strtotime($cart['date_cart']));
                 $cart['total_cart'] = number_format($cart['total_cart'], 2);
                 if ($cart['products']) {
-//                    $cart['products']= $quotationRepository->findOneProductById($cart['products'][$j]['id_product']);
                     $cart['products'][$j]['id_product'];
                     $cart['products'][$j]['product_name'];
                     $cart['products'][$j]['product_price'] = number_format($cart['products'][$j]['product_price'], 2);
                     $cart['products'][$j]['product_quantity'];
                     $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
-//                    $cart['products'][$j]['id_image'];
-//                    $cart['products'][$j]['path'] = $cart['products'][$j]['id_image'];
-//                    if ($cart['products'][$j]['path']) {
-//                        $cart['products'][$j]['path'] = str_split($cart['products'][$j]['path']);
-//                    }
+                    // On récupère les images liées aux produits
                     $cart['products'][$j]['attributes'] = $quotationRepository->findAttributesByProduct($cart['products'][$j]['id_product'], $cart['products'][$j]['id_product_attribute']);
                     $cart['products'][$j]['id_image'] = $quotationRepository->findPicturesByAttributesProduct($cart['products'][$j]['id_product'], $cart['products'][$j]['id_product_attribute'])['id_image'];
                     if ($cart['products'][$j]['id_image'] == '0' || $cart['products'][$j]['id_product_attribute'] == '0') {
                         $cart['products'][$j]['id_image'] = $quotationRepository->findPicturesByProduct($cart['products'][$j]['id_product'])['id_image'];
                     }
 
+                    // Pour créer le path, on va séparer l'id_image s'il dispose d'un nombre à 2 chiffres sinon on récupère l'id_image
                     $cart['products'][$j]['path'] = $cart['products'][$j]['id_image'];
                     if ($cart['products'][$j]['path']) {
                         $cart['products'][$j]['path'] = str_split($cart['products'][$j]['path']);
@@ -462,8 +456,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $quotationRepository = $this->get('quotation_repository');
         $product = $quotationRepository->findOneProductById($id_product);
         $productWithoutAttributes = [];
-        // Permet de récupérer le dernier cart d'un customer que l'on récupère ensuite en js via le json
-//        $idLastCart = $quotationRepository->findLastCartByCustomerId()['id_cart'] + 1;
 
         for ($i = 0; $i < count($product); $i++) {
             $product[$i]['tax_amount'] = $product[$i]['product_price'] * $product[$i]['rate'] / 100;
@@ -471,12 +463,9 @@ class AdminQuotationController extends FrameworkBundleAdminController
             if ($product[$i]['id_product_attribute']) {
                 $product[$i]['attributes'] = $quotationRepository->findAttributesByProduct($id_product, $product[$i]['id_product_attribute']);
             }
-//            $product[$i]['id_last_cart'] = $idLastCart;
         }
 
-//        dump($product);die;
         if (is_null($product[0]['id_product_attribute'])) {
-//            $productWithoutAttributes['id_last_cart'] = $idLastCart;
             $productWithoutAttributes['id_product'] = $product[0]['id_product'];
             $productWithoutAttributes['product_name'] = $product[0]['product_name'];
             $productWithoutAttributes['product_price'] = $product[0]['product_price'];
@@ -513,10 +502,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $quotationRepository = $this->get('quotation_repository');
         $customer = $quotationRepository->getCustomerInfoById($id_customer);
 
-//        dump($id_customer);die;
-//        dump($customer);die;
-
-       //dump($session->get('cart')['id_customer'], $id_customer);die;
         // On récupère les adresses du client
         if ($customer['id_customer']) {
             $customer['addresses'] = $quotationRepository->findAddressesByCustomer($id_customer);
@@ -539,7 +524,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $dateUpd = date_format(new \DateTime('now'), 'Y-m-d H:i:s');
         $id_customization = 0;
 
-        //dump($session->get('cart'));die;
+        // On utilise la session pour stocker les éléments
         if ($session->get('cart')['id_customer'] === $id_customer) {
             $newProduct = [
                 'id_product' => $id_product,
@@ -588,7 +573,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
                 ]
             );
         }
-//        dump($session->get('cart'));die;
 
             // On récupère le dernier cart du client
             $products = $quotationRepository->findProductsCustomerByCarts($session->get('cart')['id_cart']);

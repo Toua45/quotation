@@ -272,7 +272,6 @@ class QuotationRepository
     /**
      * @return array
      */
-//    public function findProductsCustomerByCarts($idCart, $id_product_attribute = null)
     public function findProductsCustomerByCarts($idCart)
     {
         $expr = $this->connection->getExpressionBuilder();
@@ -289,14 +288,7 @@ class QuotationRepository
             ->join('p', $this->databasePrefix . 'product_lang', 'pl', 'p.id_product = pl.id_product')
             ->join('p', $this->databasePrefix . 'tax_rule', 'tr', 'p.id_tax_rules_group = tr.id_tax_rules_group')
             ->join('tr', $this->databasePrefix . 'tax', 't', 'tr.id_tax = t.id_tax')
-            ->where($expr->eq('ca.id_cart', ':id_cart'));
-
-//        if (null === $id_product_attribute) {
-//            $query->andWhere($expr->eq('pac.id_product_attribute', ':id_product_attribute'))
-//                ->setParameter('id_product_attribute', $id_product_attribute);
-//        }
-
-        $query
+            ->where($expr->eq('ca.id_cart', ':id_cart'))
             ->andWhere('tr.id_country = 8')
             ->setParameter('id_cart', $idCart);
 

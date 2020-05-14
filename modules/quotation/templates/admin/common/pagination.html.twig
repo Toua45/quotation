@@ -47,7 +47,7 @@
                     {% elseif 1 > (currentPage + nearByPagesLimit) - loop.index0 %}
 
                     {% else %}
-                        <li {{ currentPage == loop.index }} class="page-item">
+                        <li {{ currentPage == loop.index }} class="page-item pagination_number">
                             <a href="{{ path('quotation_admin', {'page': loop.index}|merge(app.request.query.all)) }}"
                                class="page-link active">{{ loop.index }}</a>
                         </li>

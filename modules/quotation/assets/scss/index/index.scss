@@ -175,4 +175,16 @@
   .group-action {
     width: max-content;
   }
+
+  a, .pagination_number {
+    color: $bg-color;
+
+    :hover {
+      color: $bg-color
+    }
+    :focus {
+      box-shadow:none;
+    }
+  }
+
 }

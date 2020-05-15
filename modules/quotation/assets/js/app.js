@@ -546,6 +546,10 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         // On ajoute l'attribut data-idproduct auquel on affecte l'id_product au form
                         formAddProductToCart.setAttribute('data-idproduct', attributes.id_product);
                     }
+                    // Create attribute id_product on form.add-product-to-cart
+                    formAddProductToCart.setAttribute('data-idproduct', attributes.id_product);
+                    // Create attribute id_product_attribute on form.add-product-to-cart
+                    formAddProductToCart.setAttribute('data-idproductattribute', attributes.id_product_attribute);
                     sectionProductAttributes.classList.replace('d-flex', 'd-none'); // Hide select section
                 } else {
                     for (let product of attributes) {
@@ -555,6 +559,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                         // Create attribute id_product on form.add-product-to-cart
                         formAddProductToCart.setAttribute('data-idproduct', product.id_product);
+                        // Remove attribute id_product_attribute on form.add-product-to-cart
+                        formAddProductToCart.removeAttribute('data-idproductattribute', attributes.id_product_attribute);
                         sectionProductAttributes.classList.replace('d-none', 'd-flex');
 
                         if (index === 0 || typeof product.attributes === 'undefined') {
@@ -595,14 +601,26 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         /*
                          * Insert product to cart on bdd
                          */
+                        let id_product_without_attribute = formAddProductToCart.dataset.idproductattribute;
                         let id_prod_attr = document.getElementById('js-output-attributes-products').value;
+                        let argsURL = '';
 
-                        let argsURL = '/' +
-                            formAddProductToCart.dataset.idproduct + '/' + // Get id_product
-                            id_prod_attr + '/' + // Get id_product_attribute
-                            document.getElementById('product-quantity').value + '/' + // Get quantity
-                            formAddProductToCart.dataset.idcustomer + '/' + // Get id_customer
-                            formAddProductToCart.dataset.idcart; // Get id_cart
+                        // S'il y a des éléments option dans le select alors les paramètres sont affectés par ces valeurs
+                        if (selectProductAttributes.length > 0) {
+                            argsURL = '/' +
+                                formAddProductToCart.dataset.idproduct + '/' + // Get id_product
+                                id_prod_attr + '/' + // Get id_product_attribute
+                                document.getElementById('product-quantity').value + '/' + // Get quantity
+                                formAddProductToCart.dataset.idcustomer + '/' + // Get id_customer
+                                formAddProductToCart.dataset.idcart; // Get id_cart
+                        } else {
+                            argsURL = '/' +
+                                formAddProductToCart.dataset.idproduct + '/' + // Get id_product
+                                id_product_without_attribute + '/' + // Get id_product_attribute
+                                document.getElementById('product-quantity').value + '/' + // Get quantity
+                                formAddProductToCart.dataset.idcustomer + '/' + // Get id_customer
+                                formAddProductToCart.dataset.idcart; // Get id_cart
+                        }
 
                         let urlPost = Event.currentTarget.dataset.urlpost;
                         const getCustomerLastCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = cart.id_cart;

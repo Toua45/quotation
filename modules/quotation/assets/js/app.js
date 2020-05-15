@@ -104,7 +104,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         .replace(/\d+(?=\?_token)/, link.dataset.idcustomer);
 
                                     const getCustomerShow = (customer) => {
-                                        let addressController = window.location.origin + '/adminToua/index.php/?controller=AdminAddresses';
+
+                                        let addressController = window.location.origin + '/adminLionel/index.php/?controller=AdminAddresses';
+
                                         let personalData = '';
                                         let tableCustomerOrders = '';
                                         let customerOrders = '';
@@ -191,6 +193,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         true,
                                         []
                                     );
+
                                 })
                             })
                         }
@@ -198,7 +201,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
-                        let linkCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/cart/';
+                        let linkCart = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/show/cart/';
                         let urlCart = document.querySelector('[data-customercart]').dataset.customercart;
                         let newUrlCart;
 
@@ -236,10 +239,12 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         let modalCustomerOrderDetailsCart = '';
                                         let modalCustomerQuotationDetails = '';
                                         let modalCustomerQuotationDetailsCart = '';
+                                        let selectAddress = '';
+                                        let addressSelected = '';
 
                                         /*
                                         * Cart section
-                                         */
+                                        */
 
                                         // L'instruction for...of permet de créer une boucle d'un array qui parcourt un objet itérable
                                         // Attention à l'ordre d'éxécution des boucles, on éxecute dans cartData, ensuite dans modalCartInfos et enfin tableCart
@@ -448,6 +453,71 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         document.getElementById('add-product-to-cart').setAttribute('data-idcustomer', data['customer'].id_customer);
                                         // on ajoute l'attribut data-idcustomer à l'élément html add-product-to-cart pour récupérer l'id_customer qui nous servira pour la section search product section
                                         document.getElementById('add-product-to-cart').setAttribute('data-idcart', data.id_last_cart);
+
+                                        /**
+                                         * Addresses block
+                                         */
+
+                                        let addresses = data['addresses'];
+
+                                        // placeholder, 1st option of the select
+                                        selectAddress = mod.TemplateModule.placeholderAddress;
+
+                                        // obtenir la liste des alias d'addresses dans les 2 selects
+                                        for (let addressList of addresses) {
+                                            selectAddress += mod.TemplateModule.selectAddress
+                                                .replace(/---id-address---/, addressList.id_address)
+                                                .replace(/---alias---/, addressList.alias)
+                                        }
+
+                                        // remplir le block par l'addresse de livraison sélectionnée
+                                        if (document.querySelectorAll('.address-delivery') !== null) {
+                                            document.querySelectorAll('.address-delivery').forEach(function (link) {
+                                                link.addEventListener('change', function (Event) {
+
+                                                    // filter (fonction js de base) permet de récupérer l'objet dont la value de l'option est égale à l'id_address
+                                                    for (let address of addresses.filter(address => address.id_address === link.value)) {
+                                                        addressSelected = mod.TemplateModule.addressSelected
+                                                            .replace(/---firstname---/, address.firstname)
+                                                            .replace(/---lastname---/, address.lastname)
+                                                            .replace(/---company---/, address.company)
+                                                            .replace(/---address---/, address.address)
+                                                            .replace(/---further_address---/, address.further_address)
+                                                            .replace(/---postcode---/, address.postcode)
+                                                            .replace(/---city---/, address.city)
+                                                            .replace(/---country---/, address.country)
+                                                            .replace(/---phone---/, address.phone);
+                                                    }
+
+                                                    document.getElementById('address-delivery-selected').innerHTML = addressSelected;
+                                                })
+                                            })
+                                        }
+
+                                        if (document.querySelectorAll('.address-invoice') !== null) {
+                                            document.querySelectorAll('.address-invoice').forEach(function (link) {
+                                                link.addEventListener('change', function (Event) {
+
+                                                    for (let address of addresses.filter(address => address.id_address === link.value)) {
+                                                        addressSelected = mod.TemplateModule.addressSelected
+                                                            .replace(/---firstname---/, address.firstname)
+                                                            .replace(/---lastname---/, address.lastname)
+                                                            .replace(/---company---/, address.company)
+                                                            .replace(/---address---/, address.address)
+                                                            .replace(/---further_address---/, address.further_address)
+                                                            .replace(/---postcode---/, address.postcode)
+                                                            .replace(/---city---/, address.city)
+                                                            .replace(/---country---/, address.country)
+                                                            .replace(/---phone---/, address.phone);
+                                                    }
+
+                                                    document.getElementById('address-invoice-selected').innerHTML = addressSelected;
+                                                })
+                                            })
+                                        }
+
+                                        document.getElementById('address-delivery').innerHTML = selectAddress;
+                                        document.getElementById('address-invoice').innerHTML = selectAddress;
                                     };
 
                                     /*
@@ -466,10 +536,12 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     // Ici, on récupère la class 'd-none' de l'élément id 'js-output-customer-details' et on la remplace par 'd-block'
                                     document.getElementById('js-output-customer-details').classList.replace('d-none', 'd-block');
                                     document.getElementById('js-output-cart-infos').classList.replace('d-none', 'd-block');
-
+                                    document.getElementById('js-output-address').classList.replace('d-none', 'd-block');
                                 });
                             });
                         }
+
+                        // here
                     }
                 });
             });
@@ -692,6 +764,28 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     const inputSearchProducts = document.getElementById('quotation_product_cartId');
     ['keyup', 'click'].forEach(event => {
         inputSearchProducts.addEventListener(event, getQueryProduct, false);
+    });
+}
+
+var current_page = document.getElementById("index_page").dataset.page;
+
+if (window.location.pathname.replace(/.*(?=\/quotation\/admin\/research)/ || /.*(?=\/quotation\/admin\/research\/)/, '') === '/quotation/admin/research' || '/quotation/admin/research/' + current_page) {
+    document.getElementById('filter_page').addEventListener('click', Event => {
+        Event.preventDefault();
+        let form = Event.currentTarget.closest('thead').querySelector('form'); // Get form
+        const _url = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/research?';
+        const params = {
+            tokenSearch: 'quotation_search[_token]=' + document.getElementById('quotation_search__token').value,
+            end: 'quotation_search[end]=' + document.getElementById('quotation_search_end').value,
+            name: 'quotation_search[name]=' + document.getElementById('quotation_search_name').value,
+            reference: 'quotation_search[reference]=' + document.getElementById('quotation_search_reference').value,
+            start: 'quotation_search[start]=' + document.getElementById('quotation_search_start').value,
+            status: 'quotation_search[status]=' + document.getElementById('quotation_search_status').value,
+        };
+        const url = Object.values(params).join('&');
+        form.method = 'GET';
+        form.action = _url + url;
+        form.submit();
     });
 }
 

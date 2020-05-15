@@ -1,15 +1,10 @@
 quotation_admin:
-  path: quotation/admin/research/{name}/{reference}/{status}/{start}/{end}/{page}
+  path: quotation/admin/research/{page}
   methods: [GET, POST]
   defaults:
     _controller: 'Quotation\Controller\AdminQuotationController::quotationIndex'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
-    name: 'AAAAA'
-    reference: '00000'
-    status: 'AAAAA'
-    start: '1000-01-01'
-    end: '3000-01-01'
     page: 1
   requirements:
     page: '\d+'

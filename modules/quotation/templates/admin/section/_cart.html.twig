@@ -1,22 +1,21 @@
-<section class="cart">
+<span data-customercart="{{ path('quotation_admin_show_cart', { id_cart: 0 }) }}"></span>
 
-    <span data-customercart="{{ path('quotation_admin_show_cart', { id_cart: 0 }) }}"></span>
+<div id="js-output-cart-infos" class="cart-infos d-none">
 
-    <div id="js-output-cart-infos" class="cart-infos d-none">
-
-        <div class="quotation card p-4" id="products" data-products="{{ asset('data-product.js') }}">
-            <div class="quotation-head mb-3 d-flex justify-content-between">
-                <div class="d-flex align-items-center" data-searchproducts="{{ path('quotation_admin_search_products', { query: 'query' }) }}">
-                    <i class="material-icons mr-2">shopping_cart</i>
-                    <h1 class="panel-heading">Panier</h1>
-                </div>
+    <div class="quotation card p-4" id="products" data-products="{{ asset('data-product.js') }}">
+        <div class="quotation-head mb-3 d-flex justify-content-between">
+            <div class="d-flex align-items-center"
+                 data-searchproducts="{{ path('quotation_admin_search_products', { query: 'query' }) }}">
+                <i class="material-icons mr-2">shopping_cart</i>
+                <h1 class="panel-heading">Panier</h1>
             </div>
+        </div>
 
-            <div class="container mb-4 d-inline-flex justify-content-center align-items-center" id="search_products">
-                {% include '@Modules/quotation/templates/admin/_form_quotation_product.html.twig' %}
-            </div>
+        <div class="container mb-4 d-inline-flex justify-content-center align-items-center" id="search_products">
+            {% include '@Modules/quotation/templates/admin/_form_quotation_product.html.twig' %}
+        </div>
 
-            <div id="js-output-products" class="d-flex"><!-- Products here! --></div>
+        <div id="js-output-products" class="d-flex"><!-- Products here! --></div>
 
             <div class="tab-content">
                 <table class="table">
@@ -32,24 +31,22 @@
                     </thead>
                     <tbody id="output-cart-products-to-use">
 
-                    <!-- Products here! -->
+                <!-- Products here! -->
 
-                    </tbody>
-                    <tfoot id="output-cart-to-use">
+                </tbody>
+                <tfoot id="output-cart-to-use">
 
-                    <!-- total cart here! -->
+                <!-- total cart here! -->
 
-                    </tfoot>
-                </table>
-            </div>
-
-            <div class="form-group">
-                <div class="col-lg-12">
-                    <div class="alert alert-warning">Les prix sont Hors Taxe</div>
-                </div>
-            </div>
+                </tfoot>
+            </table>
         </div>
 
+        <div class="form-group">
+            <div class="col-lg-12">
+                <div class="alert alert-warning pl-5">Les prix sont Hors Taxe</div>
+            </div>
+        </div>
     </div>
 
-</section>
+</div>

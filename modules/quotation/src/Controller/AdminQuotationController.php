@@ -44,11 +44,13 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $quotations = $quotationRepository->findQuotationsByFilters($page);
         }
 
+        $currentPage = $page;
 
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
             'quotations' => $quotations['records'],
             'page' => $page,
-            'nbPages' => (int)ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE),
+            'currentPage' => $currentPage,
+            'maxPages' => (int)ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE),
             'nbRecords' => $quotations['nbRecords'],
             'quotationFilterForm' => $quotationFilterForm->createView()
         ]);
@@ -334,6 +336,8 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $orders[$key]['city'] = $order['city'];
         }
 
+        $addresses = $quotationRepository->findAddressesByCustomer($id_customer);
+
         $response = [];
 
         foreach ($quotations as $key => $quotation) {
@@ -351,6 +355,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             'orders' => $orders,
             'response' => $response,
             'id_last_cart' => $idLastCart = $quotationRepository->findLastCartByCustomerId()['id_cart'] + 1,  // Permet de récupérer le dernier cart d'un customer que l'on récupère ensuite en js via le json
+            'addresses' => $addresses,
         ]), 200, [], true);
     }
 

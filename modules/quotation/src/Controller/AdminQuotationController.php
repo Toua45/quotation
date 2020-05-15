@@ -259,13 +259,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
      */
     public function showCustomerDetails(Request $request, $id_customer, SessionInterface $session)
     {
-//        if ($session->has('cart')) {
-//            $session->set('cart', []);
-//        }
-
-//        dump($session->get('cart'));die;
-
-
         $quotationRepository = $this->get('quotation_repository');
         $customer = $quotationRepository->getCustomerInfoById($id_customer);
         $carts = $quotationRepository->findCartsByCustomer($id_customer);
@@ -390,8 +383,10 @@ class AdminQuotationController extends FrameworkBundleAdminController
                     $cart['products'][$j]['product_quantity'];
                     $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
                     // On récupère les images liées aux produits
-                    $cart['products'][$j]['attributes'] = $quotationRepository->findAttributesByProduct($cart['products'][$j]['id_product'], $cart['products'][$j]['id_product_attribute']);
-                    $cart['products'][$j]['id_image'] = $quotationRepository->findPicturesByAttributesProduct($cart['products'][$j]['id_product'], $cart['products'][$j]['id_product_attribute'])['id_image'];
+                    $cart['products'][$j]['attributes'] = $quotationRepository->findAttributesByProduct($cart['products'][$j]['id_product'],
+                                                          $cart['products'][$j]['id_product_attribute']);
+                    $cart['products'][$j]['id_image'] = $quotationRepository->findPicturesByAttributesProduct($cart['products'][$j]['id_product'],
+                                                        $cart['products'][$j]['id_product_attribute'])['id_image'];
                     if ($cart['products'][$j]['id_image'] == '0' || $cart['products'][$j]['id_product_attribute'] == '0') {
                         $cart['products'][$j]['id_image'] = $quotationRepository->findPicturesByProduct($cart['products'][$j]['id_product'])['id_image'];
                     }
@@ -506,8 +501,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
      */
     public function createNewCart($id_product, $id_product_attribute, $quantity, $id_customer, $id_cart, SessionInterface $session)
     {
-        dump($session->get('cart'));
-
         $quotationRepository = $this->get('quotation_repository');
         $customer = $quotationRepository->getCustomerInfoById($id_customer);
 
@@ -534,7 +527,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $id_customization = 0;
 
         // On utilise la session pour stocker les éléments
-//        if ($session->has('cart')['id_customer'] && $session->get('cart')['id_customer'] === $id_customer) {
         if ($session->get('cart')['id_customer'] === $id_customer) {
             $newProduct = [
                 'id_product' => $id_product,
@@ -549,7 +541,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
                     'product' => $newProduct
                 ]
             );
-//        } elseif(!$session->has('cart')['id_customer'] || $session->get('id_customer' !== $id_customer)) {
         } else {
             // create cart
             $cart = $quotationRepository->addNewCart(
@@ -604,8 +595,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
                     $dateAdd
                 );
             }
-
-        dump($session->get('cart'));die;
 
         return new JsonResponse(json_encode($session->get('cart')), 200, [], true);
     }

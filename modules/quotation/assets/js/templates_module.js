@@ -428,13 +428,14 @@ export const TemplateModule = {
     quotationCartProducts: `<tr>
                                 <td class="text-left"><img src="---picture---"></td>
                                 <td class="text-left">---productName---</td>
+                                <td class="text-left">---productAttribute---</td>
                                 <td class="text-left">---productPrice---</td>
                                 <td class="text-left">---productQuantity---</td>
                                 <td class="text-left">---totalProduct---</td>
                             </tr>`,
 
     quotationCart: `<tr>
-                        <th colspan="3" class="text-left">Total produits</th>
+                        <th colspan="5" class="text-left">Total produits</th>
                         <th class="text-left">---totalCart---</th>
                     </tr>`,
 

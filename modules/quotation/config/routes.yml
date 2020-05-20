@@ -120,3 +120,16 @@ quotation_admin_create_new_cart:
     _controller: 'Quotation\Controller\AdminQuotationController::createNewCart'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
+
+quotation_admin_update_product_quantity_cart:
+  path: quotation/admin/update/quantity/product/cart/{id_cart}/{id_product}/{id_product_attribute}/{quantity}
+  requirements:
+    id_cart: '\d+'
+    id_product: '\d+'
+    id_product_attribute: '\d+'
+    quantity: '\d+'
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::updateQuantityProductCart'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'

@@ -603,4 +603,35 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         return new JsonResponse(json_encode($session->get('cart')), 200, [], true);
     }
+
+    /**
+     * Update product quantity on cart
+     * @param $id_cart
+     * @param $id_product
+     * @param $id_product_attribute
+     * @param $quantity
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function updateQuantityProductCart($id_cart, $id_product, $id_product_attribute, $quantity)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $productQty = $quotationRepository->updateQuantityProductOnCart($id_cart, $id_product, $id_product_attribute, $quantity);
+        $cart = $quotationRepository->findOneCartById($id_cart);
+
+        if ($cart['id_cart']) {
+            $cart['products'] = $quotationRepository->findProductsCustomerByCarts($cart['id_cart']);
+        }
+
+        for ($j = 0; $j < count($cart['products']); $j++) {
+            if ($cart['id_cart']) {
+                $cart['total_cart'] = number_format($cart['total_cart'], 2);
+                if ($cart['products']) {
+                    $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
+                }
+            }
+        }
+
+        return new JsonResponse(json_encode($cart), 200, [], true);
+    }
 }

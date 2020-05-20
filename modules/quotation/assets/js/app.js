@@ -105,7 +105,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                     const getCustomerShow = (customer) => {
 
-                                        let addressController = window.location.origin + '/adminLionel/index.php/?controller=AdminAddresses';
+                                        let addressController = window.location.origin + '/adminToua/index.php/?controller=AdminAddresses';
 
                                         let personalData = '';
                                         let tableCustomerOrders = '';
@@ -201,7 +201,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
-                        let linkCart = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/show/cart/';
+                        let linkCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/cart/';
                         let urlCart = document.querySelector('[data-customercart]').dataset.customercart;
                         let newUrlCart;
 
@@ -717,21 +717,94 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                             let outputCartTotal = '';
                             let outputProductOnCart = '';
 
-                            for (let product of cart['products']) {
-                                outputProductOnCart += mod.TemplateModule.quotationCartProducts
-                                    .replace(/---picture---/, picture + product.path.join('/') + '/' + product.id_image + '-small_default.jpg')
-                                    .replace(/---productName---/, product.product_name)
-                                    .replace(/---productAttribute---/, product.attributes)
-                                    .replace(/---productPrice---/, product.product_price + ' €')
-                                    .replace(/---productQuantity---/, product.product_quantity)
-                                    .replace(/---totalProduct---/, product.total_product + ' €');
-                            }
+                                for (let product of cart['products']) {
+                                    outputProductOnCart += mod.TemplateModule.quotationCartProducts
+                                        .replace(/---picture---/, picture + product.path.join('/') + '/' + product.id_image + '-small_default.jpg')
+                                        .replace(/---idProduct---/, product.id_product)
+                                        .replace(/---idProd---/, product.id_product)
+                                        .replace(/---productName---/, product.product_name)
+                                        .replace(/---idProductAttribute---/, product.id_product_attribute)
+                                        .replace(/---idProdAttr---/, product.id_product_attribute)
+                                        .replace(/---productAttribute---/, product.attributes)
+                                        .replace(/---productPrice---/, product.product_price + ' €')
+                                        .replace(/---productQuantity---/, product.product_quantity)
+                                        .replace(/---totalProduct---/, product.total_product + ' €')
+                                        .replace(/---token---/, new URL(window.location.href).searchParams.get('_token'));
+                                }
 
                             outputCartTotal += mod.TemplateModule.quotationCart
                                 .replace(/---totalCart---/, cart['total_cart'] + ' €');
 
                             document.getElementById('output-cart-products-to-use').innerHTML = outputProductOnCart;
+                            document.getElementById('output-cart-products-to-use').setAttribute('data-idcart', cart.id_cart);
                             document.getElementById('output-cart-to-use').innerHTML = outputCartTotal;
+
+                            /*
+                             * Update product quantity on cart
+                             */
+                            let paramsUrlProductQuantity = '';
+
+                            if (document.querySelectorAll('input.cart_quantity') !== null) {
+                                // On boucle sur chaque élément input auquel on attache l'évènement change
+                                document.querySelectorAll('input.cart_quantity').forEach(function (input) {
+                                    input.addEventListener('change', function (Event) {
+
+                                        Event.preventDefault();
+                                        // On va récupérer l'élément parent et ses enfants
+                                        let children = Event.currentTarget.closest('tr').children;
+                                        let idProduct, idProductAttribute;
+
+                                        for (let i = 0; i < children.length; i++) {
+                                            let regexp = new RegExp('^(product_name_)');
+                                            if (children[i].id.match(regexp) !== null) {
+                                                idProduct = children[i].id.split('_')[2];
+                                                idProductAttribute = children[i].id.split('_')[3];
+                                            }
+                                        }
+
+                                        paramsUrlProductQuantity = '/' +
+                                            document.getElementById('output-cart-products-to-use').dataset.idcart + '/' + // Get id_cart
+                                            idProduct + '/' + // Get id_product
+                                            idProductAttribute + '/' + // Get id_product_attribute
+                                            document.getElementById('product_quantity_on_cart').value + '?' +  // Get quantity
+                                            "_token=" + document.getElementById('token').value; // Get token
+
+                                        let urlProductQtyPost = window.location.origin + '/adminToua/index.php/modules/quotation/admin/update/quantity/product/cart' + paramsUrlProductQuantity;
+
+                                        console.log(urlProductQtyPost);
+
+                                        const getCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = cart.id_cart;
+
+                                        QuotationModule.getData(
+                                            urlProductQtyPost,
+                                            getCart,
+                                            null,
+                                            'POST',
+                                            true,
+                                            []
+                                        );
+
+                                        /*
+                                         * Update total product price and total cart when product quantity change
+                                         */
+                                        const showProductsTotalPriceUpdateOnCart = (cart) => {
+                                            for (let product of cart['products']) {
+                                                document.getElementById('total_product_price_on_cart').innerHTML = product.total_product + ' €';
+                                            }
+                                            document.getElementById('total_cart').innerHTML = cart['total_cart'] + ' €';
+                                        };
+
+                                        QuotationModule.getData(
+                                            urlProductQtyPost,
+                                            showProductsTotalPriceUpdateOnCart,
+                                            null,
+                                            null,
+                                            true,
+                                            []
+                                        );
+                                    });
+                                });
+                            };
                         };
 
                         QuotationModule.getData(
@@ -742,9 +815,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                             true,
                             []
                         );
-
                     });
-
                 });
             };
 
@@ -773,7 +844,7 @@ if (window.location.pathname.replace(/.*(?=\/quotation\/admin\/research)/ || /.*
     document.getElementById('filter_page').addEventListener('click', Event => {
         Event.preventDefault();
         let form = Event.currentTarget.closest('thead').querySelector('form'); // Get form
-        const _url = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/research?';
+        const _url = window.location.origin + '/adminToua/index.php/modules/quotation/admin/research?';
         const params = {
             tokenSearch: 'quotation_search[_token]=' + document.getElementById('quotation_search__token').value,
             end: 'quotation_search[end]=' + document.getElementById('quotation_search_end').value,
@@ -787,6 +858,10 @@ if (window.location.pathname.replace(/.*(?=\/quotation\/admin\/research)/ || /.*
         form.action = _url + url;
         form.submit();
     });
+}
+
+function myFunction() {
+    confirm("Hello! I am an alert box!");
 }
 
 // any SCSS you require will output into a single scss file (app.scss in this case)

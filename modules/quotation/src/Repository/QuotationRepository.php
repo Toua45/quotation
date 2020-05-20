@@ -754,4 +754,30 @@ class QuotationRepository
                     ]);
         return $query->execute();
     }
+
+    /**
+     * Update product quantity on Cart
+     * @param int $id_cart
+     * @param int $id_product
+     * @param int $id_product_attribute
+     * @param $quantity
+     * @return \Doctrine\DBAL\Driver\Statement|int
+     */
+    public function updateQuantityProductOnCart(int $id_cart, int $id_product, int $id_product_attribute, $quantity)
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->update($this->databasePrefix . 'cart_product');
+
+        $query->set('quantity', $quantity)
+            ->where('id_cart = :id_cart')
+            ->andWhere('id_product = :id_product')
+            ->andWhere('id_product_attribute = :id_product_attribute')
+            ->setParameters([
+                'id_cart' => $id_cart,
+                'id_product' => $id_product,
+                'id_product_attribute' => $id_product_attribute,
+                'quantity' => $quantity
+            ]);
+        return $query->execute();
+    }
 }

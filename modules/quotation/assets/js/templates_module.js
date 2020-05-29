@@ -429,11 +429,11 @@ export const TemplateModule = {
                                 <td class="text-left"><img src="---picture---"></td>
                                 <td id="product_name_---idProduct---_---idProductAttribute---" class="text-left">---productName---</td>
                                 <td id="product_attribute_---idProdAttr---_---idProd---" class="text-left">---productAttribute---</td>
-                                <td class="text-left">---productPrice---</td>
-                                <td class="text-left"><input type="text" id="product_quantity_on_cart" class="cart_quantity w-25" value="---productQuantity---" />
+                                <td class="product_price_cart text-left">---productPrice---</td>
+                                <td class="text-left"><input type="text" class="cart_quantity w-25" value="---productQuantity---" />
                                 <input id="token" type="hidden" name="_token" value="---token---"/>
                                 </td>
-                                <td id="total_product_price_on_cart" class="text-left">---totalProduct---</td>
+                                <td class="total_product_price_on_cart text-left">---totalProduct---</td>
                             </tr>`,
 
     quotationCart: `<tr>

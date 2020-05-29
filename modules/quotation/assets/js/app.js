@@ -540,8 +540,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                 });
                             });
                         }
-
-                        // here
                     }
                 });
             });
@@ -721,16 +719,17 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     outputProductOnCart += mod.TemplateModule.quotationCartProducts
                                         .replace(/---picture---/, picture + product.path.join('/') + '/' + product.id_image + '-small_default.jpg')
                                         .replace(/---idProduct---/, product.id_product)
-                                        .replace(/---idProd---/, product.id_product)
-                                        .replace(/---productName---/, product.product_name)
                                         .replace(/---idProductAttribute---/, product.id_product_attribute)
+                                        .replace(/---productName---/, product.product_name)
                                         .replace(/---idProdAttr---/, product.id_product_attribute)
+                                        .replace(/---idProd---/, product.id_product)
                                         .replace(/---productAttribute---/, product.attributes)
                                         .replace(/---productPrice---/, product.product_price + ' €')
                                         .replace(/---productQuantity---/, product.product_quantity)
                                         .replace(/---totalProduct---/, product.total_product + ' €')
                                         .replace(/---token---/, new URL(window.location.href).searchParams.get('_token'));
                                 }
+
 
                             outputCartTotal += mod.TemplateModule.quotationCart
                                 .replace(/---totalCart---/, cart['total_cart'] + ' €');
@@ -762,16 +761,25 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             }
                                         }
 
+                                        // On récupère l'élément input et sa valeur
+                                        let inputQty = Event.currentTarget.closest('tr').querySelector('.cart_quantity');
+                                        // On récupère le prix unitaire
+                                        let priceElement = Event.currentTarget.closest('tr').querySelector('.product_price_cart');
+                                        // On récupère le total des produit
+                                        let totalPriceElement = Event.currentTarget.closest('tr').querySelector('.total_product_price_on_cart');
+                                        inputQty.value = Event.currentTarget.value;
+                                        let currentPrice = priceElement.textContent.split(' ')[0];
+                                        let euroSymbol = priceElement.textContent.split(' ')[1];
+                                        totalPriceElement.textContent = Math.round(parseFloat(currentPrice) * parseFloat(Event.currentTarget.value) * 100)/100 + ' ' + euroSymbol;
+
                                         paramsUrlProductQuantity = '/' +
                                             document.getElementById('output-cart-products-to-use').dataset.idcart + '/' + // Get id_cart
                                             idProduct + '/' + // Get id_product
                                             idProductAttribute + '/' + // Get id_product_attribute
-                                            document.getElementById('product_quantity_on_cart').value + '?' +  // Get quantity
+                                            Event.currentTarget.value + '?' +  // Get quantity
                                             "_token=" + document.getElementById('token').value; // Get token
 
                                         let urlProductQtyPost = window.location.origin + '/adminToua/index.php/modules/quotation/admin/update/quantity/product/cart' + paramsUrlProductQuantity;
-
-                                        console.log(urlProductQtyPost);
 
                                         const getCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = cart.id_cart;
 
@@ -788,9 +796,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                          * Update total product price and total cart when product quantity change
                                          */
                                         const showProductsTotalPriceUpdateOnCart = (cart) => {
-                                            for (let product of cart['products']) {
-                                                document.getElementById('total_product_price_on_cart').innerHTML = product.total_product + ' €';
-                                            }
+
                                             document.getElementById('total_cart').innerHTML = cart['total_cart'] + ' €';
                                         };
 
@@ -858,10 +864,6 @@ if (window.location.pathname.replace(/.*(?=\/quotation\/admin\/research)/ || /.*
         form.action = _url + url;
         form.submit();
     });
-}
-
-function myFunction() {
-    confirm("Hello! I am an alert box!");
 }
 
 // any SCSS you require will output into a single scss file (app.scss in this case)

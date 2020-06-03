@@ -796,6 +796,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                          * Update total product price and total cart when product quantity change
                                          */
                                         const showProductsTotalPriceUpdateOnCart = (cart) => {
+                                            console.log(cart);
 
                                             document.getElementById('total_cart').innerHTML = cart['total_cart'] + ' €';
                                         };
@@ -809,6 +810,56 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             []
                                         );
                                     });
+                                });
+                            };
+
+                            /*
+                             * Delete product on cart
+                             */
+                            let urlProductToDelete;
+                            let paramsUrlProductToDelete = '';
+
+                            if (document.querySelectorAll('button.delete_product') !== null) {
+                                document.querySelectorAll('button.delete_product').forEach(function (link) {
+                                    link.addEventListener('click', function (Event) {
+                                        Event.preventDefault();
+                                        
+                                            let children = Event.currentTarget.closest('tr').children;
+                                            let idProductToDelete, idProductAttributeToDelete;
+
+                                            for (let i = 0; i < children.length; i++) {
+                                                let regexp = new RegExp('^(product_name_)');
+                                                if (children[i].id.match(regexp) !== null) {
+                                                    idProductToDelete = children[i].id.split('_')[2];
+                                                    idProductAttributeToDelete = children[i].id.split('_')[3];
+                                                }
+                                            }
+
+                                            paramsUrlProductToDelete = '/' +
+                                                document.getElementById('output-cart-products-to-use').dataset.idcart + '/' + // Get id_cart
+                                                idProductToDelete + '/' + // Get id_product
+                                                idProductAttributeToDelete + '?' + // Get id_product_attribute
+                                                "_token=" + document.getElementById('token').value; // Get token
+
+                                            console.log(paramsUrlProductToDelete);
+
+                                            urlProductToDelete = window.location.origin + '/adminToua/index.php/modules/quotation/admin/delete/product/cart' + paramsUrlProductToDelete;
+
+                                            console.log(urlProductToDelete);
+
+                                            const getUpdateCart = (cart) => {
+                                        };
+
+                                        QuotationModule.getData(
+                                            urlProductToDelete,
+                                            getUpdateCart,
+                                            null,
+                                            'POST',
+                                            true,
+                                            []
+                                        );
+
+                                    })
                                 });
                             };
                         };

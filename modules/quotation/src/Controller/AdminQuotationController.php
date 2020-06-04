@@ -647,7 +647,13 @@ class AdminQuotationController extends FrameworkBundleAdminController
     {
         $quotationRepository = $this->get('quotation_repository');
         $product = $quotationRepository->deleteProductOnCart($id_cart, $id_product, $id_product_attribute);
+        $cart = $quotationRepository->findOneCartById($id_cart);
 
-        return new JsonResponse("The product " . $id_product. " on the cart ". $id_cart . " is delete");
+        if ($cart['id_cart']) {
+            $cart['total_cart'] = number_format($cart['total_cart'], 2);
+        }
+
+        return new JsonResponse(json_encode($cart), 200, [], true);
+//        return new JsonResponse("The product " . $id_product. " on the cart ". $id_cart . " is delete");
     }
 }

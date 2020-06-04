@@ -432,7 +432,7 @@ export const TemplateModule = {
                                 <td class="product_price_cart text-left">---productPrice---</td>
                                 <td class="text-left">
                                 <div class="input-group fixed-width-md">
-                                <input type="text" class="cart_quantity w-25" value="---productQuantity---" />
+                                <input type="number" class="cart_quantity w-25" min="1" value="---productQuantity---" />
                                 <input id="token" type="hidden" name="_token" value="---token---"/>
                                 <button class="delete_product btn btn-light" style="height: 35px"><i class="material-icons">clear</i></button>
                                 </div> 

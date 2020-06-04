@@ -419,7 +419,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                                         for (let product of cart['products']) {
                                                             outputCartProductsToUse += mod.TemplateModule.quotationCartProducts
-                                                                .replace(/---picture---/, picture + product.path.join('/') + '/' + product.id_image + '-small_default.jpg')
+                                                                .replace(/---picture---/, picture + product.path.join('/') + '/' + product.id_image + '-cart_default.jpg')
                                                                 .replace(/---productName---/, product.product_name)
                                                                 .replace(/---productAttribute---/, product.attributes)
                                                                 .replace(/---productPrice---/, product.product_price + ' €')
@@ -715,20 +715,20 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                             let outputCartTotal = '';
                             let outputProductOnCart = '';
 
-                                for (let product of cart['products']) {
-                                    outputProductOnCart += mod.TemplateModule.quotationCartProducts
-                                        .replace(/---picture---/, picture + product.path.join('/') + '/' + product.id_image + '-small_default.jpg')
-                                        .replace(/---idProduct---/, product.id_product)
-                                        .replace(/---idProductAttribute---/, product.id_product_attribute)
-                                        .replace(/---productName---/, product.product_name)
-                                        .replace(/---idProdAttr---/, product.id_product_attribute)
-                                        .replace(/---idProd---/, product.id_product)
-                                        .replace(/---productAttribute---/, product.attributes)
-                                        .replace(/---productPrice---/, product.product_price + ' €')
-                                        .replace(/---productQuantity---/, product.product_quantity)
-                                        .replace(/---totalProduct---/, product.total_product + ' €')
-                                        .replace(/---token---/, new URL(window.location.href).searchParams.get('_token'));
-                                }
+                            for (let product of cart['products']) {
+                                outputProductOnCart += mod.TemplateModule.quotationCartProducts
+                                    .replace(/---picture---/, picture + product.path.join('/') + '/' + product.id_image + '-cart_default.jpg')
+                                    .replace(/---idProduct---/, product.id_product)
+                                    .replace(/---idProductAttribute---/, product.id_product_attribute)
+                                    .replace(/---productName---/, product.product_name)
+                                    .replace(/---idProdAttr---/, product.id_product_attribute)
+                                    .replace(/---idProd---/, product.id_product)
+                                    .replace(/---productAttribute---/, product.attributes)
+                                    .replace(/---productPrice---/, product.product_price + ' €')
+                                    .replace(/---productQuantity---/, product.product_quantity)
+                                    .replace(/---totalProduct---/, product.total_product + ' €')
+                                    .replace(/---token---/, new URL(window.location.href).searchParams.get('_token'));
+                            }
 
 
                             outputCartTotal += mod.TemplateModule.quotationCart
@@ -753,6 +753,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         let children = Event.currentTarget.closest('tr').children;
                                         let idProduct, idProductAttribute;
 
+                                        // On récupère l'id_product et l'id_product_attribute
                                         for (let i = 0; i < children.length; i++) {
                                             let regexp = new RegExp('^(product_name_)');
                                             if (children[i].id.match(regexp) !== null) {
@@ -770,7 +771,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         inputQty.value = Event.currentTarget.value;
                                         let currentPrice = priceElement.textContent.split(' ')[0];
                                         let euroSymbol = priceElement.textContent.split(' ')[1];
-                                        totalPriceElement.textContent = Math.round(parseFloat(currentPrice) * parseFloat(Event.currentTarget.value) * 100)/100 + ' ' + euroSymbol;
+                                        totalPriceElement.textContent = Math.round(parseFloat(currentPrice) * parseFloat(Event.currentTarget.value) * 100) / 100 + ' ' + euroSymbol;
 
                                         paramsUrlProductQuantity = '/' +
                                             document.getElementById('output-cart-products-to-use').dataset.idcart + '/' + // Get id_cart
@@ -796,7 +797,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                          * Update total product price and total cart when product quantity change
                                          */
                                         const showProductsTotalPriceUpdateOnCart = (cart) => {
-                                            console.log(cart);
 
                                             document.getElementById('total_cart').innerHTML = cart['total_cart'] + ' €';
                                         };
@@ -811,7 +811,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         );
                                     });
                                 });
-                            };
+                            }
+                            ;
 
                             /*
                              * Delete product on cart
@@ -823,31 +824,32 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                 document.querySelectorAll('button.delete_product').forEach(function (link) {
                                     link.addEventListener('click', function (Event) {
                                         Event.preventDefault();
-                                        
-                                            let children = Event.currentTarget.closest('tr').children;
-                                            let idProductToDelete, idProductAttributeToDelete;
 
-                                            for (let i = 0; i < children.length; i++) {
-                                                let regexp = new RegExp('^(product_name_)');
-                                                if (children[i].id.match(regexp) !== null) {
-                                                    idProductToDelete = children[i].id.split('_')[2];
-                                                    idProductAttributeToDelete = children[i].id.split('_')[3];
-                                                }
+                                        let children = Event.currentTarget.closest('tr').children;
+                                        let idProductToDelete, idProductAttributeToDelete;
+
+                                        for (let i = 0; i < children.length; i++) {
+                                            let regexp = new RegExp('^(product_name_)');
+                                            if (children[i].id.match(regexp) !== null) {
+                                                idProductToDelete = children[i].id.split('_')[2];
+                                                idProductAttributeToDelete = children[i].id.split('_')[3];
                                             }
+                                        }
 
-                                            paramsUrlProductToDelete = '/' +
-                                                document.getElementById('output-cart-products-to-use').dataset.idcart + '/' + // Get id_cart
-                                                idProductToDelete + '/' + // Get id_product
-                                                idProductAttributeToDelete + '?' + // Get id_product_attribute
-                                                "_token=" + document.getElementById('token').value; // Get token
+                                        paramsUrlProductToDelete = '/' +
+                                            document.getElementById('output-cart-products-to-use').dataset.idcart + '/' + // Get id_cart
+                                            idProductToDelete + '/' + // Get id_product
+                                            idProductAttributeToDelete + '?' + // Get id_product_attribute
+                                            "_token=" + document.getElementById('token').value; // Get token
 
-                                            console.log(paramsUrlProductToDelete);
+                                        urlProductToDelete = window.location.origin + '/adminToua/index.php/modules/quotation/admin/delete/product/cart' + paramsUrlProductToDelete;
 
-                                            urlProductToDelete = window.location.origin + '/adminToua/index.php/modules/quotation/admin/delete/product/cart' + paramsUrlProductToDelete;
+                                        // On ajoute à l'élément tr le plus proche la class='d-none'
+                                        Event.currentTarget.closest('tr').classList.add('d-none');
 
-                                            console.log(urlProductToDelete);
-
-                                            const getUpdateCart = (cart) => {
+                                        // On récupère le total_cart à jour
+                                        const getUpdateCart = (cart) => {
+                                            document.getElementById('total_cart').innerHTML = cart['total_cart'] + ' €';
                                         };
 
                                         QuotationModule.getData(
@@ -861,7 +863,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                     })
                                 });
-                            };
+                            }
+                            ;
                         };
 
                         QuotationModule.getData(

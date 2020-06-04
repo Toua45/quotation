@@ -133,3 +133,15 @@ quotation_admin_update_product_quantity_cart:
     _controller: 'Quotation\Controller\AdminQuotationController::updateQuantityProductCart'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
+
+quotation_admin_delete_product_cart:
+  path: quotation/admin/delete/product/cart/{id_cart}/{id_product}/{id_product_attribute}
+  requirements:
+    id_cart: '\d+'
+    id_product: '\d+'
+    id_product_attribute: '\d+'
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::deleteProductCart'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'

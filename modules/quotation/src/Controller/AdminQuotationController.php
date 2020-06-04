@@ -654,6 +654,5 @@ class AdminQuotationController extends FrameworkBundleAdminController
         }
 
         return new JsonResponse(json_encode($cart), 200, [], true);
-//        return new JsonResponse("The product " . $id_product. " on the cart ". $id_cart . " is delete");
     }
 }

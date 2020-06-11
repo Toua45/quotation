@@ -19,6 +19,7 @@
         padding-top: 12px;
         width: 25%;
     }
+
     .quotation_number {
         text-decoration: underline;
         font-weight: 800;
@@ -32,6 +33,7 @@
         margin-top: 170px;
         width: 100%;
     }
+
     .siren {
         text-decoration: underline;
     }
@@ -46,6 +48,7 @@
         padding-top: 10px;
         width: 100%;
     }
+
     .customer_address {
         font-size: 20px;
         text-decoration: underline;
@@ -55,16 +58,19 @@
     table {
         border-collapse: collapse;
     }
+
     td, th {
         border: 1px solid black;
         padding: 0.3rem;
         text-align: center;
     }
+
     .quotation_tab {
         text-align: left;
         margin-top: 50px;
         width: 100%;
     }
+
     .head_tab {
         text-align: center;
         font-size: 18px;
@@ -153,13 +159,10 @@
         <span class="font-weight-bold amount_reduction">Remise :</span> {{ quotation.reduction_amount|number_format(2) }}
         €{% endif %}</p>
     <p{% if quotation.reduction_percent == 0.00 %} style="display: none"></p>
-{% else %}
+    {% else %}
     <p>
         <span class="font-weight-bold percentage_reduction">Remise : </span> {{ quotation.reduction_percent|number_format(2) }}
         %{% endif %}</p>
-    {{ dump(reduction_percent_calculation) }}
-    {{ dump(total_product_with_reduction|number_format(2)) }}
-    {{ dump(tva_reduction_amount|number_format(2)) }}
     <p><span class="font-weight-bold">TVA :</span> {{ price_tva|number_format(2) }} €</p>
     <p><span class="font-weight-bold">Montant TTC :</span> {{ total_ttc|number_format(2) }} €</p>
 </div>
@@ -180,4 +183,5 @@ if (isset($pdf) ) {
         }
     ');
 }
+
 </script>

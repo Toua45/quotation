@@ -1,5 +1,3 @@
-<!--  Partie CSS  -->
-
 <style>
 
     /* Logo de l'entreprise */
@@ -9,7 +7,6 @@
         max-height: 60%;
         float: left;
     }
-
 
     /* Référence du devis et date */
     .quotation_block {
@@ -22,13 +19,11 @@
         padding-top: 12px;
         width: 25%;
     }
-
     .quotation_number {
         text-decoration: underline;
         font-weight: 800;
         font-size: 18px;
     }
-
 
     /* Coordonnées de l'entreprise */
     .company_block {
@@ -37,11 +32,9 @@
         margin-top: 170px;
         width: 100%;
     }
-
     .siren {
         text-decoration: underline;
     }
-
 
     /* Coordonnées du client */
     .customer_block {
@@ -53,36 +46,30 @@
         padding-top: 10px;
         width: 100%;
     }
-
     .customer_address {
         font-size: 20px;
         text-decoration: underline;
     }
 
-
     /* Tableau devis */
     table {
         border-collapse: collapse;
     }
-
     td, th {
         border: 1px solid black;
         padding: 0.3rem;
         text-align: center;
     }
-
     .quotation_tab {
         text-align: left;
         margin-top: 50px;
         width: 100%;
     }
-
     .head_tab {
         text-align: center;
         font-size: 18px;
         background-color: #D3D3D3;
     }
-
 
     /* Récapitulatif total du devis */
     .total_quotation {
@@ -101,7 +88,6 @@
 </style>
 
 <!-- Partie HTML -->
-
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
@@ -134,13 +120,13 @@
 {% endfor %}
 
 <table class="quotation_tab">
-
     <thead class="head_tab">
     <tr>
         <th class="description w-100">Description</th>
-        <th class="text-center w-25">Prix unitaire</th>
+        <th class="text-center" style="width: 27%;">Prix unitaire HT</th>
         <th class="w-25">Quantité</th>
-        <th class="w-25">Montant</th>
+        <th class="w-25">Montant HT</th>
+        <th class="w-25">Réduction</th>
     </tr>
     </thead>
 
@@ -152,6 +138,7 @@
             <td>{{ product.product_price|number_format(2) }} €</td>
             <td>{{ product.product_quantity }}</td>
             <td>{{ product.total_product|number_format(2) }} €</td>
+            <td>{{ product.reduction|number_format(2) }} €</td>
         </tr>
     {% endfor %}
     </tbody>
@@ -159,16 +146,21 @@
 </table>
 
 <div class="total_quotation">
-    <p><span class="font-weight-bold">Montant HT :</span> {{ quotation.total_product_price|number_format(2) }} €</p>
-    <p><span class="font-weight-bold">Remise :</span> {{ quotation.reduction_amount|number_format(2) }} €</p>
-    <p><span class="font-weight-bold">Frais de port :</span> {{ quotation.total_shipping|number_format(2) }} €</p>
-
-    <!-- Calcul montant HT -->
-    {% set total_price_without_tva =  quotation.total_product_price  -  quotation.reduction_amount +  quotation.total_shipping %}
+    <p><span class="font-weight-bold">Montant HT :</span> {{ total_product_price|number_format(2) }} €</p>
+    <p {% if quotation.reduction_amount == 0.00 %} style="display: none"></p>
+    {% else %}
+    <p>
+        <span class="font-weight-bold amount_reduction">Remise :</span> {{ quotation.reduction_amount|number_format(2) }}
+        €{% endif %}</p>
+    <p{% if quotation.reduction_percent == 0.00 %} style="display: none"></p>
+{% else %}
+    <p>
+        <span class="font-weight-bold percentage_reduction">Remise : </span> {{ quotation.reduction_percent|number_format(2) }}
+        %{% endif %}</p>
+    {{ dump(reduction_percent_calculation) }}
+    {{ dump(total_product_with_reduction|number_format(2)) }}
+    {{ dump(tva_reduction_amount|number_format(2)) }}
     <p><span class="font-weight-bold">TVA :</span> {{ price_tva|number_format(2) }} €</p>
-
-    <!-- Calcul montant TTC -->
-    {% set total_ttc = total_price_without_tva + price_tva %}
     <p><span class="font-weight-bold">Montant TTC :</span> {{ total_ttc|number_format(2) }} €</p>
 </div>
 

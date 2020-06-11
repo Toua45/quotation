@@ -531,7 +531,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $id_customization = 0;
 
         // create cart
-        $cart = $quotationRepository->addNewCart(
+        $newCart = $quotationRepository->addNewCart(
             $idShopGroup,
             $idShop,
             $idLang,

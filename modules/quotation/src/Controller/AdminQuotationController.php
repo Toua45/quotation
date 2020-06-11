@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class AdminQuotationController extends FrameworkBundleAdminController
 {
+    const DEFAULT_PERCENTAGE_REDUCTION_AMOUNT = 20;
     /**
      * Fonction privée qui récupère toutes les données à partir du tableau 'quotation_search'
      */
@@ -70,23 +71,57 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $quotation['addresses'] = $quotationRepository->findAddressesByCustomer($quotation['id_customer']);
             $quotation['products'] = $quotationRepository->findProductsCustomerByCarts($quotation['id_cart']);
         }
+        // Calcul total par produit avec les réductions associées (Montant HT)
+        $total_product_price = 0;
+        for ($i = 0; $i < count($quotation['products']); $i++) {
+            $total_product_price += $quotation['products'][$i]['total_product'] - $quotation['products'][$i]['reduction'];
+        }
 
-        // Calcul de la TVA à partir de chaque produit, de la réduction et des frais de port
+        // Calcul de la réduction si celle-ci est affichée en pourcentage
+        $reduction_percent_calculation = $quotation['reduction_percent'] * $total_product_price / 100;
+
+        // Calcul de la TVA sur les frais de réduction
+        $tva_reduction_amount = 0;
+        if ($quotation['reduction_tax'] == false) {
+            $tva_reduction_amount = $quotation['reduction_amount'] * self::DEFAULT_PERCENTAGE_REDUCTION_AMOUNT / 100;
+        }
+
+        // Calcul de la TVA à partir de chaque produit
         $price_tva = 0;
         for ($i = 0; $i < count($quotation['products']); $i++) {
-            $price_tva += $quotation['products'][$i]['total_product'] * $quotation['products'][$i]['rate'] / 100;
+            $price_tva += ($quotation['products'][$i]['total_product'] - $quotation['products'][$i]['reduction']) * $quotation['products'][$i]['rate'] / 100;
         }
-        $price_tva -= $quotation['tva_reduction_amount'];
-        $price_tva += $quotation['tva_shipping'];
+
+        // Premier résultat avant addition de la TVA
+        $total_product_with_reduction = $total_product_price;
+        if ($quotation['reduction_amount'] != 0.00) {
+            $total_product_with_reduction = $total_product_price - $quotation['reduction_amount'];
+        } elseif ($quotation['reduction_percent'] != 0.00) {
+            $total_product_with_reduction = $total_product_price - $reduction_percent_calculation;
+        }
+
+        // Calcul total de la TVA
+        $price_tva -= $tva_reduction_amount;
+
+        // Calcul total TTC
+        $total_ttc = $total_product_with_reduction + $price_tva;
+
 
         $quotationPdf = new QuotationPdf();
 
         // Nom du fichier pdf qui comprend le nom et prénom du client et le numéro de devis
         $filename = $quotation['firstname'] . ' ' . $filename = $quotation['lastname'] . '  - Référence n° ' . $filename = $quotation['reference'];
+
         $html = $this->renderView('@Modules/quotation/templates/admin/pdf/pdf_quotation.html.twig', [
             'quotation' => $quotation,
-            'price_tva' => $price_tva
+            'total_product_price' => $total_product_price,
+            'reduction_percent_calculation' => $reduction_percent_calculation,
+            'tva_reduction_amount' => $tva_reduction_amount,
+            'total_product_with_reduction' => $total_product_with_reduction,
+            'price_tva' => $price_tva,
+            'total_ttc' => $total_ttc
         ]);
+
         $quotationPdf->createPDF($html, $filename);
     }
 
@@ -259,7 +294,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
      * @param $id_customer
      * @return JsonResponse
      */
-    public function showCustomerDetails(Request $request, $id_customer)
+    public function showCustomerDetails(Request $request, $id_customer, SessionInterface $session)
     {
         $quotationRepository = $this->get('quotation_repository');
         $customer = $quotationRepository->getCustomerInfoById($id_customer);
@@ -353,8 +388,9 @@ class AdminQuotationController extends FrameworkBundleAdminController
             'customer' => $customer,
             'carts' => $carts,
             'orders' => $orders,
+            'response' => $response,
+            'id_last_cart' => $idLastCart = $quotationRepository->findLastCartByCustomerId()['id_cart'] + 1,  // Permet de récupérer le dernier cart d'un customer que l'on récupère ensuite en js via le json
             'addresses' => $addresses,
-            'response' => $response
         ]), 200, [], true);
     }
 
@@ -386,12 +422,31 @@ class AdminQuotationController extends FrameworkBundleAdminController
                     $cart['products'][$j]['product_price'] = number_format($cart['products'][$j]['product_price'], 2);
                     $cart['products'][$j]['product_quantity'];
                     $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
-                    $cart['products'][$j]['id_image'];
+                    // On récupère les images liées aux produits
+                    $cart['products'][$j]['attributes'] = $quotationRepository->findAttributesByProduct($cart['products'][$j]['id_product'],
+                        $cart['products'][$j]['id_product_attribute']);
+                    $cart['products'][$j]['id_image'] = $quotationRepository->findPicturesByAttributesProduct($cart['products'][$j]['id_product'],
+                        $cart['products'][$j]['id_product_attribute'])['id_image'];
+                    if ($cart['products'][$j]['id_image'] == '0' || $cart['products'][$j]['id_product_attribute'] == '0') {
+                        $cart['products'][$j]['id_image'] = $quotationRepository->findPicturesByProduct($cart['products'][$j]['id_product'])['id_image'];
+                    }
+
+                    // Pour créer le path, on va séparer l'id_image s'il dispose d'un nombre à 2 chiffres sinon on récupère l'id_image
                     $cart['products'][$j]['path'] = $cart['products'][$j]['id_image'];
                     if ($cart['products'][$j]['path']) {
                         $cart['products'][$j]['path'] = str_split($cart['products'][$j]['path']);
                     }
                 }
+            }
+        }
+
+        for ($k = 0; $k < count($cart['products']); $k++) {
+            $attributes = '';
+            if (isset($cart['products'][$k]['attributes'])) {
+                for ($l = 0; $l < count($cart['products'][$k]['attributes']); $l++) {
+                    $attributes .= $cart['products'][$k]['attributes'][$l]['attribute_details'] . ' - ';
+                }
+                $cart['products'][$k]['attributes'] = rtrim($attributes, ' - ');
             }
         }
 
@@ -445,6 +500,8 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $productWithoutAttributes = [];
 
         for ($i = 0; $i < count($product); $i++) {
+            $product[$i]['tax_amount'] = $product[$i]['product_price'] * $product[$i]['rate'] / 100;
+            $product[$i]['price_product_ttc'] = $product[$i]['product_price'] + $product[$i]['tax_amount'];
             if ($product[$i]['id_product_attribute']) {
                 $product[$i]['attributes'] = $quotationRepository->findAttributesByProduct($id_product, $product[$i]['id_product_attribute']);
             }
@@ -464,13 +521,104 @@ class AdminQuotationController extends FrameworkBundleAdminController
             if (isset($product[$i]['attributes'])) {
                 for ($j = 0; $j < count($product[$i]['attributes']); $j++) {
                     $attributes .= $product[$i]['attributes'][$j]['attribute_details'] . ' - ';
-                    $attributesDetails = $attributes . $product[$i]['product_price'];
+                    $attributesDetails = $attributes . $product[$i]['product_price'] . ' €';
                 }
                 $product[$i]['attributes'] = rtrim($attributesDetails, ' - ');
             }
         }
 
         return new JsonResponse(json_encode($product), 200, [], true);
+    }
+
+    /**
+     * Duplicate cart
+     * @param $id_customer
+     * @param $id_cart
+     * @param $new_id_cart
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function duplicateCart($id_customer, $id_cart, $new_id_cart, SessionInterface $session)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $customer = $quotationRepository->getCustomerInfoById($id_customer);
+
+        // On récupère les adresses du client
+        if ($customer['id_customer']) {
+            $customer['addresses'] = $quotationRepository->findAddressesByCustomer($id_customer);
+            // Si le client ne dispose pas d'adresse, on affecte l'id_adress à 0
+            if ($customer['addresses'] === []) {
+                $customerIdAddress['id_address'] = $customer['addresses'] === [] ? '0' : $customer['addresses'];
+                array_push($customer['addresses'], $customerIdAddress);
+            }
+        }
+
+        $idShopGroup = $this->getContext()->shop->id_shop_group;
+        $idShop = $this->getContextShopId();
+        $idLang = $this->getContext()->language->id;
+        $idAddressDelivery = $customer['addresses'][0]['id_address'];
+        $idAddressInvoice = $customer['addresses'][0]['id_address'];
+        $idCurrency = $this->getContext()->currency->id;
+        $idGuest = $id_customer;
+        $secureKey = $customer['secure_key'];
+        $dateAdd = date_format(new \DateTime('now'), 'Y-m-d H:i:s');
+        $dateUpd = date_format(new \DateTime('now'), 'Y-m-d H:i:s');
+        $id_customization = 0;
+
+        // create cart
+        $newCart = $quotationRepository->addNewCart(
+            $idShopGroup,
+            $idShop,
+            $idLang,
+            $idAddressDelivery,
+            $idAddressInvoice,
+            $idCurrency,
+            $id_customer,
+            $idGuest,
+            $secureKey,
+            $dateAdd,
+            $dateUpd,
+            1,
+            '',
+            0,
+            0,
+            0,
+            0
+        );
+
+        $cart = $quotationRepository->findOneCartById($id_cart);
+
+        if ($cart['id_cart']) {
+            $cart['products'] = $quotationRepository->findProductsCustomerByCarts($cart['id_cart']);
+        }
+
+        $session->set('cart',
+            [
+                'id_cart' => $new_id_cart,
+                'id_customer' => $id_customer,
+                'products' => $quotationRepository->findProductsCustomerByCarts($cart['id_cart'])
+            ]
+        );
+
+        for ($i = 0; $i < count($session->get('cart')['products']); $i++) {
+            $quotationRepository->insertProductsToCart(
+                $session->get('cart')['id_cart'],
+                $session->get('cart')['products'][$i]['id_product'],
+                $idAddressDelivery,
+                $idShop,
+                $session->get('cart')['products'][$i]['id_product_attribute'],
+                $id_customization,
+                $session->get('cart')['products'][$i]['product_quantity'],
+                $dateAdd
+            );
+        }
+
+        return new JsonResponse(json_encode([
+            'customer' => $customer,
+            'cart' => $cart,
+            'session' => $session->get('cart')
+        ]), 200, [], true);
+
     }
 
     /**
@@ -508,10 +656,24 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $dateAdd = date_format(new \DateTime('now'), 'Y-m-d H:i:s');
         $dateUpd = date_format(new \DateTime('now'), 'Y-m-d H:i:s');
         $id_customization = 0;
-        $cartByCustomer = [];
 
-        if ($id_cart == 0) {
-            // On crée ici un nouveau panier
+        // On utilise la session pour stocker les éléments
+        if ($session->get('cart')['id_customer'] === $id_customer) {
+            $newProduct = [
+                'id_product' => $id_product,
+                'id_product_attribute' => $id_product_attribute,
+                'quantity' => $quantity
+            ];
+
+            $session->set('cart',
+                [
+                    'id_cart' => $session->get('cart')['id_cart'],
+                    'id_customer' => $session->get('cart')['id_customer'],
+                    'product' => $newProduct
+                ]
+            );
+        } else {
+            // create cart
             $cart = $quotationRepository->addNewCart(
                 $idShopGroup,
                 $idShop,
@@ -532,14 +694,9 @@ class AdminQuotationController extends FrameworkBundleAdminController
                 0
             );
 
-            // On recherche le panier venue de créé
-            $currentCart = $quotationRepository->findLastCartByCustomerId($id_customer);
-            // Get id of customer's last cart
-            $currentCartId = $currentCart['id_cart'];
-            // On va utiliser les sessions pour stocker les données
             $session->set('cart',
                 [
-                    'id_cart' => $currentCartId,
+                    'id_cart' => $id_cart,
                     'id_customer' => $id_customer,
                     'product' => [
                         'id_product' => $id_product,
@@ -548,7 +705,16 @@ class AdminQuotationController extends FrameworkBundleAdminController
                     ]
                 ]
             );
-            // Une fois récupéré, on insert les données récupérées la première fois en base de données
+        }
+
+        // On récupère le dernier cart du client
+        $products = $quotationRepository->findProductsCustomerByCarts($session->get('cart')['id_cart']);
+        // On va crée un tableau pour récupérer tous les id_product
+        $productsID = array_map(function ($product) {
+            return $product['id_product'];
+        }, $products);
+        //On vérifie si l'id_product existe dans le tableau, s'il n'existe pas, on insert les données en base de données
+        if (!in_array($session->get('cart')['product']['id_product'], $productsID)) {
             $quotationRepository->insertProductsToCart(
                 $session->get('cart')['id_cart'],
                 $session->get('cart')['product']['id_product'],
@@ -559,41 +725,60 @@ class AdminQuotationController extends FrameworkBundleAdminController
                 $session->get('cart')['product']['quantity'],
                 $dateAdd
             );
-        } else {
-            // On sort de la condition puisque le panier est différent de 0, on créé un nouveau tableau pour récupérer le nouveau produit
-            $newProduct = [
-                'id_product' => $id_product,
-                'id_product_attribute' => $id_product_attribute,
-                'quantity' => $quantity
-            ];
-            // On va utiliser les sessions pour stocker les nouvelles données
-            $session->set('cart',
-                [
-                    'id_cart' => $session->get('cart')['id_cart'],
-                    'id_customer' => $session->get('cart')['id_customer'],
-                    'product' => $newProduct
-                ]
-            );
-            // On récupère le dernier cart du client
-            $products = $quotationRepository->findProductsCustomerByCarts($session->get('cart')['id_cart']);
-            // On va crée un tableau pour récupérer tous les id_product
-            $productsID = array_map(function ($product) {
-                return $product['id_product'];
-            }, $products);
-            // On vérifie si l'id_product existe dans le tableau, s'il n'existe pas, on insert les données en base de données
-            if (!in_array($session->get('cart')['product']['id_product'], $productsID)) {
-                $quotationRepository->insertProductsToCart(
-                    $session->get('cart')['id_cart'],
-                    $session->get('cart')['product']['id_product'],
-                    $idAddressDelivery,
-                    $idShop,
-                    $session->get('cart')['product']['id_product_attribute'],
-                    $id_customization,
-                    $session->get('cart')['product']['quantity'],
-                    $dateAdd
-                );
+        }
+
+        return new JsonResponse(json_encode($session->get('cart')), 200, [], true);
+    }
+
+    /**
+     * Update product quantity on cart
+     * @param $id_cart
+     * @param $id_product
+     * @param $id_product_attribute
+     * @param $quantity
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function updateQuantityProductCart($id_cart, $id_product, $id_product_attribute, $quantity)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $productQty = $quotationRepository->updateQuantityProductOnCart($id_cart, $id_product, $id_product_attribute, $quantity);
+        $cart = $quotationRepository->findOneCartById($id_cart);
+
+        if ($cart['id_cart']) {
+            $cart['products'] = $quotationRepository->findProductsCustomerByCarts($cart['id_cart']);
+        }
+
+        for ($j = 0; $j < count($cart['products']); $j++) {
+            if ($cart['id_cart']) {
+                $cart['total_cart'] = number_format($cart['total_cart'], 2);
+                if ($cart['products']) {
+                    $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
+                }
             }
         }
-        return new JsonResponse(json_encode($session->get('cart')), 200, [], true);
+
+        return new JsonResponse(json_encode($cart), 200, [], true);
+    }
+
+    /**
+     * Delete product on cart
+     * @param $id_cart
+     * @param $id_product
+     * @param $id_product_attribute
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function deleteProductCart($id_cart, $id_product, $id_product_attribute)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $product = $quotationRepository->deleteProductOnCart($id_cart, $id_product, $id_product_attribute);
+        $cart = $quotationRepository->findOneCartById($id_cart);
+
+        if ($cart['id_cart']) {
+            $cart['total_cart'] = number_format($cart['total_cart'], 2);
+        }
+
+        return new JsonResponse(json_encode($cart), 200, [], true);
     }
 }

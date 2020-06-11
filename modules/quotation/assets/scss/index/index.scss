@@ -130,7 +130,7 @@
     svg {
       height: $svg-size;
       width: $svg-size;
-      margin-top: 1px;
+      margin-top: 1.70px;
     }
 
     circle, path {
@@ -169,4 +169,16 @@
   .group-action {
     width: max-content;
   }
+
+  a, .pagination_number {
+    color: $bg-color;
+
+    :hover {
+      color: $bg-color
+    }
+    :focus {
+      box-shadow:none;
+    }
+  }
+
 }

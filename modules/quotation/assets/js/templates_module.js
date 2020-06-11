@@ -222,7 +222,7 @@ export const TemplateModule = {
                         <button class="btn btn-light d-flex" data-toggle="modal" data-target="#showCartModal_---id-cart-modal---">
                             <span uk-icon="icon: search" class="mr-1 search-icon"></span> Details
                         </button>
-                        <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-light d-flex ml-3">
+                        <a href="---link-show-customer-cart-use---"  data-idCustomer="---idCustomer---"  data-idcart="---id---" data-idnewcart="---idNewCart---" data-token="---token---" class="customer-cart-to-use btn btn-light d-flex ml-3">
                             <span uk-icon="icon: arrow-right" class="mr-1"></span> Utiliser
                         </a>
                     </td>         
@@ -293,7 +293,7 @@ export const TemplateModule = {
                 <button class="btn btn-light d-flex" data-toggle="modal" data-target="#showOrderModal_---id-order-modal---">
                      <span uk-icon="icon: search" class="mr-1 search-icon"></span> Details
                 </button>
-                <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-light d-flex ml-3">
+                <a href="---link-show-customer-cart-use---" data-idCustomer="---idCustomer---"  data-idcart="---id---" data-idnewcart="---idNewCart---" data-token="---token---" class="customer-cart-to-use btn btn-light d-flex ml-3">
                     <span uk-icon="icon: arrow-right" class="mr-1"></span> Utiliser
                 </a>
             </td>
@@ -369,7 +369,7 @@ export const TemplateModule = {
                 <button class="btn btn-light d-flex" data-toggle="modal" data-target="#showQuotationModal_---id-quotation-modal---">
                     <span uk-icon="icon: search" class="mr-1 search-icon"></span> Details
                 </button>
-                <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-light d-flex ml-3">
+                <a href="---link-show-customer-cart-use---" data-idCustomer="---idCustomer---"  data-idcart="---id---" data-idnewcart="---idNewCart---" data-token="---token---" class="customer-cart-to-use btn btn-light d-flex ml-3">
                     <span uk-icon="icon: arrow-right" class="mr-1"></span> Utiliser
                 </a>
             </td>
@@ -427,15 +427,22 @@ export const TemplateModule = {
 
     quotationCartProducts: `<tr>
                                 <td class="text-left"><img src="---picture---"></td>
-                                <td class="text-left">---productName---</td>
-                                <td class="text-left">---productPrice---</td>
-                                <td class="text-left">---productQuantity---</td>
-                                <td class="text-left">---totalProduct---</td>
+                                <td id="product_name_---idProduct---_---idProductAttribute---" class="text-left">---productName---</td>
+                                <td id="product_attribute_---idProdAttr---_---idProd---" class="text-left">---productAttribute---</td>
+                                <td class="product_price_cart text-left">---productPrice---</td>
+                                <td class="text-left">
+                                <div class="input-group fixed-width-md">
+                                <input type="number" class="cart_quantity w-25" min="1" value="---productQuantity---" />
+                                <input id="token" type="hidden" name="_token" value="---token---"/>
+                                <button class="delete_product btn btn-light" style="height: 35px"><i class="material-icons">clear</i></button>
+                                </div> 
+                                </td>
+                                <td class="total_product_price_on_cart text-left">---totalProduct---</td>
                             </tr>`,
 
     quotationCart: `<tr>
-                        <th colspan="3" class="text-left">Total produits</th>
-                        <th class="text-left">---totalCart---</th>
+                        <th colspan="5" class="text-left">Total produits</th>
+                        <th id="total_cart" class="text-left">---totalCart---</th>
                     </tr>`,
 
     productQuantity: `---quantityInStock---`,

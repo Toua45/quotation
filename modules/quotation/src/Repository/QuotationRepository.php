@@ -219,9 +219,7 @@ class QuotationRepository
             ->addSelect('q.*', 'c.firstname', 'c.lastname')
             ->addSelect('SUM(p.price * cp.quantity) AS total_product_price')
             ->addSelect('o.total_shipping')
-            ->addSelect('o.total_shipping * 20 / 100 AS tva_shipping')
-            ->addSelect('cr.reduction_amount')
-            ->addSelect('cr.reduction_amount * 20 / 100 AS tva_reduction_amount')
+            ->addSelect('cr.reduction_amount', 'cr.reduction_percent', 'cr.reduction_tax')
             ->from($this->databasePrefix . 'quotation', 'q')
             ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
             ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart = cp.id_cart')
@@ -277,24 +275,25 @@ class QuotationRepository
     {
         $expr = $this->connection->getExpressionBuilder();
 
-        return $this->connection->createQueryBuilder()
+        $query = $this->connection->createQueryBuilder()
             ->addSelect('p.id_product', 'pl.name AS product_name', 'p.reference AS product_reference', 'p.price AS product_price', 'cp.quantity AS product_quantity')
             ->addSelect('p.price * cp.quantity AS total_product')
-            ->addSelect('i.id_image')
             ->addSelect('t.rate')
+            ->addSelect('cp.id_product_attribute')
+            ->addSelect('sp.reduction')
             ->from($this->databasePrefix . 'product', 'p')
             ->join('p', $this->databasePrefix . 'cart_product', 'cp', 'cp.id_product = p.id_product')
+            ->leftJoin('p', $this->databasePrefix . 'specific_price', 'sp', 'sp.id_product = p.id_product')
             ->join('cp', $this->databasePrefix . 'cart', 'ca', 'cp.id_cart = ca.id_cart')
             ->join('ca', $this->databasePrefix . 'customer', 'c', 'ca.id_customer = c.id_customer')
             ->join('p', $this->databasePrefix . 'product_lang', 'pl', 'p.id_product = pl.id_product')
-            ->join('p', $this->databasePrefix . 'image', 'i', 'p.id_product = i.id_product')
             ->join('p', $this->databasePrefix . 'tax_rule', 'tr', 'p.id_tax_rules_group = tr.id_tax_rules_group')
             ->join('tr', $this->databasePrefix . 'tax', 't', 'tr.id_tax = t.id_tax')
             ->where($expr->eq('ca.id_cart', ':id_cart'))
             ->andWhere('tr.id_country = 8')
-            ->setParameter('id_cart', $idCart)
-            ->execute()
-            ->fetchAll();
+            ->setParameter('id_cart', $idCart);
+
+        return $query->execute()->fetchAll();
     }
 
     /**
@@ -426,6 +425,10 @@ class QuotationRepository
             ->fetch();
     }
 
+    /**
+     * @param $id_customer
+     * @return array
+     */
     public function findAddressesByCustomer($id_customer)
     {
         return $this->connection->createQueryBuilder()
@@ -504,15 +507,19 @@ class QuotationRepository
 
         return $this->connection->createQueryBuilder()
             ->addSelect('p.id_product', 'pl.name AS product_name')
-            ->addSelect("CONCAT(ROUND(p.price, 2), ' €') AS product_price")
+            ->addSelect("ROUND(p.price, 2) AS product_price")
             ->addSelect('pac.id_product_attribute')
             ->addSelect('sa.quantity')
+            ->addSelect('p.reference AS product_reference')
+            ->addSelect('t.rate')
             ->from($this->databasePrefix . 'product', 'p')
             ->join('p', $this->databasePrefix . 'product_lang', 'pl', 'p.id_product = pl.id_product')
             ->leftJoin('p', $this->databasePrefix . 'product_attribute', 'pa', 'p.id_product = pa.id_product')
             ->leftJoin('pa', $this->databasePrefix . 'product_attribute_combination', 'pac', 'pac.id_product_attribute = pa.id_product_attribute')
             ->leftJoin('pac', $this->databasePrefix . 'attribute', 'a', 'pac.id_attribute = a.id_attribute')
             ->leftJoin('pac', $this->databasePrefix . 'stock_available', 'sa', 'pac.id_product_attribute = sa.id_product_attribute')
+            ->join('p', $this->databasePrefix . 'tax_rule', 'tr', 'p.id_tax_rules_group = tr.id_tax_rules_group')
+            ->join('tr', $this->databasePrefix . 'tax', 't', 'tr.id_tax = t.id_tax')
             ->where($expr->eq('p.id_product', ':id_product'))
             ->addGroupBy('pac.id_product_attribute')
             ->setParameter('id_product', $id_product)->execute()->fetchAll();
@@ -546,6 +553,45 @@ class QuotationRepository
                 ->setParameters(['id_product' => $id_product, 'id_product_attribute' => $id_product_attribute]);
         }
         return $query->execute()->fetchAll();
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function findPicturesByProduct($id_product)
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->addSelect('cp.id_product')
+            ->addSelect('i.id_image')
+            ->from($this->databasePrefix . 'cart_product', 'cp')
+            ->join('cp', $this->databasePrefix . 'image', 'i', 'cp.id_product = i.id_product')
+            ->where('cp.id_product = :id_product')
+            ->setParameter('id_product', $id_product);
+
+        return $query->execute()->fetch();
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function findPicturesByAttributesProduct(
+        $id_product,
+        $id_product_attribute = null
+    )
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->addSelect('cp.id_product', 'cp.id_product_attribute')
+            ->addSelect('pai.id_image')
+            ->from($this->databasePrefix . 'cart_product', 'cp')
+            ->join('cp', $this->databasePrefix . 'product_attribute_image', 'pai', 'pai.id_product_attribute = cp.id_product_attribute');
+        if ($id_product_attribute === null) {
+            $query->where('cp.id_product = :id_product')
+                ->setParameter('id_product', $id_product);
+        } else {
+            $query->where('cp.id_product = :id_product AND cp.id_product_attribute = :id_product_attribute')
+                ->setParameters(['id_product' => $id_product, 'id_product_attribute' => $id_product_attribute]);
+        }
+        return $query->execute()->fetch();
     }
 
     /**
@@ -654,17 +700,23 @@ class QuotationRepository
     /**
      * @return mixed[]
      */
-    public function findLastCartByCustomerId($idcustomer)
+    public function findLastCartByCustomerId($idcustomer = null)
     {
         $expr = $this->connection->getExpressionBuilder();
 
-        return $this->connection->createQueryBuilder()
+        $query = $this->connection->createQueryBuilder();
+        $query
             ->addSelect('ca.id_cart', 'ca.date_add AS date_cart')
             ->from($this->databasePrefix . 'cart', 'ca')
-            ->where($expr->eq('ca.id_customer', ':id_customer'))
             ->orderBy('ca.date_add', 'DESC')
-            ->setMaxResults(1)
-            ->setParameter('id_customer', $idcustomer)->execute()->fetch();
+            ->setMaxResults(1);
+
+        if (!is_null($idcustomer)) {
+            $query->where($expr->eq('ca.id_customer', ':id_customer'))
+            ->setParameter('id_customer', $idcustomer);
+        }
+
+        return $query->execute()->fetch();
     }
 
     /**
@@ -704,6 +756,56 @@ class QuotationRepository
                         'quantity' => $quantity,
                         'date_add' => $dateAdd
                     ]);
+        return $query->execute();
+    }
+
+    /**
+     * Update product quantity on Cart
+     * @param int $id_cart
+     * @param int $id_product
+     * @param int $id_product_attribute
+     * @param $quantity
+     * @return \Doctrine\DBAL\Driver\Statement|int
+     */
+    public function updateQuantityProductOnCart(int $id_cart, int $id_product, int $id_product_attribute, $quantity)
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->update($this->databasePrefix . 'cart_product');
+
+        $query->set('quantity', $quantity)
+            ->where('id_cart = :id_cart')
+            ->andWhere('id_product = :id_product')
+            ->andWhere('id_product_attribute = :id_product_attribute')
+            ->setParameters([
+                'id_cart' => $id_cart,
+                'id_product' => $id_product,
+                'id_product_attribute' => $id_product_attribute,
+                'quantity' => $quantity
+            ]);
+        return $query->execute();
+    }
+
+    /**
+     * Delete product on Cart
+     * @param int $id_cart
+     * @param int $id_product
+     * @param int $id_product_attribute
+     * @return \Doctrine\DBAL\Driver\Statement|int
+     */
+    public function deleteProductOnCart(int $id_cart, int $id_product, int $id_product_attribute)
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->delete($this->databasePrefix . 'cart_product');
+
+        $query
+            ->where('id_cart = :id_cart')
+            ->andWhere('id_product = :id_product')
+            ->andWhere('id_product_attribute = :id_product_attribute')
+            ->setParameters([
+                'id_cart' => $id_cart,
+                'id_product' => $id_product,
+                'id_product_attribute' => $id_product_attribute,
+            ]);
         return $query->execute();
     }
 }

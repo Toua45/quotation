@@ -107,6 +107,18 @@ quotation_admin_show_product:
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
 
+quotation_admin_duplicate_cart:
+  path: quotation/admin/duplicate/cart/{id_customer}/{id_cart}/{new_id_cart}
+  requirements:
+    id_customer: '\d+'
+    id_cart: '\d+'
+    new_id_cart: '\d+'
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::duplicateCart'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
 quotation_admin_create_new_cart:
   path: quotation/admin/create/new/cart/{id_product}/{id_product_attribute}/{quantity}/{id_customer}/{id_cart}
   requirements:
@@ -118,5 +130,30 @@ quotation_admin_create_new_cart:
   methods: [GET, POST]
   defaults:
     _controller: 'Quotation\Controller\AdminQuotationController::createNewCart'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_update_product_quantity_cart:
+  path: quotation/admin/update/quantity/product/cart/{id_cart}/{id_product}/{id_product_attribute}/{quantity}
+  requirements:
+    id_cart: '\d+'
+    id_product: '\d+'
+    id_product_attribute: '\d+'
+    quantity: '\d+'
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::updateQuantityProductCart'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_delete_product_cart:
+  path: quotation/admin/delete/product/cart/{id_cart}/{id_product}/{id_product_attribute}
+  requirements:
+    id_cart: '\d+'
+    id_product: '\d+'
+    id_product_attribute: '\d+'
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::deleteProductCart'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'

@@ -219,9 +219,7 @@ class QuotationRepository
             ->addSelect('q.*', 'c.firstname', 'c.lastname')
             ->addSelect('SUM(p.price * cp.quantity) AS total_product_price')
             ->addSelect('o.total_shipping')
-            ->addSelect('o.total_shipping * 20 / 100 AS tva_shipping')
-            ->addSelect('cr.reduction_amount')
-            ->addSelect('cr.reduction_amount * 20 / 100 AS tva_reduction_amount')
+            ->addSelect('cr.reduction_amount', 'cr.reduction_percent', 'cr.reduction_tax')
             ->from($this->databasePrefix . 'quotation', 'q')
             ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
             ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart = cp.id_cart')
@@ -282,8 +280,10 @@ class QuotationRepository
             ->addSelect('p.price * cp.quantity AS total_product')
             ->addSelect('t.rate')
             ->addSelect('cp.id_product_attribute')
+            ->addSelect('sp.reduction')
             ->from($this->databasePrefix . 'product', 'p')
             ->join('p', $this->databasePrefix . 'cart_product', 'cp', 'cp.id_product = p.id_product')
+            ->leftJoin('p', $this->databasePrefix . 'specific_price', 'sp', 'sp.id_product = p.id_product')
             ->join('cp', $this->databasePrefix . 'cart', 'ca', 'cp.id_cart = ca.id_cart')
             ->join('ca', $this->databasePrefix . 'customer', 'c', 'ca.id_customer = c.id_customer')
             ->join('p', $this->databasePrefix . 'product_lang', 'pl', 'p.id_product = pl.id_product')
@@ -425,6 +425,10 @@ class QuotationRepository
             ->fetch();
     }
 
+    /**
+     * @param $id_customer
+     * @return array
+     */
     public function findAddressesByCustomer($id_customer)
     {
         return $this->connection->createQueryBuilder()

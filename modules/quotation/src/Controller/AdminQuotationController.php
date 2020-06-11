@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class AdminQuotationController extends FrameworkBundleAdminController
 {
+    const DEFAULT_PERCENTAGE_REDUCTION_AMOUNT = 20;
     /**
      * Fonction privée qui récupère toutes les données à partir du tableau 'quotation_search'
      */
@@ -70,23 +71,57 @@ class AdminQuotationController extends FrameworkBundleAdminController
             $quotation['addresses'] = $quotationRepository->findAddressesByCustomer($quotation['id_customer']);
             $quotation['products'] = $quotationRepository->findProductsCustomerByCarts($quotation['id_cart']);
         }
+        // Calcul total par produit avec les réductions associées (Montant HT)
+        $total_product_price = 0;
+        for ($i = 0; $i < count($quotation['products']); $i++) {
+            $total_product_price += $quotation['products'][$i]['total_product'] - $quotation['products'][$i]['reduction'];
+        }
 
-        // Calcul de la TVA à partir de chaque produit, de la réduction et des frais de port
+        // Calcul de la réduction si celle-ci est affichée en pourcentage
+        $reduction_percent_calculation = $quotation['reduction_percent'] * $total_product_price / 100;
+
+        // Calcul de la TVA sur les frais de réduction
+        $tva_reduction_amount = 0;
+        if ($quotation['reduction_tax'] == false) {
+            $tva_reduction_amount = $quotation['reduction_amount'] * self::DEFAULT_PERCENTAGE_REDUCTION_AMOUNT / 100;
+        }
+
+        // Calcul de la TVA à partir de chaque produit
         $price_tva = 0;
         for ($i = 0; $i < count($quotation['products']); $i++) {
-            $price_tva += $quotation['products'][$i]['total_product'] * $quotation['products'][$i]['rate'] / 100;
+            $price_tva += ($quotation['products'][$i]['total_product'] - $quotation['products'][$i]['reduction']) * $quotation['products'][$i]['rate'] / 100;
         }
-        $price_tva -= $quotation['tva_reduction_amount'];
-        $price_tva += $quotation['tva_shipping'];
+
+        // Premier résultat avant addition de la TVA
+        $total_product_with_reduction = $total_product_price;
+        if ($quotation['reduction_amount'] != 0.00) {
+            $total_product_with_reduction = $total_product_price - $quotation['reduction_amount'];
+        } elseif ($quotation['reduction_percent'] != 0.00) {
+            $total_product_with_reduction = $total_product_price - $reduction_percent_calculation;
+        }
+
+        // Calcul total de la TVA
+        $price_tva -= $tva_reduction_amount;
+
+        // Calcul total TTC
+        $total_ttc = $total_product_with_reduction + $price_tva;
+
 
         $quotationPdf = new QuotationPdf();
 
         // Nom du fichier pdf qui comprend le nom et prénom du client et le numéro de devis
         $filename = $quotation['firstname'] . ' ' . $filename = $quotation['lastname'] . '  - Référence n° ' . $filename = $quotation['reference'];
+
         $html = $this->renderView('@Modules/quotation/templates/admin/pdf/pdf_quotation.html.twig', [
             'quotation' => $quotation,
-            'price_tva' => $price_tva
+            'total_product_price' => $total_product_price,
+            'reduction_percent_calculation' => $reduction_percent_calculation,
+            'tva_reduction_amount' => $tva_reduction_amount,
+            'total_product_with_reduction' => $total_product_with_reduction,
+            'price_tva' => $price_tva,
+            'total_ttc' => $total_ttc
         ]);
+
         $quotationPdf->createPDF($html, $filename);
     }
 

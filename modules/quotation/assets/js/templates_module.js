@@ -222,7 +222,7 @@ export const TemplateModule = {
                         <button class="btn btn-light d-flex" data-toggle="modal" data-target="#showCartModal_---id-cart-modal---">
                             <span uk-icon="icon: search" class="mr-1 search-icon"></span> Details
                         </button>
-                        <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-light d-flex ml-3">
+                        <a href="---link-show-customer-cart-use---"  data-idCustomer="---idCustomer---"  data-idcart="---id---" data-idnewcart="---idNewCart---" data-token="---token---" class="customer-cart-to-use btn btn-light d-flex ml-3">
                             <span uk-icon="icon: arrow-right" class="mr-1"></span> Utiliser
                         </a>
                     </td>         
@@ -293,7 +293,7 @@ export const TemplateModule = {
                 <button class="btn btn-light d-flex" data-toggle="modal" data-target="#showOrderModal_---id-order-modal---">
                      <span uk-icon="icon: search" class="mr-1 search-icon"></span> Details
                 </button>
-                <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-light d-flex ml-3">
+                <a href="---link-show-customer-cart-use---" data-idCustomer="---idCustomer---"  data-idcart="---id---" data-idnewcart="---idNewCart---" data-token="---token---" class="customer-cart-to-use btn btn-light d-flex ml-3">
                     <span uk-icon="icon: arrow-right" class="mr-1"></span> Utiliser
                 </a>
             </td>
@@ -369,7 +369,7 @@ export const TemplateModule = {
                 <button class="btn btn-light d-flex" data-toggle="modal" data-target="#showQuotationModal_---id-quotation-modal---">
                     <span uk-icon="icon: search" class="mr-1 search-icon"></span> Details
                 </button>
-                <a href="---link-show-customer-cart-use---" data-idcart="---id---" class="customer-cart-to-use btn btn-light d-flex ml-3">
+                <a href="---link-show-customer-cart-use---" data-idCustomer="---idCustomer---"  data-idcart="---id---" data-idnewcart="---idNewCart---" data-token="---token---" class="customer-cart-to-use btn btn-light d-flex ml-3">
                     <span uk-icon="icon: arrow-right" class="mr-1"></span> Utiliser
                 </a>
             </td>

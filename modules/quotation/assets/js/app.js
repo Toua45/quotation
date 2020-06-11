@@ -277,12 +277,15 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         for (let customer of data['carts']) {
                                             if (customer.orders.length === 0) {
                                                 outputCart += mod.TemplateModule.tableCart
+                                                    .replace(/---idCustomer---/, customer.id_customer)
                                                     .replace(/---cartId---/, customer.id_cart)
+                                                    .replace(/---idNewCart---/, data.id_last_cart)
                                                     .replace(/---cartDate---/, customer.date_cart)
                                                     .replace(/---totalCart---/, customer.total_cart + ' €')
                                                     .replace(/---id-cart-modal---/, customer.id_cart)
                                                     .replace(/---id---/, customer.id_cart)
-                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
+                                                    .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart)
+                                                    .replace(/---token---/, new URL(window.location.href).searchParams.get('_token'));
                                             }
                                         }
 
@@ -337,7 +340,10 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---payment---/, customer.payment)
                                                     .replace(/---orderStatus---/, customer.order_status)
                                                     .replace(/---id-order-modal---/, customer.id_order)
+                                                    .replace(/---idCustomer---/, customer.id_customer)
                                                     .replace(/---id---/, customer.id_cart)
+                                                    .replace(/---idNewCart---/, data.id_last_cart)
+                                                    .replace(/---token---/, new URL(window.location.href).searchParams.get('_token'))
                                                     .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
                                             }
                                         }
@@ -382,7 +388,10 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---quotationDate---/, customer.date_quotation)
                                                     .replace(/---totalQuotation---/, customer.total_quotation + ' €')
                                                     .replace(/---id-quotation-modal---/, customer.id_quotation)
+                                                    .replace(/---idCustomer---/, customer.id_customer)
                                                     .replace(/---id---/, customer.id_cart)
+                                                    .replace(/---idNewCart---/, data.id_last_cart)
+                                                    .replace(/---token---/, new URL(window.location.href).searchParams.get('_token'))
                                                     .replace(/---link-show-customer-cart-use---/, linkCart + customer.id_cart);
                                             }
                                         }
@@ -409,8 +418,41 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                 link.addEventListener('click', function (Event) {
                                                     Event.preventDefault();
 
+                                                    let idCustomer = document.querySelector('a.customer-cart-to-use').dataset.idcustomer;
+                                                    let idOldCart = Event.currentTarget.closest('td').querySelector('a.customer-cart-to-use').dataset.idcart;
+                                                    let idNewCart = document.querySelector('a.customer-cart-to-use').dataset.idnewcart;
+                                                    let token = document.querySelector('a.customer-cart-to-use').dataset.token;
+
+                                                    /*
+                                                     * Duplicate cart to create new cart
+                                                     */
+                                                    let paramsUrlToDuplicateCart = '';
+
+                                                    paramsUrlToDuplicateCart = '/' +
+                                                        idCustomer + '/' +
+                                                        idOldCart + '/' +
+                                                        idNewCart + '?' +
+                                                        "_token=" + token;
+
+                                                    let urlDuplicateCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/duplicate/cart' + paramsUrlToDuplicateCart;
+
+                                                    const getNewCartByDuplicateCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = data.id_last_cart;
+
+                                                    QuotationModule.getData(
+                                                        urlDuplicateCart,
+                                                        getNewCartByDuplicateCart,
+                                                        null,
+                                                        'POST',
+                                                        true,
+                                                        []
+                                                    );
+
+                                                    /*
+                                                     * Show cart
+                                                     */
+
                                                     newUrlCart = window.location.origin + urlCart
-                                                        .replace(/\d+(?=\?_token)/, link.dataset.idcart);
+                                                        .replace(/\d+(?=\?_token)/, link.dataset.idnewcart);
 
                                                     const getCustomerCartToUse = (cart) => {
                                                         let picture = window.location.origin + '/img/p/';
@@ -420,7 +462,11 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         for (let product of cart['products']) {
                                                             outputCartProductsToUse += mod.TemplateModule.quotationCartProducts
                                                                 .replace(/---picture---/, picture + product.path.join('/') + '/' + product.id_image + '-cart_default.jpg')
+                                                                .replace(/---idProduct---/, product.id_product)
+                                                                .replace(/---idProductAttribute---/, product.id_product_attribute)
                                                                 .replace(/---productName---/, product.product_name)
+                                                                .replace(/---idProdAttr---/, product.id_product_attribute)
+                                                                .replace(/---idProd---/, product.id_product)
                                                                 .replace(/---productAttribute---/, product.attributes)
                                                                 .replace(/---productPrice---/, product.product_price + ' €')
                                                                 .replace(/---productQuantity---/, product.product_quantity)
@@ -683,6 +729,13 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                 document.getElementById('product-quantity').value + '/' + // Get quantity
                                 formAddProductToCart.dataset.idcustomer + '/' + // Get id_customer
                                 formAddProductToCart.dataset.idcart; // Get id_cart
+                        } else if (formAddProductToCart.dataset.idcart === 'undefined') {
+                            argsURL = '/' +
+                                formAddProductToCart.dataset.idproduct + '/' + // Get id_product
+                                id_product_without_attribute + '/' + // Get id_product_attribute
+                                document.getElementById('product-quantity').value + '/' + // Get quantity
+                                formAddProductToCart.dataset.idcustomer + '/' + // Get id_customer
+                                document.querySelector('a.customer-cart-to-use').dataset.idnewcart; // Get id_cart
                         } else {
                             argsURL = '/' +
                                 formAddProductToCart.dataset.idproduct + '/' + // Get id_product
@@ -897,6 +950,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         inputSearchProducts.addEventListener(event, getQueryProduct, false);
     });
 }
+
 
 var current_page = document.getElementById("index_page").dataset.page;
 

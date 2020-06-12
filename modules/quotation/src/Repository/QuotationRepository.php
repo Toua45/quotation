@@ -216,7 +216,7 @@ class QuotationRepository
     public function findQuotationById($id_quotation)
     {
         return $this->connection->createQueryBuilder()
-            ->addSelect('q.*', 'c.firstname', 'c.lastname')
+            ->addSelect('q.*', 'c.firstname', 'c.lastname', 'c.email')
             ->addSelect('SUM(p.price * cp.quantity) AS total_product_price')
             ->addSelect('o.total_shipping')
             ->addSelect('cr.reduction_amount', 'cr.reduction_percent', 'cr.reduction_tax')

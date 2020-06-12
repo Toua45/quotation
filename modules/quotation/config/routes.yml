@@ -17,6 +17,17 @@ quotation_admin_pdf:
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
 
+quotation_admin_email:
+  path: quotation/admin/email/{id_quotation}/{id_customer}
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::mailerAction'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+  requirements:
+    id_quotation: '\d+'
+    id_customer: '\d+'
+
 quotation_admin_add:
   path: quotation/admin/add
   methods: [GET, POST]

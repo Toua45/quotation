@@ -2,6 +2,7 @@
 
 namespace Quotation\Controller;
 
+use Dompdf\Dompdf;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
@@ -15,6 +16,7 @@ use Quotation\Service\QuotationPdf;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Twig\Environment;
 
 class AdminQuotationController extends FrameworkBundleAdminController
 {
@@ -123,6 +125,61 @@ class AdminQuotationController extends FrameworkBundleAdminController
         ]);
 
         $quotationPdf->createPDF($html, $filename);
+    }
+
+
+    /**
+     * @param $id_quotation
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function mailerAction($id_quotation)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $quotation = $quotationRepository->findQuotationById($id_quotation);
+
+        // Permet de générer notre email au format HTML
+        $renderer = new Environment();
+
+        // Rendu PDF
+        $pdf_file = new Dompdf();
+        $pdf_file->loadHtml('@Modules/quotation/templates/admin/pdf/pdf_quotation.html.twig');
+        // Conversion du HTML en PDF
+        $pdf_file->render();
+
+        // Affichage du contenu PDF
+        $pdf_content = $pdf_file->output();
+
+        // Paramétrage de SmtpTransport pour l'envoi d'un email
+        $transport = (new \Swift_SmtpTransport('smtp.mailtrap.io', 2525))
+            ->setUsername('e5178386d7b47e')
+            ->setPassword('08bf2f50eed9c2');
+
+        $mailer = new \Swift_Mailer($transport);
+
+        // Création d'un message
+        $message = (new \Swift_Message())
+            ->setSubject('Aquapure France - extrait devis n° ' . $quotation['reference'] . ' en date du ' . strftime("%A %d %B %G", strtotime($quotation['date_add'])))
+            ->setFrom('lionel.delamare@hotmail.com')
+            ->setTo($quotation['email'])
+            // Contenu de la page à charger pour l'email
+            ->setBody(
+                $renderer = $this->renderView(
+                    '@Modules/quotation/templates/admin/email/email.html.twig', [
+                    // Informations sur l'utilisateur
+                    'quotation' => $quotation
+                ]),
+                // Définition du format à rendre
+                'text/html'
+            )
+            ->attach(\Swift_Attachment::newInstance($pdf_content, 'test.pdf', 'application/pdf'))
+        ;
+
+        // Envoi de l'email qui prend en paramètre le message
+        $mailer->send($message);
+
+        $this->addFlash('success', 'Votre message a été envoyé avec succès.');
+
+        return $this->redirectToRoute('quotation_admin');
     }
 
     public function ajaxCustomer(Request $request)

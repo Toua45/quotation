@@ -91,6 +91,9 @@
                          <label for="pdf">PDF</label>
                      </td>
                      <td>
+                         <label for="email">Email</label>
+                     </td>
+                     <td>
                          <label for="actions">Actions</label>
                      </td>
                  </tr>
@@ -121,6 +124,7 @@
                      </td>
                      <td></td>
                      <td></td>
+                     <td></td>
                      <td>
                          <button type="button" class="search_button btn btn-light d-flex" id="filter_page"><span uk-icon="icon: search"
                                                                                                                  class="mr-1"></span>Rechercher
@@ -147,6 +151,11 @@
                              <a href="{{ path('quotation_admin_pdf', { id_quotation: quotation.id_quotation, firstname: quotation.firstname, lastname: quotation.lastname}) }}" id="token_query" target="_blank">
                                  <span uk-icon="icon: file-pdf; ratio: 1.2" class="d-flex justify-content-center"></span>
                              </a>
+                         </td>
+                         <td>
+                             <a href="{{ path('quotation_admin_email', {id_quotation: quotation.id_quotation, id_customer: quotation.id_customer}) }}"
+                                id="{{ quotation.id_quotation }}" onclick="return window.confirm('Êtes-vous sûr d\'envoyer votre message ?')">
+                                <span uk-icon="icon: mail; ratio: 1.2" class="d-flex justify-content-center"></span></a>
                          </td>
                          <td>
                              <select name="actions" id="actions">

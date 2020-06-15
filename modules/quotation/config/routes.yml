@@ -168,3 +168,29 @@ quotation_admin_delete_product_cart:
     _controller: 'Quotation\Controller\AdminQuotationController::deleteProductCart'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
+
+quotation_admin_autocompletion_ajax_discounts:
+  path: quotation/admin/autocompletion/discount
+  methods: [GET]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::ajaxDiscount'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_search_discounts:
+  path: quotation/admin/search/discounts/{query}
+  methods: [GET]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::searchDiscounts'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_show_discount:
+  path: quotation/admin/show/discount/{id_cart_rule}
+  requirements:
+    id_product: '\d+'
+  methods: [GET]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::showDiscount'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'

@@ -447,7 +447,18 @@ export const TemplateModule = {
 
     productQuantity: `---quantityInStock---`,
 
-    placeholderAddress:`<option value="placeholder" selected="selected">Selectionnez une adresse</option>`,
+    discountSelected: ` <tr>
+                            <td class="discount-name text-left">---discountName---</td>
+                            <td class="discount-description text-left">---discountDescription---</td>
+                            <td class="discount-valeur text-left">---discountValue---</td>
+                            <td class="discount-actions d-flex">
+                                <a href="---link-discount-to-use---" data-idDiscount="---idDiscount---" data-token="---token---" class="discount-to-use btn btn-light d-flex">
+                                    <span uk-icon="icon: arrow-right" class="mr-1"></span> Utiliser
+                                </a>
+                            </td>
+                        </tr>`,
+
+    placeholderAddress: `<option value="placeholder" selected="selected">Selectionnez une adresse</option>`,
 
     selectAddress: `<option value="---id-address---">---alias---</option>`,
 

@@ -9,6 +9,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Quotation\Entity\Quotation;
 use Quotation\Form\QuotationCustomerType;
+use Quotation\Form\QuotationDiscountType;
 use Quotation\Form\QuotationProductType;
 use Quotation\Form\QuotationSearchType;
 use Quotation\Service\QuotationFileSystem;
@@ -21,6 +22,7 @@ use Twig\Environment;
 class AdminQuotationController extends FrameworkBundleAdminController
 {
     const DEFAULT_PERCENTAGE_REDUCTION_AMOUNT = 20;
+
     /**
      * Fonction privée qui récupère toutes les données à partir du tableau 'quotation_search'
      */
@@ -151,15 +153,15 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         // Paramétrage de SmtpTransport pour l'envoi d'un email
         $transport = (new \Swift_SmtpTransport('smtp.mailtrap.io', 2525))
-            ->setUsername('e5178386d7b47e')
-            ->setPassword('08bf2f50eed9c2');
+            ->setUsername('24289db038041d')
+            ->setPassword('382974f58fd7f9');
 
         $mailer = new \Swift_Mailer($transport);
 
         // Création d'un message
         $message = (new \Swift_Message())
             ->setSubject('Aquapure France - extrait devis n° ' . $quotation['reference'] . ' en date du ' . strftime("%A %d %B %G", strtotime($quotation['date_add'])))
-            ->setFrom('lionel.delamare@hotmail.com')
+            ->setFrom('mailtestphp45@gmail.com')
             ->setTo($quotation['email'])
             // Contenu de la page à charger pour l'email
             ->setBody(
@@ -171,8 +173,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
                 // Définition du format à rendre
                 'text/html'
             )
-            ->attach(\Swift_Attachment::newInstance($pdf_content, 'test.pdf', 'application/pdf'))
-        ;
+            ->attach(\Swift_Attachment::newInstance($pdf_content, 'test.pdf', 'application/pdf'));
 
         // Envoi de l'email qui prend en paramètre le message
         $mailer->send($message);
@@ -246,6 +247,9 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $formQuotationProduct = $this->createForm(QuotationProductType::class, $quotation);
         $formQuotationProduct->handleRequest($request);
 
+        $formQuotationDiscount = $this->createForm(QuotationDiscountType::class, $quotation);
+        $formQuotationDiscount->handleRequest($request);
+
 //        if ($form->isSubmitted() && $form->isValid()) {
 //            $quotation->setDateAdd(new \DateTime('now'));
 //            $entityManager = $this->getDoctrine()->getManager();
@@ -264,6 +268,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             'displayInIframe' => $request->query->has('submitFormAjax'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'formQuotationProduct' => $formQuotationProduct->createView(),
+            'formQuotationDiscount' => $formQuotationDiscount->createView(),
         ]);
     }
 
@@ -837,5 +842,59 @@ class AdminQuotationController extends FrameworkBundleAdminController
         }
 
         return new JsonResponse(json_encode($cart), 200, [], true);
+    }
+
+    /**
+     * Autocompletion on discounts
+     */
+    public function ajaxDiscount(Request $request)
+    {
+        $QuotationRepository = $this->get('quotation_repository');
+        $discounts = $QuotationRepository->findAllDiscounts();
+        $response = [];
+
+        foreach ($discounts as $key => $discount) {
+            $response[$key]['fullname'] = $discount['fullname'];
+        }
+
+        $file = 'data-discount.js';
+        $fileSystem = new QuotationFileSystem();
+        if (!is_file($file)) {
+            $fileSystem->writeFile($file, $response);
+        } else {
+            $fileSystem->writeFile($file, $response);
+        }
+        return new JsonResponse(json_encode($response), 200, [], true);
+    }
+
+    /**
+     * Search discounts
+     * @param Request $request
+     * @param $query
+     * @return JsonResponse
+     */
+    public function searchDiscounts(Request $request, $query)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $discount = $quotationRepository->findDiscountByQuery($query);
+
+        return new JsonResponse(json_encode($discount), 200, [], true);
+    }
+
+    /**
+     * Show discount by ID
+     * @param Request $request
+     * @param $id_cart_rule
+     * @return JsonResponse
+     */
+    public function showDiscount(Request $request, $id_cart_rule)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $discount = $quotationRepository->findOneDiscountById($id_cart_rule);
+
+        $discount['reduction_percent'] = $discount['reduction_percent'] . ' %';
+        $discount['reduction_amount'] = $discount['reduction_amount'] . ' €';
+
+        return new JsonResponse(json_encode($discount), 200, [], true);
     }
 }

@@ -54,8 +54,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
-            let link = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/show/customer/';
-            let show = window.location.origin + '/adminLionel/index.php/sell/customers/';
+            let link = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/customer/';
+            let show = window.location.origin + '/adminToua/index.php/sell/customers/';
 
             customers.forEach((customer, i) => {
 
@@ -105,7 +105,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                     const getCustomerShow = (customer) => {
 
-                                        let addressController = window.location.origin + '/adminLionel/index.php/?controller=AdminAddresses';
+                                        let addressController = window.location.origin + '/adminToua/index.php/?controller=AdminAddresses';
 
                                         let personalData = '';
                                         let tableCustomerOrders = '';
@@ -201,7 +201,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
-                        let linkCart = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/show/cart/';
+                        let linkCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/cart/';
                         let urlCart = document.querySelector('[data-customercart]').dataset.customercart;
                         let newUrlCart;
 
@@ -434,7 +434,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         idNewCart + '?' +
                                                         "_token=" + token;
 
-                                                    let urlDuplicateCart = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/duplicate/cart' + paramsUrlToDuplicateCart;
+                                                    let urlDuplicateCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/duplicate/cart' + paramsUrlToDuplicateCart;
 
                                                     const getNewCartByDuplicateCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = data.id_last_cart;
 
@@ -582,6 +582,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     // Ici, on récupère la class 'd-none' de l'élément id 'js-output-customer-details' et on la remplace par 'd-block'
                                     document.getElementById('js-output-customer-details').classList.replace('d-none', 'd-block');
                                     document.getElementById('js-output-cart-infos').classList.replace('d-none', 'd-block');
+                                    document.getElementById('js-output-discount-infos').classList.replace('d-none', 'd-block');
                                     document.getElementById('js-output-address').classList.replace('d-none', 'd-block');
                                 });
                             });
@@ -833,7 +834,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             Event.currentTarget.value + '?' +  // Get quantity
                                             "_token=" + document.getElementById('token').value; // Get token
 
-                                        let urlProductQtyPost = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/update/quantity/product/cart' + paramsUrlProductQuantity;
+                                        let urlProductQtyPost = window.location.origin + '/adminToua/index.php/modules/quotation/admin/update/quantity/product/cart' + paramsUrlProductQuantity;
 
                                         const getCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = cart.id_cart;
 
@@ -895,7 +896,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             idProductAttributeToDelete + '?' + // Get id_product_attribute
                                             "_token=" + document.getElementById('token').value; // Get token
 
-                                        urlProductToDelete = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/delete/product/cart' + paramsUrlProductToDelete;
+                                        urlProductToDelete = window.location.origin + '/adminToua/index.php/modules/quotation/admin/delete/product/cart' + paramsUrlProductToDelete;
 
                                         // On ajoute à l'élément tr le plus proche la class='d-none'
                                         Event.currentTarget.closest('tr').classList.add('d-none');
@@ -949,6 +950,81 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     ['keyup', 'click'].forEach(event => {
         inputSearchProducts.addEventListener(event, getQueryProduct, false);
     });
+
+    /*
+    *Search discount section
+    */
+    let urlDiscount = document.getElementById('js-data-discount').dataset.source;
+
+    QuotationModule.getData(
+        urlDiscount,
+        QuotationModule.getData,
+        QuotationModule.getDiscountsURL(),
+        null,
+        true,
+        []
+    );
+
+    QuotationModule.getData(
+        QuotationModule.getDiscountsURL(),
+        QuotationModule.autocomplete,
+        null,
+        null,
+        true,
+        ['#quotation_discount_cartId', 'discounts', 2]
+    );
+
+    const getQueryDiscount = (Event) => {
+
+        let urlSearchDiscount = document.getElementById('js-data-discount').dataset.discount;
+
+        let idCartRule = parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim());
+        urlSearchDiscount = window.location.origin + urlSearchDiscount.replace(/\d+(?=\?_token)/, idCartRule);
+
+        const getDiscountToUse = (discount) => {
+            let outputDiscount = '';
+
+            import('./templates_module').then(mod => {
+
+                if (discount.reduction_percent !== '0.00 %') {
+                    console.log('reduction en %');
+                    outputDiscount += mod.TemplateModule.discountSelected
+                        .replace(/---discountName---/, discount.name)
+                        .replace(/---discountDescription---/, discount.description)
+                        .replace(/---discountValue---/, discount.reduction_percent)
+                        .replace(/---idDiscount---/, discount.id_cart_rule)
+                        .replace(/---token---/, new URL(window.location.href).searchParams.get('_token'));
+                } else {
+                    console.log('reduction en €');
+                    outputDiscount += mod.TemplateModule.discountSelected
+                        .replace(/---discountName---/, discount.name)
+                        .replace(/---discountDescription---/, discount.description)
+                        .replace(/---discountValue---/, discount.reduction_amount)
+                        .replace(/---idDiscount---/, discount.id_cart_rule)
+                        .replace(/---token---/, new URL(window.location.href).searchParams.get('_token'));
+                }
+
+
+
+                document.getElementById('output-discounts').innerHTML = outputDiscount;
+            });
+        };
+
+        QuotationModule.getData(
+            urlSearchDiscount,
+            getDiscountToUse,
+            null,
+            null,
+            true,
+            []
+        );
+
+    };
+
+    const inputSearchDiscounts = document.getElementById('quotation_discount_cartId');
+    ['keyup', 'click', 'change'].forEach(event => {
+        inputSearchDiscounts.addEventListener(event, getQueryDiscount, false);
+    });
 }
 
 
@@ -958,7 +1034,7 @@ if (window.location.pathname.replace(/.*(?=\/quotation\/admin\/research)/ || /.*
     document.getElementById('filter_page').addEventListener('click', Event => {
         Event.preventDefault();
         let form = Event.currentTarget.closest('thead').querySelector('form'); // Get form
-        const _url = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/research?';
+        const _url = window.location.origin + '/adminToua/index.php/modules/quotation/admin/research?';
         const params = {
             tokenSearch: 'quotation_search[_token]=' + document.getElementById('quotation_search__token').value,
             end: 'quotation_search[end]=' + document.getElementById('quotation_search_end').value,

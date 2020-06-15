@@ -1,0 +1,35 @@
+<div id="js-output-discount-infos" class="discount-infos d-none">
+
+    <div class="quotation card p-4" id="discounts" data-discounts="{{ asset('data-discount.js') }}">
+        <div class="quotation-head mb-3 d-flex justify-content-between">
+            <div class="d-flex align-items-center"
+                 data-searchproducts="{{ path('quotation_admin_search_discounts', { query: 'query' }) }}">
+                <i class="material-icons mr-2">local_offer</i>
+                <h1 class="panel-heading">Bons de Reduction</h1>
+            </div>
+        </div>
+
+        <div class="container mb-4 d-inline-flex justify-content-center align-items-center" id="search_discounts">
+            {% include '@Modules/quotation/templates/admin/_form_quotation_discount.html.twig' %}
+        </div>
+
+        <div class="tab-content">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="text-left">Nom</th>
+                    <th class="text-left">Description</th>
+                    <th class="text-left">Valeur</th>
+                    <th class="text-left">Actions</th>
+                </tr>
+                </thead>
+                <tbody id="output-discounts">
+
+                <!-- Discounts here! -->
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

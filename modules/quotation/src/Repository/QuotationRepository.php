@@ -808,4 +808,47 @@ class QuotationRepository
             ]);
         return $query->execute();
     }
+
+    /**
+     * @return mixed[]
+     */
+    public function findAllDiscounts()
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('crl.id_cart_rule', "CONCAT( crl.id_cart_rule, ' - ' , crl.name, ' - ', cr.code) AS fullname")
+            ->from($this->databasePrefix . 'cart_rule_lang', 'crl')
+            ->join('crl', $this->databasePrefix . 'cart_rule', 'cr', 'crl.id_cart_rule = cr.id_cart_rule')
+            ->execute()
+            ->fetchAll();
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function findDiscountByQuery($query)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('crl.id_cart_rule', 'crl.name')
+            ->from($this->databasePrefix . 'cart_rule_lang', 'crl')
+            ->where('crl.name LIKE :query')
+            ->setParameter('query', '%' . $query . '%')
+            ->execute()
+            ->fetchAll()
+            ;
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function findOneDiscountById($id_cart_rule)
+    {
+        $expr = $this->connection->getExpressionBuilder();
+
+        return $this->connection->createQueryBuilder()
+            ->addSelect('cr.id_cart_rule', 'crl.name', 'cr.description', 'cr.code', 'cr.free_shipping', 'cr.reduction_percent', 'cr.reduction_amount')
+            ->from($this->databasePrefix . 'cart_rule', 'cr')
+            ->join('cr', $this->databasePrefix . 'cart_rule_lang', 'crl', 'cr.id_cart_rule = crl.id_cart_rule')
+            ->where($expr->eq('cr.id_cart_rule', ':id_cart_rule'))
+            ->setParameter('id_cart_rule', $id_cart_rule)->execute()->fetch();
+    }
 }

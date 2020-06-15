@@ -1,0 +1,18 @@
+<div class="quotation-discount-section">
+    {{ form_start(formQuotationDiscount, {'attr':{'class':'mt-4'}}) }}
+
+    <div class="d-flex align-items-center">
+        {{ form_label(formQuotationDiscount.cartId, null, {'label_attr':{'class':'form-label col-sm-6 mt-2'}}) }}
+        <div class="col-sm-12">
+            {{ form_widget(formQuotationDiscount.cartId) }}
+        </div>
+    </div>
+
+    {{ form_end(formQuotationDiscount) }}
+
+        <span id="js-data-discount"
+              data-source="{{ path('quotation_admin_autocompletion_ajax_discounts') }}"
+              data-discount="{{ path('quotation_admin_show_discount', {id_cart_rule: 0}) }}">
+        </span>
+    </form>
+</div>

@@ -169,7 +169,7 @@ quotation_admin_delete_product_cart:
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
 
-quotation_admin_autocompletion_ajax_discounts:
+quotation_admin_autocompletion_ajax_discount:
   path: quotation/admin/autocompletion/discount
   methods: [GET]
   defaults:

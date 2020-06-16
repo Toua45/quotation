@@ -897,4 +897,43 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         return new JsonResponse(json_encode($discount), 200, [], true);
     }
+
+    /**
+     * Assign cart_rule to cart
+     * @param $id_cart
+     * @param $id_cart_rule
+     * @return JsonResponse
+     */
+    public function insertCartRule($id_cart, $id_cart_rule)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $cart = $quotationRepository->assignCartRuleToCart($id_cart, $id_cart_rule);
+
+        return new JsonResponse(json_encode('It works !'));
+    }
+
+    /**
+     * Show Cart discounts
+     * @param Request $request
+     * @param $id_cart
+     * @return JsonResponse
+     */
+    public function showCartDiscounts(Request $request, $id_cart)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $cart = $quotationRepository->findOneCartById($id_cart);
+
+        if ($cart['id_cart']) {
+            $cart['discounts'] = $quotationRepository->findDiscountsByIdCart($cart['id_cart']);
+        }
+
+        for ($j = 0; $j < count($cart['discounts']); $j++) {
+            if ($cart['discounts']) {
+                $cart['discounts'][$j]['reduction_percent'] = $cart['discounts'][$j]['reduction_percent'] . ' %';
+                $cart['discounts'][$j]['reduction_amount'] = $cart['discounts'][$j]['reduction_amount'] . ' €';
+            }
+        }
+
+        return new JsonResponse(json_encode($cart), 200, [], true);
+    }
 }

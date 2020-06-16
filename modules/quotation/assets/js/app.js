@@ -499,6 +499,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         document.getElementById('add-product-to-cart').setAttribute('data-idcustomer', data['customer'].id_customer);
                                         // on ajoute l'attribut data-idcustomer à l'élément html add-product-to-cart pour récupérer l'id_customer qui nous servira pour la section search product section
                                         document.getElementById('add-product-to-cart').setAttribute('data-idcart', data.id_last_cart);
+                                        // On ajoute l'attribut data-idcart à l'élément id output-discounts
+                                        document.getElementById('output-discounts').setAttribute('data-idcart', data.id_last_cart);
 
                                         /**
                                          * Addresses block
@@ -791,6 +793,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                             document.getElementById('output-cart-products-to-use').innerHTML = outputProductOnCart;
                             document.getElementById('output-cart-products-to-use').setAttribute('data-idcart', cart.id_cart);
                             document.getElementById('output-cart-to-use').innerHTML = outputCartTotal;
+                            // On ajoute l'attribut data-idcart à l'élément id output-discounts
+                            document.getElementById('output-discounts').setAttribute('data-idcart', cart.id_cart);
 
                             /*
                              * Update product quantity on cart
@@ -952,7 +956,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     });
 
     /*
-    *Search discount section
+    *Search discounts section
     */
     let urlDiscount = document.getElementById('js-data-discount').dataset.source;
 
@@ -977,48 +981,92 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     const getQueryDiscount = (Event) => {
 
         let urlSearchDiscount = document.getElementById('js-data-discount').dataset.discount;
+        let urlShowCartDiscounts = document.getElementById('js-data-discount').dataset.cart;
 
         let idCartRule = parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim());
         urlSearchDiscount = window.location.origin + urlSearchDiscount.replace(/\d+(?=\?_token)/, idCartRule);
+        urlShowCartDiscounts = window.location.origin + urlShowCartDiscounts.replace(/\d+(?=\?_token)/, document.getElementById('output-discounts').dataset.idcart);
 
-        const getDiscountToUse = (discount) => {
-            let outputDiscount = '';
+        let urlAssignCartRuleToCart;
+        let cartRuleParamsUrl = '';
+
+        const showDiscountToUse = (discount) => {
+            document.getElementById('output-discounts').setAttribute('data-idcartrule', discount.id_cart_rule);
+            document.getElementById('output-discounts').setAttribute('data-token', new URL(window.location.href).searchParams.get('_token'));
 
             import('./templates_module').then(mod => {
 
-                if (discount.reduction_percent !== '0.00 %') {
-                    console.log('reduction en %');
-                    outputDiscount += mod.TemplateModule.discountSelected
-                        .replace(/---discountName---/, discount.name)
-                        .replace(/---discountDescription---/, discount.description)
-                        .replace(/---discountValue---/, discount.reduction_percent)
-                        .replace(/---idDiscount---/, discount.id_cart_rule)
-                        .replace(/---token---/, new URL(window.location.href).searchParams.get('_token'));
-                } else {
-                    console.log('reduction en €');
-                    outputDiscount += mod.TemplateModule.discountSelected
-                        .replace(/---discountName---/, discount.name)
-                        .replace(/---discountDescription---/, discount.description)
-                        .replace(/---discountValue---/, discount.reduction_amount)
-                        .replace(/---idDiscount---/, discount.id_cart_rule)
-                        .replace(/---token---/, new URL(window.location.href).searchParams.get('_token'));
-                }
+                document.getElementById('submitCartRuleToUse').addEventListener('click', Event => {
+                    Event.preventDefault();
 
+                    /*
+                     * Assign cart_rule to cart on bdd
+                     */
+                    let id_cart = document.getElementById('output-discounts').dataset.idcart;
+                    let id_cart_rule = document.getElementById('output-discounts').dataset.idcartrule;
+                    let token = document.getElementById('output-discounts').dataset.token;
 
+                    cartRuleParamsUrl = '/' + id_cart + '/' + id_cart_rule + '?' + "_token=" + token;
 
-                document.getElementById('output-discounts').innerHTML = outputDiscount;
+                    urlAssignCartRuleToCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/assign/discount/cart' + cartRuleParamsUrl;
+
+                    const getCartRuleToCart = (discount) => {
+
+                    };
+
+                    QuotationModule.getData(
+                        urlAssignCartRuleToCart,
+                        getCartRuleToCart,
+                        null,
+                        'POST',
+                        true,
+                        []
+                    );
+
+                    /*
+                     * Show cart_rule assign to cart
+                     */
+                    const showCartDiscounts = (cart) => {
+                        console.log(cart);
+                        let outputDiscount = '';
+
+                        for (let discount of cart['discounts']) {
+                            if (discount.reduction_percent !== '0.00 %') {
+                                outputDiscount += mod.TemplateModule.discountSelected
+                                    .replace(/---discountName---/, discount.name)
+                                    .replace(/---discountDescription---/, discount.description)
+                                    .replace(/---discountValue---/, discount.reduction_percent);
+                            } else {
+                                outputDiscount += mod.TemplateModule.discountSelected
+                                    .replace(/---discountName---/, discount.name)
+                                    .replace(/---discountDescription---/, discount.description)
+                                    .replace(/---discountValue---/, discount.reduction_amount);
+                            }
+                        }
+                        document.getElementById('output-discounts').innerHTML = outputDiscount;
+
+                    };
+
+                    QuotationModule.getData(
+                        urlShowCartDiscounts,
+                        showCartDiscounts,
+                        null,
+                        null,
+                        true,
+                        []
+                    );
+                });
             });
         };
 
         QuotationModule.getData(
             urlSearchDiscount,
-            getDiscountToUse,
+            showDiscountToUse,
             null,
             null,
             true,
             []
         );
-
     };
 
     const inputSearchDiscounts = document.getElementById('quotation_discount_cartId');

@@ -188,9 +188,30 @@ quotation_admin_search_discounts:
 quotation_admin_show_discount:
   path: quotation/admin/show/discount/{id_cart_rule}
   requirements:
-    id_product: '\d+'
+    id_cart_rule: '\d+'
   methods: [GET]
   defaults:
     _controller: 'Quotation\Controller\AdminQuotationController::showDiscount'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_show_cart_discounts:
+  path: quotation/admin/show/cart/discounts/{id_cart}
+  requirements:
+    id_cart: '\d+'
+  methods: [GET]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::showCartDiscounts'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_insert_cart_rule:
+  path: quotation/admin/assign/discount/cart/{id_cart}/{id_cart_rule}
+  requirements:
+    id_cart: '\d+'
+    id_cart_rule: '\d+'
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::insertCartRule'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'

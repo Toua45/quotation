@@ -851,4 +851,43 @@ class QuotationRepository
             ->where($expr->eq('cr.id_cart_rule', ':id_cart_rule'))
             ->setParameter('id_cart_rule', $id_cart_rule)->execute()->fetch();
     }
+
+    /**
+     * Assign cart_rule to Cart
+     * @param int $id_cart
+     * @param int $id_cart_rule
+     * @return \Doctrine\DBAL\Driver\Statement|int
+     */
+    public function assignCartRuleToCart(int $id_cart, int $id_cart_rule)
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->insert($this->databasePrefix . 'cart_cart_rule');
+
+        $query->values([
+            'id_cart' => ':id_cart',
+            'id_cart_rule' => ':id_cart_rule',
+        ])
+            ->setParameters([
+                'id_cart' => $id_cart,
+                'id_cart_rule' => $id_cart_rule,
+            ]);
+        return $query->execute();
+    }
+
+    /*
+     * @return mixed[]
+     */
+    public function findDiscountsByIdCart($id_cart)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('ccr.id_cart', 'ccr.id_cart_rule')
+            ->addSelect('cr.id_cart_rule', 'crl.name', 'cr.description', 'cr.code', 'cr.free_shipping', 'cr.reduction_percent', 'cr.reduction_amount')
+            ->from($this->databasePrefix . 'cart_cart_rule', 'ccr')
+            ->join('ccr', $this->databasePrefix . 'cart_rule', 'cr', 'ccr.id_cart_rule = cr.id_cart_rule')
+            ->join('cr', $this->databasePrefix . 'cart_rule_lang', 'crl', 'cr.id_cart_rule = crl.id_cart_rule')
+            ->where('ccr.id_cart = :id_cart')
+            ->setParameter('id_cart', $id_cart)
+            ->execute()
+            ->fetchAll();
+    }
 }

@@ -447,8 +447,6 @@ export const TemplateModule = {
 
     productQuantity: `---quantityInStock---`,
 
-    // discountDescription: `<input type="text" name="discount_descritpion" id="discount_descritpion" class="col-sm-12 quantity-product" data-idcartrule="---idDiscount---" value="---cartRuleDescription---"/>`,
-
     discountSelected: ` <tr>
                             <td id="discount-name_---idCartRule---" class="text-left">---discountName---</td>
                             <td class="discount-description text-left">---discountDescription---</td>

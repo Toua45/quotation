@@ -13,26 +13,9 @@
 
     {{ form_end(formQuotationDiscount) }}
 
-{#    <form id="assign-cart-rule-to-cart">#}
-{#        <div id="js-output-cart-rule-to-cart" class="d-none">#}
-{#            <div id="section-cart-rule" class="form-group d-flex align-items-center mt-4">#}
-{#                <label class="col-sm-6">Description</label>#}
-{#                <div class="col-sm-6 d-flex align-items-center">#}
-{#                    <div id="output-discount-description" class="col-sm-12">#}
-{#                        <!-- Discount description here! -->#}
-{#                    </div>#}
-{#                    <button id="submitCartRuleToUse" class="btn btn-light d-flex ml-3">#}
-{#                        <span uk-icon="icon: arrow-right" class="mr-1"></span> Utiliser#}
-{#                    </button>#}
-
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-
-            <span id="js-data-discount"
-                  data-source="{{ path('quotation_admin_autocompletion_ajax_discount') }}"
-                  data-discount="{{ path('quotation_admin_show_discount', {id_cart_rule: 0}) }}"
-                  data-cart="{{ path('quotation_admin_show_cart_discounts', {id_cart: 0}) }}">
-        </span>
-{#    </form>#}
+    <span id="js-data-discount"
+          data-source="{{ path('quotation_admin_autocompletion_ajax_discount') }}"
+          data-discount="{{ path('quotation_admin_show_discount', {id_cart_rule: 0}) }}"
+          data-cart="{{ path('quotation_admin_show_cart_discounts', {id_cart: 0}) }}">
+    </span>
 </div>

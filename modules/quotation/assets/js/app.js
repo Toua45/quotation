@@ -982,7 +982,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         let urlShowCartDiscounts = document.getElementById('js-data-discount').dataset.cart;
 
         let idCartRule = parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim());
-        console.log(idCartRule);
         urlSearchDiscount = window.location.origin + urlSearchDiscount.replace(/\d+(?=\?_token)/, idCartRule);
         urlShowCartDiscounts = window.location.origin + urlShowCartDiscounts.replace(/\d+(?=\?_token)/, document.getElementById('output-discounts').dataset.idcart);
 
@@ -990,39 +989,25 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         let cartRuleParamsUrl = '';
 
         const showDiscountToUse = (discount) => {
-            // document.getElementById('output-discounts').setAttribute('data-idcartrule', discount.id_cart_rule);
+            document.getElementById('output-discounts').setAttribute('data-idcartrule', discount.id_cart_rule);
             document.getElementById('output-discounts').setAttribute('data-token', new URL(window.location.href).searchParams.get('_token'));
 
             import('./templates_module').then(mod => {
 
-                // let outputDiscountDescription = '';
-                // outputDiscountDescription += mod.TemplateModule.discountDescription
-                //     .replace(/---idDiscount---/, discount.id_cart_rule)
-                //     .replace(/---cartRuleDescription---/, discount.description);
-                //
-                // document.getElementById('output-discount-description').innerHTML = outputDiscountDescription;
-
-
                 let id_cart = document.getElementById('output-discounts').dataset.idcart;
-                // let id_cart_rule = document.getElementById('output-discounts').dataset.idcartrule;
-                // let id_cart_rule = document.getElementById('discount_descritpion').dataset.idcartrule;
                 let token = document.getElementById('output-discounts').dataset.token;
-
-                // console.log(idCartRule);
 
                 document.getElementById('submitCartRuleToUse').addEventListener('click', Event => {
                     Event.preventDefault();
 
+                    let id_cart_rule = document.getElementById('output-discounts').dataset.idcartrule;
+
                     /*
                      * Assign cart_rule to cart on bdd
                      */
-                    cartRuleParamsUrl = '/' + id_cart + '/' + idCartRule + '?' + "_token=" + token;
-
-                    console.log(cartRuleParamsUrl);
+                    cartRuleParamsUrl = '/' + id_cart + '/' + id_cart_rule + '?' + "_token=" + token;
 
                     urlAssignCartRuleToCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/assign/discount/cart' + cartRuleParamsUrl;
-
-                    console.log(urlAssignCartRuleToCart);
 
                     const getCartRuleToCart = (discount) => {
 
@@ -1066,8 +1051,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         let urlDiscountToDelete;
                         let paramsUrlDiscountToDelete = '';
 
-                        // console.log(document.querySelectorAll('button.delete_discount'));
-
                         if (document.querySelectorAll('button.delete_discount') !== null) {
                             document.querySelectorAll('button.delete_discount').forEach(function (link) {
                                 link.addEventListener('click', function (Event) {
@@ -1102,11 +1085,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         []
                                     );
 
-
                                 });
                             });
                         };
-
                     };
 
                     QuotationModule.getData(
@@ -1118,7 +1099,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         []
                     );
                 });
-
             });
         };
 
@@ -1133,7 +1113,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     };
 
     const inputSearchDiscounts = document.getElementById('quotation_discount_cartId');
-    ['keyup'].forEach(event => {
+    ['keyup', 'click'].forEach(event => {
         inputSearchDiscounts.addEventListener(event, getQueryDiscount, false);
     });
 }

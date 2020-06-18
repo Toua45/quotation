@@ -215,3 +215,14 @@ quotation_admin_insert_cart_rule:
     _controller: 'Quotation\Controller\AdminQuotationController::insertCartRule'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
+
+quotation_admin_delete_discount_cart:
+  path: quotation/admin/delete/discount/cart/{id_cart}/{id_cart_rule}
+  requirements:
+    id_cart: '\d+'
+    id_cart_rule: '\d+'
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::deleteDiscountCart'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'

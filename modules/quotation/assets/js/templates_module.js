@@ -448,11 +448,11 @@ export const TemplateModule = {
     productQuantity: `---quantityInStock---`,
 
     discountSelected: ` <tr>
-                            <td class="discount-name text-left">---discountName---</td>
+                            <td id="discount-name_---idCartRule---" class="text-left">---discountName---</td>
                             <td class="discount-description text-left">---discountDescription---</td>
                             <td class="discount-valeur text-left">---discountValue---</td>
                             <td class="discount-actions d-flex">
-                                <button class="discount-to-delete btn btn-light d-flex">
+                                <button class="delete_discount btn btn-light d-flex">
                                     <span uk-icon="icon: close" class="mr-1"></span> Suppimer
                                 </button>
                             </td>

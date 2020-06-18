@@ -890,4 +890,25 @@ class QuotationRepository
             ->execute()
             ->fetchAll();
     }
+
+    /**
+     * Delete discount on Cart
+     * @param int $id_cart
+     * @param int $id_cart_rule
+     * @return \Doctrine\DBAL\Driver\Statement|int
+     */
+    public function deleteDiscountOnCart(int $id_cart, int $id_cart_rule)
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->delete($this->databasePrefix . 'cart_cart_rule');
+
+        $query
+            ->where('id_cart = :id_cart')
+            ->andWhere('id_cart_rule = :id_cart_rule')
+            ->setParameters([
+                'id_cart' => $id_cart,
+                'id_cart_rule' => $id_cart_rule,
+            ]);
+        return $query->execute();
+    }
 }

@@ -869,8 +869,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         );
                                     });
                                 });
-                            }
-                            ;
+                            };
 
                             /*
                              * Delete product on cart
@@ -921,8 +920,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                     })
                                 });
-                            }
-                            ;
+                            };
                         };
 
                         QuotationModule.getData(
@@ -996,16 +994,17 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
             import('./templates_module').then(mod => {
 
+                let id_cart = document.getElementById('output-discounts').dataset.idcart;
+                let token = document.getElementById('output-discounts').dataset.token;
+
                 document.getElementById('submitCartRuleToUse').addEventListener('click', Event => {
                     Event.preventDefault();
+
+                    let id_cart_rule = document.getElementById('output-discounts').dataset.idcartrule;
 
                     /*
                      * Assign cart_rule to cart on bdd
                      */
-                    let id_cart = document.getElementById('output-discounts').dataset.idcart;
-                    let id_cart_rule = document.getElementById('output-discounts').dataset.idcartrule;
-                    let token = document.getElementById('output-discounts').dataset.token;
-
                     cartRuleParamsUrl = '/' + id_cart + '/' + id_cart_rule + '?' + "_token=" + token;
 
                     urlAssignCartRuleToCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/assign/discount/cart' + cartRuleParamsUrl;
@@ -1027,17 +1026,18 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                      * Show cart_rule assign to cart
                      */
                     const showCartDiscounts = (cart) => {
-                        console.log(cart);
                         let outputDiscount = '';
 
                         for (let discount of cart['discounts']) {
                             if (discount.reduction_percent !== '0.00 %') {
                                 outputDiscount += mod.TemplateModule.discountSelected
+                                    .replace(/---idCartRule---/, discount.id_cart_rule)
                                     .replace(/---discountName---/, discount.name)
                                     .replace(/---discountDescription---/, discount.description)
                                     .replace(/---discountValue---/, discount.reduction_percent);
                             } else {
                                 outputDiscount += mod.TemplateModule.discountSelected
+                                    .replace(/---idCartRule---/, discount.id_cart_rule)
                                     .replace(/---discountName---/, discount.name)
                                     .replace(/---discountDescription---/, discount.description)
                                     .replace(/---discountValue---/, discount.reduction_amount);
@@ -1045,6 +1045,49 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         }
                         document.getElementById('output-discounts').innerHTML = outputDiscount;
 
+                        /*
+                         * Delete discount assign to cart
+                         */
+                        let urlDiscountToDelete;
+                        let paramsUrlDiscountToDelete = '';
+
+                        if (document.querySelectorAll('button.delete_discount') !== null) {
+                            document.querySelectorAll('button.delete_discount').forEach(function (link) {
+                                link.addEventListener('click', function (Event) {
+                                    Event.preventDefault();
+
+                                    let children = Event.currentTarget.closest('tr').children;
+                                    let idDiscount;
+
+                                    for (let i = 0; i < children.length; i++) {
+                                        let regexp = new RegExp('^(discount-name_)');
+                                        if (children[i].id.match(regexp) !== null) {
+                                            idDiscount = children[i].id.split('_')[1];
+                                        }
+                                    }
+
+                                    paramsUrlDiscountToDelete = '/' + id_cart + '/' + idDiscount + '?' + "_token=" + token;
+
+                                    urlDiscountToDelete = window.location.origin + '/adminToua/index.php/modules/quotation/admin/delete/discount/cart' + paramsUrlDiscountToDelete;
+
+                                    Event.currentTarget.closest('tr').classList.add('d-none');
+
+                                    const getUpdateDiscountOnCart = (cart) => {
+
+                                    };
+
+                                    QuotationModule.getData(
+                                        urlDiscountToDelete,
+                                        getUpdateDiscountOnCart,
+                                        null,
+                                        'POST',
+                                        true,
+                                        []
+                                    );
+
+                                });
+                            });
+                        };
                     };
 
                     QuotationModule.getData(
@@ -1070,11 +1113,10 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     };
 
     const inputSearchDiscounts = document.getElementById('quotation_discount_cartId');
-    ['keyup', 'click', 'change'].forEach(event => {
+    ['keyup', 'click'].forEach(event => {
         inputSearchDiscounts.addEventListener(event, getQueryDiscount, false);
     });
 }
-
 
 var current_page = document.getElementById("index_page").dataset.page;
 

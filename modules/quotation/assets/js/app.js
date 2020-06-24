@@ -986,12 +986,12 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         let idCartRule = parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim());
         urlSearchDiscount = window.location.origin + urlSearchDiscount.replace(/\d+(?=\?_token)/, idCartRule);
         urlShowCartDiscounts = window.location.origin + urlShowCartDiscounts.replace(/\d+(?=\?_token)/, document.getElementById('output-discounts').dataset.idcart);
-        console.log(idCartRule);
 
         let urlAssignCartRuleToCart;
         let cartRuleParamsUrl = '';
 
         const showDiscountToUse = (discount) => {
+
             document.getElementById('output-discounts').setAttribute('data-idcartrule', discount.id_cart_rule);
             document.getElementById('output-discounts').setAttribute('data-token', new URL(window.location.href).searchParams.get('_token'));
 
@@ -1000,260 +1000,135 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                 let id_cart = document.getElementById('output-discounts').dataset.idcart;
                 let token = document.getElementById('output-discounts').dataset.token;
 
-                document.getElementById('quotation_discount_cartId').addEventListener('blur', Event => {
-                // document.getElementById('submitCartRuleToUse').addEventListener('click', Event => {
+                document.getElementById('submitCartRuleToUse').addEventListener('click', Event => {
                     Event.preventDefault();
 
-
-                    // let id_cart_rule = document.getElementById('output-discounts').dataset.idcartrule;
+                    let id_cart_rule = document.getElementById('output-discounts').dataset.idcartrule;
                     // let date = new Date();
                     // let dateToday = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
                     let total_cart = parseFloat(document.getElementById('total_cart').textContent.split(' ')[0]);
-                    // console.log('total_cart = ', parseFloat(total_cart));
-                    // console.log('minimum_amount = ', parseFloat(discount.minimum_amount));
+                    let cartRuleId = discount.id_cart_rule;
+                    let cartRuleMinimumAmount = parseFloat(discount.minimum_amount);
 
-                    // if (dateToday > discount.date_to) {
-                    //     document.getElementById('discount_date_err').classList.remove('d-none');
-                    //     document.getElementById('discount_cart_err').classList.add('d-none');
-                    // }
-
-                    // Store data temporally
-                    // sessionStorage.setItem('idCart', id_cart);
-                    // sessionStorage.setItem('idCartRule', idCartRule);
-
-                    if (sessionStorage.getItem('idCart')) {
-                        if (sessionStorage.getItem('idCartRule_' + idCartRule) !== idCartRule) {
-                            sessionStorage.setItem('idCartRule_' + idCartRule, idCartRule);
-
-                            if (total_cart < parseFloat(discount.minimum_amount)) {
-                                console.log('Non applicable', total_cart, ' < ', parseFloat(discount.minimum_amount));
-                                document.getElementById('discount_cart_err').classList.remove('d-none');
-                            } else {
-                                console.log('Applicable', total_cart, ' > ', parseFloat(discount.minimum_amount));
-                                /*
-                                 * Assign cart_rule to cart on bdd
-                                 */
-                                // cartRuleParamsUrl = '/' + sessionStorage.getItem('idCart') + '/' + sessionStorage.getItem('idCartRule_' + idCartRule) + '?' + "_token=" + token;
-                                cartRuleParamsUrl = '/' + id_cart + '/' + idCartRule + '?' + "_token=" + token;
-                                console.log(cartRuleParamsUrl);
-
-                                urlAssignCartRuleToCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/assign/discount/cart' + cartRuleParamsUrl;
-
-                                const getCartRuleToCart = (discount) => {
-
-                                };
-
-                                QuotationModule.getData(
-                                    urlAssignCartRuleToCart,
-                                    getCartRuleToCart,
-                                    null,
-                                    'POST',
-                                    true,
-                                    []
-                                );
-
-                                document.getElementById('discount_table').classList.remove('d-none');
-                                document.getElementById('discount_cart_err').classList.add('d-none');
-
-                                /*
-                                 * Show cart_rule assign to cart
-                                 */
-                                const showCartDiscounts = (cart) => {
-                                    let outputDiscount = '';
-
-                                    for (let discount of cart['discounts']) {
-                                        if (discount.reduction_percent !== '0.00 %') {
-                                            outputDiscount += mod.TemplateModule.discountSelected
-                                                .replace(/---idCartRule---/, discount.id_cart_rule)
-                                                .replace(/---discountName---/, discount.name)
-                                                .replace(/---discountDescription---/, discount.description)
-                                                .replace(/---discountValue---/, discount.reduction_percent);
-                                        } else {
-                                            outputDiscount += mod.TemplateModule.discountSelected
-                                                .replace(/---idCartRule---/, discount.id_cart_rule)
-                                                .replace(/---discountName---/, discount.name)
-                                                .replace(/---discountDescription---/, discount.description)
-                                                .replace(/---discountValue---/, discount.reduction_amount);
-                                        }
-                                    }
-                                    document.getElementById('output-discounts').innerHTML = outputDiscount;
-
-                                    /*
-                                     * Delete discount assign to cart
-                                     */
-                                    let urlDiscountToDelete;
-                                    let paramsUrlDiscountToDelete = '';
-
-                                    if (document.querySelectorAll('button.delete_discount') !== null) {
-                                        document.querySelectorAll('button.delete_discount').forEach(function (link) {
-                                            link.addEventListener('click', function (Event) {
-                                                Event.preventDefault();
-
-                                                let children = Event.currentTarget.closest('tr').children;
-                                                let idDiscount;
-
-                                                for (let i = 0; i < children.length; i++) {
-                                                    let regexp = new RegExp('^(discount-name_)');
-                                                    if (children[i].id.match(regexp) !== null) {
-                                                        idDiscount = children[i].id.split('_')[1];
-                                                    }
-                                                }
-
-                                                paramsUrlDiscountToDelete = '/' + id_cart + '/' + idDiscount + '?' + "_token=" + token;
-
-                                                urlDiscountToDelete = window.location.origin + '/adminToua/index.php/modules/quotation/admin/delete/discount/cart' + paramsUrlDiscountToDelete;
-
-                                                Event.currentTarget.closest('tr').classList.add('d-none');
-
-                                                const getUpdateDiscountOnCart = (cart) => {
-
-                                                };
-
-                                                QuotationModule.getData(
-                                                    urlDiscountToDelete,
-                                                    getUpdateDiscountOnCart,
-                                                    null,
-                                                    'POST',
-                                                    true,
-                                                    []
-                                                );
-                                            });
-                                        });
-                                    };
-                                };
-
-                                QuotationModule.getData(
-                                    urlShowCartDiscounts,
-                                    showCartDiscounts,
-                                    null,
-                                    null,
-                                    true,
-                                    []
-                                );
+                    let idProduct;
+                    let regexProduct = new RegExp('^(product_name_)');
+                    let children = document.getElementById('output-cart-products-to-use').children;
+                    for (let ch = 0; ch < children.length; ch++) {
+                        let grandChildren = children[ch].children;
+                        for (let g = 0; g < grandChildren.length; g++) {
+                            if (grandChildren[g].id.match(regexProduct) !== null) {
+                                idProduct = grandChildren[g].id.split('_')[2];
                             }
-
-                        } else {
-                            return false;
                         }
-                    } else {
-                        sessionStorage.setItem('idCart', id_cart);
-                        sessionStorage.setItem('idCartRule_' + idCartRule, idCartRule);
                     }
 
+                    if (total_cart > cartRuleMinimumAmount) {
+                        if (id_cart_rule === cartRuleId) {
+                            /*
+                         * Assign cart_rule to cart on bdd
+                         */
+                            cartRuleParamsUrl = '/' + id_cart + '/' + id_cart_rule + '?' + "_token=" + token;
 
-        //             if (sessionStorage.getItem('idCart')) {
-        //                 if (sessionStorage.getItem('idCart')) {
-        //
-        //                 }
-        //                 // if (total_cart < parseFloat(discount.minimum_amount)) {
-        //                 console.log('Non applicable', sessionStorage.getItem('currrentTotalCart'), ' < ', sessionStorage.getItem('currrentDiscount'));
-        //                 document.getElementById('discount_cart_err').classList.remove('d-none');
-        //             }
-        //                 // else if (document.getElementById('output-cart-products-to-use').children){
-        //                 //     document.getElementById('discount_product_err').classList.remove('d-none');
-        //             // }
-        //             else {
-        //                 console.log('Applicable', sessionStorage.getItem('currrentTotalCart'), ' > ', sessionStorage.getItem('currrentDiscount'));
-        //                 /*
-        //                  * Assign cart_rule to cart on bdd
-        //                  */
-        //                 cartRuleParamsUrl = '/' + id_cart + '/' + idCartRule + '?' + "_token=" + token;
-        //                 console.log(cartRuleParamsUrl);
-        //
-        //                 urlAssignCartRuleToCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/assign/discount/cart' + cartRuleParamsUrl;
-        //
-        //                 const getCartRuleToCart = (discount) => {
-        //
-        //                 };
-        //
-        //                 QuotationModule.getData(
-        //                     urlAssignCartRuleToCart,
-        //                     getCartRuleToCart,
-        //                     null,
-        //                     'POST',
-        //                     true,
-        //                     []
-        //                 );
-        //
-        //                 document.getElementById('discount_table').classList.remove('d-none');
-        //                 document.getElementById('discount_cart_err').classList.add('d-none');
-        //
-        //                 /*
-        //                  * Show cart_rule assign to cart
-        //                  */
-        //                 const showCartDiscounts = (cart) => {
-        //                     let outputDiscount = '';
-        //
-        //                     for (let discount of cart['discounts']) {
-        //                         if (discount.reduction_percent !== '0.00 %') {
-        //                             outputDiscount += mod.TemplateModule.discountSelected
-        //                                 .replace(/---idCartRule---/, discount.id_cart_rule)
-        //                                 .replace(/---discountName---/, discount.name)
-        //                                 .replace(/---discountDescription---/, discount.description)
-        //                                 .replace(/---discountValue---/, discount.reduction_percent);
-        //                         } else {
-        //                             outputDiscount += mod.TemplateModule.discountSelected
-        //                                 .replace(/---idCartRule---/, discount.id_cart_rule)
-        //                                 .replace(/---discountName---/, discount.name)
-        //                                 .replace(/---discountDescription---/, discount.description)
-        //                                 .replace(/---discountValue---/, discount.reduction_amount);
-        //                         }
-        //                     }
-        //                     document.getElementById('output-discounts').innerHTML = outputDiscount;
-        //
-        //                     /*
-        //                      * Delete discount assign to cart
-        //                      */
-        //                     let urlDiscountToDelete;
-        //                     let paramsUrlDiscountToDelete = '';
-        //
-        //                     if (document.querySelectorAll('button.delete_discount') !== null) {
-        //                         document.querySelectorAll('button.delete_discount').forEach(function (link) {
-        //                             link.addEventListener('click', function (Event) {
-        //                                 Event.preventDefault();
-        //
-        //                                 let children = Event.currentTarget.closest('tr').children;
-        //                                 let idDiscount;
-        //
-        //                                 for (let i = 0; i < children.length; i++) {
-        //                                     let regexp = new RegExp('^(discount-name_)');
-        //                                     if (children[i].id.match(regexp) !== null) {
-        //                                         idDiscount = children[i].id.split('_')[1];
-        //                                     }
-        //                                 }
-        //
-        //                                 paramsUrlDiscountToDelete = '/' + id_cart + '/' + idDiscount + '?' + "_token=" + token;
-        //
-        //                                 urlDiscountToDelete = window.location.origin + '/adminToua/index.php/modules/quotation/admin/delete/discount/cart' + paramsUrlDiscountToDelete;
-        //
-        //                                 Event.currentTarget.closest('tr').classList.add('d-none');
-        //
-        //                                 const getUpdateDiscountOnCart = (cart) => {
-        //
-        //                                 };
-        //
-        //                                 QuotationModule.getData(
-        //                                     urlDiscountToDelete,
-        //                                     getUpdateDiscountOnCart,
-        //                                     null,
-        //                                     'POST',
-        //                                     true,
-        //                                     []
-        //                                 );
-        //                             });
-        //                         });
-        //                     };
-        //                 };
-        //
-        //                 QuotationModule.getData(
-        //                     urlShowCartDiscounts,
-        //                     showCartDiscounts,
-        //                     null,
-        //                     null,
-        //                     true,
-        //                     []
-        //                 );
-        //             }
+                            urlAssignCartRuleToCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/assign/discount/cart' + cartRuleParamsUrl;
+
+                            const getCartRuleToCart = (discount) => {
+
+                            };
+
+                            QuotationModule.getData(
+                                urlAssignCartRuleToCart,
+                                getCartRuleToCart,
+                                null,
+                                'POST',
+                                true,
+                                []
+                            );
+
+                            document.getElementById('discount_table').classList.remove('d-none');
+                            document.getElementById('discount_cart_err').classList.add('d-none');
+                            document.getElementById('discount_date_err').classList.add('d-none');
+
+                            /*
+                             * Show cart_rule assign to cart
+                             */
+                            const showCartDiscounts = (cart) => {
+                                let outputDiscount = '';
+
+                                for (let discount of cart['discounts']) {
+                                    if (discount.reduction_percent !== '0.00 %') {
+                                        outputDiscount += mod.TemplateModule.discountSelected
+                                            .replace(/---idCartRule---/, discount.id_cart_rule)
+                                            .replace(/---discountName---/, discount.name)
+                                            .replace(/---discountDescription---/, discount.description)
+                                            .replace(/---discountValue---/, discount.reduction_percent);
+                                    } else {
+                                        outputDiscount += mod.TemplateModule.discountSelected
+                                            .replace(/---idCartRule---/, discount.id_cart_rule)
+                                            .replace(/---discountName---/, discount.name)
+                                            .replace(/---discountDescription---/, discount.description)
+                                            .replace(/---discountValue---/, discount.reduction_amount);
+                                    }
+                                }
+                                document.getElementById('output-discounts').innerHTML = outputDiscount;
+
+                                /*
+                                 * Delete discount assign to cart
+                                 */
+                                let urlDiscountToDelete;
+                                let paramsUrlDiscountToDelete = '';
+
+                                if (document.querySelectorAll('button.delete_discount') !== null) {
+                                    document.querySelectorAll('button.delete_discount').forEach(function (link) {
+                                        link.addEventListener('click', function (Event) {
+                                            Event.preventDefault();
+
+                                            let children = Event.currentTarget.closest('tr').children;
+                                            let idDiscount;
+
+                                            for (let i = 0; i < children.length; i++) {
+                                                let regexp = new RegExp('^(discount-name_)');
+                                                if (children[i].id.match(regexp) !== null) {
+                                                    idDiscount = children[i].id.split('_')[1];
+                                                }
+                                            }
+
+                                            paramsUrlDiscountToDelete = '/' + id_cart + '/' + idDiscount + '?' + "_token=" + token;
+
+                                            urlDiscountToDelete = window.location.origin + '/adminToua/index.php/modules/quotation/admin/delete/discount/cart' + paramsUrlDiscountToDelete;
+
+                                            Event.currentTarget.closest('tr').classList.add('d-none');
+
+                                            const getUpdateDiscountOnCart = (cart) => {
+
+                                            };
+
+                                            QuotationModule.getData(
+                                                urlDiscountToDelete,
+                                                getUpdateDiscountOnCart,
+                                                null,
+                                                'POST',
+                                                true,
+                                                []
+                                            );
+                                        });
+                                    });
+                                };
+                            };
+
+                            QuotationModule.getData(
+                                urlShowCartDiscounts,
+                                showCartDiscounts,
+                                null,
+                                null,
+                                true,
+                                []
+                            );
+                        }
+                        document.getElementById('discount_cart_err').classList.add('d-none');
+
+                    } else {
+                        document.getElementById('discount_cart_err').classList.remove('d-none');
+                    }
 
                 });
             });

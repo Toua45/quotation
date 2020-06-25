@@ -845,7 +845,8 @@ class QuotationRepository
         $expr = $this->connection->getExpressionBuilder();
 
         return $this->connection->createQueryBuilder()
-            ->addSelect('cr.id_cart_rule', 'crl.name', 'cr.description', 'cr.code', 'cr.free_shipping', 'cr.reduction_percent', 'cr.reduction_amount')
+            ->addSelect('cr.id_cart_rule', 'cr.date_from', 'cr.date_to', 'crl.name', 'cr.description', 'cr.code',
+                'cr.minimum_amount', 'cr.free_shipping', 'cr.reduction_percent', 'cr.reduction_amount', 'cr.reduction_product')
             ->from($this->databasePrefix . 'cart_rule', 'cr')
             ->join('cr', $this->databasePrefix . 'cart_rule_lang', 'crl', 'cr.id_cart_rule = crl.id_cart_rule')
             ->where($expr->eq('cr.id_cart_rule', ':id_cart_rule'))

@@ -894,6 +894,9 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         $discount['reduction_percent'] = $discount['reduction_percent'] . ' %';
         $discount['reduction_amount'] = $discount['reduction_amount'] . ' €';
+        if ($discount['reduction_product'] === '0') {
+            $discount['reduction_product'] = null;
+        }
 
         return new JsonResponse(json_encode($discount), 200, [], true);
     }

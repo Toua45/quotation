@@ -586,6 +586,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     document.getElementById('js-output-cart-infos').classList.replace('d-none', 'd-block');
                                     document.getElementById('js-output-discount-infos').classList.replace('d-none', 'd-block');
                                     document.getElementById('js-output-address').classList.replace('d-none', 'd-block');
+                                    document.getElementById('js-output-cart-summary').classList.replace('d-none', 'd-block');
                                 });
                             });
                         }
@@ -1066,13 +1067,13 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         .replace(/---idCartRule---/, discount.id_cart_rule)
                                                         .replace(/---discountName---/, discount.name)
                                                         .replace(/---discountDescription---/, discount.description)
-                                                        .replace(/---discountValue---/, discount.reduction_percent);
+                                                        .replace(/---discountValue---/, discount.reduction_percent + ' %');
                                                 } else {
                                                     outputDiscount += mod.TemplateModule.discountSelected
                                                         .replace(/---idCartRule---/, discount.id_cart_rule)
                                                         .replace(/---discountName---/, discount.name)
                                                         .replace(/---discountDescription---/, discount.description)
-                                                        .replace(/---discountValue---/, discount.reduction_amount);
+                                                        .replace(/---discountValue---/, discount.reduction_amount + ' €');
                                                 }
                                             }
                                             document.getElementById('output-discounts').innerHTML = outputDiscount;

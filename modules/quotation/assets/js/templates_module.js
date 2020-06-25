@@ -468,6 +468,7 @@ export const TemplateModule = {
                       ---further_address--- <br>
                       ---postcode--- ---city---<br>
                       ---country--- <br>
-                      ---phone---`
+                      ---phone---`,
+
 
 };

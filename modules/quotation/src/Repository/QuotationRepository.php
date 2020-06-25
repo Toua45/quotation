@@ -280,7 +280,7 @@ class QuotationRepository
             ->addSelect('p.price * cp.quantity AS total_product')
             ->addSelect('t.rate')
             ->addSelect('cp.id_product_attribute')
-            ->addSelect('sp.reduction')
+            ->addSelect('sp.reduction AS specific_price_reduction')
             ->from($this->databasePrefix . 'product', 'p')
             ->join('p', $this->databasePrefix . 'cart_product', 'cp', 'cp.id_product = p.id_product')
             ->leftJoin('p', $this->databasePrefix . 'specific_price', 'sp', 'sp.id_product = p.id_product')
@@ -882,7 +882,7 @@ class QuotationRepository
     {
         return $this->connection->createQueryBuilder()
             ->addSelect('ccr.id_cart', 'ccr.id_cart_rule')
-            ->addSelect('cr.id_cart_rule', 'crl.name', 'cr.description', 'cr.code', 'cr.free_shipping', 'cr.reduction_percent', 'cr.reduction_amount')
+            ->addSelect('cr.id_cart_rule', 'crl.name', 'cr.description', 'cr.code', 'cr.free_shipping', 'cr.reduction_percent', 'cr.reduction_amount', 'cr.reduction_product')
             ->from($this->databasePrefix . 'cart_cart_rule', 'ccr')
             ->join('ccr', $this->databasePrefix . 'cart_rule', 'cr', 'ccr.id_cart_rule = cr.id_cart_rule')
             ->join('cr', $this->databasePrefix . 'cart_rule_lang', 'crl', 'cr.id_cart_rule = crl.id_cart_rule')

@@ -78,7 +78,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         // Calcul total par produit avec les réductions associées (Montant HT)
         $total_product_price = 0;
         for ($i = 0; $i < count($quotation['products']); $i++) {
-            $total_product_price += $quotation['products'][$i]['total_product'] - $quotation['products'][$i]['reduction'];
+            $total_product_price += $quotation['products'][$i]['total_product'] - $quotation['products'][$i]['specific_price_reduction'];
         }
 
         // Calcul de la réduction si celle-ci est affichée en pourcentage
@@ -93,7 +93,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         // Calcul de la TVA à partir de chaque produit
         $price_tva = 0;
         for ($i = 0; $i < count($quotation['products']); $i++) {
-            $price_tva += ($quotation['products'][$i]['total_product'] - $quotation['products'][$i]['reduction']) * $quotation['products'][$i]['rate'] / 100;
+            $price_tva += ($quotation['products'][$i]['total_product'] - $quotation['products'][$i]['specific_price_reduction']) * $quotation['products'][$i]['rate'] / 100;
         }
 
         // Premier résultat avant addition de la TVA
@@ -469,6 +469,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         if ($cart['id_cart']) {
             $cart['products'] = $quotationRepository->findProductsCustomerByCarts($cart['id_cart']);
+            $cart['discounts'] = $quotationRepository->findDiscountsByIdCart($cart['id_cart']);
             $cart['order'] = $quotationRepository->findOrderByCart($cart['id_cart']);
             $cart['quotation'] = $quotationRepository->findQuotationByCart($cart['id_cart']);
         }
@@ -485,7 +486,8 @@ class AdminQuotationController extends FrameworkBundleAdminController
                     $cart['products'][$j]['product_price'] = number_format($cart['products'][$j]['product_price'], 2);
                     $cart['products'][$j]['product_quantity'];
                     $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
-                    $cart['products'][$j]['tva_amount'] = number_format((($cart['products'][$j]['product_price']*$cart['products'][$j]['rate'])/100)*$cart['products'][$j]['product_quantity'], 2);
+                    $cart['products'][$j]['tva_amount_product'] = number_format(($cart['products'][$j]['product_price']*$cart['products'][$j]['rate'])/100, 2);
+                    $cart['products'][$j]['total_tva_amount_product'] = number_format((($cart['products'][$j]['product_price']*$cart['products'][$j]['rate'])/100)*$cart['products'][$j]['product_quantity'], 2);
                     // On récupère les images liées aux produits
                     $cart['products'][$j]['attributes'] = $quotationRepository->findAttributesByProduct($cart['products'][$j]['id_product'],
                         $cart['products'][$j]['id_product_attribute']);
@@ -504,15 +506,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
             }
         }
 
-        // On calcule le montant total de la tva
-        for ($i = 0; $i < count($cart['products']); $i++) {
-            $cart['total_taxes'] += number_format($cart['products'][$i]['tva_amount'], 2);
-        }
-        $cart['total_taxes'] = strval($cart['total_taxes']);
-
-        // On calule le montant total ttc du panier
-        $cart['total_ttc'] = number_format($cart['total_cart'] + $cart['total_taxes'], 2);
-
         for ($k = 0; $k < count($cart['products']); $k++) {
             $attributes = '';
             if (isset($cart['products'][$k]['attributes'])) {
@@ -522,6 +515,15 @@ class AdminQuotationController extends FrameworkBundleAdminController
                 $cart['products'][$k]['attributes'] = rtrim($attributes, ' - ');
             }
         }
+
+        // On calcule le montant total de la tva
+        for ($l = 0; $l < count($cart['products']); $l++) {
+            $cart['total_taxes'] += number_format($cart['products'][$l]['total_tva_amount_product'], 2);
+        }
+        $cart['total_taxes'] = strval($cart['total_taxes']);
+
+        // On calule le montant total ttc du panier
+        $cart['total_ttc'] = number_format($cart['total_cart'] + $cart['total_taxes'], 2);
 
         return new JsonResponse(json_encode($cart), 200, [], true);
     }
@@ -825,11 +827,23 @@ class AdminQuotationController extends FrameworkBundleAdminController
         for ($j = 0; $j < count($cart['products']); $j++) {
             if ($cart['id_cart']) {
                 $cart['total_cart'] = number_format($cart['total_cart'], 2);
+                $cart['total_taxes'] = 0;
                 if ($cart['products']) {
                     $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
+                    $cart['products'][$j]['tva_amount_product'] = number_format(($cart['products'][$j]['product_price']*$cart['products'][$j]['rate'])/100, 2);
+                    $cart['products'][$j]['total_tva_amount_product'] = number_format((($cart['products'][$j]['product_price']*$cart['products'][$j]['rate'])/100)*$cart['products'][$j]['product_quantity'], 2);
                 }
             }
         }
+
+        // On calcule le montant total de la tva
+        for ($l = 0; $l < count($cart['products']); $l++) {
+            $cart['total_taxes'] += number_format($cart['products'][$l]['total_tva_amount_product'], 2);
+        }
+        $cart['total_taxes'] = strval($cart['total_taxes']);
+
+        // On calule le montant total ttc du panier
+        $cart['total_ttc'] = number_format($cart['total_cart'] + $cart['total_taxes'], 2);
 
         return new JsonResponse(json_encode($cart), 200, [], true);
     }
@@ -849,8 +863,29 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $cart = $quotationRepository->findOneCartById($id_cart);
 
         if ($cart['id_cart']) {
-            $cart['total_cart'] = number_format($cart['total_cart'], 2);
+            $cart['products'] = $quotationRepository->findProductsCustomerByCarts($cart['id_cart']);
         }
+
+        for ($j = 0; $j < count($cart['products']); $j++) {
+            if ($cart['id_cart']) {
+                $cart['total_cart'] = number_format($cart['total_cart'], 2);
+                $cart['total_taxes'] = 0;
+                if ($cart['products']) {
+                    $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
+                    $cart['products'][$j]['tva_amount_product'] = number_format(($cart['products'][$j]['product_price']*$cart['products'][$j]['rate'])/100, 2);
+                    $cart['products'][$j]['total_tva_amount_product'] = number_format((($cart['products'][$j]['product_price']*$cart['products'][$j]['rate'])/100)*$cart['products'][$j]['product_quantity'], 2);
+                }
+            }
+        }
+
+        // On calcule le montant total de la tva
+        for ($l = 0; $l < count($cart['products']); $l++) {
+            $cart['total_taxes'] += number_format($cart['products'][$l]['total_tva_amount_product'], 2);
+        }
+        $cart['total_taxes'] = strval($cart['total_taxes']);
+
+        // On calule le montant total ttc du panier
+        $cart['total_ttc'] = number_format($cart['total_cart'] + $cart['total_taxes'], 2);
 
         return new JsonResponse(json_encode($cart), 200, [], true);
     }
@@ -924,92 +959,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $cart = $quotationRepository->assignCartRuleToCart($id_cart, $id_cart_rule);
 
         return new JsonResponse(json_encode('It works !'));
-    }
-
-    /**
-     * Show Cart discounts
-     * @param Request $request
-     * @param $id_cart
-     * @return JsonResponse
-     */
-    public function showCartDiscounts(Request $request, $id_cart)
-    {
-        $quotationRepository = $this->get('quotation_repository');
-        $cart = $quotationRepository->findOneCartById($id_cart);
-
-        if ($cart['id_cart']) {
-            $cart['products'] = $quotationRepository->findProductsCustomerByCarts($cart['id_cart']);
-            $cart['discounts'] = $quotationRepository->findDiscountsByIdCart($cart['id_cart']);
-        }
-
-        for ($j = 0; $j < count($cart['products']); $j++) {
-            if ($cart['id_cart']) {
-                $cart['id_cart'];
-                $cart['date_cart'] = date("d/m/Y", strtotime($cart['date_cart']));
-                $cart['total_cart'] = number_format($cart['total_cart'], 2);
-                $cart['total_taxes'] = 0;
-                if ($cart['products']) {
-                    $cart['products'][$j]['id_product'];
-                    $cart['products'][$j]['product_name'];
-                    $cart['products'][$j]['product_price'] = number_format($cart['products'][$j]['product_price'], 2);
-                    $cart['products'][$j]['product_quantity'];
-                    $cart['products'][$j]['total_product'] = number_format($cart['products'][$j]['total_product'], 2);
-                    $cart['products'][$j]['tva_amount'] = number_format((($cart['products'][$j]['product_price']*$cart['products'][$j]['rate'])/100)*$cart['products'][$j]['product_quantity'], 2);
-                    // On récupère les images liées aux produits
-                    $cart['products'][$j]['attributes'] = $quotationRepository->findAttributesByProduct($cart['products'][$j]['id_product'],
-                        $cart['products'][$j]['id_product_attribute']);
-                    $cart['products'][$j]['id_image'] = $quotationRepository->findPicturesByAttributesProduct($cart['products'][$j]['id_product'],
-                        $cart['products'][$j]['id_product_attribute'])['id_image'];
-                    if ($cart['products'][$j]['id_image'] == '0' || $cart['products'][$j]['id_product_attribute'] == '0') {
-                        $cart['products'][$j]['id_image'] = $quotationRepository->findPicturesByProduct($cart['products'][$j]['id_product'])['id_image'];
-                    }
-
-                    // Pour créer le path, on va séparer l'id_image s'il dispose d'un nombre à 2 chiffres sinon on récupère l'id_image
-                    $cart['products'][$j]['path'] = $cart['products'][$j]['id_image'];
-                    if ($cart['products'][$j]['path']) {
-                        $cart['products'][$j]['path'] = str_split($cart['products'][$j]['path']);
-                    }
-                }
-            }
-        }
-
-        for ($k = 0; $k < count($cart['products']); $k++) {
-            $attributes = '';
-            if (isset($cart['products'][$k]['attributes'])) {
-                for ($l = 0; $l < count($cart['products'][$k]['attributes']); $l++) {
-                    $attributes .= $cart['products'][$k]['attributes'][$l]['attribute_details'] . ' - ';
-                }
-                $cart['products'][$k]['attributes'] = rtrim($attributes, ' - ');
-            }
-        }
-
-//        for ($l = 0; $l < count($cart['discounts']); $l++) {
-//            if ($cart['discounts']) {
-////                $cart['discounts'][$l]['reduction_percent'] = $cart['discounts'][$l]['reduction_percent'];
-////                $cart['discounts'][$l]['reduction_amount'] = $cart['discounts'][$l]['reduction_amount'];
-//                if ($cart['discounts'][$l]['reduction_product'] != '0') {
-//                    if ($cart['discounts'][$l]['reduction_percent'] != '0.00')
-//                    $cart['discounts'][$l]['product_price_with_discount'] = ;
-//                }
-//            }
-//        }
-
-        // On calcule le montant des réductions lié aux produits
-
-
-        // On calcule le montant des réductions lié au panier
-
-
-        // On calcule le montant total de la tva
-        for ($m = 0; $m < count($cart['products']); $m++) {
-            $cart['total_taxes'] += number_format($cart['products'][$m]['tva_amount'], 2);
-        }
-        $cart['total_taxes'] = strval($cart['total_taxes']);
-
-        // On calule le montant total ttc du panier
-        $cart['total_ttc'] = number_format($cart['total_cart'] + $cart['total_taxes'], 2);
-
-        return new JsonResponse(json_encode($cart), 200, [], true);
     }
 
     /**

@@ -475,10 +475,10 @@ export const TemplateModule = {
 
     cartSummaryTotalProducts: `---totalProducts---`,
 
-    // cartSummaryTotalDiscounts: `---totalDiscounts---`,
+    cartSummaryTotalDiscounts: `---totalDiscounts---`,
 
     cartSummaryTotalTaxes: `---totalTaxesCartSummary---`,
-    //
+
     cartSummaryTotalWithoutTaxes: `---totalCartWithoutTaxes---`,
 
     cartSummaryTotalWithTaxes: `---totalCartWithTaxes---`,

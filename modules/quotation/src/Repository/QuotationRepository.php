@@ -883,13 +883,31 @@ class QuotationRepository
         return $this->connection->createQueryBuilder()
             ->addSelect('ccr.id_cart', 'ccr.id_cart_rule')
             ->addSelect('cr.id_cart_rule', 'crl.name', 'cr.description', 'cr.code', 'cr.free_shipping', 'cr.reduction_percent', 'cr.reduction_amount', 'cr.reduction_product')
+//            ->addSelect('p.price')
             ->from($this->databasePrefix . 'cart_cart_rule', 'ccr')
             ->join('ccr', $this->databasePrefix . 'cart_rule', 'cr', 'ccr.id_cart_rule = cr.id_cart_rule')
             ->join('cr', $this->databasePrefix . 'cart_rule_lang', 'crl', 'cr.id_cart_rule = crl.id_cart_rule')
+//            ->join('cr', $this->databasePrefix . 'product', 'p', 'cr.reduction_product = p.id_product')
             ->where('ccr.id_cart = :id_cart')
             ->setParameter('id_cart', $id_cart)
             ->execute()
             ->fetchAll();
+    }
+
+    /*
+     * @return mixed []
+     */
+    public function findProductAssignToDiscount($id_product)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('cr.reduction_product AS id_product')
+            ->addSelect('ROUND(p.price, 2) AS product_price')
+            ->from($this->databasePrefix . 'cart_rule', 'cr')
+            ->join('cr', $this->databasePrefix . 'product', 'p', 'cr.reduction_product = p.id_product')
+            ->where('cr.reduction_product = :id_product')
+            ->setParameter('id_product', $id_product)
+            ->execute()
+            ->fetch();
     }
 
     /**

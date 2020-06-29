@@ -430,6 +430,7 @@ export const TemplateModule = {
                                 <td id="product_name_---idProduct---_---idProductAttribute---" class="text-left">---productName---</td>
                                 <td id="product_attribute_---idProdAttr---_---idProd---" class="text-left">---productAttribute---</td>
                                 <td class="product_price_cart text-left">---productPrice---</td>
+                                <td class="product_taxe text-left d-none">---productTaxe---</td>
                                 <td class="text-left">
                                 <div class="input-group fixed-width-md">
                                 <input type="number" class="cart_quantity w-25" min="1" value="---productQuantity---" />
@@ -437,11 +438,13 @@ export const TemplateModule = {
                                 <button class="delete_product btn btn-light" style="height: 35px"><i class="material-icons">clear</i></button>
                                 </div> 
                                 </td>
+                                <td class="total_product_taxe text-left d-none">---totalProductTaxe---</td>
                                 <td class="total_product_price_on_cart text-left">---totalProduct---</td>
                             </tr>`,
 
     quotationCart: `<tr>
                         <th colspan="5" class="text-left">Total produits</th>
+                        <th id="total_cart_taxes" class="text-left d-none">---totalCartTaxes---</th>
                         <th id="total_cart" class="text-left">---totalCart---</th>
                     </tr>`,
 
@@ -468,6 +471,17 @@ export const TemplateModule = {
                       ---further_address--- <br>
                       ---postcode--- ---city---<br>
                       ---country--- <br>
-                      ---phone---`
+                      ---phone---`,
+
+    cartSummaryTotalProducts: `---totalProducts---`,
+
+    cartSummaryTotalDiscounts: `---totalDiscounts---`,
+
+    cartSummaryTotalTaxes: `---totalTaxesCartSummary---`,
+
+    cartSummaryTotalWithoutTaxes: `---totalCartWithoutTaxes---`,
+
+    cartSummaryTotalWithTaxes: `---totalCartWithTaxes---`,
+
 
 };

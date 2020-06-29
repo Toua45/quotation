@@ -1,0 +1,10 @@
+.cart-summary-panel {
+  border: 1px solid $middlegrey;
+  border-radius: 5px;
+}
+
+.data-focus.data-focus-primary {
+  background-color: $primary;
+  border-radius: 10px;
+  color: $light;
+}

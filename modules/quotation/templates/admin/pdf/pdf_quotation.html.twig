@@ -144,7 +144,7 @@
             <td>{{ product.product_price|number_format(2) }} €</td>
             <td>{{ product.product_quantity }}</td>
             <td>{{ product.total_product|number_format(2) }} €</td>
-            <td>{{ product.reduction|number_format(2) }} €</td>
+            <td>{{ product.specific_price_reduction|number_format(2) }} €</td>
         </tr>
     {% endfor %}
     </tbody>

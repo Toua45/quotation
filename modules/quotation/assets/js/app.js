@@ -241,6 +241,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         let modalCustomerQuotationDetailsCart = '';
                                         let selectAddress = '';
                                         let addressSelected = '';
+                                        let picturePath = window.location.origin + '/img/p/';
 
                                         /*
                                         * Cart section
@@ -254,11 +255,14 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                                 // TemplateModule.cartData correspond à cartData dans le fichier templates_module.js
                                                 modalCustomerDetailsCart += mod.TemplateModule.cartData
+                                                    .replace(/---productPicture---/, picturePath + product.path.join('/') + '/' + product.id_image + '-cart_default.jpg')
                                                     .replace(/---productName---/, product.product_name)
+                                                    .replace(/---productAttribute---/, product.attributes)
                                                     .replace(/---productPrice---/, product.product_price + ' €')
                                                     .replace(/---productQuantity---/, product.product_quantity)
                                                     .replace(/---totalProduct---/, product.total_product + ' €');
                                             }
+
 
                                             modalCustomerDetails += mod.TemplateModule.modalCartInfos
                                                 .replace(/---id-cart-modal---/, cart.id_cart)
@@ -301,7 +305,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                                 // Etant donné que les produits d'un panier sont déjà récupérés, on va réutiliser le template correspondant, ici TemplateModule.cartData
                                                 modalCustomerOrderDetailsCart += mod.TemplateModule.cartData
+                                                    .replace(/---productPicture---/, picturePath + product.path.join('/') + '/' + product.id_image + '-cart_default.jpg')
                                                     .replace(/---productName---/, product.product_name)
+                                                    .replace(/---productAttribute---/, product.attributes)
                                                     .replace(/---productPrice---/, product.product_price + ' €')
                                                     .replace(/---productQuantity---/, product.product_quantity)
                                                     .replace(/---totalProduct---/, product.total_product + ' €');
@@ -323,7 +329,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---orderStatus---/, order.order_status)
                                                     .replace(/---id-cart---/, order.id_cart)
                                                     .replace(/---totalProducts---/, order.total_products + ' €')
+                                                    .replace(/---totalDiscounts---/, cart.total_discounts + ' €')
                                                     .replace(/---totalShipping---/, order.total_shipping + ' €')
+                                                    .replace(/---totaltaxes---/, cart.total_taxes + ' €')
                                                     .replace(/---totalPaid---/, order.total_paid + ' €')
                                                     .replace(/---order-cart-data---/, modalCustomerOrderDetailsCart);
                                             }
@@ -358,7 +366,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             for (let product of cart['products']) {
 
                                                 modalCustomerQuotationDetailsCart += mod.TemplateModule.cartData
+                                                    .replace(/---productPicture---/, picturePath + product.path.join('/') + '/' + product.id_image + '-cart_default.jpg')
                                                     .replace(/---productName---/, product.product_name)
+                                                    .replace(/---productAttribute---/, product.attributes)
                                                     .replace(/---productPrice---/, product.product_price + ' €')
                                                     .replace(/---productQuantity---/, product.product_quantity)
                                                     .replace(/---totalProduct---/, product.total_product + ' €');
@@ -375,18 +385,21 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---reference---/, quotation.quotation_reference)
                                                     .replace(/---id-cart---/, quotation.id_cart)
                                                     .replace(/---totalQuotation---/, quotation.total_quotation + ' €')
+                                                    .replace(/---totalDiscounts---/, cart.total_discounts + ' €')
+                                                    .replace(/---totaltaxes---/, cart.total_taxes + ' €')
+                                                    .replace(/---totalTTC---/, cart.total_ttc + ' €')
                                                     .replace(/---quotation-cart-data---/, modalCustomerQuotationDetailsCart);
                                             }
 
                                             modalCustomerQuotationDetailsCart = '';
                                         }
 
-                                        for (let customer of data['response']) {
+                                        for (let customer of data['quotations']) {
                                             if (typeof customer.id_quotation !== 'undefined') {
                                                 outputQuotation += mod.TemplateModule.tableQuotation
                                                     .replace(/---quotationId---/, customer.id_quotation)
                                                     .replace(/---quotationDate---/, customer.date_quotation)
-                                                    .replace(/---totalQuotation---/, customer.total_quotation + ' €')
+                                                    .replace(/---totalQuotation---/, customer.total_ttc + ' €')
                                                     .replace(/---id-quotation-modal---/, customer.id_quotation)
                                                     .replace(/---idCustomer---/, customer.id_customer)
                                                     .replace(/---id---/, customer.id_cart)

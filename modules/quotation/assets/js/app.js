@@ -482,15 +482,49 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                                 .replace(/---idProd---/, product.id_product)
                                                                 .replace(/---productAttribute---/, product.attributes)
                                                                 .replace(/---productPrice---/, product.product_price + ' €')
+                                                                .replace(/---productTaxe---/, product.tva_amount_product)
                                                                 .replace(/---productQuantity---/, product.product_quantity)
+                                                                .replace(/---totalProductTaxe---/, product.total_tva_amount_product)
                                                                 .replace(/---totalProduct---/, product.total_product + ' €');
                                                         }
 
                                                         outputCartToUse += mod.TemplateModule.quotationCart
+                                                            .replace(/---totalCartTaxes---/, cart['total_taxes'] + ' €')
                                                             .replace(/---totalCart---/, cart['total_cart'] + ' €');
 
                                                         document.getElementById('output-cart-products-to-use').innerHTML = outputCartProductsToUse;
                                                         document.getElementById('output-cart-to-use').innerHTML = outputCartToUse;
+
+                                                        /*
+                                                         * Show cart_summary
+                                                         */
+                                                        let outputCartSummaryTotalProducts = '';
+                                                        let outputCartSummaryTotalTaxes = '';
+                                                        let outputCartSummaryTotalCartWithoutTaxes = '';
+                                                        let outputCartSummaryTotalCartWithTaxes = '';
+
+                                                        let cartSummaryTotalProducts = document.getElementById('cart_summary_total_products');
+                                                        let cartSummaryTotalTaxes = document.getElementById('cart_summary_total_taxes');
+                                                        let cartSummaryTotalWithoutTaxes = document.getElementById('cart_summary_total_without_taxes');
+                                                        let cartSummaryTotalWithTaxes = document.getElementById('cart_summary_total_with_taxes');
+
+                                                        outputCartSummaryTotalProducts = mod.TemplateModule.cartSummaryTotalProducts.replace(/---totalProducts---/,
+                                                            document.getElementById('total_cart').textContent);
+                                                        outputCartSummaryTotalTaxes = mod.TemplateModule.cartSummaryTotalTaxes.replace(/---totalTaxesCartSummary---/,
+                                                            document.getElementById('total_cart_taxes').textContent);
+                                                        outputCartSummaryTotalCartWithoutTaxes = mod.TemplateModule.cartSummaryTotalWithoutTaxes.replace(/---totalCartWithoutTaxes---/,
+                                                            document.getElementById('total_cart').textContent);
+
+                                                        cartSummaryTotalProducts.innerHTML = outputCartSummaryTotalProducts;
+                                                        cartSummaryTotalTaxes.innerHTML = outputCartSummaryTotalTaxes;
+                                                        cartSummaryTotalWithoutTaxes.innerHTML = outputCartSummaryTotalCartWithoutTaxes;
+
+                                                        let cartSummaryTotalTaxesValue = parseFloat(cartSummaryTotalTaxes.textContent.split(' ')[0]);
+                                                        let cartSummaryTotalWithoutTaxesValue = parseFloat(cartSummaryTotalWithoutTaxes.textContent.split(' ')[0]);
+                                                        let cartSummaryTotalWithTaxesValue = parseFloat(cartSummaryTotalTaxesValue + cartSummaryTotalWithoutTaxesValue).toFixed(2);
+
+                                                        outputCartSummaryTotalCartWithTaxes = mod.TemplateModule.cartSummaryTotalWithTaxes.replace(/---totalCartWithTaxes---/, cartSummaryTotalWithTaxesValue + ' €');
+                                                        cartSummaryTotalWithTaxes.innerHTML = outputCartSummaryTotalCartWithTaxes;
                                                     };
 
                                                     /*
@@ -1150,6 +1184,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                              * Show cart summary
                                              */
                                             let outputCartSummaryTotalDiscounts = '';
+                                            let cartSummaryTotalProducts = document.getElementById('cart_summary_total_products');
                                             let cartSummaryTotalDiscounts = document.getElementById('cart_summary_total_discounts');
                                             let cartSummaryTotalTaxes = document.getElementById('cart_summary_total_taxes');
                                             let cartSummaryTotalWithoutTaxes = document.getElementById('cart_summary_total_without_taxes');
@@ -1159,10 +1194,12 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                 cart['total_discounts'] + ' €');
 
                                             cartSummaryTotalDiscounts.innerHTML = outputCartSummaryTotalDiscounts;
+                                            cartSummaryTotalWithoutTaxes.innerHTML = (parseFloat(cartSummaryTotalProducts.textContent.split(' ')[0])
+                                                - parseFloat(cartSummaryTotalDiscounts.textContent.split(' ')[0])).toFixed(2) + ' €';
                                             // On récupère le total ttc à jour après les réductions
-                                            cartSummaryTotalWithTaxesAndDiscounts.innerHTML = (parseFloat(cartSummaryTotalWithoutTaxes.textContent.split(' ')[0]) -
-                                                parseFloat(cartSummaryTotalDiscounts.textContent.split(' ')[0]) +
-                                                parseFloat(cartSummaryTotalTaxes.textContent.split(' ')[0])).toFixed(2) + ' €';
+                                            cartSummaryTotalWithTaxesAndDiscounts.innerHTML = (parseFloat(cartSummaryTotalWithoutTaxes.textContent.split(' ')[0])
+                                               // - parseFloat(cartSummaryTotalDiscounts.textContent.split(' ')[0])
+                                               + parseFloat(cartSummaryTotalTaxes.textContent.split(' ')[0])).toFixed(2) + ' €';
 
 
                                             /*
@@ -1193,10 +1230,12 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                                         const getUpdateDiscountOnCart = (cart) => {
                                                             cartSummaryTotalDiscounts.innerHTML = cart['total_discounts'] + ' €';
+                                                            cartSummaryTotalWithoutTaxes.innerHTML = (parseFloat(cartSummaryTotalProducts.textContent.split(' ')[0])
+                                                                - parseFloat(cartSummaryTotalDiscounts.textContent.split(' ')[0])).toFixed(2) + ' €';
                                                             // On récupère le total ttc à jour après les réductions
-                                                            cartSummaryTotalWithTaxesAndDiscounts.innerHTML = (parseFloat(cartSummaryTotalWithoutTaxes.textContent.split(' ')[0]) -
-                                                                parseFloat(cartSummaryTotalDiscounts.textContent.split(' ')[0]) +
-                                                                parseFloat(cartSummaryTotalTaxes.textContent.split(' ')[0])).toFixed(2) + ' €';
+                                                            cartSummaryTotalWithTaxesAndDiscounts.innerHTML = (parseFloat(cartSummaryTotalWithoutTaxes.textContent.split(' ')[0])
+                                                                // - parseFloat(cartSummaryTotalDiscounts.textContent.split(' ')[0])
+                                                                + parseFloat(cartSummaryTotalTaxes.textContent.split(' ')[0])).toFixed(2) + ' €';
                                                         };
 
                                                         QuotationModule.getData(

@@ -12,6 +12,7 @@ use Quotation\Form\QuotationCustomerType;
 use Quotation\Form\QuotationDiscountType;
 use Quotation\Form\QuotationProductType;
 use Quotation\Form\QuotationSearchType;
+use Quotation\Form\QuotationStatusType;
 use Quotation\Service\QuotationFileSystem;
 use Quotation\Service\QuotationPdf;
 use Symfony\Component\HttpFoundation\Request;
@@ -250,6 +251,9 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $formQuotationDiscount = $this->createForm(QuotationDiscountType::class, $quotation);
         $formQuotationDiscount->handleRequest($request);
 
+        $formQuotationStatus = $this->createForm(QuotationStatusType::class, $quotation);
+        $formQuotationStatus->handleRequest($request);
+
 //        if ($form->isSubmitted() && $form->isValid()) {
 //            $quotation->setDateAdd(new \DateTime('now'));
 //            $entityManager = $this->getDoctrine()->getManager();
@@ -269,6 +273,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'formQuotationProduct' => $formQuotationProduct->createView(),
             'formQuotationDiscount' => $formQuotationDiscount->createView(),
+            'formQuotationStatus' => $formQuotationStatus->createView(),
         ]);
     }
 

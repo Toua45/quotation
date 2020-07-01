@@ -639,7 +639,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     document.getElementById('js-output-cart-infos').classList.replace('d-none', 'd-block');
                                     document.getElementById('js-output-discount-infos').classList.replace('d-none', 'd-block');
                                     document.getElementById('js-output-address').classList.replace('d-none', 'd-block');
-                                    // document.getElementById('js-output-cart-summary').classList.replace('d-none', 'd-block');
                                 });
                             });
                         }
@@ -1207,7 +1206,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                 - parseFloat(cartSummaryTotalDiscounts.textContent.split(' ')[0])).toFixed(2) + ' €';
                                             // On récupère le total ttc à jour après les réductions
                                             cartSummaryTotalWithTaxesAndDiscounts.innerHTML = (parseFloat(cartSummaryTotalWithoutTaxes.textContent.split(' ')[0])
-                                               // - parseFloat(cartSummaryTotalDiscounts.textContent.split(' ')[0])
                                                + parseFloat(cartSummaryTotalTaxes.textContent.split(' ')[0])).toFixed(2) + ' €';
 
 

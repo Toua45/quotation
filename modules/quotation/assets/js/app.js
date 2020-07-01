@@ -77,6 +77,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                     output += mod.TemplateModule.card
                         .replace(/---increment---/, i)
+                        .replace(/---fullname---/, customer.lastname + customer.firstname)
                         .replace(/---lastname---/, customer.lastname)
                         .replace(/---firstname---/, customer.firstname)
                         .replace(/---customer-id---/, customer.id_customer)
@@ -538,12 +539,17 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         true,
                                                         []
                                                     );
+
+                                                    // On affiche le récapitulatif du panier
+                                                    document.getElementById('js-output-cart-summary').classList.replace('d-none', 'd-block');
                                                 });
                                             });
                                         }
 
                                         // on ajoute l'attribut data-idcustomer à l'élément html add-product-to-cart pour récupérer l'id_customer qui nous servira pour la section search product section
                                         document.getElementById('add-product-to-cart').setAttribute('data-idcustomer', data['customer'].id_customer);
+                                        // on ajoute l'attribut data-customername à l'élément html add-product-to-cart pour récupérer le fullname qui nous servira pour la reference du devis lors de la création de celui-ci
+                                        document.getElementById('add-product-to-cart').setAttribute('data-customername', data['customer'].lastname + data['customer'].firstname);
                                         // on ajoute l'attribut data-idcustomer à l'élément html add-product-to-cart pour récupérer l'id_customer qui nous servira pour la section search product section
                                         document.getElementById('add-product-to-cart').setAttribute('data-idcart', data.id_last_cart);
                                         // On ajoute l'attribut data-idcart à l'élément id output-discounts
@@ -633,7 +639,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     document.getElementById('js-output-cart-infos').classList.replace('d-none', 'd-block');
                                     document.getElementById('js-output-discount-infos').classList.replace('d-none', 'd-block');
                                     document.getElementById('js-output-address').classList.replace('d-none', 'd-block');
-                                    document.getElementById('js-output-cart-summary').classList.replace('d-none', 'd-block');
+                                    // document.getElementById('js-output-cart-summary').classList.replace('d-none', 'd-block');
                                 });
                             });
                         }
@@ -1044,6 +1050,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                             true,
                             []
                         );
+
+                        // On affiche le récapitulatif du panier
+                        document.getElementById('js-output-cart-summary').classList.replace('d-none', 'd-block');
                     });
                 });
             };
@@ -1294,6 +1303,43 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     };
 
     const inputSearchDiscounts = document.getElementById('quotation_discount_cartId').addEventListener('blur', getQueryDiscount, false);
+
+    /*
+     * Create new quotation
+     */
+    let urlCreateNewQuotation;
+    let paramsUrlCreateNewQuotation = '';
+
+    document.getElementById('submitCreateNewQuotation').addEventListener('click', Event => {
+
+        let newQuotationToken = new URL(window.location.href).searchParams.get('_token');
+        location.href = window.location.origin + '/adminToua/index.php/modules/quotation/admin/research' + '?' + "_token=" + newQuotationToken;
+
+        let newQuotationCartId = document.getElementById('add-product-to-cart').dataset.idcart;
+        let newQuotationCustomerId = document.getElementById('add-product-to-cart').dataset.idcustomer;
+        let newQuotationCustomerName = document.getElementById('add-product-to-cart').dataset.customername.substr(0, 3);
+        let randomNumbReference = Math.floor(Math.random() * 1000000);
+        let newQuotationReference = newQuotationCustomerId + newQuotationCustomerName +  randomNumbReference;
+        let newQuotationMessage = document.getElementById('quotation_message').value;
+        let newQuotationDate = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000).toISOString().substr(0, 19).replace('T', ' ');
+        let newQuotationStatus = document.getElementById('quotation_status_status').value;
+
+        paramsUrlCreateNewQuotation =  '/' + newQuotationCartId + '/' + newQuotationCustomerId + '/' + newQuotationReference + '/' + newQuotationMessage + '/' + newQuotationDate
+            + '/' + newQuotationStatus + '?' + "_token=" + newQuotationToken;
+        urlCreateNewQuotation = window.location.origin + '/adminToua/index.php/modules/quotation/admin/create/new/quotation' + paramsUrlCreateNewQuotation;
+
+        const getQuotation = (quotation) => {};
+
+        QuotationModule.getData(
+            urlCreateNewQuotation,
+            getQuotation,
+            null,
+            'POST',
+            true,
+            []
+        );
+
+    });
 
 }
 

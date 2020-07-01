@@ -2,7 +2,7 @@ export const TemplateModule = {
 
     card: `<div id='customer-card_---increment---' class="card hidden customerCard" >
                 <div class="card-header card-header-customer">    
-                    <h2>---firstname--- ---lastname---</h2>
+                    <h2 id="customer_name_---fullname---">---firstname--- ---lastname---</h2>
                     <h2>#---customer-id---</h2>             
                 </div>
                 <div class="card-body">

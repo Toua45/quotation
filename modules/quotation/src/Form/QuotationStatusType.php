@@ -20,7 +20,7 @@ class QuotationStatusType extends AbstractType
                 'choices' => [
                     'À valider' => 'validate',
                     'Validé' => 'validated',
-                    'Approuvé' => 'approved',
+                    'Commandé' => 'ordered',
                     'Refusé' => 'refused'
                 ],
                 'attr' => [

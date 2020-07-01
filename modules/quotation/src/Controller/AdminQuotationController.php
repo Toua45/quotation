@@ -1148,4 +1148,23 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         return new JsonResponse(json_encode($cart), 200, [], true);
     }
+
+    /**
+     * Create new quotation
+     * @param $id_cart
+     * @param $id_customer
+     * @param $reference
+     * @param $message_visible
+     * @param $date_add
+     * @param $status
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function createNewQuotation($id_cart, $id_customer, $reference, $message_visible, $date_add, $status)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $quotation = $quotationRepository->createQuotation($id_cart, $id_customer, $reference, $message_visible, $date_add, $status);
+
+        return new JsonResponse(json_encode('Quotation create !'));
+    }
 }

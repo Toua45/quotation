@@ -626,7 +626,7 @@ class QuotationRepository
     public function getCustomerInfoById($id_customer)
     {
         return $this->connection->createQueryBuilder()
-            ->addSelect('c.id_customer', 'c.secure_key')
+            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname', 'c.secure_key')
             ->from($this->databasePrefix . 'customer', 'c')
             ->where('c.id_customer = :id_customer')
             ->setParameter('id_customer', $id_customer)
@@ -927,6 +927,40 @@ class QuotationRepository
             ->setParameters([
                 'id_cart' => $id_cart,
                 'id_cart_rule' => $id_cart_rule,
+            ]);
+        return $query->execute();
+    }
+
+    /**
+     * Create quotation
+     * @param $id_cart
+     * @param $id_customer
+     * @param $reference
+     * @param $message_visible
+     * @param $date_add
+     * @param $status
+     * @return \Doctrine\DBAL\Driver\Statement|int
+     */
+    public function createQuotation(int $id_cart, int $id_customer, string $reference, string $message_visible, $date_add, string $status)
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->insert($this->databasePrefix . 'quotation');
+
+        $query->values([
+            'id_cart' => ':id_cart',
+            'id_customer' => ':id_customer',
+            'reference' => ':reference',
+            'message_visible' => ':message_visible',
+            'date_add' => ':date_add',
+            'status' => ':status',
+        ])
+            ->setParameters([
+                'id_cart' => $id_cart,
+                'id_customer' => $id_customer,
+                'reference' => $reference,
+                'message_visible' => $message_visible,
+                'date_add' => $date_add,
+                'status' => $status,
             ]);
         return $query->execute();
     }

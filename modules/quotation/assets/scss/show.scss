@@ -1,0 +1,9 @@
+.customer_infos, .customer_message, .cart_infos {
+  border-bottom: 1px solid $lightgrey;
+}
+
+.show_quotation_message {
+  border: 1px solid $textarea-border;
+  border-radius: 5px;
+  background-color: $input-color;
+}

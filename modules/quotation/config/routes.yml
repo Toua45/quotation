@@ -231,3 +231,13 @@ quotation_admin_create_new_quotation:
     _controller: 'Quotation\Controller\AdminQuotationController::createNewQuotation'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
+
+quotation_admin_show_quotation:
+  path: quotation/admin/show/quotation/{id_quotation}
+  requirements:
+    id_quotation: '\d+'
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::showQuotation'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'

@@ -1,0 +1,151 @@
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+
+    <div class="card p-3">
+        <a href="{{ path('quotation_admin') }}" class="btn btn-primary">Retour à la liste des devis</a>
+    </div>
+
+    <div class="card pt-3 pb-3 p-4">
+        <div class="row d-flex">
+            <div class="col-xs-6 col-sm-3">
+                <div class="quotation-infos">
+                    <h2><i class="material-icons">content_paste</i>
+                        <span class="title">Devis [{{ quotation.id_quotation }}]</span></br>
+                        <span class="value ml-4">Référence : {{ quotation.reference }}</span>
+                    </h2>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-3">
+                <div class="quotation-infos">
+                    <h2><i class="material-icons">calendar_today</i>
+                        <span class="title">Date</span></br>
+                        <span class="value ml-4">{{ quotation.date_add | date('d/m/Y')}}</span>
+                    </h2>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-3">
+                <div class="quotation-infos">
+                    <h2><i class="material-icons">credit_card</i>
+                        <span class="title">Total</span></br>
+                        <span class="value ml-4">{{ cart.total_ttc }} €</span>
+                    </h2>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-3">
+                <div class="quotation-infos">
+                    <h2><i class="material-icons">label</i>
+                        <span class="title">Status</span></br>
+                        <span class="value ml-4">{{ quotation.status }}</span>
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3 pr-3">
+        <div class="block col-3">
+            <div class="card pt-3 pb-3 p-4">
+                <div class="customer_infos d-flex">
+                    <i class="material-icons mr-2">person</i>
+                    <h3 class="panel-heading">CLIENT :<span
+                                class="ml-2">{{ quotation.firstname }} {{ quotation.lastname }}</span>
+                        <span>[{{ quotation.id_customer }}]</span></h3>
+                </div>
+                <div class="customer_adress d-flex pt-3">
+                    <i class="material-icons">location_on</i>
+                    <span class="pl-2">ADRESSE</span>
+                </div>
+                <div class="pt-2 pl-4">
+                    <span>{{ quotation.addresses[0].address }}</span></br>
+                    <span>{{ quotation.addresses[0].postcode }} {{ quotation.addresses[0].city }}</span></br>
+                    <span>{{ quotation.addresses[0].country }}</span></br>
+                </div>
+            </div>
+
+            <div class="card pt-3 pb-3 p-4">
+                <div class="customer_message d-flex">
+                    <i class="material-icons mr-2">mail</i>
+                    <h3 class="panel-heading">MESSAGE</h3>
+                </div>
+                <div class="d-flex justify-content-center pt-4">
+                    <textarea class="show_quotation_message" name="quotation_message" rows="15"
+                              cols="40">{{ quotation.message_visible }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="card col-9 pt-3 pb-3 p-4">
+            <div class="cart_details">
+                <div class="cart_infos row">
+                    <i class="material-icons mr-2">shopping_cart</i>
+                    <h3 class="panel-heading">CONTENU DU PANIER [{{ quotation.id_cart }}]</h3>
+                </div>
+
+                <div class="tab-content d-flex align-items-start col-12">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th class="text-left">Miniature</th>
+                            <th class="text-left">Produits</th>
+                            <th class="text-left">Description</th>
+                            <th class="text-left">Prix Unitaire HT</th>
+                            <th class="text-left">Quantité</th>
+                            <th class="text-left">Total</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for product in cart.products %}
+                            <tr>
+                                <td class="text-left"><img src="{{ product.url }}"></td>
+                                <td class="text-left">{{ product.product_name }}</td>
+                                <td class="text-left">{{ product.attributes }}</td>
+                                <td class="text-left">{{ product.product_price }} €</td>
+                                <td class="text-left">{{ product.product_quantity }}</td>
+                                <td class="text-left">{{ product.total_product }} €</td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="5" class="text-left">Total HT</td>
+                            <td class="text-left">{{ cart.total_cart }} €</td>
+                        </tr>
+
+                        {% for discount in cart.discounts %}
+                            <tr>
+                                <td class="text-left">Nom de la réduction</td>
+                                <td class="text-left">{{ discount.name }}</td>
+                                <td colspan="3" class="text-left">{{ discount.description }}</td>
+                                <td class="text-left">{{ discount.reduction_amount }} €</td>
+                            </tr>
+                        {% endfor %}
+
+                        <tr>
+                            <td colspan="5" class="text-left">Total Réductions</td>
+                            <td class="text-left">{{ cart.total_discounts }} €</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" class="text-left">TVA</td>
+                            <td class="text-left">{{ cart.total_taxes }} €</td>
+                        </tr>
+                        <tr>
+                            <th colspan="5" class="text-left">Total TTC</th>
+                            <th class="text-left">{{ cart.total_ttc }} €</th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+    {% block javascripts %}
+        <script type="text/javascript" src="{{ asset('quotation-bundle/quotation-bundle.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/uikit@3.3.3/dist/js/uikit-icons.min.js"></script>
+    {% endblock %}

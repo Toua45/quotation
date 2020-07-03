@@ -254,15 +254,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $formQuotationStatus = $this->createForm(QuotationStatusType::class, $quotation);
         $formQuotationStatus->handleRequest($request);
 
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $quotation->setDateAdd(new \DateTime('now'));
-//            $entityManager = $this->getDoctrine()->getManager();
-//            $entityManager->persist($quotation);
-//            $entityManager->flush();
-//
-//            return $this->redirectToRoute('quotation_admin');
-//        }
-
         return $this->render('@Modules/quotation/templates/admin/add_quotation.html.twig', [
             'quotation' => $quotation,
             'formQuotationCustomer' => $formQuotationCustomer->createView(),
@@ -674,32 +665,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
                 $cart['products'][$k]['attributes'] = rtrim($attributes, ' - ');
             }
         }
-
-//        // On calcule le montant total de la tva
-//        for ($l = 0; $l < count($cart['products']); $l++) {
-//            $cart['total_taxes'] += number_format($cart['products'][$l]['total_tva_amount_product'], 2);
-//        }
-//        $cart['total_taxes'] = strval($cart['total_taxes']);
-//
-//        // Partie Discount
-//        for ($m = 0; $m < count($cart['discounts']); $m++) {
-//            if ($cart['discounts'][$m]['reduction_product']) {
-//                $cart['discounts'][$m]['reduction_product'] = $quotationRepository->findProductAssignToDiscount($cart['discounts'][$m]['reduction_product']);
-//                if ($cart['discounts'][$m]['reduction_percent'] !== '0.00') {
-//                    $cart['discounts'][$m]['reduction_amount'] =
-//                        $cart['discounts'][$m]['reduction_product']['product_price'] * $cart['discounts'][$m]['reduction_percent'] / 100;
-//                    $cart['discounts'][$m]['reduction_amount'] = strval($cart['discounts'][$m]['reduction_amount']);
-//                }
-//            } else if ($cart['discounts'][$m]['reduction_percent'] !== '0.00') {
-//                $cart['discounts'][$m]['reduction_amount'] = $cart['total_cart'] * $cart['discounts'][$m]['reduction_percent'] / 100;
-//                $cart['discounts'][$m]['reduction_amount'] = strval($cart['discounts'][$m]['reduction_amount']);
-//            }
-//            $cart['total_discounts'] += number_format($cart['discounts'][$m]['reduction_amount'], 2);
-//        }
-//        $cart['total_discounts'] = strval(($cart['total_discounts']));
-//
-//        // On calule le montant total ttc du panier
-//        $cart['total_ttc'] = number_format(($cart['total_cart'] - $cart['total_discounts']) + $cart['total_taxes'], 2);
 
         // Partie Discount
         $cart['total_discounts'] = '0';
@@ -1281,7 +1246,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
     /**
      * Show quotation
      * @param $id_quotation
-     * //     * @return JsonResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showQuotation($id_quotation)
     {
@@ -1406,11 +1371,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         // On calule le montant total ttc du panier
         $cart['total_ttc'] = number_format(($cart['total_cart'] - $cart['total_discounts']) + $cart['total_taxes'], 2);
-
-//        return new JsonResponse(json_encode([
-//            'quotation' => $quotation,
-//            'cart' => $cart,
-//        ]), 200, [], true);
 
         return $this->render('@Modules/quotation/templates/admin/show_quotation.html.twig', [
             'quotation' => $quotation,

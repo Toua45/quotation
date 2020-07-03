@@ -1311,9 +1311,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     let paramsUrlCreateNewQuotation = '';
 
     document.getElementById('submitCreateNewQuotation').addEventListener('click', Event => {
-    Event.preventDefault();
+
         let newQuotationToken = new URL(window.location.href).searchParams.get('_token');
-        // location.href = window.location.origin + '/adminToua/index.php/modules/quotation/admin/research';
+        location.href = window.location.origin + '/adminToua/index.php/modules/quotation/admin/research';
 
         let newQuotationCartId = document.getElementById('add-product-to-cart').dataset.idcart;
         let newQuotationCustomerId = document.getElementById('add-product-to-cart').dataset.idcustomer;
@@ -1327,7 +1327,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         paramsUrlCreateNewQuotation =  '/' + newQuotationCartId + '/' + newQuotationCustomerId + '/' + newQuotationReference + '/' + newQuotationMessage + '/' + newQuotationDate
             + '/' + newQuotationStatus + '?' + "_token=" + newQuotationToken;
         urlCreateNewQuotation = window.location.origin + '/adminToua/index.php/modules/quotation/admin/create/new/quotation' + paramsUrlCreateNewQuotation;
-        console.log(urlCreateNewQuotation);
 
         const getQuotation = (quotation) => {};
 

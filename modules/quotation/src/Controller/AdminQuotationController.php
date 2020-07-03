@@ -1364,6 +1364,11 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $cart['total_product_taxes'] = number_format($cart['total_product_taxes'], 2);
         $cart['total_product_taxes'] = strval($cart['total_product_taxes']);
 
+        // On calcule le montant HT après réductions
+        $cart['total_ht_with_discount'] = '0';
+        $cart['total_ht_with_discount'] = $cart['total_cart'] - $cart['total_discounts'];
+        $cart['total_ht_with_discount'] = strval($cart['total_ht_with_discount']);
+
         // On calucule le montant total de la tva
         $cart['total_taxes'] = '0';
         $cart['total_taxes'] = $cart['total_product_taxes'] - $cart['total_discounts_tax'];

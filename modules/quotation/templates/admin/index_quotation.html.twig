@@ -128,8 +128,9 @@
                      <td></td>
                      <td></td>
                      <td>
-                         <button type="button" class="search_button btn btn-light d-flex" id="filter_page"><span uk-icon="icon: search"
-                                                                                                                 class="mr-1"></span>Rechercher
+                         <button type="button" class="search_button btn btn-light d-flex" id="filter_page"><span
+                                     uk-icon="icon: search"
+                                     class="mr-1"></span>Rechercher
                          </button>
                      </td>
                  </tr>
@@ -150,22 +151,41 @@
                          <td>{{ quotation.status }}</td>
                          <td>{{ quotation.total_product_price|number_format(2) }} €</td>
                          <td>
-                             <a href="{{ path('quotation_admin_pdf', { id_quotation: quotation.id_quotation, firstname: quotation.firstname, lastname: quotation.lastname}) }}" id="token_query" target="_blank">
-                                 <span uk-icon="icon: file-pdf; ratio: 1.2" class="d-flex justify-content-center"></span>
+                             <a href="{{ path('quotation_admin_pdf', { id_quotation: quotation.id_quotation, firstname: quotation.firstname, lastname: quotation.lastname}) }}"
+                                id="token_query" target="_blank">
+                                 <span uk-icon="icon: file-pdf; ratio: 1.2"
+                                       class="d-flex justify-content-center"></span>
                              </a>
                          </td>
                          <td>
                              <a href="{{ path('quotation_admin_email', {id_quotation: quotation.id_quotation, id_customer: quotation.id_customer}) }}"
-                                id="{{ quotation.id_quotation }}" onclick="return window.confirm('Êtes-vous sûr d\'envoyer votre message ?')">
-                                <span uk-icon="icon: mail; ratio: 1.2" class="d-flex justify-content-center"></span></a>
+                                id="{{ quotation.id_quotation }}"
+                                onclick="return window.confirm('Êtes-vous sûr d\'envoyer votre message ?')">
+                                 <span uk-icon="icon: mail; ratio: 1.2"
+                                       class="d-flex justify-content-center"></span></a>
                          </td>
                          <td>
-                             <select name="actions" id="actions">
-                                 <option selected="selected">-</option>
-                                 <option value="">Modifier le devis</option>
-                                 <option value="">lorem ipsum</option>
-                                 <option value="">lorem ipsum</option>
-                             </select>
+                             <div class="btn-group-action">
+                                 <div class="btn-group pull-right">
+                                     <a href="{{ path('quotation_admin_show_quotation', { id_quotation : quotation.id_quotation }) }}"
+                                        class="btn btn-light" title="Afficher">
+                                         <i class="material-icons">zoom_in</i> Afficher
+                                     </a>
+
+                                     <button class="btn btn-light" data-toggle="dropdown">
+                                         <i class="material-icons">arrow_drop_down</i>
+                                     </button>
+                                     <ul class="dropdown-menu">
+                                         <li>
+                                             <a href="#"
+                                                onclick="(confirm('Supprimer ce devis?'))"
+                                                title="Supprimer" class="delete_quotation">
+                                                 <i class="material-icons ml-2">delete</i>Supprimer
+                                             </a>
+                                         </li>
+                                     </ul>
+                                 </div>
+                             </div>
                          </td>
                      </tr>
                  {% else %}
@@ -204,7 +224,7 @@
              </div>
 
              <!-- Pagination -->
-                    {% include '@Modules/quotation/templates/admin/common/pagination.html.twig' %}
+             {% include '@Modules/quotation/templates/admin/common/pagination.html.twig' %}
              <!-- End pagination -->
 
          </div>

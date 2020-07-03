@@ -110,7 +110,7 @@
                         </tbody>
                         <tfoot>
                         <tr>
-                            <td colspan="5" class="text-left">Total HT</td>
+                            <td colspan="5" class="text-left">Total Produits HT</td>
                             <td class="text-left">{{ cart.total_cart }} €</td>
                         </tr>
 
@@ -124,8 +124,12 @@
                         {% endfor %}
 
                         <tr>
-                            <td colspan="5" class="text-left">Total Réductions</td>
+                            <td colspan="5" class="text-left">Total Réductions HT</td>
                             <td class="text-left">{{ cart.total_discounts }} €</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" class="text-left">Total HT</td>
+                            <td class="text-left">{{ cart.total_ht_with_discount }} €</td>
                         </tr>
                         <tr>
                             <td colspan="5" class="text-left">TVA</td>

@@ -1204,6 +1204,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             cartSummaryTotalDiscounts.innerHTML = outputCartSummaryTotalDiscounts;
                                             cartSummaryTotalWithoutTaxes.innerHTML = (parseFloat(cartSummaryTotalProducts.textContent.split(' ')[0])
                                                 - parseFloat(cartSummaryTotalDiscounts.textContent.split(' ')[0])).toFixed(2) + ' €';
+                                            cartSummaryTotalTaxes.innerHTML = cart['total_taxes'] + ' €';
                                             // On récupère le total ttc à jour après les réductions
                                             cartSummaryTotalWithTaxesAndDiscounts.innerHTML = (parseFloat(cartSummaryTotalWithoutTaxes.textContent.split(' ')[0])
                                                + parseFloat(cartSummaryTotalTaxes.textContent.split(' ')[0])).toFixed(2) + ' €';
@@ -1239,6 +1240,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                             cartSummaryTotalDiscounts.innerHTML = cart['total_discounts'] + ' €';
                                                             cartSummaryTotalWithoutTaxes.innerHTML = (parseFloat(cartSummaryTotalProducts.textContent.split(' ')[0])
                                                                 - parseFloat(cartSummaryTotalDiscounts.textContent.split(' ')[0])).toFixed(2) + ' €';
+                                                            cartSummaryTotalTaxes.innerHTML = cart['total_taxes'] + ' €';
                                                             // On récupère le total ttc à jour après les réductions
                                                             cartSummaryTotalWithTaxesAndDiscounts.innerHTML = (parseFloat(cartSummaryTotalWithoutTaxes.textContent.split(' ')[0])
                                                                 // - parseFloat(cartSummaryTotalDiscounts.textContent.split(' ')[0])

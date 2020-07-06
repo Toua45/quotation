@@ -7,3 +7,37 @@
   border-radius: 5px;
   background-color: $input-color;
 }
+
+.btn-light {
+  background-color: $light;
+  color: $darkgrey;
+  font-size: 12px;
+  font-weight: initial;
+  border: solid 1px $middlegrey;
+  border-radius: 3px;
+  padding: 5px 8px 3px 6px;
+
+  $svg-size: 15px;
+
+  svg {
+    height: $svg-size;
+    width: $svg-size;
+    margin-top: 1.70px;
+  }
+
+  circle, path {
+    stroke-width: 2;
+  }
+}
+
+$bg-color: #00AFF0;
+
+.btn-light:hover, {
+  color: $light;
+  background-color: $bg-color;
+  border-color: darken($bg-color, 5%);
+
+  circle, path {
+    stroke: $light;
+  }
+}

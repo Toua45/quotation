@@ -1343,6 +1343,40 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
 }
 
+// if (QuotationModule.getParamFromURL('show') !== null && QuotationModule.getParamFromURL('show').length === 1) {
+    /*
+    * Update quotation
+    */
+    let urlUpdateMessageQuotation;
+    let paramsUrlUpdateQuotation = '';
+
+    document.getElementById('submitNewMessage').addEventListener('click', Event => {
+        Event.preventDefault();
+
+        let quotationToken = new URL(window.location.href).searchParams.get('_token');
+        let quotationId = document.getElementById('quotation_number').dataset.idquotation;
+        let quotationMessage = document.getElementById('show_message').value;
+
+        paramsUrlUpdateQuotation = '/' + quotationId + '/' + "'" + quotationMessage + "'" + '?' + "_token=" + quotationToken;
+
+        urlUpdateMessageQuotation = window.location.origin + '/adminToua/index.php/modules/quotation/admin/update/message/quotation' + paramsUrlUpdateQuotation;
+        console.log(urlUpdateMessageQuotation);
+
+        document.getElementById('quotation_message_success').classList.remove('d-none');
+
+        const getMessageQuotation = (quotation) => {};
+
+        QuotationModule.getData(
+            urlUpdateMessageQuotation,
+            getMessageQuotation,
+            null,
+            'POST',
+            true,
+            []
+        );
+    });
+// }
+
 var current_page = document.getElementById("index_page").dataset.page;
 
 if (window.location.pathname.replace(/.*(?=\/quotation\/admin\/research)/ || /.*(?=\/quotation\/admin\/research\/)/, '') === '/quotation/admin/research' || '/quotation/admin/research/' + current_page) {

@@ -1382,4 +1382,20 @@ class AdminQuotationController extends FrameworkBundleAdminController
             'cart' => $cart,
         ]);
     }
+
+    /**
+     * Update message form quotation
+     * @param $id_quotation
+     * @param $message_visible
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function updateMessageQuotation($id_quotation, $message_visible)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $messageQuotation = $quotationRepository->updateMessageQuotation($id_quotation, $message_visible);
+        $quotation = $quotationRepository->findQuotationById($id_quotation);
+
+        return new JsonResponse(json_encode($quotation), 200, [], true);
+    }
 }

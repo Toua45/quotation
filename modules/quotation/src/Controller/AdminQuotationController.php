@@ -12,6 +12,7 @@ use Quotation\Form\QuotationCustomerType;
 use Quotation\Form\QuotationDiscountType;
 use Quotation\Form\QuotationProductType;
 use Quotation\Form\QuotationSearchType;
+use Quotation\Form\QuotationShowStatusType;
 use Quotation\Form\QuotationStatusType;
 use Quotation\Service\QuotationFileSystem;
 use Quotation\Service\QuotationPdf;
@@ -1246,9 +1247,10 @@ class AdminQuotationController extends FrameworkBundleAdminController
     /**
      * Show quotation
      * @param $id_quotation
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showQuotation($id_quotation)
+    public function showQuotation($id_quotation, Request $request)
     {
         $quotationRepository = $this->get('quotation_repository');
         $quotation = $quotationRepository->findQuotationById($id_quotation);
@@ -1377,14 +1379,18 @@ class AdminQuotationController extends FrameworkBundleAdminController
         // On calule le montant total ttc du panier
         $cart['total_ttc'] = number_format(($cart['total_cart'] - $cart['total_discounts']) + $cart['total_taxes'], 2);
 
+        $formShowQuotationStatus = $this->createForm(QuotationShowStatusType::class, $quotation);
+        $formShowQuotationStatus->handleRequest($request);
+
         return $this->render('@Modules/quotation/templates/admin/show_quotation.html.twig', [
             'quotation' => $quotation,
             'cart' => $cart,
+            'formShowQuotationStatus' => $formShowQuotationStatus->createView(),
         ]);
     }
 
     /**
-     * Update message form quotation
+     * Update message from show quotation
      * @param $id_quotation
      * @param $message_visible
      * @return JsonResponse
@@ -1394,6 +1400,22 @@ class AdminQuotationController extends FrameworkBundleAdminController
     {
         $quotationRepository = $this->get('quotation_repository');
         $messageQuotation = $quotationRepository->updateMessageQuotation($id_quotation, $message_visible);
+        $quotation = $quotationRepository->findQuotationById($id_quotation);
+
+        return new JsonResponse(json_encode($quotation), 200, [], true);
+    }
+
+    /**
+     * Update status from show quotation
+     * @param $id_quotation
+     * @param $status
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function updateStatusQuotation($id_quotation, $status)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $statusQuotation = $quotationRepository->updateStatusQuotation($id_quotation, $status);
         $quotation = $quotationRepository->findQuotationById($id_quotation);
 
         return new JsonResponse(json_encode($quotation), 200, [], true);

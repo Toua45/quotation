@@ -252,3 +252,14 @@ quotation_admin_update_message_quotation:
     _controller: 'Quotation\Controller\AdminQuotationController::updateMessageQuotation'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
+
+quotation_admin_update_status_quotation:
+  path: quotation/admin/update/status/quotation/{id_quotation}/{status}
+  requirements:
+    id_quotation: '\d+'
+    status: '[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*'
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::updateStatusQuotation'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'

@@ -1,3 +1,9 @@
+.show_quotation_status_select {
+  background-color: $input-color;
+  border-radius: 3px;
+  padding: 6px 8px;
+}
+
 .customer_infos, .customer_message, .cart_infos {
   border-bottom: 1px solid $lightgrey;
 }

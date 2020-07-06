@@ -983,4 +983,23 @@ class QuotationRepository
         return $query->execute();
     }
 
+    /**
+     * Update status on quotation
+     * @param int $id_quotation
+     * @param $status
+     * @return \Doctrine\DBAL\Driver\Statement|int
+     */
+    public function updateStatusQuotation(int $id_quotation, $status)
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->update($this->databasePrefix . 'quotation');
+
+        $query->set('status', $status)
+            ->where('id_quotation = :id_quotation')
+            ->setParameters([
+                'id_quotation' => $id_quotation,
+                'status' => $status,
+            ]);
+        return $query->execute();
+    }
 }

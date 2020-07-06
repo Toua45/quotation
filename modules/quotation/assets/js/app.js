@@ -2,6 +2,7 @@ import '../scss/app.scss';
 import {QuotationModule} from "./quotation_module";
 
 if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamFromURL('add').length === 1) {
+    console.log('In add page');
     // Récupère le chemin du JSON par l'id 'js-data'
     let url = document.getElementById('js-data').dataset.source;
 
@@ -922,7 +923,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         let priceTaxe = Event.currentTarget.closest('tr').querySelector('.product_taxe').textContent;
                                         // On récupère le total de la tva du produit
                                         let totalPriceTaxe = Event.currentTarget.closest('tr').querySelector('.total_product_taxe');
-                                        totalPriceTaxe.textContent = Math.round(parseFloat(priceTaxe)*parseFloat(Event.currentTarget.value) * 100) / 100 + ' €';
+                                        totalPriceTaxe.textContent = Math.round(parseFloat(priceTaxe) * parseFloat(Event.currentTarget.value) * 100) / 100 + ' €';
 
                                         paramsUrlProductQuantity = '/' +
                                             document.getElementById('output-cart-products-to-use').dataset.idcart + '/' + // Get id_cart
@@ -974,7 +975,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         );
                                     });
                                 });
-                            };
+                            }
+                            ;
 
                             /*
                              * Delete product on cart
@@ -1038,7 +1040,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                     })
                                 });
-                            };
+                            }
+                            ;
                         };
 
                         QuotationModule.getData(
@@ -1158,7 +1161,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         cartRuleParamsUrl = '/' + id_cart + '/' + id_cart_rule + '?' + "_token=" + token;
                                         urlAssignCartRuleToCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/assign/discount/cart' + cartRuleParamsUrl;
 
-                                        const getCartRuleToCart = (discount) => {};
+                                        const getCartRuleToCart = (discount) => {
+                                        };
 
                                         QuotationModule.getData(
                                             urlAssignCartRuleToCart,
@@ -1180,11 +1184,11 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             let outputDiscount = '';
 
                                             for (let discount of cart['discounts']) {
-                                                    outputDiscount += mod.TemplateModule.discountSelected
-                                                        .replace(/---idCartRule---/, discount.id_cart_rule)
-                                                        .replace(/---discountName---/, discount.name)
-                                                        .replace(/---discountDescription---/, discount.description)
-                                                        .replace(/---discountValue---/, discount.reduction_amount + ' €');
+                                                outputDiscount += mod.TemplateModule.discountSelected
+                                                    .replace(/---idCartRule---/, discount.id_cart_rule)
+                                                    .replace(/---discountName---/, discount.name)
+                                                    .replace(/---discountDescription---/, discount.description)
+                                                    .replace(/---discountValue---/, discount.reduction_amount + ' €');
                                             }
                                             document.getElementById('output-discounts').innerHTML = outputDiscount;
 
@@ -1207,7 +1211,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             cartSummaryTotalTaxes.innerHTML = cart['total_taxes'] + ' €';
                                             // On récupère le total ttc à jour après les réductions
                                             cartSummaryTotalWithTaxesAndDiscounts.innerHTML = (parseFloat(cartSummaryTotalWithoutTaxes.textContent.split(' ')[0])
-                                               + parseFloat(cartSummaryTotalTaxes.textContent.split(' ')[0])).toFixed(2) + ' €';
+                                                + parseFloat(cartSummaryTotalTaxes.textContent.split(' ')[0])).toFixed(2) + ' €';
 
 
                                             /*
@@ -1257,7 +1261,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         );
                                                     });
                                                 });
-                                            };
+                                            }
+                                            ;
                                         };
 
                                         QuotationModule.getData(
@@ -1319,16 +1324,17 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         let newQuotationCustomerId = document.getElementById('add-product-to-cart').dataset.idcustomer;
         let newQuotationCustomerName = document.getElementById('add-product-to-cart').dataset.customername.substr(0, 3);
         let randomNumbReference = Math.floor(Math.random() * 1000000);
-        let newQuotationReference = newQuotationCustomerId + newQuotationCustomerName +  randomNumbReference;
+        let newQuotationReference = newQuotationCustomerId + newQuotationCustomerName + randomNumbReference;
         let newQuotationMessage = document.getElementById('quotation_message').value;
         let newQuotationDate = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000).toISOString().substr(0, 19).replace('T', ' ');
         let newQuotationStatus = document.getElementById('quotation_status_status').value;
 
-        paramsUrlCreateNewQuotation =  '/' + newQuotationCartId + '/' + newQuotationCustomerId + '/' + newQuotationReference + '/' + newQuotationMessage + '/' + newQuotationDate
+        paramsUrlCreateNewQuotation = '/' + newQuotationCartId + '/' + newQuotationCustomerId + '/' + newQuotationReference + '/' + newQuotationMessage + '/' + newQuotationDate
             + '/' + newQuotationStatus + '?' + "_token=" + newQuotationToken;
         urlCreateNewQuotation = window.location.origin + '/adminToua/index.php/modules/quotation/admin/create/new/quotation' + paramsUrlCreateNewQuotation;
 
-        const getQuotation = (quotation) => {};
+        const getQuotation = (quotation) => {
+        };
 
         QuotationModule.getData(
             urlCreateNewQuotation,
@@ -1340,8 +1346,75 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         );
 
     });
-
 }
+
+// if (QuotationModule.getParamFromURL('show') !== null && QuotationModule.getParamFromURL('show').length === 1) {
+//     console.log('In show page');
+
+    let quotationToken = new URL(window.location.href).searchParams.get('_token');
+    let quotationId = document.getElementById('quotation_number').dataset.idquotation;
+    /*
+     * Update quotation status
+     */
+    let urlUpdateStatusQuotation;
+    let paramsUrlUpdateStatusQuotation = '';
+
+    document.getElementById('quotation_show_status_status').addEventListener('change', Event => {
+        Event.preventDefault();
+
+        let quotationStatus = document.getElementById('quotation_show_status_status').value;
+
+        paramsUrlUpdateStatusQuotation = '/' + quotationId + '/' + "'" + quotationStatus + "'" + '?' + "_token=" + quotationToken;
+
+        urlUpdateStatusQuotation = window.location.origin + '/adminToua/index.php/modules/quotation/admin/update/status/quotation' + paramsUrlUpdateStatusQuotation;
+        console.log(urlUpdateStatusQuotation);
+
+        document.getElementById('quotation_status_success').classList.remove('d-none');
+
+        const getStatusQuotation = (quotation) => {
+        };
+
+        QuotationModule.getData(
+            urlUpdateStatusQuotation,
+            getStatusQuotation,
+            null,
+            'POST',
+            true,
+            []
+        );
+    });
+
+    /*
+    * Update quotation message
+    */
+    let urlUpdateMessageQuotation;
+    let paramsUrlUpdateMessageQuotation = '';
+
+    document.getElementById('submitNewMessage').addEventListener('click', Event => {
+        Event.preventDefault();
+
+        let quotationMessage = document.getElementById('show_message').value;
+
+        paramsUrlUpdateMessageQuotation = '/' + quotationId + '/' + "'" + quotationMessage + "'" + '?' + "_token=" + quotationToken;
+
+        urlUpdateMessageQuotation = window.location.origin + '/adminToua/index.php/modules/quotation/admin/update/message/quotation' + paramsUrlUpdateMessageQuotation;
+        console.log(urlUpdateMessageQuotation);
+
+        document.getElementById('quotation_message_success').classList.remove('d-none');
+
+        const getMessageQuotation = (quotation) => {
+        };
+
+        QuotationModule.getData(
+            urlUpdateMessageQuotation,
+            getMessageQuotation,
+            null,
+            'POST',
+            true,
+            []
+        );
+    });
+// }
 
 var current_page = document.getElementById("index_page").dataset.page;
 

@@ -2,6 +2,19 @@
 
 {% block content %}
 
+    <div id="quotation_message_success" class="alert alert-success alert-dismissible fade show d-none" role="alert">
+        Le message du devis a été modifié
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div id="quotation_status_success" class="alert alert-success alert-dismissible fade show d-none" role="alert">
+        Le statut du devis a été modifié
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
     <div class="card p-3">
         <a href="{{ path('quotation_admin') }}" class="btn btn-primary">Retour à la liste des devis</a>
     </div>
@@ -11,7 +24,7 @@
             <div class="col-xs-6 col-sm-3">
                 <div class="quotation-infos">
                     <h2><i class="material-icons">content_paste</i>
-                        <span class="title">Devis [{{ quotation.id_quotation }}]</span></br>
+                        <span id="quotation_number" data-idquotation="{{ quotation.id_quotation }}" class="title">Devis [{{ quotation.id_quotation }}]</span></br>
                         <span class="value ml-4">Référence : {{ quotation.reference }}</span>
                     </h2>
                 </div>
@@ -35,8 +48,10 @@
             <div class="col-xs-6 col-sm-3">
                 <div class="quotation-infos">
                     <h2><i class="material-icons">label</i>
-                        <span class="title">Status</span></br>
-                        <span class="value ml-4">{{ quotation.status }}</span>
+                        <span class="title">État du devis</span></br>
+                        <div class="quotation_status d-flex justify-content-start col-lg-12 ml-3">
+                            {% include '@Modules/quotation/templates/admin/_form_show_quotation_status.html.twig' %}
+                        </div>
                     </h2>
                 </div>
             </div>
@@ -69,8 +84,13 @@
                     <h3 class="panel-heading">MESSAGE</h3>
                 </div>
                 <div class="d-flex justify-content-center pt-4">
-                    <textarea class="show_quotation_message" name="quotation_message" rows="15"
+                    <textarea id="show_message" class="show_quotation_message" name="quotation_message" rows="15"
                               cols="40">{{ quotation.message_visible }}</textarea>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button id="submitNewMessage" type="button" class="btn btn-light d-flex mt-4">
+                        <span uk-icon="icon:  arrow-right" class="mr-1"></span> Modifier le message
+                    </button>
                 </div>
             </div>
         </div>

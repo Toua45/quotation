@@ -1415,4 +1415,18 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         return new JsonResponse(json_encode($quotation), 200, [], true);
     }
+
+    /**
+     * Delete quotation
+     * @param $id_quotation
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteQuotation($id_quotation)
+    {
+        $quotationRepository = $this->get('quotation_repository');
+        $quotation = $quotationRepository->deleteQuotation($id_quotation);
+
+        $this->addFlash('success', 'Le devis a été supprimé.');
+        return $this->redirectToRoute('quotation_admin');
+    }
 }

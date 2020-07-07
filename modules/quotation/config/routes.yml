@@ -263,3 +263,13 @@ quotation_admin_update_status_quotation:
     _controller: 'Quotation\Controller\AdminQuotationController::updateStatusQuotation'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
+
+quotation_admin_delete_quotation:
+  path: quotation/admin/delete/quotation/{id_quotation}
+  requirements:
+    id_quotation: '\d+'
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::deleteQuotation'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'

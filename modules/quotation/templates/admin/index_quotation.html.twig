@@ -143,7 +143,7 @@
                          <td>
                              <input type="checkbox">
                          </td>
-                         <td>{{ quotation.id_quotation }}</td>
+                         <td id="quotationId_{{ quotation.id_quotation }}">{{ quotation.id_quotation }}</td>
                          <td>{{ quotation.reference }}</td>
                          <td>{{ quotation.firstname }} {{ quotation.lastname }}</td>
                          <td>{{ quotation.message_visible }}</td>
@@ -177,9 +177,9 @@
                                      </button>
                                      <ul class="dropdown-menu">
                                          <li>
-                                             <a href="#"
+                                             <a href="{{ path('quotation_admin_delete_quotation', { id_quotation : quotation.id_quotation}) }}"
                                                 onclick="(confirm('Supprimer ce devis?'))"
-                                                title="Supprimer" class="delete_quotation">
+                                                title="Supprimer" class="btn btn-light delete_quotation">
                                                  <i class="material-icons ml-2">delete</i>Supprimer
                                              </a>
                                          </li>

@@ -1002,4 +1002,22 @@ class QuotationRepository
             ]);
         return $query->execute();
     }
+
+    /**
+     * Delete quotation
+     * @param int $id_quotation
+     * @return \Doctrine\DBAL\Driver\Statement|int
+     */
+    public function deleteQuotation(int $id_quotation)
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->delete($this->databasePrefix . 'quotation');
+
+        $query
+            ->where('id_quotation = :id_quotation')
+            ->setParameters([
+                'id_quotation' => $id_quotation,
+            ]);
+        return $query->execute();
+    }
 }

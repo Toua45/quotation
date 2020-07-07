@@ -563,11 +563,6 @@ class AdminQuotationController extends FrameworkBundleAdminController
                     $quotations[$key]['discounts'][$s]['reduction_amount_tax'] = ($quotations[$key]['discounts'][$s]['reduction_amount'] * 20) / 100;
                     $quotations[$key]['discounts'][$s]['reduction_amount_tax'] = number_format($quotations[$key]['discounts'][$s]['reduction_amount_tax'], 2);
                     $quotations[$key]['discounts'][$s]['reduction_amount_tax'] = strval($quotations[$key]['discounts'][$s]['reduction_amount_tax']);
-                    if ($quotations[$key]['discounts'][$s]['reduction_tax'] == '1') {
-                        $quotations[$key]['discounts'][$s]['reduction_amount_ht'] = $quotations[$key]['discounts'][$s]['reduction_amount'] - $quotations[$key]['discounts'][$m]['reduction_amount_tax'];
-                        $quotations[$key]['discounts'][$s]['reduction_amount_ht'] = number_format($quotations[$key]['discounts'][$s]['reduction_amount_ht'], 2);
-                        $quotations[$key]['discounts'][$s]['reduction_amount_ht'] = strval($quotations[$key]['discounts'][$s]['reduction_amount_ht']);
-                    }
                 }
                 $quotations[$key]['total_discounts'] += number_format($quotations[$key]['discounts'][$s]['reduction_amount_ht'], 2);
             }

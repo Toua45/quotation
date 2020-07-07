@@ -1,8 +1,10 @@
 import '../scss/app.scss';
 import {QuotationModule} from "./quotation_module";
 
+/*
+ * Code on add page
+ */
 if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamFromURL('add').length === 1) {
-    console.log('In add page');
     // Récupère le chemin du JSON par l'id 'js-data'
     let url = document.getElementById('js-data').dataset.source;
 
@@ -1348,8 +1350,10 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     });
 }
 
-// if (QuotationModule.getParamFromURL('show') !== null && QuotationModule.getParamFromURL('show').length === 1) {
-//     console.log('In show page');
+/*
+ * Code on show quotation page
+ */
+if (QuotationModule.getParamFromURL('show/quotation/' + '\\d+') !== null && QuotationModule.getParamFromURL('show/quotation/' + '\\d+').length === 1) {
 
     let quotationToken = new URL(window.location.href).searchParams.get('_token');
     let quotationId = document.getElementById('quotation_number').dataset.idquotation;
@@ -1367,7 +1371,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         paramsUrlUpdateStatusQuotation = '/' + quotationId + '/' + "'" + quotationStatus + "'" + '?' + "_token=" + quotationToken;
 
         urlUpdateStatusQuotation = window.location.origin + '/adminToua/index.php/modules/quotation/admin/update/status/quotation' + paramsUrlUpdateStatusQuotation;
-        console.log(urlUpdateStatusQuotation);
 
         document.getElementById('quotation_status_success').classList.remove('d-none');
 
@@ -1398,7 +1401,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         paramsUrlUpdateMessageQuotation = '/' + quotationId + '/' + "'" + quotationMessage + "'" + '?' + "_token=" + quotationToken;
 
         urlUpdateMessageQuotation = window.location.origin + '/adminToua/index.php/modules/quotation/admin/update/message/quotation' + paramsUrlUpdateMessageQuotation;
-        console.log(urlUpdateMessageQuotation);
 
         document.getElementById('quotation_message_success').classList.remove('d-none');
 
@@ -1414,30 +1416,35 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             []
         );
     });
-// }
-
-var current_page = document.getElementById("index_page").dataset.page;
-
-if (window.location.pathname.replace(/.*(?=\/quotation\/admin\/research)/ || /.*(?=\/quotation\/admin\/research\/)/, '') === '/quotation/admin/research' || '/quotation/admin/research/' + current_page) {
-    document.getElementById('filter_page').addEventListener('click', Event => {
-        Event.preventDefault();
-        let form = Event.currentTarget.closest('thead').querySelector('form'); // Get form
-        const _url = window.location.origin + '/adminToua/index.php/modules/quotation/admin/research?';
-        const params = {
-            tokenSearch: 'quotation_search[_token]=' + document.getElementById('quotation_search__token').value,
-            end: 'quotation_search[end]=' + document.getElementById('quotation_search_end').value,
-            name: 'quotation_search[name]=' + document.getElementById('quotation_search_name').value,
-            reference: 'quotation_search[reference]=' + document.getElementById('quotation_search_reference').value,
-            start: 'quotation_search[start]=' + document.getElementById('quotation_search_start').value,
-            status: 'quotation_search[status]=' + document.getElementById('quotation_search_status').value,
-        };
-        const url = Object.values(params).join('&');
-        form.method = 'GET';
-        form.action = _url + url;
-        form.submit();
-    });
 }
 
+/*
+ * Code on Index page
+ */
+if (QuotationModule.getParamFromURL('research') !== null && QuotationModule.getParamFromURL('research').length === 1) {
+
+    var current_page = document.getElementById("index_page").dataset.page;
+
+    if (window.location.pathname.replace(/.*(?=\/quotation\/admin\/research)/ || /.*(?=\/quotation\/admin\/research\/)/, '') === '/quotation/admin/research' || '/quotation/admin/research/' + current_page) {
+        document.getElementById('filter_page').addEventListener('click', Event => {
+            Event.preventDefault();
+            let form = Event.currentTarget.closest('thead').querySelector('form'); // Get form
+            const _url = window.location.origin + '/adminToua/index.php/modules/quotation/admin/research?';
+            const params = {
+                tokenSearch: 'quotation_search[_token]=' + document.getElementById('quotation_search__token').value,
+                end: 'quotation_search[end]=' + document.getElementById('quotation_search_end').value,
+                name: 'quotation_search[name]=' + document.getElementById('quotation_search_name').value,
+                reference: 'quotation_search[reference]=' + document.getElementById('quotation_search_reference').value,
+                start: 'quotation_search[start]=' + document.getElementById('quotation_search_start').value,
+                status: 'quotation_search[status]=' + document.getElementById('quotation_search_status').value,
+            };
+            const url = Object.values(params).join('&');
+            form.method = 'GET';
+            form.action = _url + url;
+            form.submit();
+        });
+    }
+}
 
 // any SCSS you require will output into a single scss file (app.scss in this case)
 

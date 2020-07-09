@@ -1020,4 +1020,22 @@ class QuotationRepository
             ]);
         return $query->execute();
     }
+
+    /*
+     * @return mixed[]
+     */
+    public function findAddressStore($id_cart)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('c.id_cart', 'sl.id_store', 'ss.id_shop')
+            ->addSelect('sl.name', 'sl.address1', 's.postcode', 's.city', 's.phone', 's.email')
+            ->from($this->databasePrefix . 'cart', 'c')
+            ->join('c', $this->databasePrefix . 'store_shop', 'ss', 'c.id_shop = ss.id_shop')
+            ->join('ss', $this->databasePrefix . 'store_lang', 'sl', 'ss.id_store = sl.id_store')
+            ->join('sl', $this->databasePrefix . 'store', 's', 'sl.id_store = s.id_store')
+            ->where('c.id_cart = :id_cart')
+            ->setParameter('id_cart', $id_cart)
+            ->execute()
+            ->fetch();
+    }
 }

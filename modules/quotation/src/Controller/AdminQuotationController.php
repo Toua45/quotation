@@ -59,7 +59,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             'currentPage' => $currentPage,
             'maxPages' => (int)ceil($quotations['nbRecords'] / Quotation::NB_MAX_QUOTATIONS_PER_PAGE),
             'nbRecords' => $quotations['nbRecords'],
-            'quotationFilterForm' => $quotationFilterForm->createView()
+            'quotationFilterForm' => $quotationFilterForm->createView(),
         ]);
     }
 

@@ -1444,6 +1444,51 @@ if (QuotationModule.getParamFromURL('research') !== null && QuotationModule.getP
             form.submit();
         });
     }
+
+    /*
+     * Update quotation status on index page
+     */
+    if (document.querySelectorAll('select.index_quotation_status') !== null) {
+        document.querySelectorAll('select.index_quotation_status').forEach(function (link) {
+            link.addEventListener('change', function (Event) {
+                Event.preventDefault();
+
+                let indexQuotationToken = new URL(window.location.href).searchParams.get('_token');
+                let children = Event.currentTarget.closest('tr').children;
+                let indexQuotationId;
+                let urlUpdateIndexQuotationStatus;
+                let paramsUrlUpdateIndexQuotationStatus = '';
+
+                // On récupère l'id_quotation
+                for (let i = 0; i < children.length; i++) {
+                    let regexp = new RegExp('^(index-quotation-id_)');
+                    if (children[i].id.match(regexp) !== null) {
+                        indexQuotationId = children[i].id.split('_')[1];
+                    }
+                }
+
+                // On récupère la valeur de l'option du select
+                let indexQuotationStatus = document.getElementById('output_quotation_status_' + indexQuotationId).value;
+                paramsUrlUpdateIndexQuotationStatus = '/' + indexQuotationId + '/' + "'" + indexQuotationStatus + "'" + '?' + "_token=" + indexQuotationToken;
+
+                urlUpdateIndexQuotationStatus = window.location.origin + '/adminToua/index.php/modules/quotation/admin/update/status/quotation' + paramsUrlUpdateIndexQuotationStatus;
+
+                document.getElementById('index_quotation_status_success').classList.remove('d-none');
+
+                const getUpdateQuotationStatus = (quotation) => {
+                };
+
+                QuotationModule.getData(
+                    urlUpdateIndexQuotationStatus,
+                    getUpdateQuotationStatus,
+                    null,
+                    'POST',
+                    true,
+                    []
+                );
+            });
+        });
+    };
 }
 
 // any SCSS you require will output into a single scss file (app.scss in this case)

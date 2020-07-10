@@ -6,6 +6,13 @@
 
      {% include '@Modules/quotation/templates/admin/_flash_message.html.twig' %}
 
+     <div id="index_quotation_status_success" class="alert alert-success alert-dismissible fade show d-none" role="alert">
+         Le statut du devis a été modifié
+         <button id="btn_quotation_status_success" type="button" class="close" data-dismiss="alert" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+         </button>
+     </div>
+
      <div class="quotation">
          <div class="card">
              <div class="quotation-head mb-3 d-flex justify-content-between">
@@ -143,12 +150,17 @@
                          <td>
                              <input type="checkbox">
                          </td>
-                         <td>{{ quotation.id_quotation }}</td>
+                         <td id="index-quotation-id_{{ quotation.id_quotation }}">{{ quotation.id_quotation }}</td>
                          <td>{{ quotation.reference }}</td>
                          <td>{{ quotation.firstname }} {{ quotation.lastname }}</td>
-                         <td>{{ quotation.message_visible }}</td>
+                         <td>{{ quotation.message_visible|striptags|slice(0, 10)|raw}}</td>
                          <td>{{ quotation.date_add|date('d/m/Y') }}</td>
-                         <td>{{ quotation.status }}</td>
+                         <td><select id="output_quotation_status_{{ quotation.id_quotation }}" class="index_quotation_status">
+                                 <option value="validate" {% if quotation.status == 'validate' %} selected="selected" {% endif %}>À valider</option>
+                                 <option value="validated" {% if quotation.status == 'validated' %} selected="selected" {% endif %}>Validé</option>
+                                 <option value="ordered" {% if quotation.status == 'ordered' %} selected="selected" {% endif %}>Commandé</option>
+                                 <option value="refused" {% if quotation.status == 'refused' %} selected="selected" {% endif %}>Refusé</option>
+                             </select></td>
                          <td>{{ quotation.total_product_price|number_format(2) }} €</td>
                          <td>
                              <a href="{{ path('quotation_admin_pdf', { id_quotation: quotation.id_quotation, firstname: quotation.firstname, lastname: quotation.lastname}) }}"

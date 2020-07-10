@@ -38,7 +38,6 @@ class QuotationSearchType extends AbstractType
                 'choices' => [
                     'À valider' => 'validate',
                     'Validé' => 'validated',
-                    'Commandé' => 'ordered',
                     'Refusé' => 'refused'
                 ],
                 'attr' => [

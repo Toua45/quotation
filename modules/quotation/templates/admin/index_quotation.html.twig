@@ -158,7 +158,6 @@
                          <td><select id="output_quotation_status_{{ quotation.id_quotation }}" class="index_quotation_status">
                                  <option value="validate" {% if quotation.status == 'validate' %} selected="selected" {% endif %}>À valider</option>
                                  <option value="validated" {% if quotation.status == 'validated' %} selected="selected" {% endif %}>Validé</option>
-                                 <option value="ordered" {% if quotation.status == 'ordered' %} selected="selected" {% endif %}>Commandé</option>
                                  <option value="refused" {% if quotation.status == 'refused' %} selected="selected" {% endif %}>Refusé</option>
                              </select></td>
                          <td>{{ quotation.total_product_price|number_format(2) }} €</td>

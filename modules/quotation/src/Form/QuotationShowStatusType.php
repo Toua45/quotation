@@ -14,8 +14,6 @@ class QuotationShowStatusType extends AbstractType
         $builder
             ->setMethod('POST')
             ->add('status', ChoiceType::class, [
-                'required' => false,
-                'placeholder' => 'Afficher tous les status',
                 'choices' => [
                     'À valider' => 'validate',
                     'Validé' => 'validated',

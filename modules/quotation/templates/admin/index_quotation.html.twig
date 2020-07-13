@@ -223,6 +223,22 @@
                                                  <i class="material-icons ml-2">shopping_cart</i>Créer une commande
                                              </a>
                                          </li>
+                                         {% if quotation.status == 'ordered' %}
+                                             <li class="mt-1">
+                                                 <a href="{{ quotation.url_to_show_order }}"
+                                                    title="ShowOrder" class="btn btn-light show_order_quotation"
+                                                    id="link_to_show_order_{{ quotation.id_quotation }}">
+                                                     <i class="material-icons ml-2">zoom_in</i>Voir la commande
+                                                 </a>
+                                             </li>
+                                         {% endif %}
+                                         <li class="mt-1">
+                                             <a href="{{ quotation.url_to_show_order }}" {% if quotation.orders == [] %} onclick="(alert('Aucune commande n\'est liée à ce panier'))"{% endif %}
+                                                title="ShowOrder" class="btn btn-light show_order_quotation d-none"
+                                                id="link_to_show_order_{{ quotation.id_quotation }}">
+                                                 <i class="material-icons ml-2">zoom_in</i>Voir la commande
+                                             </a>
+                                         </li>
                                      </ul>
                                  </div>
                              </div>

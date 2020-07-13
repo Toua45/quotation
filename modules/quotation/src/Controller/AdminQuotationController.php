@@ -53,6 +53,11 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         $currentPage = $page;
 
+        // on récupère la fonction getAdminLink qui permet de passer une commande à partir d'un panier
+        for ($i = 0; $i < count($quotations['records']); $i++) {
+            $quotations['records'][$i]['url_to_order'] = $this->getAdminLink('AdminOrders', ['id_cart' => $quotations['records'][$i]['id_cart'], 'addorder' => 1]);
+        }
+
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
             'quotations' => $quotations['records'],
             'page' => $page,

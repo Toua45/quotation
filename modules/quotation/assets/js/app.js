@@ -1473,6 +1473,14 @@ if (QuotationModule.getParamFromURL('research') !== null && QuotationModule.getP
 
                 urlUpdateIndexQuotationStatus = window.location.origin + '/adminToua/index.php/modules/quotation/admin/update/status/quotation' + paramsUrlUpdateIndexQuotationStatus;
 
+                let linkToOrder = document.getElementById('link_to_order_' + indexQuotationId);
+
+                if(indexQuotationStatus === 'validated') {
+                    linkToOrder.classList.remove('d-none')
+                } else {
+                    linkToOrder.classList.add('d-none')
+                }
+
                 document.getElementById('index_quotation_status_success').classList.remove('d-none');
 
                 const getUpdateQuotationStatus = (quotation) => {

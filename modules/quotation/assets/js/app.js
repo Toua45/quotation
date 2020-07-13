@@ -1481,6 +1481,14 @@ if (QuotationModule.getParamFromURL('research') !== null && QuotationModule.getP
                     linkToOrder.classList.add('d-none')
                 }
 
+                let linkToShowOrder = document.getElementById('link_to_show_order_' + indexQuotationId);
+
+                if(indexQuotationStatus === 'ordered') {
+                    linkToShowOrder.classList.remove('d-none')
+                } else {
+                    linkToShowOrder.classList.add('d-none')
+                }
+
                 document.getElementById('index_quotation_status_success').classList.remove('d-none');
 
                 const getUpdateQuotationStatus = (quotation) => {

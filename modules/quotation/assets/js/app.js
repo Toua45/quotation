@@ -1331,7 +1331,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         let newQuotationDate = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000).toISOString().substr(0, 19).replace('T', ' ');
         let newQuotationStatus = document.getElementById('quotation_status_status').value;
 
-        paramsUrlCreateNewQuotation = '/' + newQuotationCartId + '/' + newQuotationCustomerId + '/' + newQuotationReference + '/' + newQuotationMessage + '/' + newQuotationDate
+        paramsUrlCreateNewQuotation = '/' + newQuotationCartId + '/' + newQuotationCustomerId + '/' + newQuotationReference + '/' + newQuotationMessage + ' ' + '/' + newQuotationDate
             + '/' + newQuotationStatus + '?' + "_token=" + newQuotationToken;
         urlCreateNewQuotation = window.location.origin + '/adminToua/index.php/modules/quotation/admin/create/new/quotation' + paramsUrlCreateNewQuotation;
 

@@ -63,6 +63,80 @@ class AdminQuotationController extends FrameworkBundleAdminController
             if ($quotations['records'][$i]['orders']) {
                 $quotations['records'][$i]['url_to_show_order'] = $this->getAdminLink('AdminOrders', ['id_order' => $quotations['records'][$i]['orders'][0]['id_order'], 'vieworder' => 1]);
             }
+            // On récupère le cart lié au quotation
+            $quotations['records'][$i]['cart'] = $quotationRepository->findOneCartById($quotations['records'][$i]['id_cart']);
+            if ($quotations['records'][$i]['cart']['id_cart']) {
+                $quotations['records'][$i]['cart']['products'] = $quotationRepository->findProductsCustomerByCarts($quotations['records'][$i]['cart']['id_cart']);
+                $quotations['records'][$i]['cart']['discounts'] = $quotationRepository->findDiscountsByIdCart($quotations['records'][$i]['cart']['id_cart']);
+            }
+            // On récupère les produits du cart
+            for ($j = 0; $j < count($quotations['records'][$i]['cart']['products']); $j++) {
+                if ($quotations['records'][$i]['cart']['products']) {
+                    $quotations['records'][$i]['cart']['products'][$j]['total_product'] = number_format($quotations['records'][$i]['cart']['products'][$j]['total_product'], 2);
+                    $quotations['records'][$i]['cart']['products'][$j]['tva_amount_product'] = number_format(($quotations['records'][$i]['cart']['products'][$j]['product_price'] * $quotations['records'][$i]['cart']['products'][$j]['rate']) / 100, 2);
+                    $quotations['records'][$i]['cart']['products'][$j]['total_tva_amount_product'] = number_format((($quotations['records'][$i]['cart']['products'][$j]['product_price'] * $quotations['records'][$i]['cart']['products'][$j]['rate']) / 100) * $quotations['records'][$i]['cart']['products'][$j]['product_quantity'], 2);
+
+                }
+            }
+            // Partie Discount
+            $quotations['records'][$i]['cart']['total_discounts'] = 0;
+            for ($k = 0; $k < count($quotations['records'][$i]['cart']['discounts']); $k++) {
+                if ($quotations['records'][$i]['cart']['discounts'][$k]['reduction_product']) {
+                    $quotations['records'][$i]['cart']['discounts'][$k]['reduction_product'] = $quotationRepository->findProductAssignToDiscount($quotations['records'][$i]['cart']['discounts'][$k]['reduction_product']);
+                    if ($quotations['records'][$i]['cart']['discounts'][$k]['reduction_percent'] !== '0.00') {
+                        $quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount'] =
+                            $quotations['records'][$i]['cart']['discounts'][$k]['reduction_product']['product_price'] * $quotations['records'][$i]['cart']['discounts'][$k]['reduction_percent'] / 100;
+                        $quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount'] = strval($quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount']);
+                    }
+                } else if ($quotations['records'][$i]['cart']['discounts'][$k]['reduction_percent'] !== '0.00') {
+                    $quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount'] = $quotations['records'][$i]['cart']['total_cart'] * $quotations['records'][$i]['cart']['discounts'][$k]['reduction_percent'] / 100;
+                    $quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount'] = strval($quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount']);
+                }
+                $quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount_ht'] = $quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount'];
+
+                $quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount_tax'] = '0';
+                if ($quotations['records'][$i]['cart']['discounts'][$k]['reduction_tax'] !== null) {
+                    $quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount_tax'] = ($quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount'] * 20) / 100;
+                    $quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount_tax'] = number_format($quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount_tax'], 2);
+                    $quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount_tax'] = strval($quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount_tax']);
+                    if ($quotations['records'][$i]['cart']['discounts'][$k]['reduction_tax'] == '1') {
+                        $quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount_ht'] = $quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount'] - $quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount_tax'];
+                        $quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount_ht'] = number_format($quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount_ht'], 2);
+                        $quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount_ht'] = strval($quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount_ht']);
+                    }
+                }
+                $quotations['records'][$i]['cart']['total_discounts'] += number_format($quotations['records'][$i]['cart']['discounts'][$k]['reduction_amount_ht'], 2);
+            }
+            $quotations['records'][$i]['cart']['total_discounts'] = strval(($quotations['records'][$i]['cart']['total_discounts']));
+
+            // On calcule le montant total de la tva des réductions HT
+            $quotations['records'][$i]['cart']['total_discounts_tax'] = '0';
+            for ($l = 0; $l < count($quotations['records'][$i]['cart']['discounts']); $l++) {
+                $quotations['records'][$i]['cart']['total_discounts_tax'] += $quotations['records'][$i]['cart']['discounts'][$l]['reduction_amount_tax'];
+            }
+            $quotations['records'][$i]['cart']['total_discounts_tax'] = number_format($quotations['records'][$i]['cart']['total_discounts_tax'], 2);
+            $quotations['records'][$i]['cart']['total_discounts_tax'] = strval($quotations['records'][$i]['cart']['total_discounts_tax']);
+
+            // On calcule le montant total de la tva des produits HT
+            $quotations['records'][$i]['cart']['total_product_taxes'] = '0';
+            for ($m = 0; $m < count($quotations['records'][$i]['cart']['products']); $m++) {
+                $quotations['records'][$i]['cart']['total_product_taxes'] += $quotations['records'][$i]['cart']['products'][$m]['total_tva_amount_product'];
+            }
+            $quotations['records'][$i]['cart']['total_product_taxes'] = number_format($quotations['records'][$i]['cart']['total_product_taxes'], 2);
+            $quotations['records'][$i]['cart']['total_product_taxes'] = strval($quotations['records'][$i]['cart']['total_product_taxes']);
+
+            // On calcule le montant HT après réductions
+            $quotations['records'][$i]['cart']['total_ht_with_discount'] = '0';
+            $quotations['records'][$i]['cart']['total_ht_with_discount'] = $quotations['records'][$i]['cart']['total_cart'] - $quotations['records'][$i]['cart']['total_discounts'];
+            $quotations['records'][$i]['cart']['total_ht_with_discount'] = strval($quotations['records'][$i]['cart']['total_ht_with_discount']);
+
+            // On calucule le montant total de la tva
+            $quotations['records'][$i]['cart']['total_taxes'] = '0';
+            $quotations['records'][$i]['cart']['total_taxes'] = $quotations['records'][$i]['cart']['total_product_taxes'] - $quotations['records'][$i]['cart']['total_discounts_tax'];
+            $quotations['records'][$i]['cart']['total_taxes'] = strval($quotations['records'][$i]['cart']['total_taxes']);
+
+            // On calule le montant total ttc du panier$quotations['records'][$i]['cart']
+            $quotations['records'][$i]['cart']['total_ttc'] = number_format(($quotations['records'][$i]['cart']['total_cart'] - $quotations['records'][$i]['cart']['total_discounts']) + $quotations['records'][$i]['cart']['total_taxes'], 2);
         }
 
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [

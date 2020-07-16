@@ -1355,6 +1355,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
  */
 if (QuotationModule.getParamFromURL('show/quotation/' + '\\d+') !== null && QuotationModule.getParamFromURL('show/quotation/' + '\\d+').length === 1) {
 
+    // On récupère le style du form-control et non celui du csutom-select pour l'attribut html select
+    document.getElementById('quotation_show_status_status').classList.replace('custom-select', 'form-control');
+
     let quotationToken = new URL(window.location.href).searchParams.get('_token');
     let quotationId = document.getElementById('quotation_number').dataset.idquotation;
     /*

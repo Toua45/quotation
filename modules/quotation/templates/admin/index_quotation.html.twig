@@ -171,7 +171,7 @@
                                      Refusé
                                  </option>
                              </select></td>
-                         <td>{{ quotation.total_product_price|number_format(2) }} €</td>
+                         <td>{{ quotation.cart.total_ttc }} €</td>
                          <td>
                              <a href="{{ path('quotation_admin_pdf', { id_quotation: quotation.id_quotation, firstname: quotation.firstname, lastname: quotation.lastname}) }}"
                                 id="token_query" target="_blank">

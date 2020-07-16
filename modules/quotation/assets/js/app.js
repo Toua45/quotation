@@ -1421,7 +1421,8 @@ if (QuotationModule.getParamFromURL('show/quotation/' + '\\d+') !== null && Quot
 /*
  * Code on Index page
  */
-if (QuotationModule.getParamFromURL('research') !== null && QuotationModule.getParamFromURL('research').length === 1) {
+if (QuotationModule.getParamFromURL('research') !== null && QuotationModule.getParamFromURL('research').length === 1 ||
+    QuotationModule.getParamFromURL('research/' + '\\d+') !== null && QuotationModule.getParamFromURL('research/' + '\\d+').length === 1) {
 
     var current_page = document.getElementById("index_page").dataset.page;
 

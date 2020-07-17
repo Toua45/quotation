@@ -545,6 +545,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                                     // On affiche le récapitulatif du panier
                                                     document.getElementById('js-output-cart-summary').classList.replace('d-none', 'd-block');
+                                                    // On récupère le style du form-control
+                                                    document.getElementById('quotation_status_status').classList.replace('custom-select', 'form-control');
                                                 });
                                             });
                                         }
@@ -1057,6 +1059,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                         // On affiche le récapitulatif du panier
                         document.getElementById('js-output-cart-summary').classList.replace('d-none', 'd-block');
+                        // On récupère le style du form-control
+                        document.getElementById('quotation_status_status').classList.replace('custom-select', 'form-control');
                     });
                 });
             };

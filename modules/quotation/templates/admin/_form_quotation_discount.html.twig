@@ -1,9 +1,9 @@
-<div class="quotation-discount-section">
+<div class="quotation-discount-section col-6">
     {{ form_start(formQuotationDiscount, {'attr':{'class':'mt-4'}}) }}
 
     <div class="d-flex align-items-center">
-        {{ form_label(formQuotationDiscount.cartId, null, {'label_attr':{'class':'form-label col-sm-6 mt-2'}}) }}
-        <div class="col-sm-12">
+        {{ form_label(formQuotationDiscount.cartId, null, {'label_attr':{'class':'form-label col-sm-3 mt-2'}}) }}
+        <div class="col-sm-9">
             {{ form_widget(formQuotationDiscount.cartId) }}
         </div>
         <button id="submitCartRuleToUse" type="button" class="btn btn-light d-flex ml-3">

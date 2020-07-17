@@ -70,5 +70,10 @@
       border-top: solid 1px $border-color;
       border-bottom: solid 1px $border-color;
     }
+
+    .delete_quotation, .show_order_quotation, .order_quotation {
+      border: none;
+      width: 100%;
+    }
   }
 }

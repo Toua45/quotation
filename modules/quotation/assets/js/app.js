@@ -1484,17 +1484,17 @@ if (QuotationModule.getParamFromURL('research') !== null && QuotationModule.getP
                 let linkToOrder = document.getElementById('link_to_order_' + indexQuotationId);
 
                 if(indexQuotationStatus === 'validated') {
-                    linkToOrder.classList.remove('d-none')
+                    linkToOrder.classList.replace('d-none', 'd-flex')
                 } else {
-                    linkToOrder.classList.add('d-none')
+                    linkToOrder.classList.replace('d-flex', 'd-none')
                 }
 
                 let linkToShowOrder = document.getElementById('link_to_show_order_' + indexQuotationId);
 
                 if(indexQuotationStatus === 'ordered') {
-                    linkToShowOrder.classList.remove('d-none')
+                    linkToShowOrder.classList.replace('d-none', 'd-flex')
                 } else {
-                    linkToShowOrder.classList.add('d-none')
+                    linkToShowOrder.classList.replace('d-flex', 'd-none')
                 }
 
                 document.getElementById('index_quotation_status_success').classList.remove('d-none');

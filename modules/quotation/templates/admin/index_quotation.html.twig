@@ -200,7 +200,7 @@
                                      <ul class="dropdown-menu">
                                          <li>
                                              <a href="{{ path('quotation_admin_delete_quotation', { id_quotation : quotation.id_quotation}) }}"
-                                                onclick="(confirm('Supprimer ce devis?'))"
+                                                onclick="return confirm('Supprimer ce devis?')"
                                                 title="Supprimer" class="btn btn-light delete_quotation d-flex justify-content-start">
                                                  <i class="material-icons ml-2">delete</i>Supprimer
                                              </a>
@@ -208,7 +208,7 @@
                                          {% if quotation.status == 'validated' %}
                                              <li class="mt-1">
                                                  <a href="{{ quotation.url_to_order }}"
-                                                    onclick="(confirm('Voulez-vous créer une commande ?'))"
+                                                    onclick="return confirm('Voulez-vous créer une commande ?')"
                                                     title="Commander" class="btn btn-light order_quotation d-flex justify-content-start"
                                                     id="link_to_order_{{ quotation.id_quotation }}">
                                                      <i class="material-icons ml-2">shopping_cart</i>Créer une commande
@@ -217,7 +217,7 @@
                                          {% endif %}
                                          <li class="mt-1">
                                              <a href="{{ quotation.url_to_order }}"
-                                                onclick="(confirm('Voulez-vous créer une commande ?'))"
+                                                onclick="return confirm('Voulez-vous créer une commande ?')"
                                                 title="Commander" class="btn btn-light order_quotation d-none justify-content-start"
                                                 id="link_to_order_{{ quotation.id_quotation }}">
                                                  <i class="material-icons ml-2">shopping_cart</i>Créer une commande

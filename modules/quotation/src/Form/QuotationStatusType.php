@@ -16,7 +16,7 @@ class QuotationStatusType extends AbstractType
             ->add('status', ChoiceType::class, [
                 'required' => false,
                 'label' => 'État du devis',
-                'placeholder' => 'Afficher tous les status',
+                'placeholder' => 'Afficher tous les statuts',
                 'choices' => [
                     'À valider' => 'validate',
                     'Validé' => 'validated',

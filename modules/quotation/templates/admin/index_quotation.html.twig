@@ -43,21 +43,6 @@
                          <div class="infobulle">
                              <div class="bloc-infobulle">
                                  <span class="text-infobulle">
-                                    Exporter
-                                 </span>
-                                 <div class="arrow"></div>
-                             </div>
-                         </div>
-
-                         <a href="#">
-                             <span uk-icon="icon: pull" class="justify-content-end"></span>
-                         </a>
-                     </div>
-
-                     <div class="icon">
-                         <div class="infobulle">
-                             <div class="bloc-infobulle">
-                                 <span class="text-infobulle">
                                     Rafraîchir
                                  </span>
                                  <div class="arrow"></div>
@@ -76,7 +61,6 @@
              <table class="table table-stripped">
                  <thead class="border-0">
                  <tr>
-                     <td></td>
                      <td>
                          <label for="id_quotation">ID</label>
                      <td>
@@ -109,7 +93,6 @@
                  </tr>
                  {{ form_start(quotationFilterForm, {'attr':{ 'id': 'filter_quotations_form'}}) }}
                  <tr class="search">
-                     <td></td>
                      <td></td>
                      <td>
                          {{ form_row(quotationFilterForm.reference) }}
@@ -145,12 +128,9 @@
                  {{ form_end(quotationFilterForm) }}
                  </thead>
 
-                 <tbody>
+                 <tbody id ="quotation_table">
                  {% for quotation in quotations %}
                      <tr class="bg-{{ loop.index0 is even ? 'light' : 'none' }}">
-                         <td>
-                             <input type="checkbox">
-                         </td>
                          <td id="index-quotation-id_{{ quotation.id_quotation }}">{{ quotation.id_quotation }}</td>
                          <td>{{ quotation.reference }}</td>
                          <td>{{ quotation.firstname }} {{ quotation.lastname }}</td>
@@ -257,27 +237,6 @@
                  {% endfor %}
                  </tbody>
              </table>
-
-             <div class="group-action">
-                 <a class="btn btn-light d-flex" data-toggle="collapse" href="#collapseExample" role="button"
-                    aria-expanded="false" aria-controls="collapseExample">
-                     Actions groupées
-                     <span uk-icon="icon: triangle-down"></span>
-                 </a>
-                 <div class="collapse" id="collapseExample">
-                     <div class="card card-body">
-                         <div class="d-flex align-items-center">
-                             <input class="uk-checkbox" type="checkbox" checked="checked" name="select" id="select">
-                             <span uk-icon="icon: check-square" class="justify-content-end"></span>
-                             <label for="select" class="m-0 mr-1">Tout sélectionner</label>
-                         </div>
-                         <div class="d-flex align-items-center">
-                             <input class="uk-checkbox" type="checkbox" name="unselect" id="unselect">
-                             <label for="unselect" class="m-0 mr-1">Tout désélectionner</label>
-                         </div>
-                     </div>
-                 </div>
-             </div>
 
              <!-- Pagination -->
              {% include '@Modules/quotation/templates/admin/common/pagination.html.twig' %}

@@ -10,7 +10,7 @@ quotation_admin:
     page: '\d+'
 
 quotation_admin_pdf:
-  path: quotation/admin/pdf_view/{id_quotation}/{firstname} {lastname}
+  path: quotation/admin/pdf_view/{id_quotation}/devis_n°_{reference}
   methods: [GET]
   defaults:
     _controller: 'Quotation\Controller\AdminQuotationController::quotationPdf'

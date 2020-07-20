@@ -173,7 +173,7 @@
                              </select></td>
                          <td>{{ quotation.cart.total_ttc }} €</td>
                          <td>
-                             <a href="{{ path('quotation_admin_pdf', { id_quotation: quotation.id_quotation, firstname: quotation.firstname, lastname: quotation.lastname}) }}"
+                             <a href="{{ path('quotation_admin_pdf', { id_quotation: quotation.id_quotation, reference: quotation.reference}) }}"
                                 id="token_query" target="_blank">
                                  <span uk-icon="icon: file-pdf; ratio: 1.2"
                                        class="d-flex justify-content-center"></span>

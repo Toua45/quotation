@@ -19,8 +19,7 @@ pour un client avant de passer commande d'un ou plusieurs produit·s.
 * Exécuter `doctrine:schema:update --force`
 
 ## Administration
-* Renommer le dossier 'admin' dans le fichier 'quotation/webpack.config.js' par le nom de votre dossier admin de la racine de Prestashop.
-* Dans le répertoire 'quotation/assets/js/app.js', renommer les éléments (lignes '54' et '55') par le nom de votre dossier admin de la racine de Prestashop.
+* Renommer le dossier 'admin' dans le fichier 'quotation/webpack.config.js' par le nom de votre dossier admin de la racine de Prestashop sur les lignes 10 et 12.
 
 ## Construit avec
 * Prestashop 1.7.6.3

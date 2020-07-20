@@ -1364,6 +1364,11 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
  */
 if (QuotationModule.getParamFromURL('show/quotation/' + '\\d+') !== null && QuotationModule.getParamFromURL('show/quotation/' + '\\d+').length === 1) {
 
+    // On récupère le nom du dossier admin
+    let adminFolderNameShowPage = window.location.pathname;
+    adminFolderNameShowPage = adminFolderNameShowPage.split("/");
+    adminFolderNameShowPage = adminFolderNameShowPage[adminFolderNameShowPage.length - 8];
+
     // On récupère le style du form-control et non celui du csutom-select pour l'attribut html select
     document.getElementById('quotation_show_status_status').classList.replace('custom-select', 'form-control');
 
@@ -1382,7 +1387,7 @@ if (QuotationModule.getParamFromURL('show/quotation/' + '\\d+') !== null && Quot
 
         paramsUrlUpdateStatusQuotation = '/' + quotationId + '/' + "'" + quotationStatus + "'" + '?' + "_token=" + quotationToken;
 
-        urlUpdateStatusQuotation = window.location.origin + '/adminToua/index.php/modules/quotation/admin/update/status/quotation' + paramsUrlUpdateStatusQuotation;
+        urlUpdateStatusQuotation = window.location.origin + '/' + adminFolderNameShowPage + '/index.php/modules/quotation/admin/update/status/quotation' + paramsUrlUpdateStatusQuotation;
 
         document.getElementById('quotation_status_success').classList.remove('d-none');
 
@@ -1412,7 +1417,7 @@ if (QuotationModule.getParamFromURL('show/quotation/' + '\\d+') !== null && Quot
 
         paramsUrlUpdateMessageQuotation = '/' + quotationId + '/' + "'" + quotationMessage + "'" + '?' + "_token=" + quotationToken;
 
-        urlUpdateMessageQuotation = window.location.origin + '/adminToua/index.php/modules/quotation/admin/update/message/quotation' + paramsUrlUpdateMessageQuotation;
+        urlUpdateMessageQuotation = window.location.origin + '/' + adminFolderNameShowPage + '/index.php/modules/quotation/admin/update/message/quotation' + paramsUrlUpdateMessageQuotation;
 
         document.getElementById('quotation_message_success').classList.remove('d-none');
 
@@ -1436,13 +1441,23 @@ if (QuotationModule.getParamFromURL('show/quotation/' + '\\d+') !== null && Quot
 if (QuotationModule.getParamFromURL('research') !== null && QuotationModule.getParamFromURL('research').length === 1 ||
     QuotationModule.getParamFromURL('research/' + '\\d+') !== null && QuotationModule.getParamFromURL('research/' + '\\d+').length === 1) {
 
+    // On récupère le nom du dossier admin
+    let adminFolderNameIndexPage = window.location.pathname;
+    if (QuotationModule.getParamFromURL('research') !== null && QuotationModule.getParamFromURL('research').length === 1) {
+        adminFolderNameIndexPage = adminFolderNameIndexPage.split("/");
+        adminFolderNameIndexPage = adminFolderNameIndexPage[adminFolderNameIndexPage.length - 6];
+    } else {
+        adminFolderNameIndexPage = adminFolderNameIndexPage.split("/");
+        adminFolderNameIndexPage = adminFolderNameIndexPage[adminFolderNameIndexPage.length - 7];
+    }
+
     var current_page = document.getElementById("index_page").dataset.page;
 
     if (window.location.pathname.replace(/.*(?=\/quotation\/admin\/research)/ || /.*(?=\/quotation\/admin\/research\/)/, '') === '/quotation/admin/research' || '/quotation/admin/research/' + current_page) {
         document.getElementById('filter_page').addEventListener('click', Event => {
             Event.preventDefault();
             let form = Event.currentTarget.closest('thead').querySelector('form'); // Get form
-            const _url = window.location.origin + '/adminToua/index.php/modules/quotation/admin/research?';
+            const _url = window.location.origin + '/' + adminFolderNameIndexPage + '/index.php/modules/quotation/admin/research?';
             const params = {
                 tokenSearch: 'quotation_search[_token]=' + document.getElementById('quotation_search__token').value,
                 end: 'quotation_search[end]=' + document.getElementById('quotation_search_end').value,
@@ -1484,7 +1499,7 @@ if (QuotationModule.getParamFromURL('research') !== null && QuotationModule.getP
                 let indexQuotationStatus = document.getElementById('output_quotation_status_' + indexQuotationId).value;
                 paramsUrlUpdateIndexQuotationStatus = '/' + indexQuotationId + '/' + "'" + indexQuotationStatus + "'" + '?' + "_token=" + indexQuotationToken;
 
-                urlUpdateIndexQuotationStatus = window.location.origin + '/adminToua/index.php/modules/quotation/admin/update/status/quotation' + paramsUrlUpdateIndexQuotationStatus;
+                urlUpdateIndexQuotationStatus = window.location.origin + '/' + adminFolderNameIndexPage + '/index.php/modules/quotation/admin/update/status/quotation' + paramsUrlUpdateIndexQuotationStatus;
 
                 let linkToOrder = document.getElementById('link_to_order_' + indexQuotationId);
 

@@ -13,6 +13,12 @@ export const QuotationModule = {
         }
     },
 
+    getDiscountsURL: function () {
+        if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamFromURL('add').length === 1) {
+            return document.getElementById('discounts').dataset.discounts.replace(/\?(?=\d)(\w|\W)+/g, '');
+        }
+    },
+
     getData: function (url, callback, path = null, method = null, dataFetch = false, autocomplete = []) {
         let Mth = method !== null ? method.toUpperCase() : 'GET';
         fetch(url, {method: Mth}).then(response => response.json()).then(data => {

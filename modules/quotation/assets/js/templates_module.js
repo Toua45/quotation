@@ -2,7 +2,7 @@ export const TemplateModule = {
 
     card: `<div id='customer-card_---increment---' class="card hidden customerCard" >
                 <div class="card-header card-header-customer">    
-                    <h2>---firstname--- ---lastname---</h2>
+                    <h2 id="customer_name_---fullname---">---firstname--- ---lastname---</h2>
                     <h2>#---customer-id---</h2>             
                 </div>
                 <div class="card-body">
@@ -228,7 +228,7 @@ export const TemplateModule = {
                     </td>         
                  </tr>`,
 
-    modalCartInfos: `<div class="modal fade" id="showCartModal_---id-cart-modal---" tabindex="-1" role="dialog" aria-labelledby="showCustomerModalTitle" aria-hidden="true">
+    modalCartInfos: `<div class="modal fade cartModal" id="showCartModal_---id-cart-modal---" tabindex="-1" role="dialog" aria-labelledby="showCustomerModalTitle" aria-hidden="true">
                           <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
@@ -251,8 +251,10 @@ export const TemplateModule = {
                                         <table class="table">
                                              <thead>
                                                 <tr>
+                                                <th class="text-left">Miniature</th>
                                                 <th class="text-left">Produits</th>
-                                                <th class="text-left">Prix Unitaire</th>
+                                                <th class="text-left">Description</th>
+                                                <th class="text-left">Prix Unitaire HT</th>
                                                 <th class="text-left">Quantité</th>
                                                 <th class="text-left">Total</th>
                                                 </tr>
@@ -261,7 +263,7 @@ export const TemplateModule = {
                                             
                                                 ---cart-data---
                                                 
-                                                <th colspan="3" class="text-left">Total produits</th>
+                                                <th colspan="5" class="text-left">Total produits</th>
                                                 <th class="text-left">---totalCart---</th>
                                                 </tr>
                                         </table>
@@ -277,7 +279,9 @@ export const TemplateModule = {
                      </div>`,
 
     cartData: `<tr>
+                    <td class="text-left"><img src="---productPicture---"></td>
                     <td class="text-left">---productName---</td>
+                    <td class="text-left">---productAttribute---</td>
                     <td class="text-left">---productPrice---</td>
                     <td class="text-left">---productQuantity---</td>
                     <td class="text-left">---totalProduct---</td>
@@ -299,7 +303,7 @@ export const TemplateModule = {
             </td>
         </tr>`,
 
-    modalCartOrderInfos: `<div class="modal fade" id="showOrderModal_---id-order-modal---" tabindex="-1" role="dialog" aria-labelledby="showCustomerModalTitle" aria-hidden="true">
+    modalCartOrderInfos: `<div class="modal fade cartModal" id="showOrderModal_---id-order-modal---" tabindex="-1" role="dialog" aria-labelledby="showCustomerModalTitle" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -328,8 +332,10 @@ export const TemplateModule = {
                                 <table class="table">
                                      <thead>
                                         <tr>
+                                        <th class="text-left">Miniature</th>
                                         <th class="text-left">Produits</th>
-                                        <th class="text-left">Prix Unitaire</th>
+                                        <th class="text-left">Description</th>
+                                        <th class="text-left">Prix Unitaire HT</th>
                                         <th class="text-left">Quantité</th>
                                         <th class="text-left">Total</th>
                                         </tr>
@@ -339,15 +345,23 @@ export const TemplateModule = {
                                         ---order-cart-data---
                                         
                                         <tr>
-                                        <td colspan="3" class="text-left">Total produits</td>
+                                        <td colspan="5" class="text-left">Total produits</td>
                                         <td class="text-left">---totalProducts---</td>
                                         </tr>
                                         <tr>
-                                        <td colspan="3" class="text-left">Livraison</td>
+                                        <td colspan="5" class="text-left">Réductions</td>
+                                        <td class="text-left">---totalDiscounts---</td>
+                                        </tr>
+                                        <tr>
+                                        <td colspan="5" class="text-left">Livraison</td>
                                         <td class="text-left">---totalShipping---</td>
                                         </tr>
                                         <tr>
-                                        <th colspan="3" class="text-left">Total payé</th>
+                                        <td colspan="5" class="text-left">TVA</td>
+                                        <td class="text-left">---totaltaxes---</td>
+                                        </tr>
+                                        <tr>
+                                        <th colspan="5" class="text-left">Total payé TTC</th>
                                         <th class="text-left">---totalPaid---</th>
                                         </tr>
                                 </table>
@@ -375,7 +389,7 @@ export const TemplateModule = {
             </td>
         </tr>`,
 
-    modalCartQuotationInfos: `<div class="modal fade" id="showQuotationModal_---id-quotation-modal---" tabindex="-1" role="dialog" aria-labelledby="showCustomerModalTitle" aria-hidden="true">
+    modalCartQuotationInfos: `<div class="modal fade cartModal" id="showQuotationModal_---id-quotation-modal---" tabindex="-1" role="dialog" aria-labelledby="showCustomerModalTitle" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -399,8 +413,10 @@ export const TemplateModule = {
                                 <table class="table">
                                     <thead>
                                         <tr>
+                                            <th class="text-left">Minature</th>
                                             <th class="text-left">Produits</th>
-                                            <th class="text-left">Prix Unitaire</th>
+                                            <th class="text-left">Description</th>
+                                            <th class="text-left">Prix Unitaire HT</th>
                                             <th class="text-left">Quantité</th>
                                             <th class="text-left">Total</th>
                                         </tr>
@@ -411,8 +427,20 @@ export const TemplateModule = {
                                         ---quotation-cart-data---
                                         
                                         <tr>
-                                        <td colspan="3" class="text-left">Total produits</td>
+                                        <td colspan="5" class="text-left">Total produits</td>
                                         <td class="text-left">---totalQuotation---</td>
+                                        </tr>
+                                        <tr>
+                                        <td colspan="5" class="text-left">Réductions</td>
+                                        <td class="text-left">---totalDiscounts---</td>
+                                        </tr>
+                                        <tr>
+                                        <td colspan="5" class="text-left">TVA</td>
+                                        <td class="text-left">---totaltaxes---</td>
+                                        </tr>
+                                        <tr>
+                                        <th colspan="5" class="text-left">Total TTC</th>
+                                        <th class="text-left">---totalTTC---</th>
                                         </tr>   
                                     </tbody>                                     
                                 </table>
@@ -430,6 +458,7 @@ export const TemplateModule = {
                                 <td id="product_name_---idProduct---_---idProductAttribute---" class="text-left">---productName---</td>
                                 <td id="product_attribute_---idProdAttr---_---idProd---" class="text-left">---productAttribute---</td>
                                 <td class="product_price_cart text-left">---productPrice---</td>
+                                <td class="product_taxe text-left d-none">---productTaxe---</td>
                                 <td class="text-left">
                                 <div class="input-group fixed-width-md">
                                 <input type="number" class="cart_quantity w-25" min="1" value="---productQuantity---" />
@@ -437,17 +466,30 @@ export const TemplateModule = {
                                 <button class="delete_product btn btn-light" style="height: 35px"><i class="material-icons">clear</i></button>
                                 </div> 
                                 </td>
+                                <td class="total_product_taxe text-left d-none">---totalProductTaxe---</td>
                                 <td class="total_product_price_on_cart text-left">---totalProduct---</td>
                             </tr>`,
 
     quotationCart: `<tr>
                         <th colspan="5" class="text-left">Total produits</th>
+                        <th id="total_cart_taxes" class="text-left d-none">---totalCartTaxes---</th>
                         <th id="total_cart" class="text-left">---totalCart---</th>
                     </tr>`,
 
     productQuantity: `---quantityInStock---`,
 
-    placeholderAddress:`<option value="placeholder" selected="selected">Selectionnez une adresse</option>`,
+    discountSelected: ` <tr>
+                            <td id="discount-name_---idCartRule---" class="text-left">---discountName---</td>
+                            <td class="discount-description text-left">---discountDescription---</td>
+                            <td class="discount-valeur text-left">---discountValue---</td>
+                            <td class="discount-actions d-flex">
+                                <button class="delete_discount btn btn-light d-flex">
+                                    <span uk-icon="icon: close" class="mr-1"></span> Suppimer
+                                </button>
+                            </td>
+                        </tr>`,
+
+    placeholderAddress: `<option value="placeholder" selected="selected">Selectionnez une adresse</option>`,
 
     selectAddress: `<option value="---id-address---">---alias---</option>`,
 
@@ -457,6 +499,17 @@ export const TemplateModule = {
                       ---further_address--- <br>
                       ---postcode--- ---city---<br>
                       ---country--- <br>
-                      ---phone---`
+                      ---phone---`,
+
+    cartSummaryTotalProducts: `---totalProducts---`,
+
+    cartSummaryTotalDiscounts: `---totalDiscounts---`,
+
+    cartSummaryTotalTaxes: `---totalTaxesCartSummary---`,
+
+    cartSummaryTotalWithoutTaxes: `---totalCartWithoutTaxes---`,
+
+    cartSummaryTotalWithTaxes: `---totalCartWithTaxes---`,
+
 
 };

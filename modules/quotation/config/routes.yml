@@ -10,12 +10,23 @@ quotation_admin:
     page: '\d+'
 
 quotation_admin_pdf:
-  path: quotation/admin/pdf_view/{id_quotation}/{firstname} {lastname}
+  path: quotation/admin/pdf_view/{id_quotation}/devis_n°_{reference}
   methods: [GET]
   defaults:
     _controller: 'Quotation\Controller\AdminQuotationController::quotationPdf'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'
+
+quotation_admin_email:
+  path: quotation/admin/email/{id_quotation}/{id_customer}
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::mailerAction'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+  requirements:
+    id_quotation: '\d+'
+    id_customer: '\d+'
 
 quotation_admin_add:
   path: quotation/admin/add
@@ -155,5 +166,110 @@ quotation_admin_delete_product_cart:
   methods: [GET, POST]
   defaults:
     _controller: 'Quotation\Controller\AdminQuotationController::deleteProductCart'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_autocompletion_ajax_discount:
+  path: quotation/admin/autocompletion/discount
+  methods: [GET]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::ajaxDiscount'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_search_discounts:
+  path: quotation/admin/search/discounts/{query}
+  methods: [GET]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::searchDiscounts'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_show_discount:
+  path: quotation/admin/show/discount/{id_cart_rule}
+  requirements:
+    id_cart_rule: '\d+'
+  methods: [GET]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::showDiscount'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_insert_cart_rule:
+  path: quotation/admin/assign/discount/cart/{id_cart}/{id_cart_rule}
+  requirements:
+    id_cart: '\d+'
+    id_cart_rule: '\d+'
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::insertCartRule'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_delete_discount_cart:
+  path: quotation/admin/delete/discount/cart/{id_cart}/{id_cart_rule}
+  requirements:
+    id_cart: '\d+'
+    id_cart_rule: '\d+'
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::deleteDiscountCart'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_create_new_quotation:
+  path: quotation/admin/create/new/quotation/{id_cart}/{id_customer}/{reference}/{message_visible}/{date_add}/{status}
+  requirements:
+    id_cart: '\d+'
+    id_customer: '\d+'
+    reference: '\w+'
+    message_visible: '[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*'
+    date_add: '^\d\d\d\d-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]) (00|[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9]):([0-9]|[0-5][0-9])$'
+    status: '\w+'
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::createNewQuotation'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_show_quotation:
+  path: quotation/admin/show/quotation/{id_quotation}
+  requirements:
+    id_quotation: '\d+'
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::showQuotation'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_update_message_quotation:
+  path: quotation/admin/update/message/quotation/{id_quotation}/{message_visible}
+  requirements:
+    id_quotation: '\d+'
+    message_visible: '[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*'
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::updateMessageQuotation'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_update_status_quotation:
+  path: quotation/admin/update/status/quotation/{id_quotation}/{status}
+  requirements:
+    id_quotation: '\d+'
+    status: '[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*'
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::updateStatusQuotation'
+    _legacy_controller: 'AdminQuotationController'
+    _legacy_link: 'AdminQuotationController'
+
+quotation_admin_delete_quotation:
+  path: quotation/admin/delete/quotation/{id_quotation}
+  requirements:
+    id_quotation: '\d+'
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Quotation\Controller\AdminQuotationController::deleteQuotation'
     _legacy_controller: 'AdminQuotationController'
     _legacy_link: 'AdminQuotationController'

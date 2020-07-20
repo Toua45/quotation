@@ -1,6 +1,9 @@
 import '../scss/app.scss';
 import {QuotationModule} from "./quotation_module";
 
+/*
+ * Code on add page
+ */
 if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamFromURL('add').length === 1) {
     // Récupère le chemin du JSON par l'id 'js-data'
     let url = document.getElementById('js-data').dataset.source;
@@ -43,6 +46,11 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
     let urlSearchCustomers = document.querySelector('[data-searchcustomers]').dataset.searchcustomers;
 
+    // On récupère le nom du dossier admin
+    let adminFolderName = window.location.pathname;
+    adminFolderName = adminFolderName.split("/");
+    adminFolderName = adminFolderName[adminFolderName.length - 6];
+
     const getQuery = (Event) => {
 
         let query = Event.currentTarget.value !== ' ' || Event.currentTarget.value !== '' ?
@@ -54,8 +62,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
-            let link = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/show/customer/';
-            let show = window.location.origin + '/adminLionel/index.php/sell/customers/';
+            let link = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/show/customer/';
+            let show = window.location.origin + '/' + adminFolderName + 'index.php/sell/customers/';
 
             customers.forEach((customer, i) => {
 
@@ -77,6 +85,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                     output += mod.TemplateModule.card
                         .replace(/---increment---/, i)
+                        .replace(/---fullname---/, customer.lastname + customer.firstname)
                         .replace(/---lastname---/, customer.lastname)
                         .replace(/---firstname---/, customer.firstname)
                         .replace(/---customer-id---/, customer.id_customer)
@@ -105,7 +114,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                     const getCustomerShow = (customer) => {
 
-                                        let addressController = window.location.origin + '/adminLionel/index.php/?controller=AdminAddresses';
+                                        let addressController = window.location.origin + '/' + adminFolderName + '/index.php/?controller=AdminAddresses';
 
                                         let personalData = '';
                                         let tableCustomerOrders = '';
@@ -201,7 +210,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
-                        let linkCart = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/show/cart/';
+                        let linkCart = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/show/cart/';
                         let urlCart = document.querySelector('[data-customercart]').dataset.customercart;
                         let newUrlCart;
 
@@ -241,6 +250,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         let modalCustomerQuotationDetailsCart = '';
                                         let selectAddress = '';
                                         let addressSelected = '';
+                                        let picturePath = window.location.origin + '/img/p/';
 
                                         /*
                                         * Cart section
@@ -254,11 +264,14 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                                 // TemplateModule.cartData correspond à cartData dans le fichier templates_module.js
                                                 modalCustomerDetailsCart += mod.TemplateModule.cartData
+                                                    .replace(/---productPicture---/, picturePath + product.path.join('/') + '/' + product.id_image + '-cart_default.jpg')
                                                     .replace(/---productName---/, product.product_name)
+                                                    .replace(/---productAttribute---/, product.attributes)
                                                     .replace(/---productPrice---/, product.product_price + ' €')
                                                     .replace(/---productQuantity---/, product.product_quantity)
                                                     .replace(/---totalProduct---/, product.total_product + ' €');
                                             }
+
 
                                             modalCustomerDetails += mod.TemplateModule.modalCartInfos
                                                 .replace(/---id-cart-modal---/, cart.id_cart)
@@ -301,7 +314,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                                 // Etant donné que les produits d'un panier sont déjà récupérés, on va réutiliser le template correspondant, ici TemplateModule.cartData
                                                 modalCustomerOrderDetailsCart += mod.TemplateModule.cartData
+                                                    .replace(/---productPicture---/, picturePath + product.path.join('/') + '/' + product.id_image + '-cart_default.jpg')
                                                     .replace(/---productName---/, product.product_name)
+                                                    .replace(/---productAttribute---/, product.attributes)
                                                     .replace(/---productPrice---/, product.product_price + ' €')
                                                     .replace(/---productQuantity---/, product.product_quantity)
                                                     .replace(/---totalProduct---/, product.total_product + ' €');
@@ -323,7 +338,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---orderStatus---/, order.order_status)
                                                     .replace(/---id-cart---/, order.id_cart)
                                                     .replace(/---totalProducts---/, order.total_products + ' €')
+                                                    .replace(/---totalDiscounts---/, cart.total_discounts + ' €')
                                                     .replace(/---totalShipping---/, order.total_shipping + ' €')
+                                                    .replace(/---totaltaxes---/, cart.total_taxes + ' €')
                                                     .replace(/---totalPaid---/, order.total_paid + ' €')
                                                     .replace(/---order-cart-data---/, modalCustomerOrderDetailsCart);
                                             }
@@ -358,7 +375,9 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             for (let product of cart['products']) {
 
                                                 modalCustomerQuotationDetailsCart += mod.TemplateModule.cartData
+                                                    .replace(/---productPicture---/, picturePath + product.path.join('/') + '/' + product.id_image + '-cart_default.jpg')
                                                     .replace(/---productName---/, product.product_name)
+                                                    .replace(/---productAttribute---/, product.attributes)
                                                     .replace(/---productPrice---/, product.product_price + ' €')
                                                     .replace(/---productQuantity---/, product.product_quantity)
                                                     .replace(/---totalProduct---/, product.total_product + ' €');
@@ -375,18 +394,21 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                     .replace(/---reference---/, quotation.quotation_reference)
                                                     .replace(/---id-cart---/, quotation.id_cart)
                                                     .replace(/---totalQuotation---/, quotation.total_quotation + ' €')
+                                                    .replace(/---totalDiscounts---/, cart.total_discounts + ' €')
+                                                    .replace(/---totaltaxes---/, cart.total_taxes + ' €')
+                                                    .replace(/---totalTTC---/, cart.total_ttc + ' €')
                                                     .replace(/---quotation-cart-data---/, modalCustomerQuotationDetailsCart);
                                             }
 
                                             modalCustomerQuotationDetailsCart = '';
                                         }
 
-                                        for (let customer of data['response']) {
+                                        for (let customer of data['quotations']) {
                                             if (typeof customer.id_quotation !== 'undefined') {
                                                 outputQuotation += mod.TemplateModule.tableQuotation
                                                     .replace(/---quotationId---/, customer.id_quotation)
                                                     .replace(/---quotationDate---/, customer.date_quotation)
-                                                    .replace(/---totalQuotation---/, customer.total_quotation + ' €')
+                                                    .replace(/---totalQuotation---/, customer.total_ttc + ' €')
                                                     .replace(/---id-quotation-modal---/, customer.id_quotation)
                                                     .replace(/---idCustomer---/, customer.id_customer)
                                                     .replace(/---id---/, customer.id_cart)
@@ -434,7 +456,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         idNewCart + '?' +
                                                         "_token=" + token;
 
-                                                    let urlDuplicateCart = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/duplicate/cart' + paramsUrlToDuplicateCart;
+                                                    let urlDuplicateCart = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/duplicate/cart' + paramsUrlToDuplicateCart;
 
                                                     const getNewCartByDuplicateCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = data.id_last_cart;
 
@@ -469,15 +491,49 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                                 .replace(/---idProd---/, product.id_product)
                                                                 .replace(/---productAttribute---/, product.attributes)
                                                                 .replace(/---productPrice---/, product.product_price + ' €')
+                                                                .replace(/---productTaxe---/, product.tva_amount_product)
                                                                 .replace(/---productQuantity---/, product.product_quantity)
+                                                                .replace(/---totalProductTaxe---/, product.total_tva_amount_product)
                                                                 .replace(/---totalProduct---/, product.total_product + ' €');
                                                         }
 
                                                         outputCartToUse += mod.TemplateModule.quotationCart
+                                                            .replace(/---totalCartTaxes---/, cart['total_taxes'] + ' €')
                                                             .replace(/---totalCart---/, cart['total_cart'] + ' €');
 
                                                         document.getElementById('output-cart-products-to-use').innerHTML = outputCartProductsToUse;
                                                         document.getElementById('output-cart-to-use').innerHTML = outputCartToUse;
+
+                                                        /*
+                                                         * Show cart_summary
+                                                         */
+                                                        let outputCartSummaryTotalProducts = '';
+                                                        let outputCartSummaryTotalTaxes = '';
+                                                        let outputCartSummaryTotalCartWithoutTaxes = '';
+                                                        let outputCartSummaryTotalCartWithTaxes = '';
+
+                                                        let cartSummaryTotalProducts = document.getElementById('cart_summary_total_products');
+                                                        let cartSummaryTotalTaxes = document.getElementById('cart_summary_total_taxes');
+                                                        let cartSummaryTotalWithoutTaxes = document.getElementById('cart_summary_total_without_taxes');
+                                                        let cartSummaryTotalWithTaxes = document.getElementById('cart_summary_total_with_taxes');
+
+                                                        outputCartSummaryTotalProducts = mod.TemplateModule.cartSummaryTotalProducts.replace(/---totalProducts---/,
+                                                            document.getElementById('total_cart').textContent);
+                                                        outputCartSummaryTotalTaxes = mod.TemplateModule.cartSummaryTotalTaxes.replace(/---totalTaxesCartSummary---/,
+                                                            document.getElementById('total_cart_taxes').textContent);
+                                                        outputCartSummaryTotalCartWithoutTaxes = mod.TemplateModule.cartSummaryTotalWithoutTaxes.replace(/---totalCartWithoutTaxes---/,
+                                                            document.getElementById('total_cart').textContent);
+
+                                                        cartSummaryTotalProducts.innerHTML = outputCartSummaryTotalProducts;
+                                                        cartSummaryTotalTaxes.innerHTML = outputCartSummaryTotalTaxes;
+                                                        cartSummaryTotalWithoutTaxes.innerHTML = outputCartSummaryTotalCartWithoutTaxes;
+
+                                                        let cartSummaryTotalTaxesValue = parseFloat(cartSummaryTotalTaxes.textContent.split(' ')[0]);
+                                                        let cartSummaryTotalWithoutTaxesValue = parseFloat(cartSummaryTotalWithoutTaxes.textContent.split(' ')[0]);
+                                                        let cartSummaryTotalWithTaxesValue = parseFloat(cartSummaryTotalTaxesValue + cartSummaryTotalWithoutTaxesValue).toFixed(2);
+
+                                                        outputCartSummaryTotalCartWithTaxes = mod.TemplateModule.cartSummaryTotalWithTaxes.replace(/---totalCartWithTaxes---/, cartSummaryTotalWithTaxesValue + ' €');
+                                                        cartSummaryTotalWithTaxes.innerHTML = outputCartSummaryTotalCartWithTaxes;
                                                     };
 
                                                     /*
@@ -491,14 +547,23 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         true,
                                                         []
                                                     );
+
+                                                    // On affiche le récapitulatif du panier
+                                                    document.getElementById('js-output-cart-summary').classList.replace('d-none', 'd-block');
+                                                    // On récupère le style du form-control
+                                                    document.getElementById('quotation_status_status').classList.replace('custom-select', 'form-control');
                                                 });
                                             });
                                         }
 
                                         // on ajoute l'attribut data-idcustomer à l'élément html add-product-to-cart pour récupérer l'id_customer qui nous servira pour la section search product section
                                         document.getElementById('add-product-to-cart').setAttribute('data-idcustomer', data['customer'].id_customer);
+                                        // on ajoute l'attribut data-customername à l'élément html add-product-to-cart pour récupérer le fullname qui nous servira pour la reference du devis lors de la création de celui-ci
+                                        document.getElementById('add-product-to-cart').setAttribute('data-customername', data['customer'].lastname + data['customer'].firstname);
                                         // on ajoute l'attribut data-idcustomer à l'élément html add-product-to-cart pour récupérer l'id_customer qui nous servira pour la section search product section
                                         document.getElementById('add-product-to-cart').setAttribute('data-idcart', data.id_last_cart);
+                                        // On ajoute l'attribut data-idcart à l'élément id output-discounts
+                                        document.getElementById('output-discounts').setAttribute('data-idcart', data.id_last_cart);
 
                                         /**
                                          * Addresses block
@@ -582,6 +647,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     // Ici, on récupère la class 'd-none' de l'élément id 'js-output-customer-details' et on la remplace par 'd-block'
                                     document.getElementById('js-output-customer-details').classList.replace('d-none', 'd-block');
                                     document.getElementById('js-output-cart-infos').classList.replace('d-none', 'd-block');
+                                    document.getElementById('js-output-discount-infos').classList.replace('d-none', 'd-block');
                                     document.getElementById('js-output-address').classList.replace('d-none', 'd-block');
                                 });
                             });
@@ -778,18 +844,54 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                     .replace(/---idProd---/, product.id_product)
                                     .replace(/---productAttribute---/, product.attributes)
                                     .replace(/---productPrice---/, product.product_price + ' €')
+                                    .replace(/---productTaxe---/, product.tva_amount_product)
                                     .replace(/---productQuantity---/, product.product_quantity)
+                                    .replace(/---totalProductTaxe---/, product.total_tva_amount_product)
                                     .replace(/---totalProduct---/, product.total_product + ' €')
                                     .replace(/---token---/, new URL(window.location.href).searchParams.get('_token'));
                             }
 
 
                             outputCartTotal += mod.TemplateModule.quotationCart
+                                .replace(/---totalCartTaxes---/, cart['total_taxes'] + ' €')
                                 .replace(/---totalCart---/, cart['total_cart'] + ' €');
 
                             document.getElementById('output-cart-products-to-use').innerHTML = outputProductOnCart;
                             document.getElementById('output-cart-products-to-use').setAttribute('data-idcart', cart.id_cart);
                             document.getElementById('output-cart-to-use').innerHTML = outputCartTotal;
+                            // On ajoute l'attribut data-idcart à l'élément id output-discounts
+                            document.getElementById('output-discounts').setAttribute('data-idcart', cart.id_cart);
+
+                            /*
+                             * Show cart_summary
+                             */
+                            let outputCartSummaryTotalProducts = '';
+                            let outputCartSummaryTotalTaxes = '';
+                            let outputCartSummaryTotalCartWithoutTaxes = '';
+                            let outputCartSummaryTotalCartWithTaxes = '';
+
+                            let cartSummaryTotalProducts = document.getElementById('cart_summary_total_products');
+                            let cartSummaryTotalTaxes = document.getElementById('cart_summary_total_taxes');
+                            let cartSummaryTotalWithoutTaxes = document.getElementById('cart_summary_total_without_taxes');
+                            let cartSummaryTotalWithTaxes = document.getElementById('cart_summary_total_with_taxes');
+
+                            outputCartSummaryTotalProducts = mod.TemplateModule.cartSummaryTotalProducts.replace(/---totalProducts---/,
+                                document.getElementById('total_cart').textContent);
+                            outputCartSummaryTotalTaxes = mod.TemplateModule.cartSummaryTotalTaxes.replace(/---totalTaxesCartSummary---/,
+                                document.getElementById('total_cart_taxes').textContent);
+                            outputCartSummaryTotalCartWithoutTaxes = mod.TemplateModule.cartSummaryTotalWithoutTaxes.replace(/---totalCartWithoutTaxes---/,
+                                document.getElementById('total_cart').textContent);
+
+                            cartSummaryTotalProducts.innerHTML = outputCartSummaryTotalProducts;
+                            cartSummaryTotalTaxes.innerHTML = outputCartSummaryTotalTaxes;
+                            cartSummaryTotalWithoutTaxes.innerHTML = outputCartSummaryTotalCartWithoutTaxes;
+
+                            let cartSummaryTotalTaxesValue = parseFloat(cartSummaryTotalTaxes.textContent.split(' ')[0]);
+                            let cartSummaryTotalWithoutTaxesValue = parseFloat(cartSummaryTotalWithoutTaxes.textContent.split(' ')[0]);
+                            let cartSummaryTotalWithTaxesValue = parseFloat(cartSummaryTotalTaxesValue + cartSummaryTotalWithoutTaxesValue).toFixed(2);
+
+                            outputCartSummaryTotalCartWithTaxes = mod.TemplateModule.cartSummaryTotalWithTaxes.replace(/---totalCartWithTaxes---/, cartSummaryTotalWithTaxesValue + ' €');
+                            cartSummaryTotalWithTaxes.innerHTML = outputCartSummaryTotalCartWithTaxes;
 
                             /*
                              * Update product quantity on cart
@@ -826,6 +928,12 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         let euroSymbol = priceElement.textContent.split(' ')[1];
                                         totalPriceElement.textContent = Math.round(parseFloat(currentPrice) * parseFloat(Event.currentTarget.value) * 100) / 100 + ' ' + euroSymbol;
 
+                                        // On récupère la tva du produit
+                                        let priceTaxe = Event.currentTarget.closest('tr').querySelector('.product_taxe').textContent;
+                                        // On récupère le total de la tva du produit
+                                        let totalPriceTaxe = Event.currentTarget.closest('tr').querySelector('.total_product_taxe');
+                                        totalPriceTaxe.textContent = Math.round(parseFloat(priceTaxe) * parseFloat(Event.currentTarget.value) * 100) / 100 + ' €';
+
                                         paramsUrlProductQuantity = '/' +
                                             document.getElementById('output-cart-products-to-use').dataset.idcart + '/' + // Get id_cart
                                             idProduct + '/' + // Get id_product
@@ -833,7 +941,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             Event.currentTarget.value + '?' +  // Get quantity
                                             "_token=" + document.getElementById('token').value; // Get token
 
-                                        let urlProductQtyPost = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/update/quantity/product/cart' + paramsUrlProductQuantity;
+                                        let urlProductQtyPost = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/update/quantity/product/cart' + paramsUrlProductQuantity;
 
                                         const getCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = cart.id_cart;
 
@@ -850,8 +958,20 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                          * Update total product price and total cart when product quantity change
                                          */
                                         const showProductsTotalPriceUpdateOnCart = (cart) => {
-
+                                            document.getElementById('total_cart_taxes').innerHTML = cart['total_taxes'] + ' €';
                                             document.getElementById('total_cart').innerHTML = cart['total_cart'] + ' €';
+                                            // On récupère le total cart à jour sur la section cart_summary
+                                            cartSummaryTotalProducts.innerHTML = cart['total_cart'] + ' €';
+                                            cartSummaryTotalWithoutTaxes.innerHTML = cart['total_cart'] + ' €';
+                                            // On récupère le total tva à jour sur la section cart_summary
+                                            cartSummaryTotalTaxes.innerHTML = cart['total_taxes'] + ' €';
+                                            // On récupère le total ttc à jour sur la section cart_summary
+                                            cartSummaryTotalTaxesValue = parseFloat(cartSummaryTotalTaxes.textContent.split(' ')[0]);
+                                            cartSummaryTotalWithoutTaxesValue = parseFloat(cartSummaryTotalWithoutTaxes.textContent.split(' ')[0]);
+                                            cartSummaryTotalWithTaxesValue = parseFloat(cartSummaryTotalTaxesValue + cartSummaryTotalWithoutTaxesValue).toFixed(2);
+
+                                            outputCartSummaryTotalCartWithTaxes = mod.TemplateModule.cartSummaryTotalWithTaxes.replace(/---totalCartWithTaxes---/, cartSummaryTotalWithTaxesValue + ' €');
+                                            cartSummaryTotalWithTaxes.innerHTML = outputCartSummaryTotalCartWithTaxes;
                                         };
 
                                         QuotationModule.getData(
@@ -895,14 +1015,27 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             idProductAttributeToDelete + '?' + // Get id_product_attribute
                                             "_token=" + document.getElementById('token').value; // Get token
 
-                                        urlProductToDelete = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/delete/product/cart' + paramsUrlProductToDelete;
+                                        urlProductToDelete = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/delete/product/cart' + paramsUrlProductToDelete;
 
                                         // On ajoute à l'élément tr le plus proche la class='d-none'
                                         Event.currentTarget.closest('tr').classList.add('d-none');
 
                                         // On récupère le total_cart à jour
                                         const getUpdateCart = (cart) => {
+                                            document.getElementById('total_cart_taxes').innerHTML = cart['total_taxes'] + ' €';
                                             document.getElementById('total_cart').innerHTML = cart['total_cart'] + ' €';
+                                            // On récupère le total cart à jour sur la section cart_summary
+                                            cartSummaryTotalProducts.innerHTML = cart['total_cart'] + ' €';
+                                            cartSummaryTotalWithoutTaxes.innerHTML = cart['total_cart'] + ' €';
+                                            // On récupère le total tva à jour sur la section cart_summary
+                                            cartSummaryTotalTaxes.innerHTML = cart['total_taxes'] + ' €';
+                                            // On récupère le total ttc à jour sur la section cart_summary
+                                            cartSummaryTotalTaxesValue = parseFloat(cartSummaryTotalTaxes.textContent.split(' ')[0]);
+                                            cartSummaryTotalWithoutTaxesValue = parseFloat(cartSummaryTotalWithoutTaxes.textContent.split(' ')[0]);
+                                            cartSummaryTotalWithTaxesValue = parseFloat(cartSummaryTotalTaxesValue + cartSummaryTotalWithoutTaxesValue).toFixed(2);
+
+                                            outputCartSummaryTotalCartWithTaxes = mod.TemplateModule.cartSummaryTotalWithTaxes.replace(/---totalCartWithTaxes---/, cartSummaryTotalWithTaxesValue + ' €');
+                                            cartSummaryTotalWithTaxes.innerHTML = outputCartSummaryTotalCartWithTaxes;
                                         };
 
                                         QuotationModule.getData(
@@ -928,6 +1061,11 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                             true,
                             []
                         );
+
+                        // On affiche le récapitulatif du panier
+                        document.getElementById('js-output-cart-summary').classList.replace('d-none', 'd-block');
+                        // On récupère le style du form-control
+                        document.getElementById('quotation_status_status').classList.replace('custom-select', 'form-control');
                     });
                 });
             };
@@ -949,29 +1087,452 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     ['keyup', 'click'].forEach(event => {
         inputSearchProducts.addEventListener(event, getQueryProduct, false);
     });
+
+    /*
+    *Search discounts section
+    */
+    let urlDiscount = document.getElementById('js-data-discount').dataset.source;
+
+    QuotationModule.getData(
+        urlDiscount,
+        QuotationModule.getData,
+        QuotationModule.getDiscountsURL(),
+        null,
+        true,
+        []
+    );
+
+    QuotationModule.getData(
+        QuotationModule.getDiscountsURL(),
+        QuotationModule.autocomplete,
+        null,
+        null,
+        true,
+        ['#quotation_discount_cartId', 'discounts', 2]
+    );
+
+    const getQueryDiscount = (Event) => {
+
+        let urlSearchDiscount = document.getElementById('js-data-discount').dataset.discount;
+        let urlShowCartDiscounts = document.getElementById('js-data-discount').dataset.cart;
+
+        let idCartRule = parseInt(Event.currentTarget.value.replace(/[^(\d)+(\s){1}]/, '').trim());
+        urlSearchDiscount = window.location.origin + urlSearchDiscount.replace(/\d+(?=\?_token)/, idCartRule);
+        urlShowCartDiscounts = window.location.origin + urlShowCartDiscounts.replace(/\d+(?=\?_token)/, document.getElementById('output-discounts').dataset.idcart);
+
+        let urlAssignCartRuleToCart;
+        let cartRuleParamsUrl = '';
+
+        const showDiscountToUse = (discount) => {
+
+            document.getElementById('output-discounts').setAttribute('data-idcartrule', discount.id_cart_rule);
+            document.getElementById('output-discounts').setAttribute('data-token', new URL(window.location.href).searchParams.get('_token'));
+
+            import('./templates_module').then(mod => {
+
+                let id_cart = document.getElementById('output-discounts').dataset.idcart;
+                let token = document.getElementById('output-discounts').dataset.token;
+
+                document.getElementById('submitCartRuleToUse').addEventListener('click', Event => {
+                    Event.preventDefault();
+
+                    let id_cart_rule = document.getElementById('output-discounts').dataset.idcartrule;
+                    let date = new Date();
+                    let dateToday = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000).toISOString().substr(0, 19).replace('T', ' ');
+                    let discountDateEnd = discount.date_to;
+                    let total_cart = parseFloat(document.getElementById('total_cart').textContent.split(' ')[0]);
+                    let cartRuleId = discount.id_cart_rule;
+                    let cartRuleMinimumAmount = parseFloat(discount.minimum_amount);
+                    let reductionProduct = discount.reduction_product;
+                    let idProduct;
+                    let cartProducts = [];
+                    let regexProduct = new RegExp('^(product_name_)');
+                    let firstChildren = document.getElementById('output-cart-products-to-use').children;
+
+                    // On récupère l'id_product dans le tbody 'output-cart-products-to-use'
+                    for (let i = 0; i < firstChildren.length; i++) {
+                        let secondChildren = firstChildren[i].children;
+                        for (let j = 0; j < secondChildren.length; j++) {
+                            if (secondChildren[j].id.match(regexProduct) !== null) {
+                                idProduct = secondChildren[j].id.split('_')[2];
+                            }
+                            cartProducts.push(idProduct);
+                        }
+                    }
+
+                    if (total_cart > cartRuleMinimumAmount) {
+                        if (dateToday < discountDateEnd) {
+                            for (let k = 0; k < cartProducts.length; k++) {
+                                if (reductionProduct === cartProducts[k] || reductionProduct === null) {
+                                    if (id_cart_rule === cartRuleId) {
+
+                                        /*
+                                         * Assign cart_rule to cart on bdd
+                                         */
+                                        cartRuleParamsUrl = '/' + id_cart + '/' + id_cart_rule + '?' + "_token=" + token;
+                                        urlAssignCartRuleToCart = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/assign/discount/cart' + cartRuleParamsUrl;
+
+                                        const getCartRuleToCart = (discount) => {
+                                        };
+
+                                        QuotationModule.getData(
+                                            urlAssignCartRuleToCart,
+                                            getCartRuleToCart,
+                                            null,
+                                            'POST',
+                                            true,
+                                            []
+                                        );
+
+                                        document.getElementById('discount_table').classList.remove('d-none');
+                                        document.getElementById('discount_cart_err').classList.add('d-none');
+                                        document.getElementById('discount_date_err').classList.add('d-none');
+
+                                        /*
+                                         * Show cart_rule assign to cart
+                                         */
+                                        const showCartDiscounts = (cart) => {
+                                            let outputDiscount = '';
+
+                                            for (let discount of cart['discounts']) {
+                                                outputDiscount += mod.TemplateModule.discountSelected
+                                                    .replace(/---idCartRule---/, discount.id_cart_rule)
+                                                    .replace(/---discountName---/, discount.name)
+                                                    .replace(/---discountDescription---/, discount.description)
+                                                    .replace(/---discountValue---/, discount.reduction_amount + ' €');
+                                            }
+                                            document.getElementById('output-discounts').innerHTML = outputDiscount;
+
+                                            /*
+                                             * Show cart summary
+                                             */
+                                            let outputCartSummaryTotalDiscounts = '';
+                                            let cartSummaryTotalProducts = document.getElementById('cart_summary_total_products');
+                                            let cartSummaryTotalDiscounts = document.getElementById('cart_summary_total_discounts');
+                                            let cartSummaryTotalTaxes = document.getElementById('cart_summary_total_taxes');
+                                            let cartSummaryTotalWithoutTaxes = document.getElementById('cart_summary_total_without_taxes');
+                                            let cartSummaryTotalWithTaxesAndDiscounts = document.getElementById('cart_summary_total_with_taxes');
+
+                                            outputCartSummaryTotalDiscounts = mod.TemplateModule.cartSummaryTotalDiscounts.replace(/---totalDiscounts---/,
+                                                cart['total_discounts'] + ' €');
+
+                                            cartSummaryTotalDiscounts.innerHTML = outputCartSummaryTotalDiscounts;
+                                            cartSummaryTotalWithoutTaxes.innerHTML = (parseFloat(cartSummaryTotalProducts.textContent.split(' ')[0])
+                                                - parseFloat(cartSummaryTotalDiscounts.textContent.split(' ')[0])).toFixed(2) + ' €';
+                                            cartSummaryTotalTaxes.innerHTML = cart['total_taxes'] + ' €';
+                                            // On récupère le total ttc à jour après les réductions
+                                            cartSummaryTotalWithTaxesAndDiscounts.innerHTML = (parseFloat(cartSummaryTotalWithoutTaxes.textContent.split(' ')[0])
+                                                + parseFloat(cartSummaryTotalTaxes.textContent.split(' ')[0])).toFixed(2) + ' €';
+
+
+                                            /*
+                                             * Delete discount assign to cart
+                                             */
+                                            let urlDiscountToDelete;
+                                            let paramsUrlDiscountToDelete = '';
+
+                                            if (document.querySelectorAll('button.delete_discount') !== null) {
+                                                document.querySelectorAll('button.delete_discount').forEach(function (link) {
+                                                    link.addEventListener('click', function (Event) {
+                                                        Event.preventDefault();
+
+                                                        let children = Event.currentTarget.closest('tr').children;
+                                                        let idDiscount;
+
+                                                        for (let i = 0; i < children.length; i++) {
+                                                            let regexp = new RegExp('^(discount-name_)');
+                                                            if (children[i].id.match(regexp) !== null) {
+                                                                idDiscount = children[i].id.split('_')[1];
+                                                            }
+                                                        }
+
+                                                        paramsUrlDiscountToDelete = '/' + id_cart + '/' + idDiscount + '?' + "_token=" + token;
+                                                        urlDiscountToDelete = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/delete/discount/cart' + paramsUrlDiscountToDelete;
+
+                                                        Event.currentTarget.closest('tr').classList.add('d-none');
+
+                                                        const getUpdateDiscountOnCart = (cart) => {
+                                                            cartSummaryTotalDiscounts.innerHTML = cart['total_discounts'] + ' €';
+                                                            cartSummaryTotalWithoutTaxes.innerHTML = (parseFloat(cartSummaryTotalProducts.textContent.split(' ')[0])
+                                                                - parseFloat(cartSummaryTotalDiscounts.textContent.split(' ')[0])).toFixed(2) + ' €';
+                                                            cartSummaryTotalTaxes.innerHTML = cart['total_taxes'] + ' €';
+                                                            // On récupère le total ttc à jour après les réductions
+                                                            cartSummaryTotalWithTaxesAndDiscounts.innerHTML = (parseFloat(cartSummaryTotalWithoutTaxes.textContent.split(' ')[0])
+                                                                // - parseFloat(cartSummaryTotalDiscounts.textContent.split(' ')[0])
+                                                                + parseFloat(cartSummaryTotalTaxes.textContent.split(' ')[0])).toFixed(2) + ' €';
+                                                        };
+
+                                                        QuotationModule.getData(
+                                                            urlDiscountToDelete,
+                                                            getUpdateDiscountOnCart,
+                                                            null,
+                                                            'POST',
+                                                            true,
+                                                            []
+                                                        );
+                                                    });
+                                                });
+                                            }
+                                            ;
+                                        };
+
+                                        QuotationModule.getData(
+                                            urlShowCartDiscounts,
+                                            showCartDiscounts,
+                                            null,
+                                            null,
+                                            true,
+                                            []
+                                        );
+
+                                    }
+                                    document.getElementById('discount_date_err').classList.add('d-none');
+                                    document.getElementById('discount_product_err').classList.add('d-none');
+                                } else {
+                                    document.getElementById('discount_product_err').classList.remove('d-none');
+                                }
+                                document.getElementById('discount_date_err').classList.add('d-none');
+                            }
+                        } else {
+                            document.getElementById('discount_date_err').classList.remove('d-none');
+                            document.getElementById('discount_product_err').classList.add('d-none');
+                        }
+                        document.getElementById('discount_cart_err').classList.add('d-none');
+                    } else {
+                        document.getElementById('discount_cart_err').classList.remove('d-none');
+                        document.getElementById('discount_date_err').classList.add('d-none');
+                        document.getElementById('discount_product_err').classList.add('d-none');
+                    }
+
+                });
+            });
+        };
+
+        QuotationModule.getData(
+            urlSearchDiscount,
+            showDiscountToUse,
+            null,
+            null,
+            true,
+            []
+        );
+    };
+
+    const inputSearchDiscounts = document.getElementById('quotation_discount_cartId').addEventListener('blur', getQueryDiscount, false);
+
+    /*
+     * Create new quotation
+     */
+    let urlCreateNewQuotation;
+    let paramsUrlCreateNewQuotation = '';
+
+    document.getElementById('submitCreateNewQuotation').addEventListener('click', Event => {
+
+        let newQuotationToken = new URL(window.location.href).searchParams.get('_token');
+        location.href = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/research';
+
+        let newQuotationCartId = document.getElementById('add-product-to-cart').dataset.idcart;
+        let newQuotationCustomerId = document.getElementById('add-product-to-cart').dataset.idcustomer;
+        let newQuotationCustomerName = document.getElementById('add-product-to-cart').dataset.customername.substr(0, 3);
+        let randomNumbReference = Math.floor(Math.random() * 1000000);
+        let newQuotationReference = newQuotationCustomerId + newQuotationCustomerName + randomNumbReference;
+        let newQuotationMessage = document.getElementById('quotation_message').value;
+        let newQuotationDate = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000).toISOString().substr(0, 19).replace('T', ' ');
+        let newQuotationStatus = document.getElementById('quotation_status_status').value;
+
+        paramsUrlCreateNewQuotation = '/' + newQuotationCartId + '/' + newQuotationCustomerId + '/' + newQuotationReference + '/' + newQuotationMessage + ' ' + '/' + newQuotationDate
+            + '/' + newQuotationStatus + '?' + "_token=" + newQuotationToken;
+        urlCreateNewQuotation = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/create/new/quotation' + paramsUrlCreateNewQuotation;
+
+        const getQuotation = (quotation) => {
+        };
+
+        QuotationModule.getData(
+            urlCreateNewQuotation,
+            getQuotation,
+            null,
+            'POST',
+            true,
+            []
+        );
+
+    });
 }
 
+/*
+ * Code on show quotation page
+ */
+if (QuotationModule.getParamFromURL('show/quotation/' + '\\d+') !== null && QuotationModule.getParamFromURL('show/quotation/' + '\\d+').length === 1) {
 
-var current_page = document.getElementById("index_page").dataset.page;
+    // On récupère le nom du dossier admin
+    let adminFolderNameShowPage = window.location.pathname;
+    adminFolderNameShowPage = adminFolderNameShowPage.split("/");
+    adminFolderNameShowPage = adminFolderNameShowPage[adminFolderNameShowPage.length - 8];
 
-if (window.location.pathname.replace(/.*(?=\/quotation\/admin\/research)/ || /.*(?=\/quotation\/admin\/research\/)/, '') === '/quotation/admin/research' || '/quotation/admin/research/' + current_page) {
-    document.getElementById('filter_page').addEventListener('click', Event => {
+    // On récupère le style du form-control et non celui du csutom-select pour l'attribut html select
+    document.getElementById('quotation_show_status_status').classList.replace('custom-select', 'form-control');
+
+    let quotationToken = new URL(window.location.href).searchParams.get('_token');
+    let quotationId = document.getElementById('quotation_number').dataset.idquotation;
+    /*
+     * Update quotation status
+     */
+    let urlUpdateStatusQuotation;
+    let paramsUrlUpdateStatusQuotation = '';
+
+    document.getElementById('quotation_show_status_status').addEventListener('change', Event => {
         Event.preventDefault();
-        let form = Event.currentTarget.closest('thead').querySelector('form'); // Get form
-        const _url = window.location.origin + '/adminLionel/index.php/modules/quotation/admin/research?';
-        const params = {
-            tokenSearch: 'quotation_search[_token]=' + document.getElementById('quotation_search__token').value,
-            end: 'quotation_search[end]=' + document.getElementById('quotation_search_end').value,
-            name: 'quotation_search[name]=' + document.getElementById('quotation_search_name').value,
-            reference: 'quotation_search[reference]=' + document.getElementById('quotation_search_reference').value,
-            start: 'quotation_search[start]=' + document.getElementById('quotation_search_start').value,
-            status: 'quotation_search[status]=' + document.getElementById('quotation_search_status').value,
+
+        let quotationStatus = document.getElementById('quotation_show_status_status').value;
+
+        paramsUrlUpdateStatusQuotation = '/' + quotationId + '/' + "'" + quotationStatus + "'" + '?' + "_token=" + quotationToken;
+
+        urlUpdateStatusQuotation = window.location.origin + '/' + adminFolderNameShowPage + '/index.php/modules/quotation/admin/update/status/quotation' + paramsUrlUpdateStatusQuotation;
+
+        document.getElementById('quotation_status_success').classList.remove('d-none');
+
+        const getStatusQuotation = (quotation) => {
         };
-        const url = Object.values(params).join('&');
-        form.method = 'GET';
-        form.action = _url + url;
-        form.submit();
+
+        QuotationModule.getData(
+            urlUpdateStatusQuotation,
+            getStatusQuotation,
+            null,
+            'POST',
+            true,
+            []
+        );
     });
+
+    /*
+    * Update quotation message
+    */
+    let urlUpdateMessageQuotation;
+    let paramsUrlUpdateMessageQuotation = '';
+
+    document.getElementById('submitNewMessage').addEventListener('click', Event => {
+        Event.preventDefault();
+
+        let quotationMessage = document.getElementById('show_message').value;
+
+        paramsUrlUpdateMessageQuotation = '/' + quotationId + '/' + "'" + quotationMessage + "'" + '?' + "_token=" + quotationToken;
+
+        urlUpdateMessageQuotation = window.location.origin + '/' + adminFolderNameShowPage + '/index.php/modules/quotation/admin/update/message/quotation' + paramsUrlUpdateMessageQuotation;
+
+        document.getElementById('quotation_message_success').classList.remove('d-none');
+
+        const getMessageQuotation = (quotation) => {
+        };
+
+        QuotationModule.getData(
+            urlUpdateMessageQuotation,
+            getMessageQuotation,
+            null,
+            'POST',
+            true,
+            []
+        );
+    });
+}
+
+/*
+ * Code on Index page
+ */
+if (QuotationModule.getParamFromURL('research') !== null && QuotationModule.getParamFromURL('research').length === 1 ||
+    QuotationModule.getParamFromURL('research/' + '\\d+') !== null && QuotationModule.getParamFromURL('research/' + '\\d+').length === 1) {
+
+    // On récupère le nom du dossier admin
+    let adminFolderNameIndexPage = window.location.pathname;
+    if (QuotationModule.getParamFromURL('research') !== null && QuotationModule.getParamFromURL('research').length === 1) {
+        adminFolderNameIndexPage = adminFolderNameIndexPage.split("/");
+        adminFolderNameIndexPage = adminFolderNameIndexPage[adminFolderNameIndexPage.length - 6];
+    } else {
+        adminFolderNameIndexPage = adminFolderNameIndexPage.split("/");
+        adminFolderNameIndexPage = adminFolderNameIndexPage[adminFolderNameIndexPage.length - 7];
+    }
+
+    var current_page = document.getElementById("index_page").dataset.page;
+
+    if (window.location.pathname.replace(/.*(?=\/quotation\/admin\/research)/ || /.*(?=\/quotation\/admin\/research\/)/, '') === '/quotation/admin/research' || '/quotation/admin/research/' + current_page) {
+        document.getElementById('filter_page').addEventListener('click', Event => {
+            Event.preventDefault();
+            let form = Event.currentTarget.closest('thead').querySelector('form'); // Get form
+            const _url = window.location.origin + '/' + adminFolderNameIndexPage + '/index.php/modules/quotation/admin/research?';
+            const params = {
+                tokenSearch: 'quotation_search[_token]=' + document.getElementById('quotation_search__token').value,
+                end: 'quotation_search[end]=' + document.getElementById('quotation_search_end').value,
+                name: 'quotation_search[name]=' + document.getElementById('quotation_search_name').value,
+                reference: 'quotation_search[reference]=' + document.getElementById('quotation_search_reference').value,
+                start: 'quotation_search[start]=' + document.getElementById('quotation_search_start').value,
+                status: 'quotation_search[status]=' + document.getElementById('quotation_search_status').value,
+            };
+            const url = Object.values(params).join('&');
+            form.method = 'GET';
+            form.action = _url + url;
+            form.submit();
+        });
+    }
+
+    /*
+     * Update quotation status on index page
+     */
+    if (document.querySelectorAll('select.index_quotation_status') !== null) {
+        document.querySelectorAll('select.index_quotation_status').forEach(function (link) {
+            link.addEventListener('change', function (Event) {
+                Event.preventDefault();
+
+                let indexQuotationToken = new URL(window.location.href).searchParams.get('_token');
+                let children = Event.currentTarget.closest('tr').children;
+                let indexQuotationId;
+                let urlUpdateIndexQuotationStatus;
+                let paramsUrlUpdateIndexQuotationStatus = '';
+
+                // On récupère l'id_quotation
+                for (let i = 0; i < children.length; i++) {
+                    let regexp = new RegExp('^(index-quotation-id_)');
+                    if (children[i].id.match(regexp) !== null) {
+                        indexQuotationId = children[i].id.split('_')[1];
+                    }
+                }
+
+                // On récupère la valeur de l'option du select
+                let indexQuotationStatus = document.getElementById('output_quotation_status_' + indexQuotationId).value;
+                paramsUrlUpdateIndexQuotationStatus = '/' + indexQuotationId + '/' + "'" + indexQuotationStatus + "'" + '?' + "_token=" + indexQuotationToken;
+
+                urlUpdateIndexQuotationStatus = window.location.origin + '/' + adminFolderNameIndexPage + '/index.php/modules/quotation/admin/update/status/quotation' + paramsUrlUpdateIndexQuotationStatus;
+
+                let linkToOrder = document.getElementById('link_to_order_' + indexQuotationId);
+
+                if(indexQuotationStatus === 'validated') {
+                    linkToOrder.classList.replace('d-none', 'd-flex')
+                } else {
+                    linkToOrder.classList.replace('d-flex', 'd-none')
+                }
+
+                let linkToShowOrder = document.getElementById('link_to_show_order_' + indexQuotationId);
+
+                if(indexQuotationStatus === 'ordered') {
+                    linkToShowOrder.classList.replace('d-none', 'd-flex')
+                } else {
+                    linkToShowOrder.classList.replace('d-flex', 'd-none')
+                }
+
+                document.getElementById('index_quotation_status_success').classList.remove('d-none');
+
+                const getUpdateQuotationStatus = (quotation) => {
+                };
+
+                QuotationModule.getData(
+                    urlUpdateIndexQuotationStatus,
+                    getUpdateQuotationStatus,
+                    null,
+                    'POST',
+                    true,
+                    []
+                );
+            });
+        });
+    };
 }
 
 // any SCSS you require will output into a single scss file (app.scss in this case)

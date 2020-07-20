@@ -216,16 +216,16 @@ class QuotationRepository
     public function findQuotationById($id_quotation)
     {
         return $this->connection->createQueryBuilder()
-            ->addSelect('q.*', 'c.firstname', 'c.lastname')
-            ->addSelect('SUM(p.price * cp.quantity) AS total_product_price')
-            ->addSelect('o.total_shipping')
-            ->addSelect('cr.reduction_amount', 'cr.reduction_percent', 'cr.reduction_tax')
+            ->addSelect('q.*', 'c.firstname', 'c.lastname', 'c.email')
+//            ->addSelect('SUM(p.price * cp.quantity) AS total_product_price')
+//            ->addSelect('o.total_shipping')
+//            ->addSelect('cr.reduction_amount', 'cr.reduction_percent', 'cr.reduction_tax')
             ->from($this->databasePrefix . 'quotation', 'q')
             ->join('q', $this->databasePrefix . 'customer', 'c', 'c.id_customer = q.id_customer')
-            ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart = cp.id_cart')
-            ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
-            ->join('c', $this->databasePrefix . 'orders', 'o', 'c.id_customer = o.id_customer')
-            ->join('c', $this->databasePrefix . 'cart_rule', 'cr', 'cr.id_customer = c.id_customer')
+//            ->join('q', $this->databasePrefix . 'cart_product', 'cp', 'q.id_cart = cp.id_cart')
+//            ->join('cp', $this->databasePrefix . 'product', 'p', 'cp.id_product = p.id_product')
+//            ->join('c', $this->databasePrefix . 'orders', 'o', 'c.id_customer = o.id_customer')
+//            ->join('c', $this->databasePrefix . 'cart_rule', 'cr', 'cr.id_customer = c.id_customer')
             ->where('q.id_quotation = :id_quotation')
             ->setParameter('id_quotation', $id_quotation)
             ->execute()
@@ -280,7 +280,7 @@ class QuotationRepository
             ->addSelect('p.price * cp.quantity AS total_product')
             ->addSelect('t.rate')
             ->addSelect('cp.id_product_attribute')
-            ->addSelect('sp.reduction')
+            ->addSelect('sp.reduction AS specific_price_reduction')
             ->from($this->databasePrefix . 'product', 'p')
             ->join('p', $this->databasePrefix . 'cart_product', 'cp', 'cp.id_product = p.id_product')
             ->leftJoin('p', $this->databasePrefix . 'specific_price', 'sp', 'sp.id_product = p.id_product')
@@ -626,7 +626,7 @@ class QuotationRepository
     public function getCustomerInfoById($id_customer)
     {
         return $this->connection->createQueryBuilder()
-            ->addSelect('c.id_customer', 'c.secure_key')
+            ->addSelect('c.id_customer', 'c.firstname', 'c.lastname', 'c.secure_key')
             ->from($this->databasePrefix . 'customer', 'c')
             ->where('c.id_customer = :id_customer')
             ->setParameter('id_customer', $id_customer)
@@ -807,5 +807,235 @@ class QuotationRepository
                 'id_product_attribute' => $id_product_attribute,
             ]);
         return $query->execute();
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function findAllDiscounts()
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('crl.id_cart_rule', "CONCAT( crl.id_cart_rule, ' - ' , crl.name, ' - ', cr.code) AS fullname")
+            ->from($this->databasePrefix . 'cart_rule_lang', 'crl')
+            ->join('crl', $this->databasePrefix . 'cart_rule', 'cr', 'crl.id_cart_rule = cr.id_cart_rule')
+            ->execute()
+            ->fetchAll();
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function findDiscountByQuery($query)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('crl.id_cart_rule', 'crl.name')
+            ->from($this->databasePrefix . 'cart_rule_lang', 'crl')
+            ->where('crl.name LIKE :query')
+            ->setParameter('query', '%' . $query . '%')
+            ->execute()
+            ->fetchAll()
+            ;
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function findOneDiscountById($id_cart_rule)
+    {
+        $expr = $this->connection->getExpressionBuilder();
+
+        return $this->connection->createQueryBuilder()
+            ->addSelect('cr.id_cart_rule', 'cr.date_from', 'cr.date_to', 'crl.name', 'cr.description', 'cr.code',
+                'cr.minimum_amount', 'cr.free_shipping', 'cr.reduction_percent', 'cr.reduction_amount', 'cr.reduction_product')
+            ->from($this->databasePrefix . 'cart_rule', 'cr')
+            ->join('cr', $this->databasePrefix . 'cart_rule_lang', 'crl', 'cr.id_cart_rule = crl.id_cart_rule')
+            ->where($expr->eq('cr.id_cart_rule', ':id_cart_rule'))
+            ->setParameter('id_cart_rule', $id_cart_rule)->execute()->fetch();
+    }
+
+    /**
+     * Assign cart_rule to Cart
+     * @param int $id_cart
+     * @param int $id_cart_rule
+     * @return \Doctrine\DBAL\Driver\Statement|int
+     */
+    public function assignCartRuleToCart(int $id_cart, int $id_cart_rule)
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->insert($this->databasePrefix . 'cart_cart_rule');
+
+        $query->values([
+            'id_cart' => ':id_cart',
+            'id_cart_rule' => ':id_cart_rule',
+        ])
+            ->setParameters([
+                'id_cart' => $id_cart,
+                'id_cart_rule' => $id_cart_rule,
+            ]);
+        return $query->execute();
+    }
+
+    /*
+     * @return mixed[]
+     */
+    public function findDiscountsByIdCart($id_cart)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('ccr.id_cart', 'ccr.id_cart_rule')
+            ->addSelect('cr.id_cart_rule', 'crl.name', 'cr.description', 'cr.code', 'cr.free_shipping', 'cr.reduction_percent', 'cr.reduction_amount', 'cr.reduction_tax', 'cr.reduction_product')
+            ->from($this->databasePrefix . 'cart_cart_rule', 'ccr')
+            ->join('ccr', $this->databasePrefix . 'cart_rule', 'cr', 'ccr.id_cart_rule = cr.id_cart_rule')
+            ->join('cr', $this->databasePrefix . 'cart_rule_lang', 'crl', 'cr.id_cart_rule = crl.id_cart_rule')
+            ->where('ccr.id_cart = :id_cart')
+            ->setParameter('id_cart', $id_cart)
+            ->execute()
+            ->fetchAll();
+    }
+
+    /*
+     * @return mixed []
+     */
+    public function findProductAssignToDiscount($id_product)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('cr.reduction_product AS id_product')
+            ->addSelect('ROUND(p.price, 2) AS product_price')
+            ->from($this->databasePrefix . 'cart_rule', 'cr')
+            ->join('cr', $this->databasePrefix . 'product', 'p', 'cr.reduction_product = p.id_product')
+            ->where('cr.reduction_product = :id_product')
+            ->setParameter('id_product', $id_product)
+            ->execute()
+            ->fetch();
+    }
+
+    /**
+     * Delete discount on Cart
+     * @param int $id_cart
+     * @param int $id_cart_rule
+     * @return \Doctrine\DBAL\Driver\Statement|int
+     */
+    public function deleteDiscountOnCart(int $id_cart, int $id_cart_rule)
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->delete($this->databasePrefix . 'cart_cart_rule');
+
+        $query
+            ->where('id_cart = :id_cart')
+            ->andWhere('id_cart_rule = :id_cart_rule')
+            ->setParameters([
+                'id_cart' => $id_cart,
+                'id_cart_rule' => $id_cart_rule,
+            ]);
+        return $query->execute();
+    }
+
+    /**
+     * Create quotation
+     * @param $id_cart
+     * @param $id_customer
+     * @param $reference
+     * @param $message_visible
+     * @param $date_add
+     * @param $status
+     * @return \Doctrine\DBAL\Driver\Statement|int
+     */
+    public function createQuotation(int $id_cart, int $id_customer, string $reference, string $message_visible, $date_add, string $status)
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->insert($this->databasePrefix . 'quotation');
+
+        $query->values([
+            'id_cart' => ':id_cart',
+            'id_customer' => ':id_customer',
+            'reference' => ':reference',
+            'message_visible' => ':message_visible',
+            'date_add' => ':date_add',
+            'status' => ':status',
+        ])
+            ->setParameters([
+                'id_cart' => $id_cart,
+                'id_customer' => $id_customer,
+                'reference' => $reference,
+                'message_visible' => $message_visible,
+                'date_add' => $date_add,
+                'status' => $status,
+            ]);
+        return $query->execute();
+    }
+
+    /**
+     * Update message on quotation
+     * @param int $id_quotation
+     * @param $message_visible
+     * @return \Doctrine\DBAL\Driver\Statement|int
+     */
+    public function updateMessageQuotation(int $id_quotation, $message_visible)
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->update($this->databasePrefix . 'quotation');
+
+        $query->set('message_visible', $message_visible)
+            ->where('id_quotation = :id_quotation')
+            ->setParameters([
+                'id_quotation' => $id_quotation,
+                'message_visible' => $message_visible,
+            ]);
+        return $query->execute();
+    }
+
+    /**
+     * Update status on quotation
+     * @param int $id_quotation
+     * @param $status
+     * @return \Doctrine\DBAL\Driver\Statement|int
+     */
+    public function updateStatusQuotation(int $id_quotation, $status)
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->update($this->databasePrefix . 'quotation');
+
+        $query->set('status', $status)
+            ->where('id_quotation = :id_quotation')
+            ->setParameters([
+                'id_quotation' => $id_quotation,
+                'status' => $status,
+            ]);
+        return $query->execute();
+    }
+
+    /**
+     * Delete quotation
+     * @param int $id_quotation
+     * @return \Doctrine\DBAL\Driver\Statement|int
+     */
+    public function deleteQuotation(int $id_quotation)
+    {
+        $query = $this->connection->createQueryBuilder()
+            ->delete($this->databasePrefix . 'quotation');
+
+        $query
+            ->where('id_quotation = :id_quotation')
+            ->setParameters([
+                'id_quotation' => $id_quotation,
+            ]);
+        return $query->execute();
+    }
+
+    /*
+     * @return mixed[]
+     */
+    public function findAddressStore($id_cart)
+    {
+        return $this->connection->createQueryBuilder()
+            ->addSelect('c.id_cart', 'sl.id_store', 'ss.id_shop')
+            ->addSelect('sl.name', 'sl.address1', 's.postcode', 's.city', 's.phone', 's.email')
+            ->from($this->databasePrefix . 'cart', 'c')
+            ->join('c', $this->databasePrefix . 'store_shop', 'ss', 'c.id_shop = ss.id_shop')
+            ->join('ss', $this->databasePrefix . 'store_lang', 'sl', 'ss.id_store = sl.id_store')
+            ->join('sl', $this->databasePrefix . 'store', 's', 'sl.id_store = s.id_store')
+            ->where('c.id_cart = :id_cart')
+            ->setParameter('id_cart', $id_cart)
+            ->execute()
+            ->fetch();
     }
 }

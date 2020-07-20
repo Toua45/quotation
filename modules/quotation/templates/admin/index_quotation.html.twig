@@ -4,6 +4,16 @@
 
  {% block content %}
 
+     {% include '@Modules/quotation/templates/admin/_flash_message.html.twig' %}
+
+     <div id="index_quotation_status_success" class="alert alert-success alert-dismissible fade show d-none"
+          role="alert">
+         Le statut du devis a été modifié
+         <button id="btn_quotation_status_success" type="button" class="close" data-dismiss="alert" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+         </button>
+     </div>
+
      <div class="quotation">
          <div class="card">
              <div class="quotation-head mb-3 d-flex justify-content-between">
@@ -33,21 +43,6 @@
                          <div class="infobulle">
                              <div class="bloc-infobulle">
                                  <span class="text-infobulle">
-                                    Exporter
-                                 </span>
-                                 <div class="arrow"></div>
-                             </div>
-                         </div>
-
-                         <a href="#">
-                             <span uk-icon="icon: pull" class="justify-content-end"></span>
-                         </a>
-                     </div>
-
-                     <div class="icon">
-                         <div class="infobulle">
-                             <div class="bloc-infobulle">
-                                 <span class="text-infobulle">
                                     Rafraîchir
                                  </span>
                                  <div class="arrow"></div>
@@ -66,7 +61,6 @@
              <table class="table table-stripped">
                  <thead class="border-0">
                  <tr>
-                     <td></td>
                      <td>
                          <label for="id_quotation">ID</label>
                      <td>
@@ -91,12 +85,14 @@
                          <label for="pdf">PDF</label>
                      </td>
                      <td>
+                         <label for="email">Email</label>
+                     </td>
+                     <td>
                          <label for="actions">Actions</label>
                      </td>
                  </tr>
                  {{ form_start(quotationFilterForm, {'attr':{ 'id': 'filter_quotations_form'}}) }}
                  <tr class="search">
-                     <td></td>
                      <td></td>
                      <td>
                          {{ form_row(quotationFilterForm.reference) }}
@@ -121,9 +117,11 @@
                      </td>
                      <td></td>
                      <td></td>
+                     <td></td>
                      <td>
-                         <button type="button" class="search_button btn btn-light d-flex" id="filter_page"><span uk-icon="icon: search"
-                                                                                                                 class="mr-1"></span>Rechercher
+                         <button type="button" class="search_button btn btn-light d-flex" id="filter_page"><span
+                                     uk-icon="icon: search"
+                                     class="mr-1"></span>Rechercher
                          </button>
                      </td>
                  </tr>
@@ -133,28 +131,97 @@
                  <tbody>
                  {% for quotation in quotations %}
                      <tr class="bg-{{ loop.index0 is even ? 'light' : 'none' }}">
-                         <td>
-                             <input type="checkbox">
-                         </td>
-                         <td>{{ quotation.id_quotation }}</td>
+                         <td id="index-quotation-id_{{ quotation.id_quotation }}">{{ quotation.id_quotation }}</td>
                          <td>{{ quotation.reference }}</td>
                          <td>{{ quotation.firstname }} {{ quotation.lastname }}</td>
-                         <td>{{ quotation.message_visible }}</td>
+                         <td>{{ quotation.message_visible|striptags|slice(0, 10)|raw }}</td>
                          <td>{{ quotation.date_add|date('d/m/Y') }}</td>
-                         <td>{{ quotation.status }}</td>
-                         <td>{{ quotation.total_product_price|number_format(2) }} €</td>
+                         <td><select id="output_quotation_status_{{ quotation.id_quotation }}"
+                                     class="index_quotation_status" name="select-quotation-status">
+                                 <option value="validate" {% if quotation.status == 'validate' %} selected="selected" {% endif %}>
+                                     À valider
+                                 </option>
+                                 <option value="validated" {% if quotation.status == 'validated' %} selected="selected" {% endif %}>
+                                     Validé
+                                 </option>
+                                 <option value="ordered" {% if quotation.status == 'ordered' %} selected="selected" {% endif %}>
+                                     Commandé
+                                 </option>
+                                 <option value="refused" {% if quotation.status == 'refused' %} selected="selected" {% endif %}>
+                                     Refusé
+                                 </option>
+                             </select></td>
+                         <td>{{ quotation.cart.total_ttc }} €</td>
                          <td>
-                             <a href="{{ path('quotation_admin_pdf', { id_quotation: quotation.id_quotation, firstname: quotation.firstname, lastname: quotation.lastname}) }}" id="token_query" target="_blank">
-                                 <span uk-icon="icon: file-pdf; ratio: 1.2" class="d-flex justify-content-center"></span>
+                             <a href="{{ path('quotation_admin_pdf', { id_quotation: quotation.id_quotation, reference: quotation.reference}) }}"
+                                id="token_query" target="_blank">
+                                 <span uk-icon="icon: file-pdf; ratio: 1.2"
+                                       class="d-flex justify-content-center"></span>
                              </a>
                          </td>
                          <td>
-                             <select name="actions" id="actions">
-                                 <option selected="selected">-</option>
-                                 <option value="">Modifier le devis</option>
-                                 <option value="">lorem ipsum</option>
-                                 <option value="">lorem ipsum</option>
-                             </select>
+                             <a href="{{ path('quotation_admin_email', {id_quotation: quotation.id_quotation, id_customer: quotation.id_customer}) }}"
+                                id="{{ quotation.id_quotation }}"
+                                onclick="return window.confirm('Êtes-vous sûr d\'envoyer votre message ?')">
+                                 <span uk-icon="icon: mail; ratio: 1.2"
+                                       class="d-flex justify-content-center"></span></a>
+                         </td>
+                         <td>
+                             <div class="btn-group-action">
+                                 <div class="btn-group pull-right">
+                                     <a href="{{ path('quotation_admin_show_quotation', { id_quotation : quotation.id_quotation }) }}"
+                                        class="btn btn-light" title="Afficher">
+                                         <i class="material-icons">zoom_in</i> Afficher
+                                     </a>
+
+                                     <button class="btn btn-light" data-toggle="dropdown">
+                                         <i class="material-icons">arrow_drop_down</i>
+                                     </button>
+                                     <ul class="dropdown-menu">
+                                         <li>
+                                             <a href="{{ path('quotation_admin_delete_quotation', { id_quotation : quotation.id_quotation}) }}"
+                                                onclick="return confirm('Supprimer ce devis?')"
+                                                title="Supprimer" class="btn btn-light delete_quotation d-flex justify-content-start">
+                                                 <i class="material-icons ml-2">delete</i>Supprimer
+                                             </a>
+                                         </li>
+                                         {% if quotation.status == 'validated' %}
+                                             <li class="mt-1">
+                                                 <a href="{{ quotation.url_to_order }}"
+                                                    onclick="return confirm('Voulez-vous créer une commande ?')"
+                                                    title="Commander" class="btn btn-light order_quotation d-flex justify-content-start"
+                                                    id="link_to_order_{{ quotation.id_quotation }}">
+                                                     <i class="material-icons ml-2">shopping_cart</i>Créer une commande
+                                                 </a>
+                                             </li>
+                                         {% endif %}
+                                         <li class="mt-1">
+                                             <a href="{{ quotation.url_to_order }}"
+                                                onclick="return confirm('Voulez-vous créer une commande ?')"
+                                                title="Commander" class="btn btn-light order_quotation d-none justify-content-start"
+                                                id="link_to_order_{{ quotation.id_quotation }}">
+                                                 <i class="material-icons ml-2">shopping_cart</i>Créer une commande
+                                             </a>
+                                         </li>
+                                         {% if quotation.status == 'ordered' %}
+                                             <li class="mt-1">
+                                                 <a href="{{ quotation.url_to_show_order }}"
+                                                    title="ShowOrder" class="btn btn-light show_order_quotation d-flex justify-content-start"
+                                                    id="link_to_show_order_{{ quotation.id_quotation }}">
+                                                     <i class="material-icons ml-2">zoom_in</i>Voir la commande
+                                                 </a>
+                                             </li>
+                                         {% endif %}
+                                         <li class="mt-1">
+                                             <a href="{{ quotation.url_to_show_order }}" {% if quotation.orders == [] %} onclick="(alert('Aucune commande n\'est liée à ce panier'))"{% endif %}
+                                                title="ShowOrder" class="btn btn-light show_order_quotation d-none justify-content-start"
+                                                id="link_to_show_order_{{ quotation.id_quotation }}">
+                                                 <i class="material-icons ml-2">zoom_in</i>Voir la commande
+                                             </a>
+                                         </li>
+                                     </ul>
+                                 </div>
+                             </div>
                          </td>
                      </tr>
                  {% else %}
@@ -171,29 +238,8 @@
                  </tbody>
              </table>
 
-             <div class="group-action">
-                 <a class="btn btn-light d-flex" data-toggle="collapse" href="#collapseExample" role="button"
-                    aria-expanded="false" aria-controls="collapseExample">
-                     Actions groupées
-                     <span uk-icon="icon: triangle-down"></span>
-                 </a>
-                 <div class="collapse" id="collapseExample">
-                     <div class="card card-body">
-                         <div class="d-flex align-items-center">
-                             <input class="uk-checkbox" type="checkbox" checked="checked" name="select" id="select">
-                             <span uk-icon="icon: check-square" class="justify-content-end"></span>
-                             <label for="select" class="m-0 mr-1">Tout sélectionner</label>
-                         </div>
-                         <div class="d-flex align-items-center">
-                             <input class="uk-checkbox" type="checkbox" name="unselect" id="unselect">
-                             <label for="unselect" class="m-0 mr-1">Tout désélectionner</label>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-
              <!-- Pagination -->
-                    {% include '@Modules/quotation/templates/admin/common/pagination.html.twig' %}
+             {% include '@Modules/quotation/templates/admin/common/pagination.html.twig' %}
              <!-- End pagination -->
 
          </div>

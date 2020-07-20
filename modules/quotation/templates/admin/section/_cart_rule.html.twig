@@ -1,0 +1,55 @@
+<div id="js-output-discount-infos" class="discount-infos d-none">
+
+    <div class="quotation card p-4" id="discounts" data-discounts="{{ asset('data-discount.js') }}">
+        <div class="quotation-head mb-3 d-flex justify-content-between">
+            <div class="d-flex align-items-center"
+                 data-searchdiscounts="{{ path('quotation_admin_search_discounts', { query: 'query' }) }}">
+                <i class="material-icons mr-2">local_offer</i>
+                <h1 class="panel-heading">Bons de Reduction</h1>
+            </div>
+        </div>
+
+        <div class="container mb-4 d-inline-flex justify-content-center align-items-center col-12" id="search_discounts">
+            {% include '@Modules/quotation/templates/admin/_form_quotation_discount.html.twig' %}
+        </div>
+
+        <div class="tab-content">
+            <table id="discount_table" class="table d-none">
+                <thead>
+                <tr>
+                    <th class="text-left">Nom</th>
+                    <th class="text-left">Description</th>
+                    <th class="text-left">Valeur</th>
+                    <th class="text-left">Actions</th>
+                </tr>
+                </thead>
+                <tbody id="output-discounts">
+
+                <!-- Discounts here! -->
+
+                </tbody>
+            </table>
+        </div>
+
+        <div id="discount_date_err" class="alert alert-warning alert-dismissible fade show d-none" role="alert">
+            Ce bon de réduction a expiré
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div id="discount_cart_err" class="alert alert-warning alert-dismissible fade show d-none" role="alert">
+            Votre commande n'atteint pas le montant minimum requis pour utiliser ce bon de réduction
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div id="discount_product_err" class="alert alert-warning alert-dismissible fade show d-none" role="alert">
+            Vous ne pouvez pas utiliser ce bon de réduction avec ces produits
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+    </div>
+
+</div>

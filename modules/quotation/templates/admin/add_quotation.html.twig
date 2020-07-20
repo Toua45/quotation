@@ -28,11 +28,15 @@
      </section>
 
      <section class="reduction">
-{#         include de la partie bons de réduction#}
+         {% include '@Modules/quotation/templates/admin/section/_cart_rule.html.twig' %}
      </section>
 
      <section class="address">
          {% include '@Modules/quotation/templates/admin/section/_address.html.twig' %}
+     </section>
+
+     <section class="cart_summary">
+         {% include '@Modules/quotation/templates/admin/section/_cart_summary.html.twig' %}
      </section>
 
  {% endblock %}

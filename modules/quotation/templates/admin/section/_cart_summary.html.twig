@@ -1,0 +1,60 @@
+<div id="js-output-cart-summary" class="cart-summary-infos d-none">
+
+    <div class="quotation card p-4" id="cart_summary">
+        <div class="quotation-head mb-3 d-flex justify-content-between">
+            <div class="d-flex align-items-center">
+                <i class="material-icons mr-2">reorder</i>
+                <h1 class="panel-heading">Récapitulatif</h1>
+            </div>
+        </div>
+
+        <div id="cart_summary" class="cart-summary-panel row-margin-bottom text-center">
+            <div class="row justify-content-center align-items-center mt-3 mb-3">
+                <div class="col-lg-2">
+                    <div class="data-focus">
+                        <span>Total produits</span><br>
+                        <span id="cart_summary_total_products" class="size_l text-success"><!-- total products --></span>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="data-focus">
+                        <span>Total bons de réduction (HT)</span><br>
+                        <span id="cart_summary_total_discounts" class="size_l text-danger"><!-- total discounts --></span>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="data-focus">
+                        <span>Total des taxes</span><br>
+                        <span id="cart_summary_total_taxes" class="size_l"><!-- total taxes --></span>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="data-focus">
+                        <span>Total (HT)</span><br>
+                        <span id="cart_summary_total_without_taxes" class="size_l"><!-- total HT --></span>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="data-focus data-focus-primary">
+                        <span>Total (TTC)</span><br>
+                        <span id="cart_summary_total_with_taxes" class="size_l"><!-- total ttc --></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quotation_message d-flex justify-content-center col-lg-12">
+            <div class="form-group d-flex align-items mt-4">
+                <label class="control-label" for="quotation_message">Message du devis</label>
+                <div class="col-lg-6 ml-3">
+                    <textarea name="quotation_message" id="quotation_message" rows="5" cols="77"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="quotation_status d-flex justify-content-center col-lg-12">
+            {% include '@Modules/quotation/templates/admin/_form_quotation_status.html.twig' %}
+        </div>
+    </div>
+
+</div>

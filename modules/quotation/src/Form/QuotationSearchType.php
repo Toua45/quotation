@@ -36,10 +36,10 @@ class QuotationSearchType extends AbstractType
                 'label' => false,
                 'placeholder' => 'Afficher tous les status',
                 'choices' => [
-                    'validate' => 'validate',
-                    'validated' => 'validated',
-                    'approved' => 'approved',
-                    'refused' => 'refused'
+                    'À valider' => 'validate',
+                    'Validé' => 'validated',
+                    'Commandé' => 'ordered',
+                    'Refusé' => 'refused'
                 ],
                 'attr' => [
                     'class' => 'input-text'

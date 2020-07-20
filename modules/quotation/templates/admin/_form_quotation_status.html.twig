@@ -1,0 +1,18 @@
+<div class="quotation-status-section d-flex justify-content-center col-12">
+    {{ form_start(formQuotationStatus, {'attr':{'class':'mt-2 col-6'}}) }}
+
+    <div class="d-flex align-items-center">
+        {{ form_label(formQuotationStatus.status, null, {'label_attr':{'class':'col-2 mt-2'}}) }}
+        <div class="col-10">
+            {{ form_widget(formQuotationStatus.status, {'attr':{'class':'quotation-status-select mt-2'}}) }}
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <button id="submitCreateNewQuotation" type="button" class="btn btn-light d-flex mt-4">
+            <span uk-icon="icon: check" class="mr-1"></span> Créer un devis
+        </button>
+    </div>
+
+    {{ form_end(formQuotationStatus) }}
+</div>

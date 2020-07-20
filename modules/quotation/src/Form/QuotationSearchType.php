@@ -34,7 +34,7 @@ class QuotationSearchType extends AbstractType
             ->add('status', ChoiceType::class, [
                 'required' => false,
                 'label' => false,
-                'placeholder' => 'Afficher tous les status',
+                'placeholder' => 'Afficher tous les statuts',
                 'choices' => [
                     'À valider' => 'validate',
                     'Validé' => 'validated',

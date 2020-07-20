@@ -128,7 +128,7 @@
                  {{ form_end(quotationFilterForm) }}
                  </thead>
 
-                 <tbody id ="quotation_table">
+                 <tbody>
                  {% for quotation in quotations %}
                      <tr class="bg-{{ loop.index0 is even ? 'light' : 'none' }}">
                          <td id="index-quotation-id_{{ quotation.id_quotation }}">{{ quotation.id_quotation }}</td>

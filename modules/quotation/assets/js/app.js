@@ -46,6 +46,11 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
     let urlSearchCustomers = document.querySelector('[data-searchcustomers]').dataset.searchcustomers;
 
+    // On récupère le nom du dossier admin
+    let adminFolderName = window.location.pathname;
+    adminFolderName = adminFolderName.split("/");
+    adminFolderName = adminFolderName[adminFolderName.length - 6];
+
     const getQuery = (Event) => {
 
         let query = Event.currentTarget.value !== ' ' || Event.currentTarget.value !== '' ?
@@ -57,8 +62,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
             // Build show customer link based on his id.
             // Exemple: http://localhost:8000/adminToua/index.php/modules/quotation/admin/show/customer/2
-            let link = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/customer/';
-            let show = window.location.origin + '/adminToua/index.php/sell/customers/';
+            let link = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/show/customer/';
+            let show = window.location.origin + '/' + adminFolderName + 'index.php/sell/customers/';
 
             customers.forEach((customer, i) => {
 
@@ -109,7 +114,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
                                     const getCustomerShow = (customer) => {
 
-                                        let addressController = window.location.origin + '/adminToua/index.php/?controller=AdminAddresses';
+                                        let addressController = window.location.origin + '/' + adminFolderName + '/index.php/?controller=AdminAddresses';
 
                                         let personalData = '';
                                         let tableCustomerOrders = '';
@@ -205,7 +210,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                         // Initialisation de la variable urlCustomersDetails qui prend l'élément data-customerdetails du fichier add_quotation.html.twig
                         let urlCustomersDetails = document.querySelector('[data-customerdetails]').dataset.customerdetails;
                         let newUrlCustomersDetails;
-                        let linkCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/show/cart/';
+                        let linkCart = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/show/cart/';
                         let urlCart = document.querySelector('[data-customercart]').dataset.customercart;
                         let newUrlCart;
 
@@ -451,7 +456,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         idNewCart + '?' +
                                                         "_token=" + token;
 
-                                                    let urlDuplicateCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/duplicate/cart' + paramsUrlToDuplicateCart;
+                                                    let urlDuplicateCart = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/duplicate/cart' + paramsUrlToDuplicateCart;
 
                                                     const getNewCartByDuplicateCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = data.id_last_cart;
 
@@ -936,7 +941,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             Event.currentTarget.value + '?' +  // Get quantity
                                             "_token=" + document.getElementById('token').value; // Get token
 
-                                        let urlProductQtyPost = window.location.origin + '/adminToua/index.php/modules/quotation/admin/update/quantity/product/cart' + paramsUrlProductQuantity;
+                                        let urlProductQtyPost = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/update/quantity/product/cart' + paramsUrlProductQuantity;
 
                                         const getCart = (cart) => document.getElementById('add-product-to-cart').dataset.idcart = cart.id_cart;
 
@@ -1010,7 +1015,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                             idProductAttributeToDelete + '?' + // Get id_product_attribute
                                             "_token=" + document.getElementById('token').value; // Get token
 
-                                        urlProductToDelete = window.location.origin + '/adminToua/index.php/modules/quotation/admin/delete/product/cart' + paramsUrlProductToDelete;
+                                        urlProductToDelete = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/delete/product/cart' + paramsUrlProductToDelete;
 
                                         // On ajoute à l'élément tr le plus proche la class='d-none'
                                         Event.currentTarget.closest('tr').classList.add('d-none');
@@ -1165,7 +1170,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                          * Assign cart_rule to cart on bdd
                                          */
                                         cartRuleParamsUrl = '/' + id_cart + '/' + id_cart_rule + '?' + "_token=" + token;
-                                        urlAssignCartRuleToCart = window.location.origin + '/adminToua/index.php/modules/quotation/admin/assign/discount/cart' + cartRuleParamsUrl;
+                                        urlAssignCartRuleToCart = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/assign/discount/cart' + cartRuleParamsUrl;
 
                                         const getCartRuleToCart = (discount) => {
                                         };
@@ -1242,7 +1247,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                                         }
 
                                                         paramsUrlDiscountToDelete = '/' + id_cart + '/' + idDiscount + '?' + "_token=" + token;
-                                                        urlDiscountToDelete = window.location.origin + '/adminToua/index.php/modules/quotation/admin/delete/discount/cart' + paramsUrlDiscountToDelete;
+                                                        urlDiscountToDelete = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/delete/discount/cart' + paramsUrlDiscountToDelete;
 
                                                         Event.currentTarget.closest('tr').classList.add('d-none');
 
@@ -1324,7 +1329,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     document.getElementById('submitCreateNewQuotation').addEventListener('click', Event => {
 
         let newQuotationToken = new URL(window.location.href).searchParams.get('_token');
-        location.href = window.location.origin + '/adminToua/index.php/modules/quotation/admin/research';
+        location.href = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/research';
 
         let newQuotationCartId = document.getElementById('add-product-to-cart').dataset.idcart;
         let newQuotationCustomerId = document.getElementById('add-product-to-cart').dataset.idcustomer;
@@ -1337,7 +1342,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
         paramsUrlCreateNewQuotation = '/' + newQuotationCartId + '/' + newQuotationCustomerId + '/' + newQuotationReference + '/' + newQuotationMessage + ' ' + '/' + newQuotationDate
             + '/' + newQuotationStatus + '?' + "_token=" + newQuotationToken;
-        urlCreateNewQuotation = window.location.origin + '/adminToua/index.php/modules/quotation/admin/create/new/quotation' + paramsUrlCreateNewQuotation;
+        urlCreateNewQuotation = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/create/new/quotation' + paramsUrlCreateNewQuotation;
 
         const getQuotation = (quotation) => {
         };

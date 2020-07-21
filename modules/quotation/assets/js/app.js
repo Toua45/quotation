@@ -1329,8 +1329,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     document.getElementById('submitCreateNewQuotation').addEventListener('click', Event => {
 
         let newQuotationToken = new URL(window.location.href).searchParams.get('_token');
-        location.href = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/research';
-
         let newQuotationCartId = document.getElementById('add-product-to-cart').dataset.idcart;
         let newQuotationCustomerId = document.getElementById('add-product-to-cart').dataset.idcustomer;
         let newQuotationCustomerName = document.getElementById('add-product-to-cart').dataset.customername.substr(0, 3);
@@ -1339,10 +1337,19 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         let newQuotationMessage = document.getElementById('quotation_message').value;
         let newQuotationDate = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000).toISOString().substr(0, 19).replace('T', ' ');
         let newQuotationStatus = document.getElementById('quotation_status_status').value;
+        let verifStatus = /\w+/;
 
-        paramsUrlCreateNewQuotation = '/' + newQuotationCartId + '/' + newQuotationCustomerId + '/' + newQuotationReference + '/' + newQuotationMessage + ' ' + '/' + newQuotationDate
-            + '/' + newQuotationStatus + '?' + "_token=" + newQuotationToken;
-        urlCreateNewQuotation = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/create/new/quotation' + paramsUrlCreateNewQuotation;
+        if(verifStatus.exec(newQuotationStatus) == null) {
+            document.getElementById('quotation_status_error').classList.remove('d-none');
+            Event.preventDefault();
+            return false;
+        } else {
+            paramsUrlCreateNewQuotation = '/' + newQuotationCartId + '/' + newQuotationCustomerId + '/' + newQuotationReference + '/' + newQuotationMessage + ' ' + '/' + newQuotationDate
+                + '/' + newQuotationStatus + '?' + "_token=" + newQuotationToken;
+            urlCreateNewQuotation = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/create/new/quotation' + paramsUrlCreateNewQuotation;
+
+            location.href = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/research';
+        }
 
         const getQuotation = (quotation) => {
         };

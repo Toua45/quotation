@@ -4,6 +4,7 @@ namespace Quotation\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table()
@@ -62,6 +63,9 @@ class Quotation
      * @var string
      *
      * @ORM\Column(name="status", type="string", length=100)
+     * @Assert\Choice(
+     *     choices = { "validate", "validated", "ordered", "refused"},
+     *     message = "Merci de choisir un statut valide.")
      */
     private $status;
 

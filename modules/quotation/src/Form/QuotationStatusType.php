@@ -14,7 +14,7 @@ class QuotationStatusType extends AbstractType
         $builder
             ->setMethod('POST')
             ->add('status', ChoiceType::class, [
-                'required' => false,
+                'required' => true,
                 'label' => 'État du devis',
                 'placeholder' => 'Afficher tous les statuts',
                 'choices' => [

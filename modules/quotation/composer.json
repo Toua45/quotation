@@ -20,7 +20,9 @@
     "doctrine/orm": "*",
     "symfony/webpack-encore-bundle": "^1.7",
     "symfony/filesystem": "^5.0",
-    "dompdf/dompdf": "^0.8.5"
+    "dompdf/dompdf": "^0.8.5",
+    "symfony/validator": "^5.1",
+    "doctrine/annotations": "^1.10"
   },
   "autoload": {
     "psr-4": {

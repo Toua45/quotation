@@ -1038,4 +1038,26 @@ class QuotationRepository
             ->execute()
             ->fetch();
     }
+
+    /**
+     * @return mixed[]
+     */
+    public function findLastQuotationByCustomerId($idcustomer = null)
+    {
+        $expr = $this->connection->getExpressionBuilder();
+
+        $query = $this->connection->createQueryBuilder();
+        $query
+            ->addSelect('q.id_quotation', 'q.date_add AS date_quotation')
+            ->from($this->databasePrefix . 'quotation', 'q')
+            ->orderBy('q.date_add', 'DESC')
+            ->setMaxResults(1);
+
+        if (!is_null($idcustomer)) {
+            $query->where($expr->eq('q.id_customer', ':id_customer'))
+                ->setParameter('id_customer', $idcustomer);
+        }
+
+        return $query->execute()->fetch();
+    }
 }

@@ -879,6 +879,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
             'orders' => $orders,
             'quotations' => $quotations,
             'id_last_cart' => $idLastCart = $quotationRepository->findLastCartByCustomerId()['id_cart'] + 1,  // Permet de récupérer le dernier cart d'un customer que l'on récupère ensuite en js via le json
+            'id_last_quotation' => $idLastQuotation = $quotationRepository->findLastQuotationByCustomerId()['id_quotation'] + 1,  // Permet de récupérer le dernier quotation d'un customer que l'on récupère ensuite en js via le json
             'addresses' => $addresses,
         ]), 200, [], true);
     }
@@ -1508,7 +1509,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
      * @param $message_visible
      * @param $date_add
      * @param $status
-     * @return JsonResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Exception
      */
     public function createNewQuotation($id_cart, $id_customer, $reference, $message_visible, $date_add, $status)
@@ -1656,6 +1657,8 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
         $formShowQuotationStatus = $this->createForm(QuotationShowStatusType::class, $quotation);
         $formShowQuotationStatus->handleRequest($request);
+
+//        dd($cart['products']);
 
         return $this->render('@Modules/quotation/templates/admin/show_quotation.html.twig', [
             'quotation' => $quotation,

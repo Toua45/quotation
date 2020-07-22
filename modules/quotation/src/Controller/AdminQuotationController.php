@@ -1526,7 +1526,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showQuotation($id_quotation, Request $request)
+    public function showQuotation($id_quotation, Request $request, SessionInterface $session)
     {
         $quotationRepository = $this->get('quotation_repository');
         $quotation = $quotationRepository->findQuotationById($id_quotation);
@@ -1658,7 +1658,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $formShowQuotationStatus = $this->createForm(QuotationShowStatusType::class, $quotation);
         $formShowQuotationStatus->handleRequest($request);
 
-//        dd($cart['products']);
+        $session->clear();
 
         return $this->render('@Modules/quotation/templates/admin/show_quotation.html.twig', [
             'quotation' => $quotation,

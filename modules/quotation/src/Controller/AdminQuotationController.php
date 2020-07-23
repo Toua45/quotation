@@ -34,6 +34,8 @@ class AdminQuotationController extends FrameworkBundleAdminController
 
     public function quotationIndex(Request $req, int $page)
     {
+        $indexToken = $_SERVER['QUERY_STRING'];
+
         $quotationRepository = $this->get('quotation_repository');
         $quotationFilterForm = $this->createForm(QuotationSearchType::class);
         $quotationFilterForm->handleRequest($req);
@@ -139,6 +141,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
         }
 
         return $this->render('@Modules/quotation/templates/admin/index_quotation.html.twig', [
+            'indexToken' => $indexToken,
             'quotations' => $quotations['records'],
             'page' => $page,
             'currentPage' => $currentPage,

@@ -1463,10 +1463,12 @@ if (QuotationModule.getParamFromURL('research') !== null && QuotationModule.getP
     }
 
     var current_page = document.getElementById("index_page").dataset.page;
+    let indexToken = document.getElementById('quotation-head').dataset.indextoken;
 
     if (window.location.pathname.replace(/.*(?=\/quotation\/admin\/research)/ || /.*(?=\/quotation\/admin\/research\/)/, '') === '/quotation/admin/research' || '/quotation/admin/research/' + current_page) {
         document.getElementById('filter_page').addEventListener('click', Event => {
-            Event.preventDefault();
+            // Event.preventDefault();
+
             let form = Event.currentTarget.closest('thead').querySelector('form'); // Get form
             const _url = window.location.origin + '/' + adminFolderNameIndexPage + '/index.php/modules/quotation/admin/research?';
             const params = {
@@ -1481,6 +1483,8 @@ if (QuotationModule.getParamFromURL('research') !== null && QuotationModule.getP
             form.method = 'GET';
             form.action = _url + url;
             form.submit();
+
+            location.href = _url + url + '&' + indexToken;
         });
     }
 

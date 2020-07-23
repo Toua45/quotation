@@ -560,8 +560,10 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
                                         document.getElementById('add-product-to-cart').setAttribute('data-idcustomer', data['customer'].id_customer);
                                         // on ajoute l'attribut data-customername à l'élément html add-product-to-cart pour récupérer le fullname qui nous servira pour la reference du devis lors de la création de celui-ci
                                         document.getElementById('add-product-to-cart').setAttribute('data-customername', data['customer'].lastname + data['customer'].firstname);
-                                        // on ajoute l'attribut data-idcustomer à l'élément html add-product-to-cart pour récupérer l'id_customer qui nous servira pour la section search product section
+                                        // on ajoute l'attribut data-idcart à l'élément html add-product-to-cart
                                         document.getElementById('add-product-to-cart').setAttribute('data-idcart', data.id_last_cart);
+                                        // on ajoute l'attribut data-idquotation à l'élément html add-product-to-cart
+                                        document.getElementById('add-product-to-cart').setAttribute('data-idquotation', data.id_last_quotation);
                                         // On ajoute l'attribut data-idcart à l'élément id output-discounts
                                         document.getElementById('output-discounts').setAttribute('data-idcart', data.id_last_cart);
 
@@ -1328,6 +1330,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
 
     document.getElementById('submitCreateNewQuotation').addEventListener('click', Event => {
 
+        let idQuotation = document.getElementById('add-product-to-cart').dataset.idquotation;
         let newQuotationToken = new URL(window.location.href).searchParams.get('_token');
         let newQuotationCartId = document.getElementById('add-product-to-cart').dataset.idcart;
         let newQuotationCustomerId = document.getElementById('add-product-to-cart').dataset.idcustomer;
@@ -1339,6 +1342,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         let newQuotationStatus = document.getElementById('quotation_status_status').value;
         let verifStatus = /\w+/;
 
+        // On vérifie si le statut est valide
         if(verifStatus.exec(newQuotationStatus) == null) {
             document.getElementById('quotation_status_error').classList.remove('d-none');
             Event.preventDefault();
@@ -1347,8 +1351,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             paramsUrlCreateNewQuotation = '/' + newQuotationCartId + '/' + newQuotationCustomerId + '/' + newQuotationReference + '/' + newQuotationMessage + ' ' + '/' + newQuotationDate
                 + '/' + newQuotationStatus + '?' + "_token=" + newQuotationToken;
             urlCreateNewQuotation = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/create/new/quotation' + paramsUrlCreateNewQuotation;
-
-            location.href = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/research';
         }
 
         const getQuotation = (quotation) => {
@@ -1363,6 +1365,8 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
             []
         );
 
+        // On fait une redirection vers la page show_quotation.html.twig
+        location.href = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/show/quotation/' + idQuotation + '?' + "_token=" + newQuotationToken;
     });
 }
 
@@ -1392,7 +1396,7 @@ if (QuotationModule.getParamFromURL('show/quotation/' + '\\d+') !== null && Quot
 
         let quotationStatus = document.getElementById('quotation_show_status_status').value;
 
-        paramsUrlUpdateStatusQuotation = '/' + quotationId + '/' + "'" + quotationStatus + "'" + '?' + "_token=" + quotationToken;
+        paramsUrlUpdateStatusQuotation = '/' + quotationId + '/' + quotationStatus + '?' + "_token=" + quotationToken;
 
         urlUpdateStatusQuotation = window.location.origin + '/' + adminFolderNameShowPage + '/index.php/modules/quotation/admin/update/status/quotation' + paramsUrlUpdateStatusQuotation;
 
@@ -1422,7 +1426,7 @@ if (QuotationModule.getParamFromURL('show/quotation/' + '\\d+') !== null && Quot
 
         let quotationMessage = document.getElementById('show_message').value;
 
-        paramsUrlUpdateMessageQuotation = '/' + quotationId + '/' + "'" + quotationMessage + "'" + '?' + "_token=" + quotationToken;
+        paramsUrlUpdateMessageQuotation = '/' + quotationId + '/' + quotationMessage + '?' + "_token=" + quotationToken;
 
         urlUpdateMessageQuotation = window.location.origin + '/' + adminFolderNameShowPage + '/index.php/modules/quotation/admin/update/message/quotation' + paramsUrlUpdateMessageQuotation;
 
@@ -1504,7 +1508,7 @@ if (QuotationModule.getParamFromURL('research') !== null && QuotationModule.getP
 
                 // On récupère la valeur de l'option du select
                 let indexQuotationStatus = document.getElementById('output_quotation_status_' + indexQuotationId).value;
-                paramsUrlUpdateIndexQuotationStatus = '/' + indexQuotationId + '/' + "'" + indexQuotationStatus + "'" + '?' + "_token=" + indexQuotationToken;
+                paramsUrlUpdateIndexQuotationStatus = '/' + indexQuotationId + '/' + indexQuotationStatus + '?' + "_token=" + indexQuotationToken;
 
                 urlUpdateIndexQuotationStatus = window.location.origin + '/' + adminFolderNameIndexPage + '/index.php/modules/quotation/admin/update/status/quotation' + paramsUrlUpdateIndexQuotationStatus;
 

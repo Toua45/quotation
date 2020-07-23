@@ -1658,7 +1658,8 @@ class AdminQuotationController extends FrameworkBundleAdminController
         $formShowQuotationStatus = $this->createForm(QuotationShowStatusType::class, $quotation);
         $formShowQuotationStatus->handleRequest($request);
 
-        $session->clear();
+        // On supprime la session du cart créer
+        $session->remove('cart');
 
         return $this->render('@Modules/quotation/templates/admin/show_quotation.html.twig', [
             'quotation' => $quotation,

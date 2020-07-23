@@ -1396,7 +1396,7 @@ if (QuotationModule.getParamFromURL('show/quotation/' + '\\d+') !== null && Quot
 
         let quotationStatus = document.getElementById('quotation_show_status_status').value;
 
-        paramsUrlUpdateStatusQuotation = '/' + quotationId + '/' + "'" + quotationStatus + "'" + '?' + "_token=" + quotationToken;
+        paramsUrlUpdateStatusQuotation = '/' + quotationId + '/' + quotationStatus + '?' + "_token=" + quotationToken;
 
         urlUpdateStatusQuotation = window.location.origin + '/' + adminFolderNameShowPage + '/index.php/modules/quotation/admin/update/status/quotation' + paramsUrlUpdateStatusQuotation;
 
@@ -1426,7 +1426,7 @@ if (QuotationModule.getParamFromURL('show/quotation/' + '\\d+') !== null && Quot
 
         let quotationMessage = document.getElementById('show_message').value;
 
-        paramsUrlUpdateMessageQuotation = '/' + quotationId + '/' + "'" + quotationMessage + "'" + '?' + "_token=" + quotationToken;
+        paramsUrlUpdateMessageQuotation = '/' + quotationId + '/' + quotationMessage + '?' + "_token=" + quotationToken;
 
         urlUpdateMessageQuotation = window.location.origin + '/' + adminFolderNameShowPage + '/index.php/modules/quotation/admin/update/message/quotation' + paramsUrlUpdateMessageQuotation;
 
@@ -1508,7 +1508,7 @@ if (QuotationModule.getParamFromURL('research') !== null && QuotationModule.getP
 
                 // On récupère la valeur de l'option du select
                 let indexQuotationStatus = document.getElementById('output_quotation_status_' + indexQuotationId).value;
-                paramsUrlUpdateIndexQuotationStatus = '/' + indexQuotationId + '/' + "'" + indexQuotationStatus + "'" + '?' + "_token=" + indexQuotationToken;
+                paramsUrlUpdateIndexQuotationStatus = '/' + indexQuotationId + '/' + indexQuotationStatus + '?' + "_token=" + indexQuotationToken;
 
                 urlUpdateIndexQuotationStatus = window.location.origin + '/' + adminFolderNameIndexPage + '/index.php/modules/quotation/admin/update/status/quotation' + paramsUrlUpdateIndexQuotationStatus;
 

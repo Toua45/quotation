@@ -974,7 +974,7 @@ class QuotationRepository
         $query = $this->connection->createQueryBuilder()
             ->update($this->databasePrefix . 'quotation');
 
-        $query->set('message_visible', $message_visible)
+        $query->set('message_visible', ':message_visible')
             ->where('id_quotation = :id_quotation')
             ->setParameters([
                 'id_quotation' => $id_quotation,
@@ -994,7 +994,7 @@ class QuotationRepository
         $query = $this->connection->createQueryBuilder()
             ->update($this->databasePrefix . 'quotation');
 
-        $query->set('status', $status)
+        $query->set('status', ':status')
             ->where('id_quotation = :id_quotation')
             ->setParameters([
                 'id_quotation' => $id_quotation,

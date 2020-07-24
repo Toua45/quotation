@@ -1512,7 +1512,7 @@ class AdminQuotationController extends FrameworkBundleAdminController
      * @param $message_visible
      * @param $date_add
      * @param $status
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse
      * @throws \Exception
      */
     public function createNewQuotation($id_cart, $id_customer, $reference, $message_visible, $date_add, $status)

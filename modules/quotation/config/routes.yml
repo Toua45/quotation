@@ -218,7 +218,7 @@ quotation_admin_delete_discount_cart:
     _legacy_link: 'AdminQuotationController'
 
 quotation_admin_create_new_quotation:
-  path: quotation/admin/create/new/quotation/{id_cart}/{id_customer}/{reference}/{message_visible}/{date_add}/{status}
+  path: quotation/admin/create/{id_cart}/{id_customer}/{reference}/{message_visible}/{date_add}/{status}
   requirements:
     id_cart: '\d+'
     id_customer: '\d+'

@@ -1350,10 +1350,11 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         } else {
             paramsUrlCreateNewQuotation = '/' + newQuotationCartId + '/' + newQuotationCustomerId + '/' + newQuotationReference + '/' + newQuotationMessage + ' ' + '/' + newQuotationDate
                 + '/' + newQuotationStatus + '?' + "_token=" + newQuotationToken;
-            urlCreateNewQuotation = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/create/new/quotation' + paramsUrlCreateNewQuotation;
+            urlCreateNewQuotation = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/create' + paramsUrlCreateNewQuotation;
         }
 
         const getQuotation = (quotation) => {
+            console.log('it works');
         };
 
         QuotationModule.getData(

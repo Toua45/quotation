@@ -1355,6 +1355,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         }
 
         const getQuotation = (quotation) => {
+            console.log('it works');
         };
 
         QuotationModule.getData(

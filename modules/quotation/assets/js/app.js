@@ -1325,7 +1325,6 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
     /*
      * Create new quotation
      */
-    // let urlCreateNewQuotation;
     let urlCreateNewQuotation = document.getElementById('create-new-quotation').dataset.urlquotationpost;
 
     let paramsUrlCreateNewQuotation = '';
@@ -1352,8 +1351,7 @@ if (QuotationModule.getParamFromURL('add') !== null && QuotationModule.getParamF
         } else {
             paramsUrlCreateNewQuotation = '/' + newQuotationCartId + '/' + newQuotationCustomerId + '/' + newQuotationReference + '/' + newQuotationMessage + ' ' + '/' + newQuotationDate
                 + '/' + newQuotationStatus + '?' + "_token=" + newQuotationToken;
-            // urlCreateNewQuotation = window.location.origin + '/' + adminFolderName + '/index.php/modules/quotation/admin/create/new/quotation' + paramsUrlCreateNewQuotation;
-            urlCreateNewQuotation = urlCreateNewQuotation.replace(/(\/\d+){5}(?=\?_token)/)
+            urlCreateNewQuotation = urlCreateNewQuotation.replace(/\/0(.*)$/g, paramsUrlCreateNewQuotation);
         }
 
         const getQuotation = (quotation) => {

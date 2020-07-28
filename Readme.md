@@ -32,3 +32,6 @@ pour un client avant de passer commande d'un ou plusieurs produit·s.
 * Yurniel LAHERA VILLA   
 * Nolwenn SACHET  
 * Toua VA
+
+## Lien vidéo pour avoir un apperçu du fonctionnement du module
+https://drive.google.com/file/d/1DJrneJWrAAaoL-FkcjMSJ_lYPU7bsr7U/view?usp=sharing

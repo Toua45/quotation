@@ -218,13 +218,13 @@ quotation_admin_delete_discount_cart:
     _legacy_link: 'AdminQuotationController'
 
 quotation_admin_create_new_quotation:
-  path: quotation/admin/create/new/quotation/{id_cart}/{id_customer}/{reference}/{message_visible}/{date_add}/{status}
+  path: quotation/admin/create/{id_cart}/{id_customer}/{reference}/{message_visible}/{date_add}/{status}
   requirements:
     id_cart: '\d+'
     id_customer: '\d+'
     reference: '\w+'
     message_visible: '[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*'
-    date_add: '^\d\d\d\d-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]) (00|[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9]):([0-9]|[0-5][0-9])$'
+    date_add: '(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})'
     status: 'validate|validated|ordered|refused'
   methods: [GET, POST]
   defaults:
